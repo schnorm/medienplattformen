@@ -13,6 +13,7 @@ Gilt für `schreib-modus` (beim Verfassen) und `pruef-modus` (Teil-Check A: Form
 - Direkte Zitate ≤ 40 Wörter: `\enquote{}`. > 40 Wörter: `\begin{blockzitat}`-Umgebung (in `main.tex` definiert: 1,27 cm links eingerückt, **ohne** Anführungszeichen; Zitat endet mit Punkt, Quellenangabe danach: `… Angebote. (S. 40)`).
 - Fußnoten: nur für Randbemerkungen, Übersetzungen nicht-englischer Zitate oder Copyright-Hinweise — keine inhaltlichen Ausführungen. 10 Pt., Blocksatz, fortlaufend nummeriert, beginnen mit Großbuchstaben, enden mit Punkt.
 - **Nicht als Quellen zulässig:** Vorlesungsskripte, Vorlesungsfolien, Webinars (Zitierleitfaden explizit). Bei referenzierten Inhalten daraus: auf die zitierfähige Primärquelle (Lehrbuch, Veröffentlichung) ausweichen.
+- **Nicht jede Quelle ist eine Zitierquelle**: Eigene Analysen/Sichtungen (Plattformvergleiche, SWOT, Konkurrenzrecherche) sind keine `\parencite`-Fälle, sondern `\quelle{Eigene Darstellung.}` bzw. eigene Beobachtung im Fließtext — auch wenn sie auf Webquellen basieren. `kapitelplan.md` trägt die Klassifikation je Quelle bereits vor (siehe `plan-modus` → Schritt 3, „Zitier-Klassifikation").
 
 ## Eigene Werke / Abbildungskonvention
 

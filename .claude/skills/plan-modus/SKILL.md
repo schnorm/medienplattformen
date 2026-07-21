@@ -20,7 +20,7 @@ In Schritt 0 festlegen und im Draft-Status notieren (`Betriebsart: kompakt` / `a
 - Schritt 0 + These (Schritt 2) + Kapitelgerüst (Schritt 2.5) in **einer** Dialogrunde bündeln — abfragen statt sokratisch herleiten.
 - Schritt 1 (Literatur) nur auf Wunsch oder wenn Schritt 0 „Literatur fehlt" ergibt.
 - Schritt 3: **eine Runde pro Hauptteil-Kapitel**. Einleitung/Schluss ohne eigene Runde — deren Inhalt ergibt sich aus These + Gerüst; im Kapitelplan trotzdem als eigener Block ausweisen.
-- Schritt 4 (Stresstest) **optional**: nur auf Wunsch oder wenn ein Kernargument erkennbar wackelt.
+- Schritt 4 (Stresstest) **Pflicht-Minimalpass**: **ein** Durchgang über die Kernargumente-Tabelle ist auch im Kompakt-Modus verbindlich (kostet eine Runde, kein voller Mehrfach-Modus). Grund: „nur wenn etwas wackelt" ist unzuverlässig — wer das Argument gebaut hat, ist der schlechteste Richter über seine Schwächen; ein Stark-Befund erreicht so unbemerkt den finalen Plan. Vertiefung auf einzelne Argumente nur auf Wunsch.
 - Ziel: `kapitelplan.md` in **einer Session**.
 
 **Ausführlich** (= voller Ablauf unten, Default nur für die empirische Seminararbeit; sonst opt-in per „plan ausführlich"): jeder Schritt einzeln, sokratische Herleitung, Pflicht-Stresstest.
@@ -117,6 +117,8 @@ Eigenanteil: ...
 
 **`aufgabe.md` schreiben (Single Source für die Aufgabenstellung):** Die extrahierten Punkte einmalig nach `aufgabe.md` im Projekt-Root destillieren — Papiertyp, Rahmenthema, **wörtliche** Leitfragen/Wahlaufgabe, formale Vorgaben (Seiten, Abgabefrist, geforderte Materialien), Bewertungsbezüge aus der Aufgabenstellung, Eigenanteil. Alle späteren Sessions (auch Schreib-/Prüf-Modus) lesen `aufgabe.md` statt des Aufgaben-PDFs — schneller, tokeneffizient, und die Aufgabenstellung ist Teil des Gedächtnisses. Die Abgabefrist zusätzlich in `CLAUDE.md` → „Fristen" eintragen.
 
+**Prüfer-Anmerkungen destillieren (Pflichtbestandteil, falls die Datei existiert):** `sources/Anmerkungen vom Prüfer.md` (oder ähnlich benannt) auf **bindende Steuerungen** prüfen — Vorgaben, die von der reinen Aufgabenstellung abweichen oder sie präzisieren (z. B. „Wettbewerbsanalyse gilt als eigene Analyse, nicht als Zitat", „keine Primärdaten nötig", „KI-generierte Mockups kennzeichnen"). Diese **wörtlich** in `aufgabe.md` → eigener Abschnitt **„## Prüfer-Steuerungen"** übernehmen, je Steuerung mit kurzer Einordnung, wo sie im Plan wirkt. Existiert die Datei nicht, den Abschnitt mit „— keine Prüfer-Anmerkungen vorhanden —" anlegen, nicht stillschweigend weglassen (macht sichtbar, dass geprüft wurde). Grund: Diese Steuerungen sind bindend, tauchen aber in keiner anderen Pflichtquelle auf — ohne aktive Destillation werden sie nur gefunden, wenn der Nutzer zufällig darauf zeigt.
+
 Sobald Papiertyp feststeht: `.claude/skills/_shared/typen/<typ>.md` laden.
 
 **Machbarkeits-Check (Pflichtbestandteil — vor dem Kapitelgerüst):** Aus der Aufgabenstellung alle **Tätigkeiten** ableiten, die der Nutzer real ausführen muss — nicht nur schriftlich behandeln, sondern tatsächlich tun: Interviews führen, Prototypen bauen, Umfragen durchführen, Nutzertests machen, Daten erheben, Produkte analysieren, Vergleiche erstellen. Diese als Liste formulieren und **per `AskUserQuestion` aktiv mit dem Nutzer durchgehen**: „Die Aufgabenstellung erfordert X — ist das in Ihrem Rahmen möglich?" Nicht annehmen, dass es möglich ist, nur weil es in der Aufgabenstellung steht.
@@ -131,6 +133,8 @@ Sobald Papiertyp feststeht: `.claude/skills/_shared/typen/<typ>.md` laden.
 **Lieferobjekt-Liste (Pflichtbestandteil von `aufgabe.md`):** Zusätzlich zu Text und Argumentation hält `aufgabe.md` einen Abschnitt **„## Lieferobjekte"** fest: alles, was am Ende **physisch in der Arbeit liegen muss**, nicht nur beschrieben wird. Auszugehen ist von den Substantiven der Aufgabenstellung: Nennt sie einen *Prototyp*, muss ein Prototyp vorliegen — als Skizze, Wireframe, Papiermodell oder Screenshot im Anhang. Nennt sie *Tests* oder *Nutzerfeedback*, müssen Erhebungsinstrument und Ergebnis vorliegen. Nennt sie einen *Vergleich*, muss die Erhebungsgrundlage vorliegen. Je Lieferobjekt eine Zeile: Objekt · Form (Abbildung, Tabelle, Anhang) · Zielort in der Arbeit · Status.
 
 **Faustregel für Konzeptarbeiten:** Wer ein Produkt, System oder eine Plattform entwirft, liefert mindestens (a) **eine visuelle Darstellung** des Entworfenen, (b) **jedes selbst entwickelte Instrument** als Anhang (Formular, Fragebogen, Kriterienraster) und (c) **einen Namen** für das Konzipierte. Ohne (a) bleibt der Entwurf unanschaulich, ohne (b) ist er nicht nachvollziehbar, ohne (c) liest er sich wie eine Anforderungsliste statt wie ein Konzept. Diese drei Punkte in der Lieferobjekt-Liste voreintragen und mit dem Nutzer bestätigen oder streichen — mit Begründung, falls gestrichen.
+
+**Namens-Kollisionscheck (Pflicht, sobald ein Name gesetzt wird):** Bevor ein Produkt-/Plattform-/Konzeptname final in den Plan übernommen wird, einmal kurz online prüfen (eine Suche genügt), ob der Name — oder sein Wortstamm — im selben Themenfeld bereits als Marke, App, Verein oder Projekt belegt ist. Eine Kollision (z. B. gleicher Name einer etablierten Marke im identischen Feld) untergräbt den im Bewertungsraster geforderten Eigenständigkeits-/Innovationsanspruch und ist markenrechtlich heikel. Fund → dem Nutzer als Entscheidung vorlegen (umbenennen oder bewusst abgrenzen), nicht stillschweigend übernehmen. Die finale Verfügbarkeitsprüfung (DPMA/Domain) bleibt Nutzer-Pflicht; dieser Check fängt nur die offensichtliche Kollision früh ab.
 
 **Wörtliche Abhakliste (Pflichtbestandteil von `aufgabe.md`):** `aufgabe.md` enthält zusätzlich den Abschnitt **„## Wörtliche Abhakliste"** mit vier Blöcken, je Eintrag eine Zeile mit Spalte „adressiert in":
 
@@ -297,6 +301,13 @@ Bestätigung: Ja / Nein
 [INSIGHT: <name>_zusammenfassung] ...
 ```
 
+**Zitier-Klassifikation (Pflicht, je Quelle unter „Belege"):** Nicht jede genannte Quelle ist eine Zitierquelle. Jede Quelle eindeutig einordnen und als Suffix hinter der Belege-Zeile vermerken:
+- **(a) zitiert** — geht in `\parencite`, braucht einen BBT-Key in `references.bib`.
+- **(b) eigene Analyse/Sichtung** — eigene Beobachtung oder Vergleichsanalyse (z. B. Plattform-Sichtung, Konkurrenzvergleich, SWOT): `\quelle{Eigene Darstellung.}` bzw. eigene Beobachtung im Fließtext, **kein** `\parencite`, **nicht** in `references.bib`.
+- **(c) unzulässig** — Skripte, Vorlesungsfolien, Webinars (siehe `hard-rules-formal.md` → Zitationen, Sperrliste): auf eine zitierfähige Primärquelle ausweichen, nicht in den Plan übernehmen.
+
+Beispiel: `Belege: 1. Meyer & Allen 1991 [zitiert] · 2. eigene Sichtung von 5 Konkurrenzplattformen [eigene Analyse]`. Nur Klasse (a) geht in die BBT-Key-Prüfung von `schreib-modus` ein — sonst droht dort ein erfundener Key für eine Quelle, die gar keinen braucht.
+
 **Recherche-Gate:** Steht bei „Faktenbasis" *eigene Recherche* (Produktfeatures, Marktdaten, Werkzeugvergleiche, Preise), wird der Faktenstand **vor** dem Schreiben erhoben. Solche Angaben tragen meist eine Vergleichstabelle, auf die spätere Kapitel aufsetzen; eine Korrektur nach dem Schreiben schlägt auf jede daran hängende Stelle durch. Das Ergebnis kommt als **Rechercheprotokoll** in den Kapitelblock: je Behauptung Datum, Quelle, Befund — und, bei Aktivitäts- oder Qualitätsurteilen, **das Beobachtungsmerkmal**, an dem das Urteil hängt. Ein Urteil wie „wenig belebt" ohne benennbares Merkmal ist eine Behauptung, keine Erhebung. Die abschließende Verifikation am Original bleibt Nutzer-Pflicht (IU-KI-Richtlinie); das Protokoll ersetzt sie nicht, macht aber sichtbar, *was* zu verifizieren ist.
 
 **Optional — Literatur-Volltexte bereits während der Planung sichten:** Liegen zu Schritt 1 gefundene Paper bereits als PDF vor (z. B. Open-Access-Download), kann es sich lohnen, sie schon jetzt nach zitierfähigen Stellen zu durchsuchen, statt das komplett dem Schreib-Modus zu überlassen — spart eine zweite Lektüre und sichert früh ab, dass die geplante Argumentation wirklich durch den Volltext gedeckt ist (nicht nur durchs Abstract). Ergebnis kommt mit Seitenzahl in `kapitelplan.draft.md` **und** in den finalen `kapitelplan.md`-Output unter „Zitat-Kandidaten" (siehe Output-Template unten) — Schreib-Modus liest nur `kapitelplan.md`, nicht den Draft.
@@ -309,9 +320,9 @@ Bestätigung: Ja / Nein
 
 ---
 
-## Schritt 4: Argumentations-Stresstest (ausführlich: Pflicht · kompakt: optional)
+## Schritt 4: Argumentations-Stresstest (ausführlich: voller Mehrfach-Modus · kompakt: Pflicht-Minimalpass)
 
-**Kompakt**: nur auf Wunsch des Nutzers oder wenn beim Planen ein Kernargument erkennbar wackelt (z. B. unbelegte Verallgemeinerung, Sprung von deskriptiv zu normativ) — dann gezielt vorschlagen, nicht automatisch durchlaufen.
+**Kompakt**: **ein** Pflicht-Durchgang über die Kernargumente-Tabelle — nicht mehr optional. Der Selbst-Check „wackelt hier etwas?" ist strukturell blind für die eigenen Schwächen; ein einzelner Mehrfach-Modus-Durchlauf kostet eine Runde und fängt genau die Stark-Befunde ab, die sonst unbemerkt in den finalen Plan wandern. Vertiefung auf einzelne Argumente nur zusätzlich auf Wunsch.
 
 Ruft den eigenständigen `stresstest`-Skill im **Mehrfach-Modus** auf (siehe `stresstest/SKILL.md`): alle Kernargumente aus `kapitelplan.draft.md` in einem Durchgang prüfen, Ergebnis als Tabelle.
 
@@ -327,7 +338,8 @@ Alle Inhalte liegen bereits in `kapitelplan.draft.md` (Checkpoints aus Schritt 0
 
 1. `kapitelplan.draft.md` vollständig lesen.
 2. Daraus `kapitelplan.md` **im Projekt-Root** nach dem Format unten schreiben (Schreib-Modus liest später nur diese Datei, nicht den Draft). `kapitelplan.md` enthält bewusst **keine** vollständige INSIGHT-Sammlung — die ist im Draft archiviert und blockiert sonst den Schreib-Modus-Token-Budget mit Ballast.
-3. `kapitelplan.draft.md` **nicht löschen** — stattdessen mit Hinweis markieren:
+3. **Output-Integritätscheck (Pflicht, vor Fertigstellung):** Output ⊇ Draft-Entscheidungen prüfen. Jede bestätigte Zuordnung aus dem Draft — Abhakliste-Einträge, Lieferobjekte, im INSIGHT bestätigte Feature-/Begriffs-Ideen — muss im finalen `kapitelplan.md` einen erkennbaren Ort haben. Dazu jede `[INSIGHT: ...]`-Zeile und jede Tabellenzeile aus dem Draft gegen den geschriebenen Output abgleichen (Grep-artig, Begriff für Begriff). Fehlt einer, entweder ergänzen oder bewusst mit einem Satz Begründung streichen — nicht stillschweigend verlieren. Anlass: „Journaling/Menüplanung" fiel bei einer Konsolidierung so heraus, obwohl im Draft zugeordnet.
+4. `kapitelplan.draft.md` **nicht löschen** — stattdessen mit Hinweis markieren:
    ```markdown
    # Kapitelplan (Entwurf — abgeschlossen)
    ## Status
@@ -348,7 +360,7 @@ Alle Inhalte liegen bereits in `kapitelplan.draft.md` (Checkpoints aus Schritt 0
 ## Kapitel 1: <Name> (X–Y Wörter)
 - **Datei**: `chapters/<kap>/<kap>.tex` (Master) · **Label**: `sec:<slug>`
 - **Kernargument**: ...
-- **Belege**: ...
+- **Belege**: ... (je Quelle mit Zitier-Klassifikation `[zitiert]` / `[eigene Analyse]` / `[unzulässig — ersetzt durch ...]`)
 - **Gegenargumente**: ...
 - **Antwort**: ...
 - **Argumentationsstärke**: Stark/Mittel (kompakt ohne Stresstest: „ungeprüft")
@@ -388,6 +400,7 @@ Alle Inhalte liegen bereits in `kapitelplan.draft.md` (Checkpoints aus Schritt 0
 Hinweis: Recherche-Vorarbeit — Nutzer prüft Seitenzahlen/Formulierungen final am Original (IU-KI-Richtlinie).
 
 ## Nächste Schritte
-→ schreib-modus: Kapitel nacheinander verfassen
-→ oder pruef-modus: Kapitelplan vorab prüfen
+→ pruef-modus (Umfang „Plan-Audit"): Kapitelplan auf Kohärenz prüfen — **empfohlen** vor dem Schreiben, **Pflicht** ab > 3 Kapiteln oder eigener Vergleichsmatrix/Rubrik-Karte
+→ pruef-modus (Umfang „Bereitschafts-Check"): mechanische Checkliste direkt vor dem ersten schreib-modus-Aufruf — **empfohlen**
+→ danach schreib-modus: Kapitel nacheinander verfassen
 ```

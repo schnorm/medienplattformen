@@ -14,6 +14,8 @@
 | Arbeit mit fremden Augen gegen die Aufgabenstellung prüfen (alle Kapitel FERTIG) | „Gegenlesung" |
 | Ganze Arbeit inhaltlich prüfen (sobald alle Kapitel FERTIG, **vor** dem Voll-Audit) | „Gesamt-Stresstest" |
 | Erstes Kapitel gegenprüfen (früh, ohne Score) | „Audit Kapitel: <name>" |
+| Kapitelplan auf Kohärenz prüfen (empfohlen vor dem Schreiben) | „Plan-Audit" |
+| Mechanisch prüfen, ob das Schreiben starten kann | „Bereitschafts-Check" |
 | Arbeit/Kapitelplan prüfen | „Audit" |
 | Status erfahren | „Wo stehen wir?" |
 
@@ -21,6 +23,7 @@
 
 - **Kompilieren ist Sache des Nutzers, nicht meine.** Nach Edits an `.tex`-Dateien nicht ad-hoc selbst `lualatex`/`latexmk` laufen lassen, um die eigene Änderung zu verifizieren — der Nutzer kompiliert lokal. Ausnahme: Teil-Check D (Build) im `pruef-modus` bleibt bestehen, da er ein bewusster, score-relevanter Audit-Bestandteil ist und kein Ad-hoc-Selbstcheck.
 - **Dateien sind Wahrheit, nicht der Chat-Verlauf.** `aufgabe.md`, `kapitelplan.md`, `kapitelplan.draft.md` und `chapters/**/*.tex` gelten immer vor Erinnerung/Memory — bei Zweifel lesen, nicht annehmen.
+- **Erst prüfen, dann behaupten.** Bevor eine belastbare Aussage über die Außenwelt (Marktlage, Konkurrenzprodukte, Werkzeuge, Zahlen) **oder** eine formale/prozedurale Behauptung („das ist ein Blocker", „so darf man nicht zitieren", „die Regel verlangt X") getroffen wird: die maßgebliche Quelle konsultieren — Web für Außenwelt-Fakten, die **Projektdatei** für interne Regeln (`aufgabe.md`, `sources/Anmerkungen vom Prüfer.md`, `hard-rules-formal.md`, `typen/<typ>.md`). Kein Rating, kein Blocker, keine Formalia-Aussage aus dem Gedächtnis. Im Zweifel als Hypothese kennzeichnen und verifizieren, nicht als Fakt formulieren.
 - **`main.tex`, `pages/cover.tex` und `references.bib` nie verändern** (Ausnahme: `references.bib` per Zotero/BBT-Auto-Export) — gilt unabhängig vom aktiven Skill. Projektspezifische Angaben (Titel, Papiertyp, Modul, Tutor:in, Abgabedatum, PDF-Schlagworte) stehen **ausschließlich in `pages/meta.tex`** — einmalig beim Projektstart ausfüllen; `cover.tex` und die PDF-Metadaten ziehen sich alles von dort.
 - **Single Source of Truth**: `aufgabe.md` für die Aufgabenstellung (destilliert in Plan-Modus Schritt 0 — spätere Sessions lesen diese Datei, nicht das Aufgaben-PDF), `kapitelplan.md` für Struktur/Argumentation, `chapters/**/*.tex` für den finalen Text, `references.bib` für Zitationen (nie manuell editieren).
 - **These und Kernargumente kommen vom Nutzer.** Ich hinterfrage und schärfe, liefere aber nicht die inhaltliche Position selbst. Das ist zugleich die Bedingung der IU-KI-Richtlinie: Die Verantwortung für alle Inhalte liegt beim Studierenden; jede von mir gelieferte Quelle, Zahl oder Behauptung muss der Nutzer am Original verifizieren, bevor sie in die Arbeit übernommen wird.
@@ -66,7 +69,7 @@ Kern des Workflows: **viele kurze Sessions statt einer großen.** Lange Sessions
 │       └── 01_<slug>.tex         # Subsection-Dateien
 ├── images/<kapitel>/            # Abbildungen, gespiegelt zur Kapitelstruktur (Konvention: hard-rules-formal.md → LaTeX)
 ├── logos/ · tables/             # Logos bzw. Tabellen-Fragmente
-├── sources/                     # IU-Leitfäden pro Papiertyp — nur bei konkretem Zweifelsfall lesen
+├── sources/                     # IU-Leitfäden pro Papiertyp (Zweifelsfall) + Anmerkungen vom Prüfer.md (Pflichtquelle, siehe plan-modus Schritt 0)
 └── .claude/skills/
     ├── _shared/                 # hard-rules-formal.md, typen/<typ>.md, scripts/
     ├── setup-check/             # einmaliger Umgebungscheck
@@ -83,6 +86,8 @@ Kern des Workflows: **viele kurze Sessions statt einer großen.** Lange Sessions
 |---|---|---|---|
 | Setup | `setup-check` | Einmalig bei neuem Projektordner | Bestätigung: Umgebung bereit |
 | Planen | `plan-modus` | Aufgabenstellung liegt vor, kein Kapitelplan | `aufgabe.md` + `kapitelplan.md` |
+| Plan-Audit | `pruef-modus` (Umfang „Plan-Audit") | **Empfohlen**, sobald `kapitelplan.md` final ist — **vor** `schreib-modus`; Pflicht ab > 3 Kapiteln oder eigener Vergleichsmatrix | kurze Fundliste, kein Score |
+| Bereitschafts-Check | `pruef-modus` (Umfang „Bereitschafts-Check") | **Empfohlen**, direkt vor dem allerersten `schreib-modus`-Aufruf, nach dem Plan-Audit | PASS/FAIL-Checkliste im Chat, kein Score |
 | Schreiben | `schreib-modus` | `kapitelplan.md` existiert | `chapters/**/*.tex` |
 | Gegenlesen | `gegenlesung` | Sobald alle Kapitel FERTIG — **vor** Gesamt-Stresstest und Voll-Audit | neue Runde in `AENDERUNGEN.md` |
 | Stresstest | `stresstest` | Jederzeit einzelnes Argument · Gesamt-Stresstest über die ganze Arbeit, **sobald alle Kapitel FERTIG sind — nach der Gegenlesung, vor dem Voll-Audit** (Stresstest prüft Inhalt, Prüf-Modus prüft Regeln; inhaltliche Befunde ändern den Text und würden ein vorher gefahrenes Audit entwerten) | Gegenargumente + Stärke · Gesamt: neue Runde in `AENDERUNGEN.md` |

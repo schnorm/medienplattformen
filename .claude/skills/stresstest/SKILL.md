@@ -43,6 +43,8 @@ Wenn aus `plan-modus` heraus aufgerufen: Tabelle „Kernargumente" aus `kapitelp
 
 Alle Argumente mindestens **Mittel** → zurück an `plan-modus` für den Checkpoint. Sonst: an `plan-modus` zurückmelden, welche Argumente vor dem Checkpoint nachgeschärft werden müssen.
 
+**Verifikations-Gate (Pflicht, vor der Stärke-Vergabe):** Sobald ein Argument — oder das Gegenargument, oder dessen Widerlegung — auf einer **Behauptung über die Außenwelt** ruht (Marktlage, Konkurrenzprodukte, „keine Plattform tut X", „Werkzeug Y ist der einzige …", Existenz/Nichtexistenz eines Angebots, Preise, Reichweiten), wird diese Behauptung **erst recherchiert, dann bewertet** — nicht aus Modellwissen eingeschätzt. Ohne diesen Schritt produziert der Stresstest selbstbewusst-falsche Ratings: Ein „Stark: das gibt es schon" kann sich nach einer Suche als haltlos erweisen (und umgekehrt). Die Recherche entscheidet über die Stärke; das Ergebnis mit Quelle festhalten. Reine Argumentations-/Logikeinwände (Sprung deskriptiv→normativ, unbelegte Verallgemeinerung) brauchen kein Gate.
+
 ## Gesamt-Stresstest (ganze Arbeit)
 
 Auszuführen, **sobald alle Kapitel FERTIG sind und die Gegenlesung gelaufen ist — bevor das Voll-Audit läuft**. Der `pruef-modus` prüft Regeln, der Gesamt-Stresstest prüft Argumente und Passung zur Aufgabenstellung. Inhaltliche Befunde ändern den Text — ein vorher gefahrenes Voll-Audit wäre danach hinfällig. Ein bestandenes Audit ersetzt ihn umgekehrt nie.
@@ -51,7 +53,7 @@ Auszuführen, **sobald alle Kapitel FERTIG sind und die Gegenlesung gelaufen ist
 
 1. **Laden**: `aufgabe.md` (Prüfmaßstab), alle `chapters/**/*.tex` vollständig, `pruefbericht.md` nur laden, falls vorhanden (Kontext, nicht Maßstab). `kapitelplan.md` nur bei Struktur-Zweifeln.
 2. **Prüfdimensionen** (jede explizit abarbeiten):
-   - **Argumente**: pro Kernargument das stärkste Gegenargument eines kritischen Gutachters — besonders auf Gegenbeispiele **in den eigenen Daten/Tabellen** achten (die übersieht man beim Schreiben am leichtesten).
+   - **Argumente**: pro Kernargument das stärkste Gegenargument eines kritischen Gutachters — besonders auf Gegenbeispiele **in den eigenen Daten/Tabellen** achten (die übersieht man beim Schreiben am leichtesten). Ruht ein Argument auf einer Außenwelt-Behauptung (Marktlage, Konkurrenz, Existenz eines Angebots), gilt das **Verifikations-Gate** aus dem Mehrfach-Modus: erst recherchieren, dann Stärke vergeben.
    - **Aufgabenstellung**: wörtliche Teilaufgaben und geforderte Berichtsinhalte aus `aufgabe.md` Punkt für Punkt abhaken, nicht sinngemäß — auch einzelne Begriffe („Medienformate", „Prototyp", „Bewertungen") müssen adressierbar sein. Zusätzlich je Teilaufgabe fragen: **Wurde sie ausgeführt oder ersetzt?** Bei Ersatz die Gegenfrage eines kritischen Gutachters vorwegnehmen — „Warum war der billigste reale Ersatz nicht möglich?" — und prüfen, ob der Text darauf eine Antwort gibt.
    - **Quellen-Overclaims**: trägt der zitierte Befund die daran geknüpfte Behauptung, oder wird aus einem deskriptiven Befund mehr gemacht?
    - **Kapitelübergreifende Konsistenz**: Zeitlinie (Entwurf ↔ Iteration), Zählungen im Text gegen Tabellen, Begriffs-Konsistenz inkl. Überschriften, Tabellenwertungen gegen Kriteriendefinition und Fließtext, semantische Korrektheit von Querverweisen. Zusätzlich: **Akteurs- und Rollenkonsistenz** (wer darf was, kapitelübergreifend gegengelesen — Ausschließlichkeitsformulierungen sind der Ansatzpunkt) und **selbst erhobene, unbeantwortete Einwände** (nennt die Arbeit eine Bedingung ihres eigenen Gelingens, ohne sie zu adressieren?).
@@ -65,6 +67,8 @@ Auszuführen, **sobald alle Kapitel FERTIG sind und die Gegenlesung gelaufen ist
 ## Persistenz bei Einzelaufruf
 
 Bei Einzelaufruf (außerhalb `plan-modus` Schritt 4) wird das Ergebnis nirgends automatisch gespeichert. **Empfehlung**: das Stresstest-Ergebnis manuell festhalten — entweder als Notiz in `kapitelplan.draft.md` (im `## INSIGHT-Sammlung`-Block unter einem neuen Tag wie `[stresstest:<argument-slug>]`), als Kommentar im `.tex`-Code (`% TODO: Gegenargument X entkräften`), oder im laufenden Chat. Sonst geht die Stresstest-Einschätzung beim nächsten Sessionstart verloren.
+
+**Sonderfall — Einzelaufruf zielt auf den fertigen `kapitelplan.md` (vor dem Schreiben):** Findet ein solcher Lauf umsetzungswürdige Befunde, werden die vom Nutzer bestätigten Punkte **direkt in `kapitelplan.md` eingearbeitet** (mit sichtbarer `[STRESSTEST <Datum>]`-Markierung an der betroffenen Stelle), nicht nur im Draft notiert — der Plan ist bis zum Schreibstart die mutable Wahrheit, und Schreib-Modus liest nur ihn. Das ist **kein** `AENDERUNGEN.md`-Lauf (der gilt der fertig geschriebenen Arbeit). These-/Kernargument-Änderungen bleiben Nutzerentscheidung (per `AskUserQuestion` klären).
 
 ## Wichtig
 

@@ -15,6 +15,7 @@ Kein Ersatz für Plan-/Schreib-/Prüf-Modus — nur ein kurzer Vorab-Check, dami
 4. **Shared-Referenzen**: existieren `.claude/skills/_shared/hard-rules-formal.md`, die vier Typ-Dateien `.claude/skills/_shared/typen/<typ>.md` (hausarbeit, fallstudie, seminararbeit, projektbericht) und `.claude/skills/_shared/scripts/check_bib_keys.py`? (Zentrale Einzelkopien — Skill-lokale Duplikate von Typ-/Regel-Dateien gibt es bewusst nicht mehr; falls welche unter `*/references/` oder `*/scripts/` auftauchen — z. B. ein `<typ>.md` oder ein zweites `check_formalia.py` außerhalb von `_shared/` —, sind sie veraltet und zu melden. `setup-check/references/bbt-setup.md` ist davon ausgenommen, das ist die reguläre BBT-Setup-Anleitung.)
 5. **`pages/meta.tex`**: existiert die Datei und sind die CAPS-Platzhalter (PAPIERTITEL, MODULKÜRZEL …) schon durch echte Projektangaben ersetzt? Falls nicht: Nutzer erinnern — das ist die einzige Stelle für projektspezifische Angaben (Titel, Modul, Tutor:in, Schlagworte).
 6. **Aufgabenstellung + Abgabefrist**: Liegt die Aufgabenstellung (PDF/Text) vor? Ist die Abgabefrist bekannt? → Frist in `CLAUDE.md` → „Fristen" eintragen (Zeile „Abgabe: …"). Die inhaltliche Destillation nach `aufgabe.md` übernimmt später Plan-Modus Schritt 0 — hier nur sicherstellen, dass das Material da ist.
+6b. **Prüfer-Anmerkungen**: existiert `sources/Anmerkungen vom Prüfer.md` (oder ähnlich benannt, z. B. `Anmerkungen*.md` in `sources/`)? Diese Datei kann bindende Steuerungen enthalten, die von der reinen Aufgabenstellung abweichen (z. B. Methodik-Sonderfälle, Zitierausnahmen) — Plan-Modus Schritt 0 destilliert sie verpflichtend mit. Falls nicht vorhanden: kein Fehler, nur im Statusbericht als FEHLT ausweisen, damit der Nutzer weiß, dass keine gesondert geprüft wurde.
 7. **`PERSISTENT.md`**: noch im Seed-Zustand (Kopfzeile „Stand: —")? → Nutzer erinnern: Falls es eine frühere Arbeit gibt, deren `PERSISTENT.md` hierher kopieren (den Seed überschreiben) — sonst gehen die arbeitenübergreifenden Lernpunkte verloren.
 8. **Consensus MCP**: prüfen, ob der Connector in der aktuellen Umgebung verbunden ist (Tool-Liste). Falls nicht: Hinweis, dass Plan-Modus Schritt 1 ohne Verbindung automatisch übersprungen wird, und wie er verbunden werden kann (Connectors-Einstellungen).
 9. **Ordnerstruktur**: grober Abgleich mit dem in `CLAUDE.md` hinterlegten Baum — fehlen `pages/`, `chapters/`, `images/`, `logos/`, `tables/`? Falls ja: anlegen (leere Ordner) oder Nutzer fragen, ob eine andere Struktur gewünscht ist.
@@ -30,6 +31,7 @@ Python 3 (für check_bib_keys.py): OK / FEHLT
 Shared-Referenzen (_shared inkl. typen/): OK / FEHLT (<betroffene Dateien>)
 pages/meta.tex: AUSGEFÜLLT / PLATZHALTER — <Hinweis>
 Aufgabenstellung: VORHANDEN / FEHLT · Abgabefrist: <Datum, in CLAUDE.md eingetragen> / UNBEKANNT
+Prüfer-Anmerkungen (sources/Anmerkungen*.md): VORHANDEN / FEHLT
 PERSISTENT.md: ÜBERNOMMEN / SEED — <Hinweis auf Kopie aus Vorgängerprojekt>
 Consensus MCP: VERBUNDEN / NICHT VERBUNDEN — <Hinweis>
 Ordnerstruktur: VOLLSTÄNDIG / UNVOLLSTÄNDIG (<fehlende Ordner>)
