@@ -1,0 +1,104 @@
+\subsection{Reflexion und Fazit}\label{sec:reflexion_fazit}
+
+\subsubsection{Prozess- und Ressourcenreflexion}
+
+Der UCD-Prozess erwies sich als effektiv, um die in \autoref{sec:problemstellung} beschriebenen Schwachstellen systematisch zu adressieren. Die kontinuierlichen Feedback-Schleifen mit dem CEO (\autoref{sec:methodisches_vorgehen}, \autoref{sec:ressourcen}) reduzierten das Risiko aufwändiger Rückentwicklungen, dokumentiert in \autoref{tab:ceo_feedback_historie}.
+
+Die Analyse- und Konzeptionsphase (Woche 1\textendash{}2) verlief zügig: Die Informationsarchitektur war bereits aus dem Ist-Zustand bekannt, die Wireframes ließen sich zügig erstellen und wurden in der fachlichen Validierung bestätigt. Der größere Aufwand entstand in der Gestaltungsphase (Woche 3\textendash{}4): Die Vaadin-Flow-Prototyp-Umsetzung war ressourcenintensiver als angenommen -- Komponenten, Styling und Datenbindung mussten programmiert werden, während Figma primär Layout und Struktur skizziert hatte. Der Zeitplan wurde dennoch eingehalten, alle relevanten Funktionen für die Usability-Tests wurden implementiert und die Evaluation in Woche 5 planmäßig durchgeführt.
+
+\subsubsection{UCD-Transfer}
+
+Nutzer:innen und fachliche Stakeholder wurden in zentrale Projektphasen einbezogen. Das fachliche Feedback zur Wireframe-Präsentation (\autoref{sec:wireframe_validierung}) sicherte die sachliche Passung, der Usability-Test (\autoref{sec:usability_test_evaluation}) bestätigte zentrale Verbesserungen der Oberfläche. Eine separate explorative Nutzerforschung war nicht nötig, da Produkt und Kernfunktionen bereits bekannt waren. Die Kombination aus Stakeholder-Interview (\autoref{sec:stakeholder_interview}) und Ist-Usability-Test (\autoref{sec:usability_test}) lieferte eine ausreichende Grundlage. Der Ist-Usability-Test mit Think-Aloud-Verfahren lieferte über Aufgabemetriken hinaus qualitative Einblicke in mentale Modelle und Orientierungsprobleme und diente zugleich als Bedarfsquelle für die Persona-Ableitung. Der UCD-Prozess nach ISO~9241-210 \parencite{iso_9241_210} wurde durch die wöchentlichen Meetings ergänzt, um kontinuierlichen Nutzereinfluss über die Projektlaufzeit zu gewährleisten.
+
+\begin{table}[H]
+    \centering
+    \scriptsize
+    \begin{tabular}{@{}p{1.5cm}p{3.5cm}p{4cm}p{3.5cm}@{}}
+        \toprule
+        \textbf{Woche} & \textbf{Gezeigtes Artefakt} & \textbf{CEO-Feedback (paraphrasiert)} & \textbf{Konkrete Design-Anpassung} \\
+        \midrule
+                Woche~2 & Ist-Analyse + IA-Erstentwurf & IA-Struktur: intuitiv und fachlich korrekt -- Visuelles Erscheinungsbild: veraltet & Iterationsschwerpunkt auf visuelles Design gelegt; IA-Struktur beibehalten \\
+                Woche~3 & Wireframes (3 zentrale Seiten $\times$~2 Varianten) & IA: deutlich besser als Ist-Zustand -- Sekundärnavigation und Filterung plausibel & Wireframes als fachliche Validierung übernommen; Übergang in die Mockup-Phase \\
+                Woche~4 & Erste Mockup-Version (Vaadin) & Icons: nicht konsistent mit Corporate Identity - Komponenten: zu generisch, wenig Abgrenzung -- Layout: keine klare Container-Trennung & Icons angepasst, spezialisierte Vaadin-Komponenten, Layering/Surface-Levels für Hierarchie, Container-Abgrenzung via Farbe und Schatten \\
+                Woche~5 & Finale Mockups + Usability-Test-Ergebnisse & Design: \enquote{moderner}, \enquote{besser}, \enquote{dynamischer} -- alle Testpersonen bestätigen -- 6 Detail-Anpassungen identifiziert & 6 geplante Anpassungen für nächste Iteration dokumentiert (\autoref{tab:anpassungen}) \\
+        \bottomrule
+    \end{tabular}
+    \caption[CEO-Feedback-Historie]{CEO-Feedback-Historie -- Die Spalte \glqq CEO-Feedback\grqq{} gibt die Aussagen des CEOs in paraphrasierter Form wieder. Quelle: Eigene Erhebung.}
+    \label{tab:ceo_feedback_historie}
+\end{table}
+
+\subsubsection{Qualität}
+
+Das Redesign adressiert die in \autoref{sec:problemstellung} beschriebenen Schwachstellen und erreicht die vier Projektziele in unterschiedlichem Umfang:
+
+\begin{table}[H]
+    \centering
+    \scriptsize
+    \begin{tabular}{@{}p{4.5cm}p{3.5cm}p{6.5cm}@{}}
+        \toprule
+        \textbf{Ziel} & \textbf{Status} & \textbf{Beleg} \\
+        \midrule
+        Klärung der Informationsarchitektur und Navigation & erreicht & Dreistufiges Navigationsmodell bewährt; überarbeitete Informations- und Navigationshierarchie wurde positiv bewertet (\autoref{sec:usability_test_evaluation}); Benachrichtigung wurde im Soll-Test von allen sofort erkannt \\
+        \addlinespace
+        Optimierung der direkten Zugänglichkeit häufig genutzter Aktionen & erreicht & Die Benachrichtigungsoption war direkt zugänglich und wurde von allen Testpersonen sofort erkannt; alle durchschnittlichen SEQ-Werte stiegen über den Zielwert von $> 5$ (\autoref{tab:erfolgskriterien_status}, Details in \autoref{tab:seq_uebersicht}) \\
+        \addlinespace
+        Modernisierung des visuellen Erscheinungsbilds & erreicht & Erscheinungsbild von allen Testpersonen positiv bewertet (\autoref{sec:usability_test_evaluation}); klarere Informationshierarchie; Datei-Explorer-Metaphern und Breadcrumbs gemäß Stakeholder-Interview Frage 2 aufgegriffen, Doppelklick-Affordance als Verbesserungspotenzial dokumentiert \\
+        \addlinespace
+        Optimierung für mobile Endgeräte & konzeptionell erreicht, empirische Validierung ausstehend & Mobil-Variante adressiert Pain-Point \enquote{mobile Nutzungshürden} (\autoref{sec:stakeholder_interview}) durch angepasste IA und Navigation (\autoref{subsec:varianten}); Validierung in Präsenz für Folgeiterationen geplant (\autoref{subsec:limitationen}, \autoref{subsec:iterative_weiterentwicklung}) \\
+        \bottomrule
+    \end{tabular}
+    \caption[Status der vier Projektziele]{Status der vier Projektziele mit Belegen aus der Evaluation. Quelle: Eigene Darstellung.}
+    \label{tab:ziel_status}
+\end{table}
+
+Zusätzlich wurden die folgenden zwei Querschnittsanforderungen berücksichtigt:
+
+\begin{itemize}
+  \item[Q1] \textbf{Barrierefreiheit} -- konzeptionell verankert, empirische Validierung ausstehend: Die Anforderung wurde in der Informationsarchitektur verankert (semantische Struktur, ausreichende Touch-Targets, logische Tab-Reihenfolge). Eine empirische Validierung der Barrierefreiheit -- etwa durch ein Accessibility-Audit -- war im Projektzeitraum nicht möglich und bleibt eine Aufgabe für die Folgeiterationen.
+  \item[Q2] \textbf{Operative Sicherheits-Architektur} -- erreicht: Das bestehende Audit-Log und die Zugriffstrennung (registriert/anonym) sind im Redesign als durchgängiges Architekturprinzip verankert.
+\end{itemize}
+
+Im Vergleich zur Wettbewerbsanalyse (\autoref{sec:wettbewerb}) zeigt das Redesign eine deutliche Innovationskraft -- nicht durch neue technische Features, sondern durch die ergonomische Bedienung bereits vorhandener Stärken. Die DocSecBox verfügte bereits im Ist-Zustand über vier technische Alleinstellungsmerkmale:
+
+\begin{itemize}
+    \item Datenkontrolle und Compliance-Fokus
+    \item Audit-Log pro Dokument
+    \item native QR-Code-Freigabe mit PIN-Schutz
+    \item Zwei-Klassen-Zugriffsmodell (registriert/anonym)
+\end{itemize}
+
+Diese Merkmale waren im Ist-Zustand nicht ergonomisch zugänglich. Die in der Wettbewerbsanalyse untersuchten Plattformen adressieren jeweils nur einzelne Aspekte (Nextcloud: hohe Datenkontrolle mit komplexerem Betrieb, WeTransfer und E-Mail-Anhänge: einfache Bedienung, aber eingeschränkt). Die Innovationskraft des Redesigns liegt darin, diese bestehenden Merkmale über das dreistufige Navigationsmodell ohne Bruch in der Bedienung zugänglich zu machen.
+
+\subsubsection{Limitationen und Ausblick}\label{subsec:limitationen}
+
+Die Stichprobe von sechs Testpersonen war begrenzt, die Vaadin-Flow-Prototypen auf das bestehende Backend und die für die Usability-Tests notwendigen Funktionen beschränkt. Die übrigen Funktionalitäten der Ursprungsversion bleiben Folgeaufgaben. Die Mobil-Variante wurde konzeptionell und gestalterisch finalisiert (vgl. \autoref{sec:mockups}), konnte im Projektzeitraum jedoch nicht empirisch evaluiert werden, da eine methodisch saubere Remote-Durchführung mit mobilen Endgeräten den verfügbaren Zeitrahmen überschritten hätte. Die Validierung soll mit Folgeiterationen Vor-Ort, angelehnt an die Methodik in \autoref{sec:usability_test}, nachgeholt werden.
+
+\subsubsection{Iterative Weiterentwicklung}\label{subsec:iterative_weiterentwicklung}
+
+Die folgenden Anpassungen leiten sich direkt für zukünftige Iterationen ab:
+
+\begin{table}[H]
+    \centering
+    \scriptsize
+    \begin{tabular}{@{}p{6.0cm}p{5.0cm}p{5.0cm}@{}}
+        \toprule
+        \textbf{Anpassung} & \textbf{Adressiertes Problem} & \textbf{Lösungsansatz} \\
+        \midrule
+        Visuelle Hervorhebung der Öffnen-Schaltfläche & Aktuelle Gestaltung als Affordance ungenügend wahrgenommen & Stärkere Gewichtung durch Farbe oder Rahmen \\
+        \addlinespace
+        Profilbasierte Speicherung der Sortierung & Standard-Sortierung bei jedem Besuch neu wählen; Präferenzen (Datum/Name, auf/absteigend) gingen verloren & Persistente Speicherung, sodass die Präferenzen sitzungsübergreifend erhalten bleiben \\
+        \addlinespace
+        Detail-Sektion nach Ordnerwechsel zurücksetzen & Nach Ordnerwechsel zeigt Sektion veraltete Inhalte des vorherigen Ordners & Sektion wird geleert, bis eine Datei ausgewählt wird \\
+        \addlinespace
+        Deselektion in der Ordneransicht verhindern & Deselektion führt zu inhaltsleerer Detail-Sektion und Orientierungsverlust & Verhinderung der Deselektion; Detail-Ansicht bleibt stabil \\
+        \addlinespace
+        Hover-Feedback in der Datei-Tabelle ergänzen & Zwei von sechs Testpersonen erkannten die Doppelklick-Metapher nicht, da keine visuellen Hinweise auf die aktive Zeile vorhanden waren & Hover-Effekt (z.~B. Hintergrundfarbe) zur Reduktion der kognitiven Hürde \\
+        \addlinespace
+        Rechtsklick-Kontextmenü für Dateioperationen & Erfahrene Nutzer:innen vermissten schnellen Zugriff auf Dateioperationen (Upload, Download, Freigabe, Historie) & Ergänzung als alternative Bedienung für Power-User:innen; ersetzt das Master-Detail-Pattern nicht \\
+        \bottomrule
+    \end{tabular}
+    \caption[Anpassungen für die nächste Iteration]{Aus dem Soll-Test abgeleitete Anpassungen für die nächste Iteration. Quelle: Eigene Darstellung.}
+    \label{tab:anpassungen}
+\end{table}
+
+Das Projekt hat gezeigt, dass ein nutzerzentriertes Redesign einer Bestandsanwendung mit begrenztem Zeitrahmen gelingen kann, wenn ein etablierter UCD-Prozess konsequent durchlaufen und jede Iteration als Lernschritt verstanden wird. Die identifizierten Verbesserungspotenziale (\autoref{sec:usability_test_evaluation}) sollten demnach nicht als Schwächen des aktuellen Redesigns, sondern als Ausgangspunkte für die kontinuierliche Verbesserung der Nutzererfahrung interpretiert werden.

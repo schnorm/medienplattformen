@@ -1,0 +1,121 @@
+\subsection{Usability-Test (Evaluation)}\label{sec:usability_test_evaluation}
+
+\subsubsection{Methodik und Durchführung}
+
+Die sechsköpfige Testgruppe aus dem Ist-Test (\autoref{sec:usability_test}) evaluierte einen funktionalen Vaadin-Flow-Prototyp als Soll-Oberfläche. Die quantitative Erhebung folgte dem Ist-Test-Schema mit Stoppuhr-Zeitmessung pro Task und Single Ease Question (\autoref{subsec:methodik}). Als Erfolgskriterium galt ein durchschnittlicher SEQ-Score $> 5$ pro Task (\autoref{subsec:erfolgskriterien}). Es wurden dieselben drei Aufgaben-Szenarien wie im Ist-Test verwendet (\autoref{tab:usability_tasks}).
+
+\subsubsection{Ergebnisse}
+
+Die quantitative Auswertung fasst Tabelle~\ref{tab:zeit_kombiniert_soll} zusammen. Positive Delta-Werte bedeuten eine Verschlechterung (länger als im Ist-Test), negative Werte eine Verbesserung.
+
+\begin{table}[H]
+  \centering
+  \scriptsize
+  \begin{tabular}{p{0.7cm}p{0.95cm}p{0.75cm}p{0.95cm}p{0.75cm}p{0.85cm}p{0.75cm}}
+    \toprule
+    \textbf{TP} & \textbf{T1 (s)} & \textbf{$\Delta$ T1} & \textbf{T2 (s)} & \textbf{$\Delta$ T2} & \textbf{T3 (s)} & \textbf{$\Delta$ T3} \\
+    \midrule
+    TP~1  &   92 & $+$21   &   45 & $-$30 &    4 & $-$26 \\
+    TP~2  &   85 & $+$53   &   38 & $+$10 &    8 & $-$\phantom{0}7 \\
+    TP~3  &  234 & $+$170  &   18 & $-$\phantom{0}4 &   10 & $-$\phantom{0}2 \\
+    TP~4  &   48 & $+$13   &   12 & $-$\phantom{0}8 &    4 & $-$\phantom{0}6 \\
+    TP~5  &  105 & $-$51   &   50 & $-$17 &    6 & $-$\phantom{0}1 \\
+    TP~6  &   110 & $+$\phantom{0}5 &   12 & $-$53 &    8 & $-$\phantom{0}9 \\
+    \midrule
+    \textbf{Ø} & \textbf{112} & $+$35 & \textbf{29} & $-$17 & \textbf{7} & $-$\phantom{0}8 \\
+    \bottomrule
+  \end{tabular}
+  \caption[Zeitmessungen Soll-Test pro Testperson mit Delta zum Ist]{Zeitmessungen aller Tasks im Soll-Test inkl. Delta zum Ist-Test. Quelle: Eigene Erhebung.}
+  \label{tab:zeit_kombiniert_soll}
+\end{table}
+
+Task~1 wies im Soll-Zustand mit $+45$~\% ($+35$~s) eine längere Bearbeitungszeit auf, Task~2 und Task~3 wurden deutlich schneller abgeschlossen ($-37$~\% bzw. $-53$~\%). Die hohe Varianz bei Task~1 (Spannweite $186$~s) deutet auf eine initial höhere Lernkurve hin -- TP~3 benötigte mit $234$~s mehr als doppelt so lange wie TP~4 mit $48$~s (\autoref{tab:zeit_kombiniert_soll}). Trotz der längeren Bearbeitungszeit bei Task~1 war die subjektive Bewertung deutlich höher als im Ist-Test (SEQ: 5{,}5 vs.\ 3{,}2, $+2{,}3$ Punkte; \autoref{tab:seq_uebersicht}).
+
+\paragraph{Task 1: Datei hochladen und benachrichtigen}
+
+Die Benachrichtigungsoption war direkt über die Tabs zugänglich und wurde von allen Testpersonen sofort erkannt. Der Upload-Prozess wurde als \enquote{logisch} beschrieben, die Benachrichtigung als \enquote{sofort sichtbar}. Die hohe Varianz der Bearbeitungszeiten (\autoref{tab:zeit_kombiniert_soll}) ist vermutlich auf die initiale Eingewöhnungsphase an die neue Informationsarchitektur (\autoref{sec:informationsarchitektur}) zurückzuführen. Da Task~1 trotz längerer Bearbeitungszeit subjektiv deutlich besser bewertet wurde, ist die Zeitverschlechterung nicht isoliert als grundsätzliche Schwäche zu interpretieren. Weitere Validierungen sind für die Folgeiteration geplant.
+
+\paragraph{Task 2: Dokument finden und herunterladen}
+
+Der Task wurde von allen sechs Testpersonen erfolgreich abgeschlossen. Die durchschnittliche Bearbeitungszeit sank auf ca.~29 Sekunden ($-37$~\%, \autoref{tab:zeit_kombiniert_soll}). Die Detail-Sektion innerhalb der Ordner-Datei-Tabelle wurde positiv bewertet, jedoch erkannten zwei von sechs Testpersonen die Doppelklick-Metapher nicht. Die alternative Öffnen-Schaltfläche wurde verzögert als Affordance wahrgenommen. Erfahrene Nutzer:innen vermissten außerdem das im Ist-Zustand existierende Kontextmenü. Die im Ist-Test beobachtete Sortier-Verwirrung blieb bestehen (\autoref{sec:usability_test}).
+
+\paragraph{Task 3: Öffentlicher Ordnerzugriff}
+
+Von allen Testpersonen erfolgreich und deutlich schneller abgeschlossen (\autoref{tab:zeit_kombiniert_soll}). Die Bearbeitungszeit sank auf ca.~7 Sekunden gegenüber ca.~15 Sekunden im Ist-Test \textendash{} eine Reduktion von rund $53$~\%. Die vereinfachte Ansicht ohne Anmeldehürde wurde als schnell und intuitiv empfunden.
+
+\paragraph{Subjektive Ergebnisse}
+
+Das visuelle Erscheinungsbild des Redesigns wurde von allen sechs Testpersonen positiv bewertet. Diese wurde als \enquote{moderner}, \enquote{besser} und \enquote{dynamischer} bezeichnet. Die überarbeitete Informations- und Navigationshierarchie wurde von allen als \enquote{deutlich besser als im Ist-Zustand} bewertet.
+
+\begin{table}[H]
+  \centering
+  \scriptsize
+  \begin{tabular}{p{2.8cm} p{0.45cm} c c c c c | c}
+    \toprule
+    \multicolumn{1}{c}{} & \multicolumn{6}{c|}{\textbf{Testpersonen}} & \multicolumn{1}{c}{\textbf{SEQ-Ø}} \\
+    \cmidrule(lr){2-7} \cmidrule(lr){8-8}
+    \textbf{Task} & TP1 & TP2 & TP3 & TP4 & TP5 & TP6 & Ø \\
+    \midrule
+    Task 1 (Upload + Benachrichtigung) & 6 & 6 & 4 & 6 & 5 & 6 & 5{,}5 \\
+    Task 2 (Dokument finden + Download) & 6 & 6 & 5 & 6 & 5 & 6 & 5{,}7 \\
+    Task 3 (Öffentlicher Ordnerzugriff) & 6 & 6 & 6 & 6 & 5 & 7 & 6{,}0 \\
+    \bottomrule
+  \end{tabular}
+  \caption[SEQ-Scores Soll-Test]{SEQ-Scores des Usability-Tests (Soll-Test) auf einer Skala von 1 (sehr schwierig) bis 7 (sehr einfach). Quelle: Eigene Erhebung.}
+  \label{tab:seq_soll}
+\end{table}
+
+Die SEQ-Scores stiegen über alle drei Tasks hinweg deutlich an (Ist: Ø $3,8$ → Soll: Ø $5,7$; \autoref{tab:seq_soll}). Besonders auffällig ist der Anstieg bei Task~1 um $+2,3$ Punkte -- trotz längerer Bearbeitungszeit im Soll-Zustand weist dies auf eine bessere Benutzerführung hin. Alle durchschnittlichen SEQ-Zielwerte wurden erreicht.
+
+\begin{table}[H]
+  \centering
+  \scriptsize
+  \begin{tabular}{p{5.5cm}c c c}
+    \toprule
+    \textbf{Task} & \textbf{SEQ~Ist} & \textbf{SEQ~Soll} & \textbf{Delta} \\
+    \midrule
+    Task 1 (Upload + Benachrichtigung) & 3{,}2 & 5{,}5 & +2{,}3 \\
+    Task 2 (Dokument finden + Download) & 3{,}8 & 5{,}7 & +1{,}9 \\
+    Task 3 (Öffentlicher Ordnerzugriff) & 4{,}3 & 6{,}0 & +1{,}7 \\
+    \bottomrule
+  \end{tabular}
+  \caption[SEQ-Vergleich Ist vs. Soll]{SEQ-Vergleich Ist-Test vs.~Soll-Test. Quelle: Eigene Erhebung.}
+  \label{tab:seq_uebersicht}
+\end{table}
+
+\vfill
+
+\subsubsection{Erreichung der Erfolgskriterien}\label{sec:erreichung_erfolgskriterien}
+
+Die in \autoref{subsec:erfolgskriterien} formulierten Erfolgskriterien wurden wie folgt erreicht (\autoref{tab:erfolgskriterien_status}):
+
+\begin{table}[H]
+  \centering
+  \scriptsize
+  \begin{tabular}{p{4.5cm}p{2.8cm}p{3.5cm}c}
+    \toprule
+    \textbf{Kriterium (\autoref{subsec:erfolgskriterien})} & \textbf{Ist-Zustand} & \textbf{Soll-Zustand} & \textbf{Erfüllt?} \\
+    \midrule
+    Aufgabenschwierigkeit (SEQ $> 5$) & Ø 3,8 & Ø 5,7 & Ja \\
+    Nutzerzufriedenheit & funktional, aber nicht motivierend & positiv & Ja \\
+    Aufgabenerfolg & $100\%$ & $100\%$ & Ja \\
+    Aufgabenausführungszeit & T1: 77~s, T2: 46~s, T3: 15~s & T1: +35~s, T2: {-}17~s, T3: {-}8~s & Teilweise \\
+    \bottomrule
+  \end{tabular}
+  \caption[Status der Erfolgskriterien]{Status der Erfolgskriterien. Quelle: Eigene Darstellung.}
+  \label{tab:erfolgskriterien_status}
+\end{table}
+
+Tabelle~\ref{tab:erfolgskriterien_status} fasst den Status zusammen. Drei der vier Kriterien (Aufgabenschwierigkeit, Nutzerzufriedenheit, Aufgabenerfolg) wurden vollständig erreicht. Die Aufgabenausführungszeit wurde mehrheitlich verbessert (Task 2: $-37$~\%, Task 3: $-53$~\%), wobei Task 1 zunächst länger dauerte. Damit fällt die Zeitmessung differenziert aus, während die übrigen Erfolgskriterien deutlich positiv bewertet wurden.
+
+\subsubsection{Verbesserungspotenziale}
+
+Der Soll-Test identifizierte folgende Potenziale für die nächste Iteration. Konkret geplante Anpassungen sind in \autoref{sec:reflexion_fazit} zusammengefasst.
+
+\begin{itemize}
+    \item \textbf{Selektionsverhalten.} Die Detail-Sektion wurde positiv bewertet, jedoch mit zwei Auffälligkeiten: (1) Nach Datei-Selektion in der gemeinsamen Ordner-\/\hspace{0.5pt}Datei-Tabelle wurde die Detailansicht des vorherigen Ordners angezeigt. (2) Nach Ordnernavigation blieb das vorherige Ordner-Detail bestehen, anstatt Nutzer:innen durch eine leere Detailansicht zu einer Aktion aufzufordern.
+
+    \item \textbf{Sortierung und Präferenzspeicherung.} Die im Ist-Test beobachtete Verwirrung bezüglich Sortierfelder und -\/reihenfolge blieb trotz prägnanterem Kontrast bestehen -- die Testpersonen hatten unterschiedliche Erwartungen (Datum/Name, auf-/absteigend). Als Lösung ist die persistente Speicherung im Nutzerprofil vorgesehen (vgl. \autoref{subsec:iterative_weiterentwicklung}).
+
+    \item \textbf{Interaktionsfeedback und Affordance.} Zwei von sechs Testpersonen erkannten die Doppelklick-Metapher der Datei-Tabelle nicht. Die visuelle Hervorhebung der alternativen Öffnen-Schaltfläche wurde nur verzögert als Affordance erkannt. Erfahrene Nutzer:innen vermissten trotz direkterer Bedienung innerhalb der Detail-Tabs ein Kontextmenü aus dem alten mentalen Modell.
+\end{itemize}

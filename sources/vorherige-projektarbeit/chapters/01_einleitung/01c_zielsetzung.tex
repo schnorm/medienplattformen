@@ -1,0 +1,48 @@
+\subsection{Zielsetzung und Projektanforderungen}
+
+\subsubsection{Zielsetzung}\label{subsec:zielsetzung}
+
+Das Redesign der DocSecBox verfolgt vier übergeordnete Ziele, die aus dem Stakeholder-Interview (\autoref{sec:stakeholder_interview}), der Wettbewerbsanalyse (\autoref{sec:wettbewerb}) und dem Usability-Test des Ist-Zustands (\autoref{sec:usability_test}) abgeleitet sind. Sie adressieren die in \autoref{sec:problemstellung} skizzierten Schwachfelder und bilden die Grundlage für die in \autoref{sec:evaluation} vorgesehene Evaluation.
+
+\begin{enumerate}
+    \item \textbf{Klärung der Informationsarchitektur und Navigation.} Die aktuelle Trennung zwischen globalen und kontextabhängigen Navigationselementen ist für Nutzer:innen nicht nachvollziehbar. Ziel ist ein klar strukturiertes Navigationsmodell, das die Orientierung verbessert und den aktuellen Ansichtskontext eindeutig macht.
+    \item \textbf{Optimierung der direkten Zugänglichkeit häufig genutzter Aktionen.} Häufige Aktionen wie das Freigeben von Dateien und Ordnern sollen durch direkte Sichtbarkeit effizienter zugänglich sein, um den \enquote{Gulf of Execution} zwischen Nutzungsabsicht und Bedienhandlung zu überbrücken \parencite[Kap.~2.1]{normanDesignEverydayThings2013}.
+    \item \textbf{Modernisierung des visuellen Erscheinungsbilds.} Ein professionelles, aktuelles Erscheinungsbild wird angestrebt. Die visuelle Gestaltung soll die Lesbarkeit und Auffindbarkeit von Inhalten verbessern.
+    \item \textbf{Optimierung für mobile Endgeräte.} Die Mobil-Variante soll funktionale Parität zur Desktop-Variante bieten und auf spezifische Interaktionsmuster mobiler Endgeräte optimiert sein.
+\end{enumerate}
+
+Zusätzlich zu diesen vier Zielen gelten zwei Querschnittsanforderungen, die in der Priorisierungsmatrix des Stakeholder-Interviews (\autoref{sec:stakeholder_interview}) als Höchstpriorität eingestuft wurden:
+
+\begin{itemize}
+    \item[Q1] \textit{Barrierefreiheit}
+    \item[Q2] \textit{Operative Sicherheits-Architektur} mit Audit-Log und Zugriffstrennung
+\end{itemize}
+
+Regulatorische Anforderungen wie \textit{CRA-} und \textit{EU-Regulierung} für digitale Dienste sind nicht Bestandteil dieses Redesigns, sondern als Folgeaufgaben in \autoref{sec:reflexion_fazit} verankert.
+
+\subsubsection{Erfolgskriterien}\label{subsec:erfolgskriterien}
+
+Der Erfolg des Redesigns wird anhand der in \autoref{tab:erfolgskriterien} aufgeführten Kriterien gemessen:
+
+\begin{table}[ht!]
+    \centering
+    \scriptsize
+    \begin{tabular}{S{p{3.0cm}}S{p{7.5cm}}}
+        \toprule
+        \textbf{Kriterium} & \textbf{Zielwert} \\
+        \midrule
+        Aufgabenschwierigkeit & Durchschnittlicher SEQ-Score $> 5$ pro Task auf einer 7er-Skala \\
+        Nutzerzufriedenheit & Subjektive Bewertung besser als Ist-Zustand \\
+        Aufgabenerfolg & Mindestens gleich hohe Erfolgsrate wie im Usability-Test des Ist-Zustands \\
+        Aufgabenausführungszeit & Kürzer als im Ist-Zustand \\
+        \bottomrule
+    \end{tabular}
+    \caption[Erfolgskriterien]{Erfolgskriterien für das Redesign. Quelle: Eigene Darstellung.}
+    \label{tab:erfolgskriterien}
+\end{table}
+
+Als Messinstrument wurde die Single Ease Question (SEQ) als etabliertes kompaktes post-task-Instrument gewählt \parencite[Kap.~8]{sauroLewisQuantifying2016}.
+
+Ein Zielwert von $> 5$ auf der 7er-Skala liegt über dem Skalenmittelpunkt und orientiert sich an den im Ist-Test beobachteten niedrigeren SEQ-Werten  (\autoref{sec:usability_test}). Die Zielwerte berücksichtigen den begrenzten Projektzeitraum und wurden im Rahmen der wöchentlichen Meetings definiert.
+
+Die aus den Zielen und Erfolgskriterien abgeleiteten funktionalen und nicht-funktionalen Anforderungen sind in \autoref{sec:anforderungssynthese} zusammengefasst und priorisiert.

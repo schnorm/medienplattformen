@@ -1,0 +1,65 @@
+\subsection{Variantenkonzept}\label{subsec:varianten}
+
+Aus den in \autoref{sec:personas} beschriebenen Personas und den daraus abgeleiteten Nutzungskontexten wurden zwei konzeptionell unterschiedliche Varianten abgeleitet. Sie unterscheiden sich nicht nur in der Bildschirmgröße, sondern auch in Navigationsmodell, Informationsarchitektur und Interaktionslogik.
+
+\begin{table}[H]
+    \centering
+    \scriptsize
+    \begin{tabular}{@{}p{2.7cm}p{7.0cm}p{6.0cm}@{}}
+        \toprule
+        \textbf{Attribut} & \textbf{Variante 1 -- Desktop-Variante} & \textbf{Variante 2 -- Mobil-Variante} \\
+        \midrule
+        Zielgruppe & Registrierte Stammnutzer:innen, z.~B. Dr.~med.~Weber als Mehrheitsnutzungskontext & Anonyme Empfänger:innen, z.~B. Markus Fischer; zusätzlich registrierte mobile Nutzer:innen im Multi-Device-Setting \\
+        \addlinespace
+        Geräte & Desktop-PC, iPad im Querformat & Tablet im Hochformat, Smartphones \\
+        \addlinespace
+        Primärnavigation & Dauerhaft sichtbare \emph{Drawer}-Navigation & \textit{Off canvas}-Navigation mit Hamburger-Menü \parencite[Kap.~15.1.10]{erlhoferWebsiteKonzeptionUndRelaunch2017} \\
+        \addlinespace
+        Layout & \emph{Vier-Spalten-Layout} mit Drawer, SideNav, Master und Detail & \emph{Ein-spaltiges Layout} mit Overlay-Strategie für Detail-Informationen \\
+        \addlinespace
+        Sekundärnavigation & Vertikale Sekundärnavigation, dauerhaft sichtbar & Angepasste horizontale Filterleiste, kontextuell eingebunden \\
+        \addlinespace
+        Touch-Targets & Standardgröße für Maus- und Tastaturbedienung & Optimiert für Finger-Bedienung \\
+        \bottomrule
+    \end{tabular}
+    \caption[Varianten-Vergleich Desktop vs.\ Mobil]{Konzeptionelle Unterschiede der Desktop- und Mobil-Variante. Quelle: Eigene Darstellung.}
+    \label{tab:varianten_vergleich}
+\end{table}
+
+Beide Varianten basieren auf demselben UI-Framework und derselben Backend-Schnittstelle. Die Umschaltung erfolgt über Breakpoints, sodass Geräte wie Tablets je nach Viewport und Ausrichtung die jeweils passende Variante nutzen können. Die Breakpoint-Steuerung dient dabei nicht nur der technischen Skalierung, sondern der Übergabe zwischen zwei eigenständig konzipierten Nutzungserlebnissen.
+
+Die konzeptionellen Unterschiede -- insbesondere Navigationsmuster, Layout-Strategien und Touch-Targets -- werden in \autoref{sec:skizzen_wireframes} visuell konkretisiert. Die finalen Mockups beider Varianten sind in \autoref{sec:mockups} dokumentiert.
+
+\paragraph{Prototyping- und Fidelity-Strategie}
+Zur Ausarbeitung beider Varianten wurde die Designlösung schrittweise von niedriger zu hoher Fidelität konkretisiert. Ziel war es, zunächst Struktur- und Navigationsentscheidungen unabhängig von visuellen Details zu prüfen und anschließend in eine realitätsnahe, klickbare Umsetzung zu überführen. \autoref{fig:fidelitaetshierarchie} zeigt die eingesetzten Stufen von manuellen Skizzen bis zur lauffähigen Webanwendung.
+
+\begin{figure}[ht!]
+    \centering
+    \begin{tikzpicture}[
+        node distance=0.8cm,
+        box/.style={
+            rectangle,
+            draw,
+            rounded corners,
+            fill=blue!10,
+            minimum width=3.5cm,
+            minimum height=1.5cm,
+            align=center,
+            font=\small
+        },
+        arrow/.style={->, >=latex, thick}
+    ]
+        \node[box] (a) {Manuelle Skizzen\\\small iPad\\(Low-Fidelity)};
+        \node[box] (b) [right=of a] {Digitale Wireframes\\\small Figma\\(Mid-Fidelity)};
+        \node[box] (c) [right=of b] {Implementierung\\\small Vaadin Flow\\(High-Fidelity)};
+        \node[box] (d) [right=of c] {Lauffähige\\\small Webanwendung};
+
+        \draw[arrow] (a) -- (b);
+        \draw[arrow] (b) -- (c);
+        \draw[arrow] (c) -- (d);
+    \end{tikzpicture}
+    \caption[Fidelity-Hierarchie]{Fidelity-Hierarchie im Redesign-Prozess. Quelle: Eigene Darstellung.}
+    \label{fig:fidelitaetshierarchie}
+\end{figure}
+
+Die Low- und Mid-Fidelity-Stufen werden in \autoref{sec:skizzen_wireframes} dokumentiert. Die High-Fidelity-Umsetzung erfolgte direkt in Vaadin Flow und bildet die Grundlage der in \autoref{sec:mockups} gezeigten Mockups sowie des in \autoref{sec:usability_test_evaluation} evaluierten Prototyps.

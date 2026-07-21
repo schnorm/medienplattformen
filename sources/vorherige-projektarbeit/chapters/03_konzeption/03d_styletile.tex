@@ -1,0 +1,43 @@
+\subsection{StyleTile}\label{sec:styletile}
+
+Für die visuelle Gestaltung der Mockups (\autoref{sec:mockups}) wurde das Aura-Theme von Vaadin als gestalterische UI-Ressource gewählt. Die zentralen Design-Tokens sind in \autoref{tab:styletile_tokens} zusammengefasst. \autoref{fig:styletile} und \autoref{fig:styletile_light} zeigen sie visuell.
+
+\begin{table}[H]
+    \centering
+    \scriptsize
+    \begin{tabular}{@{}p{2.8cm}p{4.4cm}p{8.9cm}@{}}
+        \toprule
+        \textbf{Token} & \textbf{Wert} & \textbf{Einsatz / Anmerkung} \\
+        \midrule
+        Designsystem & Vaadin Aura & Grundlage für Komponenten, Farben, Abstände und Light-/Dark-Mode \\
+        \addlinespace
+        Theme-Modus & System-Präferenz (Auto) & Standardmäßig automatische Übernahme der Betriebssystem-Einstellung; manuell über Theme-Schaltfläche änderbar und in Benutzerpräferenzen persistiert \\
+        \addlinespace
+        Akzentfarbe & Pink/Salmon (Logo-Extrakt) & Call-To-Action Elemente sowie Texte (bspw. aktive Navigation); Kontrast gegen Aura-Hintergründe geprüft \\
+        \addlinespace
+        Statusfarben & Rot, Orange, Grün, Blau & Semantische Aura-Standardfarben unverändert übernommen \\
+        \addlinespace
+        Icon-Set & Lucide Icons & Einheitliches Icon-Set für die gesamte Oberfläche \\
+        \addlinespace
+        Schriftart & Instrument Sans & Standardschrift des Redesigns \\
+        \addlinespace
+        Surface-Level-System & Aura-Hierarchie (Level~0 als Basis) & Abgestufte Hintergrundebenen; Container, Dialoge und Navigationsbereiche auf erhöhten Levels -- insbesondere im Datei-Explorer zur Trennung von Master und Detail \\
+        \bottomrule
+    \end{tabular}
+    \caption[Design-Tokens des Redesigns]{Design-Tokens des Redesigns (Aura-Theme). Quelle: Eigene Darstellung.}
+    \label{tab:styletile_tokens}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.00\textwidth]{images/3.4_StyleTile/StyleTile.png}
+    \caption[StyleTile \textendash{} DocSecBox Design System]{StyleTile \textendash{} DocSecBox Design System. Quelle: Eigene Darstellung.}
+    \label{fig:styletile}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.00\textwidth]{images/3.4_StyleTile/StyleTile_Light.png}
+    \caption[StyleTile \textendash{} DocSecBox Design System (Light Mode)]{StyleTile \textendash{} DocSecBox Design System (Light Mode). Quelle: Eigene Darstellung.}
+    \label{fig:styletile_light}
+\end{figure}

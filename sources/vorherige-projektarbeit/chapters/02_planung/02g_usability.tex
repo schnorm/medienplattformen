@@ -1,0 +1,124 @@
+\subsection{Usability-Test (Ist-Analyse)}\label{sec:usability_test}
+
+\subsubsection{Methodik und Durchführung}\label{subsec:methodik}
+
+Der Usability-Test der bestehenden Oberfläche wurde als Baseline für den späteren Vorher-Nachher-Vergleich durchgeführt. Pro Testphase kamen sechs Personen mit unterschiedlichem Erfahrungsstand zum Einsatz. Eine konsistente Testgruppe ermöglichte den Vergleich zwischen Ist-Zustand und Redesign. Die Testaufgaben deckten die in \autoref{sec:personas} beschriebenen Nutzungsszenarien ab.
+
+Ein Usability-Test nach dem Think-Aloud-Verfahren wurde zur Analyse der bestehenden DocSecBox-Oberfläche durchgeführt. Das Verfahren eignet sich, um Einblicke in mentale Modelle und kognitive Ursachen für Schwierigkeiten zu erhalten \parencite[Kap.~6.8]{nielsenUsabilityEngineering1993}. Im Projekt ergänzte es die quantitativen Zeit- und Erfolgsraten-Metriken um qualitative Beobachtungen.
+
+Die Tests wurden remote über Microsoft Teams durchgeführt. Als quantitative Metriken wurden pro Task die Erfolgsrate, die Bearbeitungszeit per Stoppuhr und die Single Ease Question (SEQ) erfasst. Die SEQ-Bewertung erfolgte auf einer Skala von eins (sehr schwierig) bis sieben (sehr einfach) \parencite[Kap.~8]{sauroLewisQuantifying2016}. Jede Session folgte einem strukturierten Schema: Einleitung, freie Phase zur Erkundung, drei Tasks mit Stoppuhr, SEQ-Erhebung und Abschlussgespräch.
+
+Die Entscheidung für sechs Testpersonen orientierte sich an der Empfehlung von \textcite[Kap.~17.2.2]{erlhoferWebsiteKonzeptionUndRelaunch2017}, wonach bereits wenige Proband:innen ausreichen können, um wiederkehrende und gravierende Usability-Probleme einer Oberfläche sichtbar zu machen.
+
+\begin{table}[H]
+    \centering
+    \scriptsize
+    \begin{tabular}{p{0.8cm}p{1.2cm}p{1.8cm}p{3.5cm}p{2.0cm}p{3.5cm}}
+        \toprule
+        \textbf{TP} & \textbf{Alter} & \textbf{Geschlecht} & \textbf{Beruf/Hintergrund} & \textbf{Tech-Affinität} & \textbf{Endgerät} \\
+        \midrule
+        TP1 & $\sim$45 & weiblich & Ärztin (Allgemeinmedizin) & mittel & Tablet sowie Desktop-PC \\
+        TP2 & $\sim$38 & männlich & Sachbearbeiter & mittel & Desktop-PC \\
+        TP3 & $\sim$52 & weiblich & Steuerberaterin & hoch & Desktop-PC \\
+        TP4 & $\sim$29 & männlich & IT-Projektleitung & hoch & Desktop-PC \\
+        TP5 & $\sim$41 & weiblich & med. Fachangestellte (MFA) & gering & Tablet \\
+        TP6 & $\sim$34 & männlich & Geschäftsführung & mittel & Desktop-PC \\
+        \bottomrule
+    \end{tabular}
+    \caption[Teilnehmende Ist-Test]{Zusammensetzung der Testpersonen (anonymisiert; TP1--TP6). Quelle: Eigene Erhebung.}
+    \label{tab:teilnehmende_ist}
+\end{table}
+
+Die drei Aufgaben-Szenarien entsprachen den in \autoref{tab:usability_tasks} beschriebenen Tasks.
+
+\begin{table}[H]
+    \centering
+    \scriptsize
+    \begin{tabular}{p{0.4cm}p{2.3cm}p{3.4cm}p{4.8cm}p{4.0cm}}
+        \toprule
+        \textbf{Task} & \textbf{Persona} & \textbf{Zielgruppe} & \textbf{Szenario} & \textbf{Erfolgskriterien} \\
+        \midrule
+        1 & Dr.~Weber & registriert, Provider und Empfänger & Ein Kollege hat Ihnen einen neuen Befund zugeschickt. Laden Sie diesen dem zuständigen Chirurgen hoch und benachrichtigen Sie diesen über die DocSecBox. & Ordner finden, Datei hochladen, Benachrichtigung senden \\
+        2 & Julia Hartmann & registriert, Empfänger & Sie möchten ein Dokument vom Labor Mustermann finden, das Ihnen gerade eben hochgeladen wurde, und es herunterladen. & Dokument finden, herunterladen \\
+        3 & Markus Fischer & anonym, Empfänger & Sie haben eine E-Mail mit einem Freigabe-Link der Geschäftsleitung erhalten. Orientieren Sie sich in der Ordnerstruktur und laden Sie die Unternehmensinfo für diesen Monat herunter. & Freigabe-Link öffnen, navigieren, Datei herunterladen \\
+        \bottomrule
+    \end{tabular}
+    \caption[Aufgaben-Szenarien Ist-Test]{Aufgaben-Szenarien des Usability-Tests (Ist-Test). Quelle: Eigene Darstellung.}
+    \label{tab:usability_tasks}
+\end{table}
+
+\subsubsection{Ergebnisse}
+
+Alle sechs Testpersonen schlossen alle drei Aufgaben erfolgreich ab (100~\% Erfolgsrate). \autoref{tab:zeit_uebersicht_ist} fasst die quantitativen Messungen zusammen.
+
+\begin{table}[H]
+    \centering
+    \scriptsize
+    \begin{tabular}{p{2.8cm} p{0.45cm} c c c c c | c}
+        \toprule
+        \multicolumn{1}{c}{} & \multicolumn{6}{c|}{\textbf{Testpersonen (s)}} & \multicolumn{1}{c}{\textbf{Ø (s)}} \\
+        \cmidrule(lr){2-7} \cmidrule(lr){8-8}
+        \textbf{Task} & TP1 & TP2 & TP3 & TP4 & TP5 & TP6 & Ø \\
+        \midrule
+        Task 1 (Upload + Benachrichtigung) & 71 & 32 & 64 & 35 & 156 & 105 & 77 \\
+        Task 2 (Dokument finden + Download) & 75 & 28 & 22 & 20 & 67 & 65 & 46 \\
+        Task 3 (Öffentlicher Ordnerzugriff) & 30 & 15 & 12 & 10 & 7 & 17 & 15 \\
+        \bottomrule
+    \end{tabular}
+    \caption[Zusammenfassung Zeitmessungen (Ist-Test)]{Zeitmessungen aller Tasks (Ist-Test). Quelle: Eigene Erhebung.}
+    \label{tab:zeit_uebersicht_ist}
+\end{table}
+
+\paragraph{Task 1: Datei hochladen und benachrichtigen}
+
+Fünf von sechs Testpersonen erkannten den Upload-Prozess sofort am Express-Upload-Button. Die Benachrichtigungsoption wurde verzögert gefunden, da sie hinter einer Schaltfläche versteckt war. Zwei Testpersonen suchten die Funktion über das Kontextmenü einer Datei, was zeigte, dass die visuelle Hierarchie der Aktionsschaltflächen nicht eindeutig war (\autoref{fig:verschachtelte_aktionen}). Die Bearbeitungszeiten wiesen eine hohe Streuung auf. TP~5 benötigte mit 156~s (2:36~min) mehr als doppelt so lange wie das schnellste Ergebnis von TP~2 mit 32~s (0:32~min).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/2.7_Usability-Test-Ist/Ist-Zustand-Verschachtelte-Dateiaktionen.png}
+    \caption[Ist-Oberfläche: Versteckte Benachrichtigung]{Ist-Oberfläche: Versteckte Benachrichtigungsfunktion im More-Button~(2) und alternatives Kontextmenü~(1). Quelle: Eigene Darstellung.}
+    \label{fig:verschachtelte_aktionen}
+\end{figure}
+
+\paragraph{Task 2: Dokument finden und herunterladen}
+
+Die Bearbeitungszeiten wiesen eine deutliche Streuung auf (\autoref{tab:zeit_uebersicht_ist}). Das Standardsortierverhalten erwies sich als problematisch: Eine Testperson lud die zuletzt in der Liste angezeigte Datei herunter, da sie annahm, dass es sich dabei um die neueste Datei handele. Tatsächlich handelte es sich jedoch nicht um die neueste Datei, sondern um eine ältere. Die neueste Datei stand zu diesem Zeitpunkt an erster Stelle. Es zeigten sich Diskrepanzen zwischen dem erwarteten Feld der Sortierung (Datum gegen Name) sowie der Reihenfolge (aufsteigend gegen absteigend). Die Testpersonen waren unsicher, welche Datei die richtige war, und mussten die Dateiinhalte prüfen, um die korrekte Datei zu identifizieren.
+
+\paragraph{Task 3: Öffentlicher Ordnerzugriff}
+
+Die Aufgabe erforderte weniger Interaktionsschritte, Bearbeitungszeiten waren dadurch kürzer als bei vorherigen Tasks (\autoref{tab:zeit_uebersicht_ist}), dennoch wurden Unsicherheiten sichtbar: Die Dateiliste war in diesem Ordner nicht nach Datum sortiert, was bei einer Testperson dazu führte, dass die gesuchte Datei nicht sofort zugeordnet werden konnte.
+
+\vfill
+
+\paragraph{Subjektive Ergebnisse}\null\hfill
+
+\begin{table}[H]
+    \centering
+    \scriptsize
+    \begin{tabular}{p{6.0cm} p{0.45cm} c c c c c | c}
+        \toprule
+        \multicolumn{1}{c}{} & \multicolumn{6}{c|}{\textbf{Testpersonen}} & \multicolumn{1}{c}{\textbf{SEQ-Ø}} \\
+        \cmidrule(lr){2-7} \cmidrule(lr){8-8}
+        \textbf{Task} & TP1 & TP2 & TP3 & TP4 & TP5 & TP6 & Ø \\
+        \midrule
+        Task 1 (Upload + Benachrichtigung) & 3 & 3 & 4 & 3 & 2 & 4 & 3{,}2 \\
+        Task 2 (Dokument finden + Download) & 4 & 5 & 5 & 4 & 2 & 3 & 3{,}8 \\
+        Task 3 (Öffentlicher Ordnerzugriff) & 5 & 4 & 5 & 5 & 3 & 4 & 4{,}3 \\
+        \bottomrule
+    \end{tabular}
+    \caption[SEQ-Scores Ist-Test]{SEQ-Scores des Usability-Tests (Ist-Test) auf einer Skala von 1 (sehr schwierig) bis 7 (sehr einfach). Quelle: Eigene Erhebung.}
+    \label{tab:seq_ist}
+\end{table}
+
+Die SEQ-Scores bestätigten die qualitativen Beobachtungen und lagen durchgängig unter dem in \autoref{subsec:zielsetzung} festgelegten Zielwert von~5 auf der siebenstufigen SEQ-Skala. Der niedrigste Mittelwert wurde bei Task~1 erreicht (Ø=3{,}2), was auf die komplexe Aufgabenstellung und die versteckte Benachrichtigungsfunktion zurückzuführen war. Die Einzelwerte lagen zwischen 2 und 4, wobei eine Testperson 2, drei Testpersonen 3 und zwei Testpersonen 4 bewerteten. Task~2 erreichte einen Mittelwert von~3{,}8 -- mit vier Bewertungen im Bereich 4 bis 5 und zwei niedrigeren Bewertungen (2 und 3). Task~3 erreichte mit~4{,}3 den höchsten Ist-Wert, bei einer Streuung von 3 bis 5.
+
+Das Erscheinungsbild wurde von den Testpersonen als funktional, aber nicht motivierend beschrieben.
+
+\subsubsection{Schlussfolgerungen für das Redesign}
+
+Die Ergebnisse des Usability-Tests bildeten die empirische Grundlage für die Design-Entscheidungen im Redesign. Jede der folgenden Anpassungen wurde direkt aus den Testbeobachtungen abgeleitet:
+\begin{itemize}
+    \item \textbf{Benachrichtigungsoption hinter Schaltfläche versteckt} $\to$ Häufig genutzte Aktionen wie Benachrichtigen müssen besser zugänglich gemacht werden.
+    \item \textbf{Sekundärnavigation unbeachtet} $\to$ Neubenennung und Strukturierung der Sekundärnavigation zur sofort erkennbaren Verfügbarkeit.
+    \item \textbf{Angewandte Sortierung unerkenntlich} $\to$ Sortierfeld und -reihenfolge in der Tabelle müssen klarer erkennbar gemacht werden.
+\end{itemize}

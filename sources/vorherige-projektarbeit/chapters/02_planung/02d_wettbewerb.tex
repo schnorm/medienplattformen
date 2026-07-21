@@ -1,0 +1,25 @@
+\subsection{Wettbewerbsanalyse}\label{sec:wettbewerb}
+
+Zur Einordnung der DocSecBox im Markt und zur Herleitung von Designentscheidungen wurden vier externe Vergleichslösungen analysiert und der DocSecBox als Referenz gegenübergestellt. Die Auswahl und Kategorisierung folgte der Nähe zur DocSecBox-Funktionalität: drei \emph{primäre} Wettbewerber (WeTransfer, Nextcloud und OneDrive/SharePoint), die als eigenständige Produkte ähnliche Anwendungsfälle adressieren, sowie \emph{sekundär} der etablierte E-Mail-Anhang als verbreitete Praxis ohne dediziertes Produkt. Die Bewertung der Plattformen in der folgenden Tabelle basiert auf einer eigenen heuristischen Inspektion der öffentlich zugänglichen Oberflächen und Produktkommunikation.
+
+\begin{table}[H]
+    \centering
+    \scriptsize
+    \begin{tabular}{S{p{3.5cm}}S{p{3.5cm}}S{p{4.0cm}}S{p{4.0cm}}}
+        \toprule
+        \textbf{Wettbewerber} & \textbf{Wertversprechen} & \textbf{Stärke} & \textbf{Schwachstellen} \\
+        \midrule
+        WeTransfer & Niedrigschwelliger Datei-Transfer über Link & Empfänger:innen benötigen keinen Account; schneller Linktransfer; einfache Bedienung & Nicht als dauerhafte Dokumentenablage ausgelegt; zeitlich begrenzte Transfers je nach Plan; Kollaboration und dokumentbezogene Nachvollziehbarkeit nur eingeschränkt \\
+        Nextcloud & Selbsthostbare Open-Source-Kollaborationsplattform & Umfangreiche Funktionen mit hoher Datenkontrolle bei Selbsthosting bzw. On-Premise-Betrieb & Hoher Administrations- und Wartungsaufwand bei Selbstbetrieb; in der eigenen Inspektion komplexeres Teilen- und App-Ökosystem \\
+        OneDrive/SharePoint & Cloud-Speicher und Kollaboration im Microsoft-365-Ökosystem & Enge Office-Integration, Linkfreigaben statt großer Anhänge und kollaborative Bearbeitung & Datenhoheits- und Souveränitätsfragen \\
+        E-Mail-Anhänge & Dateien direkt im E-Mail-Kontext & Vertrautes Paradigma, geringe Einstiegshürde & Providerabhängige Größenlimits; kein dokumentbezogener Zugriffsschutz nach Versand; keine zentrale Widerrufbarkeit, Ablaufsteuerung oder dokumentbezogene Auditierbarkeit \\
+        DocSecBox & Gewerbliche Datei-Freigabe und Aufbewahrung mit Compliance-Fokus & Rechtevergabe, detaillierte Protokollierung, Nachweise pro Dokument, On-Premise-/SaaS-Option und QR-Code-Zugriff mit PIN-Schutz & Überladene und unklare Navigation; eingeschränkte Mobil-Tauglichkeit \\
+        \bottomrule
+    \end{tabular}
+    \caption[Vergleich Wettbewerber]{Vergleich der DocSecBox mit ähnlichen Lösungen. Quelle: Eigene Darstellung.}
+    \label{tab:wettbewerb}
+\end{table}
+
+Die Analyse zeigt drei wesentliche Erkenntnisse für das Redesign. \emph{Erstens} setzen Vergleichslösungen wie Nextcloud und OneDrive/SharePoint kontextnahe Dateiaktionen und Linkfreigaben sichtbarer um als die bestehende DocSecBox; zudem zeigt sich bei der Darstellung von Ordnern und Dateien, dass eine gemeinsame Tabelle den Überblick erleichtern kann. \emph{Zweitens} sind die Stärken der DocSecBox beizubehalten, insbesondere Rechtevergabe, detaillierte Protokollierung, Nachweise pro Dokument sowie der QR-Code-basierte Zugriff mit PIN-Schutz. \emph{Drittens} ist die responsive Optimierung zu verbessern: In der eigenen Inspektion wirkten die Vergleichslösungen auf mobilen Endgeräten zugänglicher als das aktuelle DocSecBox-Erlebnis (\autoref{sec:problemstellung} und~\autoref{sec:konzeption}).
+
+Aus den Schwachstellen der sekundären Vergleichsbasis ergibt sich ein weiterer Hinweis: E-Mail-Anhänge sind trotz ihrer Vertrautheit für die in \autoref{subsec:zielgruppenanalyse} beschriebenen Anwendungsfälle nur eingeschränkt geeignet. Dateien können nach dem Versand als Kopien in Postfächern, Backups und Weiterleitungen verbleiben; ein zentraler Widerruf einzelner Anhänge ist im Standard-E-Mail-Modell nicht durchsetzbar. Zudem bieten klassische Anhänge ohne zusätzliche Schutzmechanismen weder dokumentbezogene Audit-Trails noch eine Ablaufsteuerung oder durchgängige Ende-zu-Ende-Absicherung über alle Übertragungswege hinweg. Die in der DocSecBox umgesetzte Trennung zwischen registrierten und anonymen Zugriffen adressiert diese Schwachstellen, indem sie versendeten Dokumenten explizite Zugriffsregeln, Widerrufbarkeit und eine nachvollziehbare Historie mitgibt.

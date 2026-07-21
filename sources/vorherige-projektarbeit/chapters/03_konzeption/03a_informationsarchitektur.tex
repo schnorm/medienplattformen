@@ -1,0 +1,40 @@
+\subsection{Informationsarchitektur (Redesign)}\label{sec:informationsarchitektur}
+
+\subsubsection{Makro-Informationsarchitektur}\label{sub:makro_ia_soll}
+
+Die DocSecBox unterscheidet zwischen registrierten Nutzer:innen und anonymen Zugriffsberechtigten, die ausschließlich über Freigabe-Links auf Inhalte zugreifen.
+
+Registrierte Benutzer:innen werden nach dem Login auf die Startseite als Landingpage geleitet. Von dort sind Datei-Explorer, Freigaben, Benachrichtigungen und Einstellungen erreichbar. Anonyme Nutzer:innen greifen direkt über Freigabe-Links auf Inhalte zu.
+
+Die Hierarchie ergibt sich aus den in \autoref{sec:ia_bestandsaufnahme} beschriebenen Schwachstellen: Die drei Hauptbereiche des Ist-Zustands werden auf fünf eigenständige Hauptseiten entzerrt -- Startseite, Datei-Explorer, Freigaben, Benachrichtigungen und Einstellungen. Freigaben und Benachrichtigungen, die im Ist-Zustand hinter Schaltflächen oder Kontextmenüs versteckt waren, erhalten im Redesign eigene Hauptseiten. Anonyme Nutzer:innen erreichen Inhalte über zwei Entrypoints: externe Ordnerfreigaben mit Dateiauswahl und Detailinformationen sowie den direkten Zugriff auf einzelne freigegebene Dateien ohne Authentifizierung.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{images/3.1_Informationsarchitektur/Makro-IA-Soll-Zustand}
+\caption[Makro-IA Soll-Zustand]{Makro-Informationsarchitektur der DocSecBox im Soll-Zustand. Quelle: Eigene Darstellung.}
+\label{fig:makro_ia_soll}
+\end{figure}
+
+\subsubsection{Navigationskonzept}\label{sub:navigationskonzept}
+
+Die Navigation der DocSecBox basiert auf einem dreistufigen Konzept, das Primär-, Sekundär- und Content-Navigation unterscheidet.
+
+Die primäre Navigation wird auf Desktop-Geräten dauerhaft sichtbar angezeigt und auf mobilen Geräten als einklappbares Menü bereitgestellt. Die visuelle Umsetzung wird in \autoref{sec:skizzen_wireframes} skizziert und in \autoref{sec:mockups} finalisiert. Sie enthält die in \autoref{sub:makro_ia_soll} definierten Hauptseiten. Anonyme Benutzer:innen benötigen keine primäre Navigation, da ihr Zugriff ausschließlich über Freigabe-Links erfolgt.
+
+Die sekundäre Navigation dient der Feinsteuerung innerhalb der Hauptseiten: Auf Desktop-Geräten als seitlicher Bereich, auf mobilen Geräten als horizontale Filterleiste (Details in \autoref{sub:mikro_ia}).
+
+Innerhalb des Datei-Explorers erfolgt die Navigation durch die Ordnerstruktur primär über eine kombinierte Ordner- und Dateitabelle. Die Detail-Sektion folgt einem Master-Detail-Prinzip und ist an das von Tidwell beschriebene Pattern \enquote{Overview Plus Detail} angelehnt \parencite[Kap.~\enquote{Overview Plus Detail}]{tidwellDesigningInterfaces2011}: Bei Auswahl eines Ordners oder einer Datei wird die zugehörige Detail-Sektion aktualisiert.
+
+Ergänzend ermöglichen Breadcrumbs den Rücksprung zu übergeordneten Ordnern \parencite[Kap.~15.1.4]{erlhoferWebsiteKonzeptionUndRelaunch2017}.
+
+Freigaben und Benachrichtigungen sind doppelt verfügbar: als eigenständige Hauptseiten in der primären Navigation (übergreifende Übersicht) und als Detail-Tabs innerhalb der Detail-Sektion im Datei-Explorer.
+
+\subsubsection{Mikro-Informationsarchitektur}\label{sub:mikro_ia}
+
+Die Mikro-Informationsarchitektur folgt dem Navigationsmodell mit Sekundärnavigation (Filter und Suche) sowie Content-Navigation in Form von kontextbezogenen Detail-Tabs. Im Datei-Explorer bietet die Sekundärnavigation Filteroptionen -- \enquote{Alle}, \enquote{Ungelesene}, \enquote{Favoriten} und \enquote{Notfälle}. Die Content-Navigation in Form von Detail-Tabs ändert sich je nach Auswahl zwischen Ordner und Datei.
+
+Die Tab-Navigation innerhalb der Detail-Sektion ersetzt die im Ist-Zustand hinter Schaltflächen versteckten Funktionen und macht diese direkt sichtbar -- ein zentrales Ergebnis der in \autoref{sec:usability_test} dokumentierten Discoverability-Probleme.
+
+Die Einstellungen-Seite gliedert sich in zwei logische Gruppen: \textit{Übersicht} (Benutzer, Gruppen, Ordner, Dateien) und \textit{Anwendung} (Oberfläche, Sicherheit, Lizenz, E-Mail, SMS, Superadmin, Datenschutz). Eine seitliche Navigation ersetzt die flache Liste des Ist-Zustands (\autoref{sec:ia_bestandsaufnahme}), auf mobilen Geräten innerhalb des Drawers integriert. Ein fixierter Aktionsbereich am Seitenende erleichtert die Übersicht bei umfangreicheren Einstellungsseiten.
+
+Auf dieser IA-Basis wurden in \autoref{sec:skizzen_wireframes} Skizzen und Wireframes entwickelt, die die Struktur visuell konkretisieren.

@@ -1,0 +1,35 @@
+\subsection{Problemstellung}\label{sec:problemstellung}
+
+Die bestehende DocSecBox erfüllt ihre Grundfunktion, weist jedoch strukturelle Schwachstellen auf, die ein gezieltes Redesign erforderlich machen. Im Folgenden werden die zentralen Problemfelder skizziert.
+
+\subsubsection{Informationsarchitektur und Navigation}\label{subsec:ia_navigation}
+
+Die Trennung zwischen übergreifenden und kontextbezogenen Navigationselementen ist für Nutzer:innen nicht klar erkennbar: Globale Ansichten und inhaltsbezogene Filter werden im selben Bereich angezeigt, wodurch unklar bleibt, ob eine Ansicht gesamtübersichtlich oder auf einen konkreten Inhalt bezogen ist. Häufig genutzte Aktionen sind zudem nicht direkt sichtbar, sondern teils hinter Kontextmenüs oder Schaltflächen versteckt. Ihre Funktionalität ist vorhanden, die potenziellen Handlungen sind aber nicht als solche wahrnehmbar \parencite[Kap.~4.4]{normanDesignEverydayThings2013}. \autoref{fig:ist_navigation} und \autoref{fig:ist_versteckte_aktionen} illustrieren diese Problematik.
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{images/1.2_Problemstellung/Ist-Zustand_Datei-Explorer_Ordnerunspezifischer_Filter.png}
+    \caption[Ist-Zustand: Navigation]{Fehlende Abgrenzung (Ordner- und Dateifilter vermischt). Quelle: Eigene Darstellung.}
+    \label{fig:ist_navigation}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{images/1.2_Problemstellung/Ist-Zustand_Verschachtelte_Dateiaktionen.png}
+    \caption[Ist-Zustand: Verschachtelte Aktionen]{Verschachtelte Dateiaktionen: (1): Kontextmenü, (2): Schaltfläche. Quelle: Eigene Darstellung.}
+    \label{fig:ist_versteckte_aktionen}
+\end{figure}
+
+\subsubsection{Visuelles Design und Mobiltauglichkeit}\label{subsec:design_mobile}
+
+Das visuelle Erscheinungsbild ist verbesserungswürdig und die Informationshierarchie undeutlich (\autoref{sec:usability_test}). Auf mobilen Endgeräten verstärken sich diese Probleme: Die Bedienelemente sind nicht an die Touch-Nutzung angepasst, die Darstellungen wirken überladen, und die mobile Version ist funktional eingeschränkt gegenüber der Desktop-Variante.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[height=0.45\textheight, keepaspectratio]{images/1.2_Problemstellung/Ist-Zustand_Mobil_Datei-Explorer_Dateiauswahl.png}
+    \caption[Ist-Zustand: Mobil]{Ist-Zustand: Mobil — Datei-Explorer mit Dateiauswahl. Quelle: Eigene Darstellung.}
+    \label{fig:ist_mobil_explorer}
+\end{figure}
+
+Diese Einschränkungen betreffen vor allem die Nutzer:innen, die im Alltag auf eine mobile Nutzung angewiesen sind. Einige dieser Anwendungsfälle werden in \autoref{sec:personas} genauer betrachtet.

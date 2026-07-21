@@ -1,0 +1,40 @@
+\subsection{Personas}\label{sec:personas}
+
+Aus der Zielgruppenanalyse (\autoref{subsec:zielgruppenanalyse}) werden drei konkrete Personas abgeleitet (\autoref{tab:personas_uebersicht}), die als fiktive, aber realitätsnahe Zielgruppenstellvertreter \parencite[Kap.~8.5]{erlhoferWebsiteKonzeptionUndRelaunch2017} die wichtigsten Nutzerprofile repräsentieren. Jede Persona repräsentiert ein spezifisches Zugriffsprofil und unterschiedliche Anforderungen an die Benutzeroberfläche. Sie dienen als Referenzrahmen für alle späteren Designentscheidungen. Die Personas wurden initial aus den Nutzungsprofilen und Zugriffsarten der Zielgruppenanalyse (\autoref{subsec:zielgruppenanalyse}) sowie den Prioritäten aus dem Stakeholder-Interview (\autoref{sec:stakeholder_interview}) abgeleitet und durch Beobachtungen realer Nutzer:innen im Usability-Test (\autoref{sec:usability_test}) validiert und verfeinert.
+
+\begin{table}[h!]
+    \centering
+    \scriptsize
+    \setlength{\tabcolsep}{4pt}
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{@{}p{2.2cm}p{5.1cm}p{4.7cm}p{4.7cm}@{}}
+        \toprule
+        \textbf{Merkmal} & \multicolumn{1}{c}{\textbf{Dr. med. Sarah Weber}} & \multicolumn{1}{c}{\textbf{Markus Fischer}} & \multicolumn{1}{c}{\textbf{Julia Hartmann}} \\
+        \midrule
+         & \includegraphics[width=2.5cm]{images/personas/persona_weber.jpg} &
+           \includegraphics[width=2.5cm]{images/personas/persona_fischer.jpg} &
+           \includegraphics[width=2.5cm]{images/personas/persona_hartmann.jpg} \\
+         & \captionsetup{font=scriptsize,labelfont=bf,scriptsize,textfont=scriptsize}\captionof{figure}[Persona Dr.~med.~Sarah Weber]{\scriptsize Persona Dr.~med.~Sarah Weber -- \textit{Quelle:}\ \textcite{pexelsTarazevichDoctor2021}}\captionsetup{labelformat=empty}\label{fig:persona_weber} &
+            \captionsetup{font=scriptsize,labelfont=bf,scriptsize,textfont=scriptsize}\captionof{figure}[Persona Markus Fischer]{\scriptsize Persona Markus Fischer -- \textit{Quelle:}\ \textcite{pexelsPiacquadioMiddleAged}}\captionsetup{labelformat=empty}\label{fig:persona_fischer} &
+            \captionsetup{font=scriptsize,labelfont=bf,scriptsize,textfont=scriptsize}\captionof{figure}[Persona Julia Hartmann]{\scriptsize Persona Julia Hartmann -- \textit{Quelle:}\ \textcite{pexelsMombelliBusinesswoman}}\captionsetup{labelformat=empty}\label{fig:persona_hartmann}\\
+        \midrule
+        Beruf & Ärztin (Radiologie) & Mitarbeiter & Sachbearbeiterin \\
+        Zugriff & Registriert & Anonym & Registriert \\
+        Nutzungsprofil & Provider + Empfänger (Zwei-Wege) & Empfänger & Nur-Empfänger \\
+        Bevorzugte Endgeräte & Desktop-PC am Arbeitsplatz, Tablet unterwegs & Smartphone & Desktop-PC \\
+        Arbeitskontext & Zeitdruck, hohe Fehlerkritikalität, fachlich erfahren mit digitalen Systemen & Geringe Technikaffinität, gelegentlich unsicher bei komplexen Anwendungen & Routine-basiert, Office-Erfahrung, keine IT-Spezialkenntnisse \\
+        Hauptaufgabe & Befunde und Bilder versenden, Zugriffe nachverfolgen, Laborwerte empfangen & Schulungs- und Prozessdokumente ohne Login empfangen und herunterladen & Empfangene Dokumente von externen Partnern verwalten und wiederauffinden \\
+        Ziele & Schnelle und sichere Übermittlung von Befunden mit Compliance-Nachweis sowie Übersicht über ein- und ausgehende Dokumente & Unkomplizierter und sofortiger Zugriff ohne Registrierung mit klarer Orientierung & Schnelle Wiederauffindbarkeit empfangener Dokumente bei klarer Struktur \\
+        \bottomrule
+    \end{tabular}
+    \caption[Persona-Übersicht]{Persona-Übersicht der DocSecBox. Quelle: Eigene Darstellung.}
+    \label{tab:personas_uebersicht}
+\end{table}
+
+Die verwendeten Portraitfotos stammen aus dem Pexels-Bestand (Pexels-Lizenz).
+
+\paragraph{Ableitung zentraler Nutzungskontexte}\label{subsec:nutzungskontexte}
+
+Aus den Personas ergeben sich zwei zentrale Nutzungskontexte für das Redesign. Registrierte Stammnutzer:innen wie Dr.~med.~Sarah Weber und Julia Hartmann benötigen eine strukturierte Arbeitsoberfläche für wiederkehrende Aufgaben wie Datei- und Ordnermanagement, Wiederauffindbarkeit und Nachvollziehbarkeit. Dieser Nutzungskontext ist vor allem durch Desktop- und Tablet-Nutzung geprägt.
+
+Anonyme Empfänger:innen wie Markus Fischer benötigen dagegen einen möglichst niedrigschwelligen Zugriff über Freigabe-Links. Hier stehen schnelle Orientierung, geringe Komplexität und mobile Bedienbarkeit im Vordergrund. Diese unterschiedlichen Nutzungskontexte bilden die Grundlage für das in \autoref{subsec:varianten} beschriebene Variantenkonzept.

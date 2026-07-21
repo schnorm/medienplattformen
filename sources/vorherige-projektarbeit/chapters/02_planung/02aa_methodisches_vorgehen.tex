@@ -1,0 +1,28 @@
+\subsection{Methodisches Vorgehen}\label{sec:methodisches_vorgehen}
+
+Das Projekt orientierte sich am Human-Centred-Design-Prozess nach ISO~9241-210 \parencite{iso_9241_210}. Die vier zentralen Aktivitäten wurden auf den Projektkontext der DocSecBox übertragen. \autoref{tab:iso_aktivitaeten} zeigt die methodische Umsetzung im Projekt.
+
+\begin{table}[H]
+    \centering
+    \scriptsize
+    \begin{tabular}{@{}p{4.0cm}p{8.5cm}@{}}
+        \toprule
+        \textbf{ISO-Aktivität} & \textbf{Methodische Umsetzung im Projekt} \\
+        \midrule
+        Nutzungskontext-Analyse & Zielgruppenanalyse, Personas, Bestandsaufnahme der Informationsarchitektur, einmaliges Stakeholder-Interview mit dem CEO, ergänzt durch eine Wettbewerbsanalyse \\
+        \addlinespace
+        Spezifikation der Nutzeranforderungen & Ableitung von Projekt- und Nutzeranforderungen aus Stakeholder-Interview, Personas, Wettbewerbsanalyse, IA-Bestandsaufnahme und Ist-Usability-Test \\
+        \addlinespace
+        Erarbeitung der Designlösungen & Entwicklung einer Soll-Informationsarchitektur, eines Variantenkonzepts für Desktop und Mobil, manueller Skizzen, digitaler Wireframes und finaler Mockups im lauffähigen Vaadin-Flow-Prototyp\footnotemark \\
+        \addlinespace
+        Evaluation & Usability-Test des Ist-Zustands als Baseline und Usability-Test des Redesigns als Validierung; beide Testphasen folgten demselben methodischen Grundaufbau \\
+        \bottomrule
+    \end{tabular}
+    \caption[Konkretisierung der vier ISO-Aktivitäten]{Konkretisierung der vier ISO-Aktivitäten nach ISO~9241-210 im Projekt. Quelle: Eigene Darstellung.}
+    \label{tab:iso_aktivitaeten}
+\end{table}
+\footnotetext{Vaadin Flow bezeichnet das Java-Webframework, mit dem der klickbare High-Fidelity-Prototyp umgesetzt wurde (siehe Anhang~C).}
+
+Der Prozess wurde durch wöchentliche Abstimmungen mit dem CEO als Product Owner begleitet. Dadurch konnten Zwischenergebnisse regelmäßig validiert und notwendige Anpassungen frühzeitig berücksichtigt werden.
+
+Auf explorative Methoden wie Card-Sorting wurde verzichtet, da die DocSecBox eine bestehende Fachanwendung mit bekannten Kernobjekten wie Dateien, Ordnern, Freigaben, Benachrichtigungen und Einstellungen ist. Im Fokus standen daher nicht neue Inhaltskategorien, sondern die bessere Sichtbarkeit, Hierarchie und Kontextbindung vorhandener Funktionen.

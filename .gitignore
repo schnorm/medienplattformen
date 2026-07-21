@@ -1,0 +1,17 @@
+# add latex tmp files
+*.aux
+*.bbl
+*.blg
+*.dvi
+*.bcf
+*.gz
+**/dir
+**.out
+**.log
+**.toc
+**.xml
+.DS_Store
+**.fls
+**.fdb_latexmk
+build/
+__pycache__/

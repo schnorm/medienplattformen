@@ -1,0 +1,49 @@
+%% Title Page
+%% Alle projektspezifischen Angaben kommen aus pages/meta.tex — diese Datei
+%% selbst nie ändern. Reihenfolge gemäß IU-Richtlinien, Anhang C (Titelblattvorlage).
+\def\usesf{}
+
+\setlength{\unitlength}{1pt}
+
+\thispagestyle{empty} % Titelseite ohne Seitennummerierung (Seite I, Zählung unsichtbar)
+\begin{titlepage}
+\usesf
+
+%\vspace{-39pt}\hspace*{300pt}\includegraphics[width=.21\paperwidth]{pages/IU.png}
+\vspace{-39pt}\begin{center}\includegraphics[width=.21\paperwidth]{pages/IU.png}\end{center}
+
+\begin{center}
+\hbox{}
+\vfill
+{\usesf}
+{\huge\bfseries \PaperTitle\par}
+
+\vskip 1.2cm
+
+{\large
+\PaperType\\
+\ModuleCode\ -- \ModuleName\\
+}
+\vskip 2cm
+
+{
+IU Internationale Hochschule\\
+Studiengang: \StudyProgram\\
+}
+\vskip 2cm
+
+{\large\bfseries \AuthorName\\}
+{Matrikelnummer: \MatrikelNr}
+\vskip 3.2cm
+
+{
+\begin{tabular}{p{5cm}l}
+Betreuende Person/Tutor:in: & \TutorName \\
+Abgabedatum: & \SubmissionDate \\
+\end{tabular}
+}
+\vfill
+\end{center}
+
+\end{titlepage}
+%% End of Title Page

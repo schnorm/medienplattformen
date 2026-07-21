@@ -1,0 +1,124 @@
+\vfill
+
+\subsection{Skizzen und Wireframes}\label{sec:skizzen_wireframes}
+
+\subsubsection{Skizzen}\label{subsec:low_fidelity_skizzen}
+
+Die in \autoref{sec:informationsarchitektur} entwickelte Soll-Informationsarchitektur bildete das Fundament für die erste visuelle Konkretisierung. Auf Basis der Makro- und Mikro-IA sowie der in \autoref{sec:usability_test} identifizierten Usability-Probleme wurden zunächst Entwürfe mit niedriger Fidelität erstellt. Für die weitere Konzeption wurden drei zentrale Seiten selektiert: \enquote{Datei-Explorer}, \enquote{Öffentliche Ordneransicht} und \enquote{Einstellungen} -- sie decken die Hauptnutzungsszenarien aus \autoref{sec:personas} ab. Der iterative Prozess erfolgte in Feedback-Schleifen mit dem Auftraggeber im Rahmen der wöchentlichen Meetings (\autoref{sec:methodisches_vorgehen}).
+
+\begin{figure}[H]
+\centering
+\fboxsep=3pt\fboxrule=0.4pt
+\noindent\fbox{\parbox[t]{0.38\textwidth}{%
+\fboxsep=1.5pt\fbox{\small\textbf{1}}\hspace{2pt}%
+\centering
+\includegraphics[width=\linewidth, keepaspectratio]{images/3.2_Skizzen-und-Wireframes/Skizzen_sharp_01}\\[0pt]
+\includegraphics[width=\linewidth, keepaspectratio]{images/3.2_Skizzen-und-Wireframes/Skizzen_sharp_02}%
+}}
+\hfill
+\noindent\fbox{\parbox[t]{0.38\textwidth}{%
+\fboxsep=1.5pt\fbox{\small\textbf{2}}\hspace{2pt}%
+\centering
+\includegraphics[width=\linewidth, keepaspectratio]{images/3.2_Skizzen-und-Wireframes/Skizzen_sharp_03}\\[0pt]
+\includegraphics[width=\linewidth, keepaspectratio]{images/3.2_Skizzen-und-Wireframes/Skizzen_sharp_04}%
+}}
+\caption[Skizzen Teil 1]{Skizzen (Teil 1): Master- und Layout-Konzept mit Datei-Explorer (1) und Datei-Detail mit Öffentlicher Ordneransicht und Struktur der Einstellungen (2). Quelle: Eigene Darstellung.}
+\label{fig:skizzen_teil_1}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\fboxsep=3pt\fboxrule=0.4pt
+\noindent\fbox{\parbox[t]{0.38\textwidth}{%
+\fboxsep=1.5pt\fbox{\small\textbf{3}}\hspace{2pt}%
+\centering
+\includegraphics[width=\linewidth, keepaspectratio]{images/3.2_Skizzen-und-Wireframes/Skizzen_sharp_05}\\[0pt]
+\includegraphics[width=\linewidth, keepaspectratio]{images/3.2_Skizzen-und-Wireframes/Skizzen_sharp_06}%
+}}
+\hfill
+\noindent\fbox{\parbox[t]{0.38\textwidth}{%
+\fboxsep=1.5pt\fbox{\small\textbf{4}}\hspace{2pt}%
+\centering
+\includegraphics[width=\linewidth, keepaspectratio]{images/3.2_Skizzen-und-Wireframes/Skizzen_sharp_07}\\[0pt]
+\includegraphics[width=\linewidth, keepaspectratio]{images/3.2_Skizzen-und-Wireframes/Skizzen_sharp_08}%
+}}
+\caption[Skizzen Teil 2]{Skizzen (Teil 2): Einstellungen sowie Mobil-Variante in (3) und (4). Quelle: Eigene Darstellung.}
+\label{fig:skizzen_teil_2}
+\end{figure}
+
+\newpage
+
+\subsubsection{Wireframes}\label{subsec:digitale_wireframes}
+
+Die digitalen Wireframes in Figma übernahmen die in den Skizzen definierte Architektur und verfeinerten sie um klare Abgrenzungen zwischen den Layout-Bereichen. Die drei zentralen Seiten wurden in beiden Varianten (\autoref{subsec:varianten}) umgesetzt und mit Detail-Ansichten für Dateien- und Ordner-Informationen verfeinert.
+
+Die Wireframes wurden bewusst ohne visuelle Ausdifferenzierung umgesetzt, um die Strukturvalidierung von gestalterischen Fragen zu trennen. Die hochauflösende Umsetzung erfolgte direkt in Vaadin Flow (\autoref{sec:mockups}).
+
+\paragraph{Layout} Auf Desktop-Geräten verwendet die Benutzeroberfläche ein Vier-Spalten-Layout (Drawer, SideNav, Master, Detail), das die verfügbare horizontale Bildschirmfläche optimal nutzt. In der Mobil-Variante wechselt das Layout auf ein ein-spaltiges Design mit Overlay-Strategie für Detail-Informationen.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth, keepaspectratio]{images/3.2_Skizzen-und-Wireframes/Desktop-Sektionen}
+\hspace{0.5em}
+\includegraphics[width=0.2\textwidth, keepaspectratio]{images/3.2_Skizzen-und-Wireframes/Mobile-Sektionen}
+\caption[Layout-Vergleich Desktop vs. Mobil]{Desktop-Variante: Vier-Spalten-Layout (Drawer, SideNav, Master, Detail). Mobil-Variante: Ein-spaltiges Layout mit Hamburger-Menü bzw. Overlay-Strategie. Quelle: Eigene Darstellung.}
+\label{fig:wireframes_layoutvergleich}
+\end{figure}
+
+\newpage
+
+\paragraph*{\textbf{Datei-Explorer}}\label{par:datei_explorer_wireframes}
+
+Der Datei-Explorer als zentrale Arbeitsfläche greift den in der Wettbewerbsanalyse beobachteten Ansatz einer gemeinsamen Ordner-\/\hspace{0.5pt}Dateitabelle auf (vgl. \autoref{sec:wettbewerb}) und kombiniert ihn mit dem Vier-Spalten-Layout (Desktop-Variante) bzw. einem ein-spaltigen Layout mit horizontaler Filter-Leiste (Mobil-Variante), (vgl. \autoref{fig:wireframes_layoutvergleich}).
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth, keepaspectratio]{images/3.2_Skizzen-und-Wireframes/Desktop-Datei-Explorer}
+\hspace{0.5em}
+\includegraphics[width=0.2\textwidth, keepaspectratio]{images/3.2_Skizzen-und-Wireframes/Mobile-Datei-Explorer}
+\caption[Datei-Explorer: Desktop vs. Mobil]{Desktop-Variante (links: Vier-Spalten-Layout). Mobil-Variante (rechts: ein-spaltig mit horizontaler Filter-Leiste). Quelle: Eigene Darstellung.}
+\label{fig:datei_explorer_desktop_mobil}
+\end{figure}
+
+\paragraph*{\textbf{Öffentliche Ordneransicht}}\label{par:offentliche_ordneransicht}
+
+Die Öffentliche Ordneransicht für anonyme Nutzer:innen via Freigabe-Link verzichtet auf Drawer und SideNav und zeigt konzentriert Ordnerinhalte mit Detail-Einsicht (Mobil-Variante: ein-spaltig, Touch-optimiert).
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth, keepaspectratio]{images/3.2_Skizzen-und-Wireframes/Desktop-Offentliche-Ordneransicht}
+\hspace{0.5em}
+\includegraphics[width=0.2\textwidth, keepaspectratio]{images/3.2_Skizzen-und-Wireframes/Mobile-Offentliche-Ordneransicht}
+\caption[Öffentliche Ordneransicht: Desktop vs. Mobil]{Desktop-Variante (links: Zwei-Spalten-Layout). Mobil-Variante (rechts: ein-spaltig, Touch-optimiert). Quelle: Eigene Darstellung.}
+\label{fig:oeffentliche_ordner_desktop_mobil}
+\end{figure}
+
+\paragraph*{\textbf{Einstellungen}}\label{par:einstellungen_wireframes}
+
+Die Einstellungsseite bleibt im Redesign stabil im Drawer sichtbar statt die gesamte Navigation zu ersetzen. Die Unterteilung in \textit{Übersicht} und \textit{Anwendung} mit fixiertem Footer wird umgesetzt. Die \enquote{Abbrechen}-Funktion wurde später durch Clean-\/\hspace{0.5pt}Dirty-State-Management ersetzt (\autoref{sec:mockups}).
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth, keepaspectratio]{images/3.2_Skizzen-und-Wireframes/Desktop-Einstellungen}
+\caption[Einstellungen Desktop]{Desktop (stabil sichtbarer Drawer). Quelle: Eigene Darstellung.}
+\label{fig:einstellungen_desktop}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.25\textwidth, keepaspectratio]{images/3.2_Skizzen-und-Wireframes/Mobile-Einstellungen-Drawer}
+\hspace{1em}
+\includegraphics[width=0.25\textwidth, keepaspectratio]{images/3.2_Skizzen-und-Wireframes/Mobile-Einstellungen-Content}
+\caption[Einstellungen: Mobil-Variante]{Mobil-Variante (links: Drawer-Navigation; rechts: Inhaltsbereich mit fixiertem Footer). Quelle: Eigene Darstellung.}
+\label{fig:einstellungen_mobil}
+\end{figure}
+
+\vfill
+
+\subsubsection{Wireframe-Präsentation: Fachliche Validierung der Informationsarchitektur}\label{sec:wireframe_validierung}
+
+Zur fachlichen Validierung der Wireframes wurde die Makro-Informationsarchitektur auf fachliche Plausibilität geprüft, bevor in die Feinkonzept-Phase mit den finalen Mockups gewechselt wurde. Im Gegensatz zum formalen Usability-Test (\autoref{sec:usability_test_evaluation}) handelte es sich um informelles Feedback interner Domänen-Expert:innen, die mit der DocSecBox-Plattform aus eigener Entwicklungs- und Nutzungspraxis vertraut sind. Eine systematische Evaluation mit Endnutzer:innen folgte im Soll-Test.
+
+An der Validierung nahmen drei Entwickler:innen der Software-Abteilung sowie der CEO als Product Owner teil (dritte Projektwoche, im Rahmen des wöchentlichen Montags-Meetings). Präsentiert wurden die drei zentralen Seiten in Variante~1 und Variante~2 sowie Detail-Ansichten. Jeweils zunächst die Desktop-, danach die Mobil-Variante.
+
+Das Feedback war durchweg bestärkend: Die IA-Struktur wurde als deutlich besser als der Ist-Zustand bewertet, insbesondere die Drawer- und Hamburger-Navigationen beider Varianten wurden bestätigt.

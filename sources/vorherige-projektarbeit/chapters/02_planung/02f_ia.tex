@@ -1,0 +1,27 @@
+\subsection{Bestandsaufnahme der Informationsarchitektur}\label{sec:ia_bestandsaufnahme}
+
+\subsubsection{Makro-Informationsarchitektur (Ist-Zustand)}\label{sub:makro_ia_ist}
+
+Im aktuellen Zustand besteht die DocSecBox aus drei Hauptbereichen: Login mit Hauptseite und Einstellungen, öffentliche Ordnerfreigabe und öffentliche Dateifreigabe. Die Hauptseite dient zugleich als Datei-Explorer und zentraler Arbeitsbereich. Die Einstellungen werden über die Drawer-Schaltfläche \emph{Verwaltung} auf der Hauptseite erreicht, die zugleich als Datei-Explorer dient.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{images/2.6_Bestandsaufnahme-IA/Makro-IA-Ist-Zustand.png}
+    \caption[Makro-IA Ist-Zustand]{Makro-IA Ist-Zustand der DocSecBox als Mindmap. Quelle: Eigene Darstellung.}
+    \label{fig:makro_ia_ist}
+\end{figure}
+
+\subsubsection{Mikro-Informationsarchitektur (Ist-Zustand)}\label{sub:mikro_ia_ist}
+
+Die Mikro-IA beschreibt die lokalen Navigationsstrukturen innerhalb der Seiten. Auf der Hauptseite befindet sich die sekundäre Navigation in komprimierter Form: Filteroptionen wie \enquote{alle}, \enquote{favorisierte} und \enquote{ungelesene} Dateien sowie die Auswahl eines einzelnen Ordners mit Suchfunktion. Bei Auswahl eines Elements werden die Dateien in einer Detailansicht (rechte Seite) angezeigt. Die Einstellungen gliedern sich in zwei Bereiche: \emph{Einstellungen} mit acht Unterpunkten sowie \emph{Objekte} mit vier Verwaltungsbereichen (Dateien, Benutzer, Gruppen, Ordner). Externe Freigaben sind unabhängig davon als eigene Seiten vorhanden, die anonymen Nutzenden via QR-Code bzw. URL zugänglich sind. Öffentliche Ordnerfreigaben zeigen eine Dateiauswahl, öffentliche Dateifreigaben öffnen direkt die Datei.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{images/2.6_Bestandsaufnahme-IA/Mikro-IA-Ist-Zustand-Ausschnitt.png}
+    \caption[Mikro-IA Ist-Zustand]{Ausschnitt der Mikro-IA (Ist-Zustand) als Mindmap. Quelle: Eigene Darstellung.}
+    \label{fig:mikro_ia_ist}
+\end{figure}
+
+\subsubsection{Identifizierte Schwachstellen}\label{sub:ia_schwachstellen}
+
+Aus der IA-Analyse lassen sich fünf zentrale Schwachstellen ableiten. Die komprimierte Makro-IA führt dazu, dass sämtliche Funktionen auf nur drei Hauptbereichen untergebracht werden müssen, was die Übersichtlichkeit einschränkt. Benachrichtigungen und Freigaben haben keine eigenständigen Navigationspunkte, was den schnellen Zugriff erschwert. Die unklare Rollenverteilung der Hauptseite bedeutet, dass Startseite, Datei-Explorer und Arbeitsbereich in einer Ansicht vereint sind, ohne echte Landingpage als Einstieg direkt nach Login. Die im Drawer untergebrachten Filteroptionen (\enquote{Aus allen Ordnern}, \enquote{Aus favorisierten Ordnern}, \enquote{Ungelesene Dateien}) wurden im Usability-Test (\autoref{sec:usability_test}) in der freien Durchklick-Phase ignoriert. Den Einstellungen -- gruppiert in \emph{Einstellungen} mit acht Unterpunkten und \emph{Objekte} mit vier Verwaltungsbereichen -- fehlt eine logische Gruppierung in technische und Verwaltungsfunktionen.
