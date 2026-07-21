@@ -1,23 +1,25 @@
 # Kapitelplan
 
 ## Papierinfo
-- **Titel**: Restlos — Konzeption einer Social-Media-Plattform für nachhaltigkeitsorientierte Hobbyköch:innen (Arbeitstitel)
+- **Titel**: Resteria — Konzeption einer Social-Media-Plattform für nachhaltigkeitsorientierte Hobbyköch:innen (Arbeitstitel)
 - **Papiertyp**: Projektbericht (B.Sc.) · **Forschungstyp**: entfällt
 - **Gewählte Aufgabenstellung**: Aufgabenstellung 2 (Social-Media-Plattform Hobbyköch:innen), Nische: Zero-Waste/Nachhaltigkeit
 - **Gesamtwortzahl (Richtwert)**: 7–10 Seiten (B.Sc.)
 - **Erstellt am**: 2026-07-21 · **Plan-Session-Checkpoints**: `kapitelplan.draft.md` (Archiv)
+- **Plattformname**: „Resteria" (Nutzer-Entscheidung 2026-07-21). Ersetzt den Arbeitstitel „Restlos", der mit „Restlos Glücklich" e.V. + App (Berlin, seit 2015, identisches Zero-Waste-Rezept-Feld) kollidierte. **Namensverfügbarkeit (DPMA / .de-Domain) prüft der Nutzer vor finaler Nutzung.**
 
 ## Kernthese
-Die Plattform „Restlos" differenziert sich von generischen Rezept-/Social-Media-Plattformen durch einen dezidierten Zero-Waste-Fokus (Resteverwertung, saisonale/regionale Zutaten), weil bestehende Plattformen zwar Rezeptaustausch ermöglichen, aber kaum gezielte Anreize/Werkzeuge zur Reduktion von Lebensmittelverschwendung bieten — und weil verhaltenswissenschaftliche Erkenntnisse zeigen, dass soziale Normen, Gamification und community-getriebene Zugehörigkeit (Green Social Network Affordances) Nachhaltigkeitsverhalten wirksam fördern.
+Die Plattform „Resteria" differenziert sich von generischen Rezept-/Social-Media-Plattformen durch einen dezidierten Zero-Waste-Fokus (Resteverwertung, saisonale/regionale Zutaten), weil bestehende Plattformen zwar Rezeptaustausch ermöglichen, aber kaum gezielte Anreize/Werkzeuge zur Reduktion von Lebensmittelverschwendung bieten — und weil verhaltenswissenschaftliche Erkenntnisse zeigen, dass soziale Normen, Gamification und community-getriebene Zugehörigkeit (Green Social Network Affordances) Nachhaltigkeitsverhalten wirksam fördern.
 - **Ebenen**: deskriptiv (Bestandsaufnahme bestehender Plattformen und ihrer Lücken) · normativ (die Plattform SOLLTE gezielt Nudge-/Gamification-/Community-Mechanismen integrieren) · erklärend: entfällt (Projektbericht-Pflichtregel)
 - **Argumentationstyp**: konzeptionell-normativ · **Gültigkeitsbereich**: Konzept-/Vorschlagsebene, keine reale Implementierung/Nutzertest
 - **Grenzen**: keine Primärerhebung zur Zielgruppe, keine reale Erprobung (im Projektbericht nicht gefordert)
 
 ## Kapitel 1: Einleitung (ca. 12 %)
 - **Datei**: `chapters/01_einleitung/einleitung.tex` (Master) · **Label**: `sec:einleitung`
-- **Kernargument**: Bestehende Plattformen trennen Rezept-Community (Chefkoch, TikTok Food) von Reste-Tools (Restegourmet) — „Restlos" verbindet beides vor dem Hintergrund wachsender gesellschaftlicher Relevanz von Lebensmittelverschwendung (SDG 12.3).
+- **Kernargument**: Die etablierten, breit genutzten Plattformen trennen Rezept-Community (Chefkoch, TikTok Food) von reinen Reste-Matching-Tools (Restegourmet, BMEL-App „Zu gut für die Tonne!" u. a.) — „Resteria" verbindet beides vor dem Hintergrund wachsender gesellschaftlicher Relevanz von Lebensmittelverschwendung (SDG 12.3).
+- **[STRESSTEST 2026-07-21]**: Absolutformulierung „trennen … keine kombiniert" entschärft — Recherche bestätigt zwar die Lücke (kein bekannter Anbieter kombiniert Reste-Matching + echte Social-Community + Zero-Waste für Hobbyköch:innen), aber es existieren MEHRERE Reste-Matching-Apps ohne Community; „Restegourmet" nicht mehr als einziger Vertreter führen.
 - **Belege**: SDG-12.3-Zeitbezug (Vittuari et al. 2023) · Wettbewerbslücke (ausführlich in Durchführung belegt)
-- **Argumentationsstärke**: ungeprüft (kompakt ohne Stresstest — kein Kernargument wirkte beim Planen wacklig)
+- **Argumentationsstärke**: Stresstest 2026-07-21 (Einzellauf) — Absolutbehauptung „trennen/keine kombiniert" entschärft, siehe [STRESSTEST]-Marker; hält nach Recherche
 - **Faktenbasis**: eigene Konzeptleistung + Literatur-Zeitbezug
 
 ### Subsection: 01_ausgangslage_und_problem
@@ -30,7 +32,7 @@ Die Plattform „Restlos" differenziert sich von generischen Rezept-/Social-Medi
 ### Subsection: 02_zielsetzung_und_verengung
 - **Argumentationsfluss**: Leitet aus dem Problem das Projektziel ab und begründet die bewusste Zielgruppen-Verengung.
 - **Inhaltspunkte**:
-  - Ziel: Konzept „Restlos" als Plattform, die Reste-Matching und echte Social-Community verbindet
+  - Ziel: Konzept „Resteria" als Plattform, die Reste-Matching und echte Social-Community verbindet
   - Explizite Begründung der Verengung „Hobbyköch:innen" → „nachhaltigkeitsorientierte Hobbyköch:innen" ([VERENGT], siehe `aufgabe.md`)
 
 ### Subsection: 03_vorgehen_und_aufbau
@@ -41,14 +43,19 @@ Die Plattform „Restlos" differenziert sich von generischen Rezept-/Social-Medi
 
 ## Kapitel 2: Durchführung (ca. 73 %)
 - **Datei**: `chapters/02_durchfuehrung/durchfuehrung.tex` (Master) · **Label**: `sec:durchfuehrung`
-- **Kernargument**: „Restlos" übersetzt evidenzbasierte Verhaltenshebel (MOA-Framework, Nudges, Green Social Network Affordances, Gamification) in Features, die keine der drei Vergleichsplattformen kombiniert bietet — Reste-Matching + Rettungspunkte/Reste-Level + echte Social-Community (Feed + Challenges) als Alleinstellungsmerkmal.
-- **Belege**: Wettbewerbsanalyse (Chefkoch/TikTok Food/Restegourmet inkl. Verbraucherzentrale-Test) · MOA-Framework/Nudge-Literatur (Vittuari, Barker) · Soma et al. 2020 (Gamification −51 % bei Vielspieler:innen; Community-Diskussion schwächste Teilnahme) · Green Social Network Affordances (Nivedhitha)
-- **Gegenargumente**: Reste-Matching allein ist nicht neu (Restegourmet existiert bereits) · reine Community-Plattformen mit Nachhaltigkeitsthema könnten ausreichen
-- **Antwort**: Kombination aus Reste-Matching UND echter Social-Community ist die eigentliche Lücke — belegt durch Verbraucherzentrale-Test (Restegourmet ohne Social-Layer) und Wettbewerbsanalyse (Chefkoch/TikTok ohne Zero-Waste-Fokus)
-- **Argumentationsstärke**: ungeprüft (kompakt ohne Stresstest)
+- **Kernargument**: „Resteria" übersetzt evidenzbasierte Verhaltenshebel (MOA-Framework, Nudges, Green Social Network Affordances, Gamification) in Features, die keine der untersuchten Plattformen kombiniert bietet — weder die generischen Rezept-Communities noch die spezialisierten Reste-Matching-Apps — Reste-Matching + Rettungspunkte/Reste-Level + echte Social-Community (Feed + Challenges) als Alleinstellungsmerkmal.
+- **Belege**: Wettbewerbsanalyse (Chefkoch/TikTok Food · Reste-Matching-Kategorie: Restegourmet + BMEL-App „Zu gut für die Tonne!" inkl. Verbraucherzentrale-Test · Abgrenzung Foodsharing.de) · MOA-Framework/Nudge-Literatur (Vittuari, Barker) · Soma et al. 2020 (Gamification −51 % bei Vielspieler:innen; Community-Diskussion schwächste Teilnahme) · Green Social Network Affordances (Nivedhitha)
+- **Gegenargumente**: Reste-Matching allein ist nicht neu (Restegourmet, BMEL-App u. a. existieren bereits) · reine Community-Plattformen mit Nachhaltigkeitsthema könnten ausreichen · Foodsharing.de verbindet doch schon Community + Lebensmittelverschwendung
+- **Antwort**: Kombination aus Reste-Matching UND echter Social-Community ist die eigentliche Lücke — belegt durch Verbraucherzentrale-Test (Restegourmet ohne Social-Layer) und Wettbewerbsanalyse (Chefkoch/TikTok ohne Zero-Waste-Fokus). Foodsharing.de ist Lebensmittel-*Weitergabe* (Fairteiler/Abholungen), kein Reste-Koch-/Rezept-Tool — anderes Segment, daher explizit abgrenzen statt ignorieren.
+- **[STRESSTEST 2026-07-21]**: USP hält laut Recherche; Angriffsfläche war die zu schmale Konkurrenzbasis. Reste-Matching als *Kategorie* darstellen (mind. Restegourmet + BMEL-App), Foodsharing.de als anderes Segment abgrenzen — beides stärkt die Lücke, statt sie zu schwächen.
+- **Argumentationsstärke**: Stresstest 2026-07-21 (Einzellauf) — USP hält; Konkurrenzbasis verbreitert (Reste-Matching als Kategorie), Foodsharing abgegrenzt, Soma-Overclaim entschärft; siehe [STRESSTEST]-Marker
 - **Faktenbasis**: eigene Recherche (Wettbewerbsanalyse) + Literatur (Vittuari, Barker, Nivedhitha, Shen, Soma) + eigene Konzeptleistung (Feature-Design, Phasenplanung)
 - **Rechercheprotokoll**: Restegourmet — keine Social-/Gamification-Features — Verbraucherzentrale-Test (2026) — https://www.verbraucherzentrale.de/wissen/umwelt-haushalt/apptest-restegourmet-sparen-sie-mit-den-zutaten-nicht-bei-der-app-100156
-- **Lieferobjekte**: UI/UX-Mockup (Anhang, KI-generiert mit Claude + Kennzeichnung) · Wettbewerbsvergleich-Tabelle · Persona-Skizze (Anhang) · Funktionsübersicht · Phasenplanungs-Tabelle
+  - [STRESSTEST 2026-07-21] BMEL-App „Zu gut für die Tonne!" — Reste-Matching (bis 3 Zutaten), Portionenrechner, Merkliste, aber keine Social-Community — https://www.bmleh.de/DE/themen/ernaehrung/lebensmittelverschwendung/reste-app.html
+  - [STRESSTEST 2026-07-21] Foodsharing.de — Community + Lebensmittel-Weitergabe (Fairteiler), kein Reste-Koch-/Rezept-Tool (Abgrenzung) — https://en.wikipedia.org/wiki/Foodsharing.de
+  - [STRESSTEST 2026-07-21] Namenskollision entdeckt: „Restlos Glücklich" e.V. (Berlin, seit 2015, Zero-Waste-Rezepte) + gleichnamige App — https://www.restlos-gluecklich.berlin/ — betrifft Plattformnamen, siehe Papierinfo
+- **[ZITIERREGEL Wettbewerbsanalyse — für schreib-modus verbindlich, 2026-07-21]**: Die Wettbewerbsanalyse ist **eigene Vergleichsanalyse** (Prüfer-Anmerkung Pkt. 2: „nachvollziehbare Vergleichsanalyse bestehender Plattformen, z. B. SWOT"). Die Plattformen (Chefkoch, TikTok Food, Restegourmet, BMEL-App, Foodsharing.de) und der Verbraucherzentrale-Test sind **Untersuchungsgegenstände / eigene Sichtung (Stand: Juli 2026), KEIN `\parencite`** — die obigen URLs sind Recherche-Nachweis, **keine Zitierquellen**, und kommen **nicht** nach `references.bib`. Vergleichstabelle und SWOT tragen `\quelle{Eigene Darstellung.}`. `\parencite` **ausschließlich** für die 5 akademischen Paper (Vittuari, Barker, Soma, Nivedhitha, Shen — alle in `references.bib`). Plattform-Aussagen als eigene Beobachtung formulieren, nicht als Fremdzitat.
+- **Lieferobjekte**: UI/UX-Mockup (Anhang, KI-generiert mit Claude + Kennzeichnung) · Wettbewerbsvergleich-Tabelle · SWOT-Übersicht (eigene Konzept-Position) · Persona-Skizze (Anhang) · Funktionsübersicht · Phasenplanungs-Tabelle
 
 **Zu verifizieren vor dem Schreiben** (Nutzer-Pflicht laut IU-KI-Richtlinie):
 - Chefkoch.de: genaue aktuelle Funktionsdetails, falls im Text konkret zitiert
@@ -57,13 +64,15 @@ Die Plattform „Restlos" differenziert sich von generischen Rezept-/Social-Medi
 - Restegourmet: Preismodell/Nutzerzahlen, falls im Text konkret genannt
 
 ### Subsection: 01_wettbewerbsanalyse — Bestehende Plattformen im Vergleich
-- **Argumentationsfluss**: Zeigt die Marktlücke, die „Restlos" schließt — Ausgangspunkt der gesamten Argumentation.
+- **Argumentationsfluss**: Zeigt die Marktlücke, die „Resteria" schließt — Ausgangspunkt der gesamten Argumentation.
 - **Inhaltspunkte**:
-  - Chefkoch.de: etablierte Rezept-Community, Kommentare/Bewertungen, kein Nachhaltigkeitsfokus
+  - Chefkoch.de: etablierte Rezept-Community, Kommentare/Bewertungen; hat Reste-Rezeptkategorien, aber keinen dedizierten Zero-Waste-Fokus/kein Reste-Matching-Werkzeug (nicht pauschal „kein Nachhaltigkeitsbezug" behaupten)
   - TikTok Food-Content-Kategorie: große Reichweite, kein dediziertes Rezept-/Reste-Tool
-  - Restegourmet-App: Reste-Zutaten-Matching + KI-Rezepte, aber laut Verbraucherzentrale-Test keine echte Social-Community (kein Following, keine Gruppen, keine Gamification)
-  - Vergleichstabelle nach Kriterien: Rezept-Austausch, Community-Funktionen, Nachhaltigkeits-/Resteverwertungsfokus
-  - Explizite Lücke benennen: keine Plattform kombiniert Reste-Matching mit echter Social-Community
+  - Reste-Matching-Apps als Kategorie (nicht nur ein Vertreter): Restegourmet + BMEL-App „Zu gut für die Tonne!" (bis zu 3 Reste-Zutaten → Rezeptvorschläge, Portionenrechner, 800+ Rezepte) — leisten Reste-Zutaten-Matching, aber nach eigener Sichtung (gestützt durch den Verbraucherzentrale-Test, Stand Juli 2026) keine echte Social-Community (kein Following, keine Gruppen, keine Gamification); Restegourmet exemplarisch vertieft
+  - [STRESSTEST 2026-07-21] Foodsharing.de kurz benennen und abgrenzen: echte Community + Anti-Waste, aber Lebensmittel-*Weitergabe* (Fairteiler/Abholungen), kein Reste-Koch-/Rezept-Tool → anderes Segment, schließt die Lücke nicht
+  - **Kriterien-Vergleichsmatrix** (Plattformen × Kriterien: Rezept-Austausch · Community-Funktionen · Nachhaltigkeits-/Resteverwertungsfokus · Reste-Matching-Werkzeug) — Lieferobjekt „Wettbewerbsvergleich-Tabelle", trägt `\quelle{Eigene Darstellung.}`, kein `\parencite` (siehe ZITIERREGEL oben). Rubrik-Karte je Kriterium beim Schreiben festlegen (was = stark/mittel/schwach, was NICHT gemeint ist — v. a. „Werkzeug vorhanden" ≠ „aktiv genutzte Community")
+  - **Kompakte SWOT der eigenen Konzept-Position „Resteria"** gegenüber dem Marktumfeld (Prüfer-Hinweis): Stärken = kombinierter USP (Reste-Matching + Community); Schwächen = Konzeptstatus, kein realer Nutzertest; Chancen = SDG-12.3-Relevanz, Partnerschaften (z. B. Food-Sharing-Initiativen); Risiken = etablierte Reste-Apps, dichtes Namens-/Marktumfeld. Knapp halten (Seitenbudget) — Anhang oder kurzer Textblock, `\quelle{Eigene Darstellung.}`
+  - Explizite Lücke benennen: keine der untersuchten Plattformen kombiniert Reste-Matching mit echter Social-Community (nicht als Absolutbehauptung „niemand weltweit", sondern bezogen auf die untersuchten, breit genutzten Anbieter)
 
 ### Subsection: 02_zielgruppe — Nachhaltigkeitsorientierte Hobbyköch:innen
 - **Argumentationsfluss**: Begründet, warum diese Zielgruppe tragfähig und differenziert ist.
@@ -72,13 +81,15 @@ Die Plattform „Restlos" differenziert sich von generischen Rezept-/Social-Medi
   - Begründete Verengung auf nachhaltigkeitsorientierte Teilgruppe (keine Primärdaten nötig, Prüfer-Anmerkung)
   - Kurze Persona-Skizze als Anhang-Lieferobjekt
 
-### Subsection: 03_konzept — Plattform „Restlos"
+### Subsection: 03_konzept — Plattform „Resteria"
 - **Argumentationsfluss**: Herzstück des Kapitels — übersetzt Literatur + Marktlücke in konkrete Produktentscheidungen.
 - **Inhaltspunkte**:
-  - Plattformname „Restlos" einführen und kurz begründen (Wortspiel „restlos verwertet")
+  - Plattformname „Resteria" einführen und kurz begründen (Reste + „-ia" → Ort/Community der Resteverwertung; klar abgegrenzt von der Zero-Waste-Marke „Restlos Glücklich")
   - Kernfunktion: Reste-Zutaten-Eingabe → Rezeptvorschlag
   - Gamification: Rettungspunkte (pro genutzter Reste-Zutat) kumulieren zu Reste-Level/Resteheld:innen-Titeln — begründet über Nudge-Reminder-Prinzip (Barker) und Green Self-Identification (Nivedhitha)
+  - [STRESSTEST 2026-07-21] Soma-Zahl korrekt rahmen: −51 % belegen, dass Gamification als Hebel gegen Lebensmittelverschwendung *grundsätzlich* wirkt — NICHT als Wirkversprechen der konkreten Punkte-/Level-Mechanik von „Resteria". Formulierung: „stützt die Wahl von Gamification als Hebel; die konkrete Ausgestaltung ist eigene Konzeptleistung." Overclaim vermeiden.
   - Weitere Funktionen: Rezept-Upload mit Foto/Video, Bewertungs-/Kommentarsystem, personalisierte Empfehlungen
+  - [ABDECKUNG aufgabe.md] Menüplanung / Reste-Journal (Schlüsselbegriff „Lebensmittel-Journaling/Menüplanung"): Wochen-/Menüplan, der geplante Mahlzeiten mit vorhandenen Resten verknüpft, plus ein „Reste-Journal", das verwertete Zutaten protokolliert und in die Rettungspunkte einspeist — bindet Journaling/Menüplanung direkt an den Zero-Waste-Kernmechanismus (schließt die Abdeckungslücke aus dem Bereitschafts-Check)
   - UI/UX-Skizze: Beschreibung im Fließtext, Mockup im Anhang (KI-generiert mit Claude, gekennzeichnet)
   - Bewusster Verzicht auf Event-Kalender als eigene Funktion, kurz begründet (Fokus-Schärfung)
 
@@ -105,16 +116,17 @@ Die Plattform „Restlos" differenziert sich von generischen Rezept-/Social-Medi
 
 ## Kapitel 3: Fazit (ca. 15 %)
 - **Datei**: `chapters/03_fazit/fazit.tex` (Master) · **Label**: `sec:fazit`
-- **Kernargument**: „Restlos" ist ein literaturbasiert hergeleitetes, klar differenziertes Plattformkonzept — Innovationskern (Reste-Matching + echte Social-Community) explizit benannt, nicht relativiert.
+- **Kernargument**: „Resteria" ist ein klar differenziertes Plattformkonzept — die *Verhaltenshebel* (Nudges, Gamification, Green Social Network Affordances) sind literaturbasiert hergeleitet, die *Differenzierung/USP* (Reste-Matching + echte Social-Community) beruht auf der eigenen Wettbewerbsanalyse; Innovationskern explizit benannt.
+- **[STRESSTEST 2026-07-21]**: Zwei Stützarten sauber trennen — nicht das Gesamtkonzept pauschal „literaturbasiert" nennen (das überschätzt die Fundierung). Hebel = Literatur, USP = eigene Recherche. „Nicht relativiert" mit der Pflicht-Limitationsschicht in Einklang halten (kein reiner Nutzertest → Konzeptstatus offen benennen).
 - **Belege**: Rückbezug auf Kernargument Durchführung + Abdeckungs-Tabelle (alle Bewertungskriterien bedient)
-- **Argumentationsstärke**: ungeprüft (kompakt ohne Stresstest)
+- **Argumentationsstärke**: Stresstest 2026-07-21 (Einzellauf) — Fundierung differenziert (Hebel = Literatur, USP = eigene Recherche); siehe [STRESSTEST]-Marker
 - **Faktenbasis**: eigene Konzeptleistung
 
 ### Subsection: 01_kernergebnisse_und_ausblick
 - **Argumentationsfluss**: Fasst das Konzept zusammen und öffnet den Blick über den Berichtsrahmen hinaus.
 - **Inhaltspunkte**:
-  - Kernergebnisse: „Restlos"-Konzept mit Alleinstellungsmerkmal zusammenfassen
-  - Literaturbasierte Fundierung als Qualitätsmerkmal des Vorgehens hervorheben
+  - Kernergebnisse: „Resteria"-Konzept mit Alleinstellungsmerkmal zusammenfassen
+  - [STRESSTEST 2026-07-21] Fundierung differenziert benennen: Verhaltenshebel literaturbasiert (Vittuari, Barker, Soma, Nivedhitha) — Differenzierung/USP aus eigener Wettbewerbsanalyse hergeleitet, nicht aus der Literatur
   - Ausblick: reale Nutzertests, mögliche Partnerschaften (z. B. lokale Food-Sharing-Initiativen) als nächste Schritte
 
 ### Subsection: 02_limitationen

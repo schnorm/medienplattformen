@@ -104,7 +104,7 @@ Kern des Workflows: **viele kurze Sessions statt einer großen.** Lange Sessions
 | Komponente (Identifikator) | Pfad | Status | Notizen |
 |---|---|---|---|
 | Aufgabenstellung | `aufgabe.md` | FERTIG | Aufgabenstellung 2 (Hobbyköch:innen), Nische Zero-Waste |
-| Kapitelplan | `kapitelplan.md` | FERTIG | Plattform „Restlos" — 3 Kapitel, 11 Subsections geplant |
+| Kapitelplan | `kapitelplan.md` | FERTIG | Plattform „Resteria" (Name 2026-07-21 gesetzt, Kollision „Restlos Glücklich" behoben) — 3 Kapitel, 11 Subsections geplant |
 | `sec:einleitung` | `chapters/01_einleitung/einleitung.tex` | NICHT BEGONNEN | Platzhalter-Datei existiert bereits, 3 Subsections geplant |
 | `sec:durchfuehrung` | `chapters/02_durchfuehrung/…` | NICHT BEGONNEN | Größtes Kapitel (73 %), 6 geplante Subsections |
 | `sec:fazit` | `chapters/03_fazit/…` | NICHT BEGONNEN | 2 Subsections geplant |
@@ -112,9 +112,9 @@ Kern des Workflows: **viele kurze Sessions statt einer großen.** Lange Sessions
 
 **Update-Regel:** Eine Komponente = eine Zeile, bestehende Zeile überschreiben, nie anhängen. Identifikator = `sec:<slug>` (in Plan-Modus Schritt 2.5 festgelegt) — hält Tabelle, Dateinamen und LaTeX-Labels synchron. Platzhalter-Zeilen spätestens bei Schritt 2.5 durch echte Einträge ersetzen; aus dem Plan entfernte Komponenten löschen.
 
-**Aktuelle Richtung**: `kapitelplan.md` ist fertig (Plattform „Restlos", 3 Kapitel/11 Subsections). Nächster Schritt: schreib-modus starten, Durchführung zuerst (voraussetzungsreichstes Kapitel) oder Einleitung als kleinerer Einstieg.
+**Aktuelle Richtung**: Stresstest (Einzellauf 2026-07-21, mit Online-Recherche) auf die Kernargumente durchgeführt und in `kapitelplan.md` eingearbeitet (`[STRESSTEST 2026-07-21]`-Marker): Wettbewerbsanalyse verbreitert (Reste-Matching als Kategorie inkl. BMEL-App, Foodsharing.de abgegrenzt), Soma −51 % korrekt gerahmt, Fazit-Fundierung getrennt (Hebel=Literatur, USP=eigene Recherche). USP hält. Plattformname „Resteria" gesetzt. Re-Stresstest (nüchtern, mit Verifikations-Gate): alle 3 Kernargumente ≥ Mittel, kein offener Stark-Befund. Wettbewerbsanalyse als **eigene Vergleichsanalyse** geklärt (Prüfer-Anmerkung Pkt. 2): Plattformen/Verbraucherzentrale = eigene Sichtung, **kein `\parencite`**, keine Webquellen in `references.bib` — ZITIERREGEL im Durchführungsblock verbindlich für schreib-modus. Methode: Kriterien-Matrix + kompakte SWOT. Journaling/Menüplanung-Abdeckungslücke in `03_konzept` geschlossen. `references.bib` (5 akademische Keys) damit vollständig. **Plan ist schreibreif.** Nächster Schritt: schreib-modus, Einleitung zuerst (kleiner Einstieg) oder Durchführung (voraussetzungsreichstes Kapitel).
 
-**Offene Fragen**: Keine blockierenden offenen Punkte für Schritt 3.
+**Offene Fragen**: Keine blockierenden Punkte. Nutzer-Restpflichten (nicht-blockierend): Namensverfügbarkeit „Resteria" (DPMA / .de-Domain) · Nivedhitha/Shen nur per Abstract → beim Schreiben vorsichtig formulieren, bis Volltext vorliegt.
 
 **Fristen**: Abgabe: kein festes Datum (`\today` auf Nutzerwunsch, siehe `PERSISTENT.md`) · Eidesstattliche Erklärung (myCampus): [offen]
 

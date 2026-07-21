@@ -171,6 +171,13 @@ Bestätigung: Ja (kompakt, aus These+Gerüst abgeleitet)
 | Soma et al. 2020 | S. 3 | Gamification-Definition + Verweis: „points, leaderboards, and badges were the most common types of strategies used to boost motivation" | `03_konzept` — direkte Stütze für Rettungspunkte+Reste-Level als literaturkonforme Gamification-Wahl |
 | Verbraucherzentrale (App-Test Restegourmet, unabhängig) | — | Restegourmet bietet Bewertungs-/Feedback-System und einfaches Rezepte-Teilen, aber **keine** Social-Features (kein Following, keine Kommentar-Community, keine Gruppen, keine Gamification/Badges/Punkte) — reines persönliches Tool (Vorratskammer, Wochenplan, KI-Rezeptgenerator) | `01_wettbewerbsanalyse` — präzisiert die Differenzierung: Lücke ist „echte Social-Community", nicht „Teilen-Funktion an sich"; Quelle: https://www.verbraucherzentrale.de/wissen/umwelt-haushalt/apptest-restegourmet-sparen-sie-mit-den-zutaten-nicht-bei-der-app-100156 |
 
-## Stresstest-Ergebnisse (sobald Schritt 4 erreicht)
-| Argument | Stärke | Begründung |
+## Stresstest-Ergebnisse (Einzellauf 2026-07-21, mit Online-Recherche verifiziert)
+| Argument / Befund | Stärke (nach Recherche) | Begründung & Umsetzung |
 |---|---|---|
+| „Niemand kombiniert Reste-Matching + Community" angreifbar (Foodsharing.de etc.) | Entkräftet → Mittel | Recherche: kein Anbieter kombiniert alles → USP hält. ABER Absolutformulierung entschärft + Foodsharing als anderes Segment (Weitergabe, kein Rezept-Tool) abgegrenzt. UMGESETZT in kapitelplan.md (Kap. 1+2, 01_wettbewerbsanalyse). |
+| Wettbewerbsanalyse zu dünn (nur Restegourmet als Reste-Tool) | Mittel–Stark | BMEL-App „Zu gut für die Tonne!" (800+ Rezepte, 3 Zutaten, Portionenrechner) u. a. fehlten. Reste-Matching jetzt als Kategorie dargestellt — stärkt die Lücke. UMGESETZT. |
+| Soma −51 % Evidenz-Transfer-Overclaim | Mittel–Stark | −51 % belegt Gamification *grundsätzlich*, nicht die konkrete Punkte-/Level-Mechanik. Rahmung in 03_konzept ergänzt. UMGESETZT. |
+| Fazit: „literaturbasiert" konflatiert Hebel + USP | Mittel | Hebel = Literatur, Differenzierung = eigene Wettbewerbsanalyse — jetzt getrennt. UMGESETZT (Kap. 3, 01_kernergebnisse). |
+| NEU: Namenskollision „Restlos" ↔ „Restlos Glücklich" e.V. + App | Stark (Namensentscheidung) | Etablierte Zero-Waste-Marke im identischen Feld. OFFEN — Nutzer wählt Alternative; „Restlos" bis dahin Platzhalter. Markiert in kapitelplan.md → Papierinfo. |
+
+**Quellen (Nutzer verifiziert final):** BMEL-App https://www.bmleh.de/DE/themen/ernaehrung/lebensmittelverschwendung/reste-app.html · Foodsharing.de https://en.wikipedia.org/wiki/Foodsharing.de · Restlos Glücklich e.V. https://www.restlos-gluecklich.berlin/ · App https://apps.apple.com/app/6759112016
