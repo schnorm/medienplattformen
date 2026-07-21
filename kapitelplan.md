@@ -56,6 +56,7 @@ Die Plattform „Resteria" differenziert sich von generischen Rezept-/Social-Med
   - [STRESSTEST 2026-07-21] Namenskollision entdeckt: „Restlos Glücklich" e.V. (Berlin, seit 2015, Zero-Waste-Rezepte) + gleichnamige App — https://www.restlos-gluecklich.berlin/ — betrifft Plattformnamen, siehe Papierinfo
 - **[ZITIERREGEL Wettbewerbsanalyse — für schreib-modus verbindlich, 2026-07-21]**: Die Wettbewerbsanalyse ist **eigene Vergleichsanalyse** (Prüfer-Anmerkung Pkt. 2: „nachvollziehbare Vergleichsanalyse bestehender Plattformen, z. B. SWOT"). Die Plattformen (Chefkoch, TikTok Food, Restegourmet, BMEL-App, Foodsharing.de) und der Verbraucherzentrale-Test sind **Untersuchungsgegenstände / eigene Sichtung (Stand: Juli 2026), KEIN `\parencite`** — die obigen URLs sind Recherche-Nachweis, **keine Zitierquellen**, und kommen **nicht** nach `references.bib`. Vergleichstabelle und SWOT tragen `\quelle{Eigene Darstellung.}`. `\parencite` **ausschließlich** für die 5 akademischen Paper (Vittuari, Barker, Soma, Nivedhitha, Shen — alle in `references.bib`). Plattform-Aussagen als eigene Beobachtung formulieren, nicht als Fremdzitat.
 - **Lieferobjekte**: UI/UX-Mockup (Anhang, KI-generiert mit Claude + Kennzeichnung) · Wettbewerbsvergleich-Tabelle · SWOT-Übersicht (eigene Konzept-Position) · Persona-Skizze (Anhang) · Funktionsübersicht · Phasenplanungs-Tabelle
+- **Budget-Verteilung innerhalb Durchführung (Richtwert)**: 01_wettbewerbsanalyse (~25 %) + 03_konzept (~30 %) = Kernpaar ~55 % der Durchführung; übrige 4 Subsections teilen sich ~45 %. Bei Mindestumfang 7 Seiten: SWOT kompakt halten (3–4 Stichpunkte) oder in Anhang verlagern; ab 8 Seiten komfortabel. Gesamtumfang ≥ 8 Seiten anpeilen.
 
 **Zu verifizieren vor dem Schreiben** (Nutzer-Pflicht laut IU-KI-Richtlinie):
 - Chefkoch.de: genaue aktuelle Funktionsdetails, falls im Text konkret zitiert
@@ -111,7 +112,7 @@ Die Plattform „Resteria" differenziert sich von generischen Rezept-/Social-Med
 - **Argumentationsfluss**: Schließt das Hauptkapitel mit Reflexion, bereitet die Fazit-Limitationen vor.
 - **Inhaltspunkte**:
   - Zielerreichung gegen `aufgabe.md` → Wörtliche Abhakliste abgleichen
-  - Methoden-Reflexion: Stärken/Schwächen des konzeptionellen Vorgehens (Grenze: keine reale Nutzerbefragung)
+  - Methoden-Reflexion: Stärken/Schwächen des konzeptionellen Vorgehens — Fokus *Prozessqualität* (war die Methode angemessen?), nicht Ergebnisgeltung (→ Fazit-Limitationen)
   - Lessons Learned aus dem Konzeptionsprozess
 
 ## Kapitel 3: Fazit (ca. 15 %)
@@ -132,9 +133,9 @@ Die Plattform „Resteria" differenziert sich von generischen Rezept-/Social-Med
 ### Subsection: 02_limitationen
 - **Argumentationsfluss**: Schließt den Bericht mit einer dreischichtigen, transparenten Grenzen-Reflexion (Projektbericht-Pflicht).
 - **Inhaltspunkte**:
-  - Limitation 1: Kein echter Nutzertest/Primärdaten → Konzept bleibt hypothetisch | Mitigation: literaturbasierte Herleitung statt freihändiger Spekulation | Zukünftig: Beta-Test vor Launch (siehe Phasenplanung)
+  - Limitation 1: Kein echter Nutzertest/Primärdaten → Konzept bleibt hypothetisch — Fokus *Ergebnisgeltung* (was bedeutet das für die Belastbarkeit?), nicht Prozessqualität (→ Durchführung-Reflexion) | Mitigation: literaturbasierte Herleitung statt freihändiger Spekulation | Zukünftig: Beta-Test vor Launch (siehe Phasenplanung)
   - Limitation 2: UI/UX-Mockup KI-generiert, nicht nutzerfeedback-validiert | Mitigation: transparente Kennzeichnung, Fokus auf Kernfunktion statt Vollausarbeitung | Zukünftig: Usability-Test mit Prototyp
-  - Limitation 3: Wettbewerbsanalyse auf 3 Plattformen begrenzt (Seitenbudget) | Mitigation: gezielte statt erschöpfende Auswahl je ein Vertreter pro Kategorie | Zukünftig: breitere Marktanalyse vor realer Umsetzung
+  - Limitation 3: Wettbewerbsanalyse auf ausgewählte Vertreter dreier Plattform-Kategorien begrenzt (Rezept-Community: Chefkoch + TikTok · Reste-Matching: Restegourmet + BMEL-App · Abgrenzung: Foodsharing.de; Seitenbudget) | Mitigation: gezielte statt erschöpfende Auswahl, je Kategorie ein bis zwei Vertreter | Zukünftig: breitere Marktanalyse vor realer Umsetzung
 
 ## Zitat-Kandidaten (Recherche-Vorarbeit, Nutzer prüft final am Original)
 
