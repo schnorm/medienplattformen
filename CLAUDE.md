@@ -110,14 +110,14 @@ Kern des Workflows: **viele kurze Sessions statt einer großen.** Lange Sessions
 |---|---|---|---|
 | Aufgabenstellung | `aufgabe.md` | FERTIG | Aufgabenstellung 2 (Hobbyköch:innen), Nische Zero-Waste |
 | Kapitelplan | `kapitelplan.md` | FERTIG | Plattform „Resteria" (Name 2026-07-21 gesetzt, Kollision „Restlos Glücklich" behoben) — 3 Kapitel, 11 Subsections geplant |
-| `sec:einleitung` | `chapters/01_einleitung/einleitung.tex` | NICHT BEGONNEN | Platzhalter-Datei existiert bereits, 3 Subsections geplant |
-| `sec:durchfuehrung` | `chapters/02_durchfuehrung/…` | NICHT BEGONNEN | Größtes Kapitel (73 %), 6 geplante Subsections |
-| `sec:fazit` | `chapters/03_fazit/…` | NICHT BEGONNEN | 2 Subsections geplant |
+| `sec:einleitung` | `chapters/01_einleitung/einleitung.tex` | FERTIG | 3 Subsections geschrieben, `check_formalia.py` 0 FEHLER |
+| `sec:durchfuehrung` | `chapters/02_durchfuehrung/…` | FERTIG | 6 Subsections geschrieben, `check_formalia.py` 0 FEHLER, alle 5 BBT-Keys genutzt; 4 Tabellen (Wettbewerbsvergleich, Funktionsübersicht, Persona, Phasenplanung) + 4 Abbildungen (Funktionslogik, 3× UI/UX-Mockup-Platzhalter Anhang B) — `\listoftables`/`\listoffigures` in `main.tex` ggf. einkommentieren (Nutzer-Hinweis, nicht selbst geändert) |
+| `sec:fazit` | `chapters/03_fazit/…` | FERTIG | 2 Subsections geschrieben (`01_kernergebnisse_und_ausblick`, `02_limitationen`), `check_formalia.py` 0 FEHLER, 4 BBT-Keys (Vittuari, Barker, Soma, Nivedhitha) validiert, Limitationen dreischichtig (warum/Mitigation/zukünftig) |
 | Prüf-Audit | `pruefbericht.md` | NICHT BEGONNEN | |
 
 **Update-Regel:** Eine Komponente = eine Zeile, bestehende Zeile überschreiben, nie anhängen. Identifikator = `sec:<slug>` (in Plan-Modus Schritt 2.5 festgelegt) — hält Tabelle, Dateinamen und LaTeX-Labels synchron. Platzhalter-Zeilen spätestens bei Schritt 2.5 durch echte Einträge ersetzen; aus dem Plan entfernte Komponenten löschen.
 
-**Aktuelle Richtung**: Plan-Audit (2026-07-21) durchgeführt, 3 Funde nachgeschärft: (1) Arbeitsteilung Reflexion/Limitationen explizit gemacht (Reflexion = Prozessqualität, Limitation = Ergebnisgeltung), (2) Plattform-Zählung in Limitation 3 mit Wettbewerbsanalyse synchronisiert (3 Kategorien statt „3 Plattformen"), (3) Budget-Verteilung innerhalb Durchführung ergänzt (Wettbewerb ~25 % + Konzept ~30 % = Kernpaar; Gesamtumfang ≥ 8 Seiten anpeilen). **Plan ist schreibreif.** Nächster Schritt: Bereitschafts-Check (empfohlen) oder direkt schreib-modus.
+**Aktuelle Richtung**: Kapitel 3 (Fazit) geschrieben und gespeichert — 2 Subsections (`01_kernergebnisse_und_ausblick`, `02_limitationen`), `check_formalia.py` 0 FEHLER, 4 BBT-Keys (Vittuari, Barker, Soma, Nivedhitha) genutzt und validiert; `pages/chapters.tex` bindet den neuen Master ein. Damit sind alle 3 Kapitel FERTIG. Nächster Schritt laut Workflow-Fahrplan: „Gegenlesung" (kalte Prüfer-Gegenlesung gegen `aufgabe.md`) — **vor** Gesamt-Stresstest und Voll-Audit.
 
 **Offene Fragen**: Keine blockierenden Punkte. Nutzer-Restpflichten (nicht-blockierend): Namensverfügbarkeit „Resteria" (DPMA / .de-Domain) · Nivedhitha/Shen nur per Abstract → beim Schreiben vorsichtig formulieren, bis Volltext vorliegt.
 

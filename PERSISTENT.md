@@ -1,6 +1,6 @@
 # PERSISTENT.md — arbeitenübergreifende Dauer-Präferenzen
 
-**Stand:** 2026-07-21 (Skill-Optimierungsrunde P1–P6) · **Zuletzt gepflegt in:** Medienplattformen-Projektbericht
+**Stand:** 2026-07-21 (Trichter-statt-Vorwegnahme-Regel) · **Zuletzt gepflegt in:** Medienplattformen-Projektbericht
 
 Diese Datei wandert von Projekt zu Projekt: Beim Start einer neuen Arbeit die `PERSISTENT.md` aus dem **vorherigen Projekt** hierher kopieren (diesen Seed einfach überschreiben). Sie enthält nur Präferenzen, die **unabhängig von der konkreten Arbeit** gelten — Stil, Zitier-Sonderfälle, Prozess-/Modellpräferenzen. Alles Projektspezifische gehört in `MEMORY.md`.
 
@@ -29,6 +29,8 @@ Diese Datei wandert von Projekt zu Projekt: Beim Start einer neuen Arbeit die `P
 [LERNEN:prozess] 2026-07-21 — `plan-modus`-Output bekommt vor Fertigstellung einen **Pflicht-Integritätscheck**: jede bestätigte Draft-Entscheidung (Abhakliste, Lieferobjekte, bestätigte Feature-Ideen) muss im finalen `kapitelplan.md` einen Ort haben, sonst gilt sie als verloren. Anlass: „Journaling/Menüplanung" fiel bei der Konsolidierung Draft → Output still heraus, obwohl im Draft zugeordnet.
 
 [LERNEN:prozess] 2026-07-21 — Jede im Plan genannte Quelle bekommt jetzt eine **Zitier-Klassifikation**: (a) zitiert → `\parencite` + BBT-Key Pflicht, (b) eigene Analyse/Sichtung → `\quelle{Eigene Darstellung.}`, kein Cite, nicht in `references.bib`, (c) unzulässig → auf Primärquelle ausweichen. Anlass: Plattformen/Webquellen standen im Plan unter „Belege" und hätten `schreib-modus` beinahe zu `\parencite` mit erfundenem Key verleitet — nur eine manuelle Sonderregel in derselben Session verhinderte es. Jetzt strukturell in `plan-modus` Schritt 3, `schreib-modus` und `hard-rules-formal.md` verankert.
+
+[LERNEN:struktur] 2026-07-21 — **Trichter statt Vorwegnahme**: Nennt eine Einleitung Vergleichsobjekte, die ein späteres Kapitel vertieft analysiert (z. B. Konkurrenzprodukte vor der Wettbewerbsanalyse), ist das kein Redundanz-Problem, solange die Einleitung nur die Behauptungsebene bedient (Kategorien, Beispiele, die Lücke selbst) und Kriterienmatrix/Testberichte/Detailbelege dem Analysekapitel vorbehalten bleiben — dieselben Beispiele in beiden Kapiteln sind sogar erwünscht (Roter Faden). Anlass: Nutzer-Nachfrage, ob die Nennung von Chefkoch/TikTok/Restegourmet/BMEL-App in der Einleitung der Wettbewerbsanalyse in Kapitel 2 vorgreift — Prüfung ergab: nein, Tiefenunterschied war klar genug. Jetzt explizit in `hard-rules-formal.md` → „Roter Faden" verankert.
 
 [LERNEN:prozess] 2026-07-21 — Vor dem allerersten `schreib-modus`-Aufruf gibt es jetzt einen **Bereitschafts-Check** als eigenen, rein mechanischen Umfang in `pruef-modus` (Nutzer-Entscheidung: Heimat `pruef-modus`, nicht `schreib-modus`-Eingangsritual — konsistent mit „Audits nur in pruef-modus"): BBT-Keys für alle `[zitiert]`-Quellen, Abhakliste/Lieferobjekte vollständig zugeordnet, kein offener Stark-Stresstest-Befund, Namens-/Prüfer-Steuerungen berücksichtigt, Papiertyp-Pflichtpunkte je einem Kapitel zugeordnet. Kein Score, keine Textbewertung — reiner Dateiabgleich. Anlass: eine Bereitschaftseinschätzung enthielt einen falschen Blocker („Zotero nötig"), weil sie geschätzt statt geprüft war. `schreib-modus` bietet den Check beim allerersten Aufruf (leeres `chapters/`) unverbindlich an.
 
