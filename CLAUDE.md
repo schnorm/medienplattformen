@@ -103,20 +103,20 @@ Kern des Workflows: **viele kurze Sessions statt einer großen.** Lange Sessions
 
 | Komponente (Identifikator) | Pfad | Status | Notizen |
 |---|---|---|---|
-| Aufgabenstellung | `aufgabe.md` | NICHT BEGONNEN | |
-| Kapitelplan | `kapitelplan.md` | NICHT BEGONNEN | |
-| `sec:<slug-1>` (Platzhalter) | `chapters/…` | NICHT BEGONNEN | wird in Plan-Phase ersetzt |
+| Aufgabenstellung | `aufgabe.md` | FERTIG | Aufgabenstellung 2 (Hobbyköch:innen), Nische Zero-Waste |
+| Kapitelplan | `kapitelplan.md` | FERTIG | Plattform „Restlos" — 3 Kapitel, 11 Subsections geplant |
+| `sec:einleitung` | `chapters/01_einleitung/einleitung.tex` | NICHT BEGONNEN | Platzhalter-Datei existiert bereits, 3 Subsections geplant |
+| `sec:durchfuehrung` | `chapters/02_durchfuehrung/…` | NICHT BEGONNEN | Größtes Kapitel (73 %), 6 geplante Subsections |
+| `sec:fazit` | `chapters/03_fazit/…` | NICHT BEGONNEN | 2 Subsections geplant |
 | Prüf-Audit | `pruefbericht.md` | NICHT BEGONNEN | |
 
 **Update-Regel:** Eine Komponente = eine Zeile, bestehende Zeile überschreiben, nie anhängen. Identifikator = `sec:<slug>` (in Plan-Modus Schritt 2.5 festgelegt) — hält Tabelle, Dateinamen und LaTeX-Labels synchron. Platzhalter-Zeilen spätestens bei Schritt 2.5 durch echte Einträge ersetzen; aus dem Plan entfernte Komponenten löschen.
 
-**Aktuelle Richtung**: [1–2 Sätze: woran wird gerade gearbeitet, unmittelbar nächster Schritt.]
+**Aktuelle Richtung**: `kapitelplan.md` ist fertig (Plattform „Restlos", 3 Kapitel/11 Subsections). Nächster Schritt: schreib-modus starten, Durchführung zuerst (voraussetzungsreichstes Kapitel) oder Einleitung als kleinerer Einstieg.
 
-> **Format (verbindlich):** höchstens **5 Zeilen**, ausschließlich (1) Stand von heute in einem Satz, (2) letzter abgeschlossener Schritt mit Datum, (3) **nächster Schritt** als konkreter Session-Einstieg, (4) blockierende offene Punkte. **Keine Historie** — kein „Zuvor …". Die Verlaufsdarstellung steht ausschließlich im Erledigt-Log von `AENDERUNGEN.md`; bei jedem Update wird der bisherige Text **ersetzt, nicht ergänzt**.
+**Offene Fragen**: Keine blockierenden offenen Punkte für Schritt 3.
 
-**Offene Fragen**: [unentschiedene Punkte für die nächste Session, z. B. „Methodik-Kapitel nötig? Noch nicht final entschieden."]
-
-**Fristen**: Abgabe: [—] · Eidesstattliche Erklärung (myCampus): [offen]
+**Fristen**: Abgabe: kein festes Datum (`\today` auf Nutzerwunsch, siehe `PERSISTENT.md`) · Eidesstattliche Erklärung (myCampus): [offen]
 
 > Aktualisiert nach jedem Checkpoint bzw. jeder gespeicherten Datei, sichtbar quittiert. Für Planungsinhalte gilt bei Widerspruch der Plan/Draft, für Statuswerte diese Tabelle.
 

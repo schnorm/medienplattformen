@@ -178,9 +178,11 @@ Forschungslücken: ...
 Empirische Papers (Seminararbeit): <Liste mit study_type>
 ```
 
-Output an Nutzer: Priority Reading Order (3–5 Papers, geordnet), pro Paper Titel/Autoren/Journal/Jahr/Citation-Count/1-Satz-Relevanz, Forschungslücken, Hinweis auf Zotero-Import → BBT-Export nach `references.bib`.
+Output an Nutzer: Priority Reading Order (3–5 Papers, geordnet), pro Paper Titel/Autoren/Journal/Jahr/Citation-Count/1-Satz-Relevanz, Forschungslücken.
 
-**Checkpoint**: `[INSIGHT: literaturrecherche]` + Priority Reading Order in `kapitelplan.draft.md` eintragen, Status auf „Nächster Schritt: 2" setzen.
+**Zotero-Erinnerung (nicht überspringen, eigene Zeile im Chat, nicht nur Nebensatz)**: Gefundene Paper jetzt in Zotero importieren — auch ohne PDF, Metadaten reichen für den BBT-Key — und Better BibTeX exportieren lassen, damit `references.bib` rechtzeitig vor Schreib-Modus bereitsteht. Ohne diesen Schritt fehlen dort die BBT-Keys für `\parencite{}`, und Schreib-Modus darf laut eigener Regel keine Keys erfinden.
+
+**Checkpoint**: `[INSIGHT: literaturrecherche]` + Priority Reading Order in `kapitelplan.draft.md` eintragen, Zotero-Erinnerung im Chat quittiert, Status auf „Nächster Schritt: 2" setzen.
 
 **Session-Schnitt empfohlen**: Nach diesem Checkpoint dem Nutzer aktiv vorschlagen, die Session zu beenden und Schritt 2 frisch zu starten. Begründung: Die Consensus-Rohtreffer sind der größte Kontextposten der Planung, aber alles Weiterverwendbare steht destilliert im Draft — eine neue Session startet schlanker und günstiger. Zudem wechselt hier laut Modellempfehlung (siehe `_shared/modell-empfehlung.md`) ohnehin das Modell (Schritt 0–1: Sonnet · Schritt 2–4: Opus/hohes Thinking), was nur per Sessionwechsel geht. Nichts geht verloren: Der Resume-Check setzt exakt bei Schritt 2 wieder auf.
 
@@ -297,6 +299,8 @@ Bestätigung: Ja / Nein
 
 **Recherche-Gate:** Steht bei „Faktenbasis" *eigene Recherche* (Produktfeatures, Marktdaten, Werkzeugvergleiche, Preise), wird der Faktenstand **vor** dem Schreiben erhoben. Solche Angaben tragen meist eine Vergleichstabelle, auf die spätere Kapitel aufsetzen; eine Korrektur nach dem Schreiben schlägt auf jede daran hängende Stelle durch. Das Ergebnis kommt als **Rechercheprotokoll** in den Kapitelblock: je Behauptung Datum, Quelle, Befund — und, bei Aktivitäts- oder Qualitätsurteilen, **das Beobachtungsmerkmal**, an dem das Urteil hängt. Ein Urteil wie „wenig belebt" ohne benennbares Merkmal ist eine Behauptung, keine Erhebung. Die abschließende Verifikation am Original bleibt Nutzer-Pflicht (IU-KI-Richtlinie); das Protokoll ersetzt sie nicht, macht aber sichtbar, *was* zu verifizieren ist.
 
+**Optional — Literatur-Volltexte bereits während der Planung sichten:** Liegen zu Schritt 1 gefundene Paper bereits als PDF vor (z. B. Open-Access-Download), kann es sich lohnen, sie schon jetzt nach zitierfähigen Stellen zu durchsuchen, statt das komplett dem Schreib-Modus zu überlassen — spart eine zweite Lektüre und sichert früh ab, dass die geplante Argumentation wirklich durch den Volltext gedeckt ist (nicht nur durchs Abstract). Ergebnis kommt mit Seitenzahl in `kapitelplan.draft.md` **und** in den finalen `kapitelplan.md`-Output unter „Zitat-Kandidaten" (siehe Output-Template unten) — Schreib-Modus liest nur `kapitelplan.md`, nicht den Draft.
+
 **Checkpoint (Schritt 3, präzisiert)**: Pro Kapitel NUR per Edit:
 1. Kapitelzusammenfassung + INSIGHT an die `## INSIGHT-Sammlung` anhängen.
 2. Die Zeile `<Kapitel> | <Kernargument>` an die Tabelle „Kernargumente" anhängen (nicht nur im Fließtext der Kapitelzusammenfassung belassen — das ist die einzige Stelle, die der Stresstest in Schritt 4 liest).
@@ -375,6 +379,13 @@ Alle Inhalte liegen bereits in `kapitelplan.draft.md` (Checkpoints aus Schritt 0
 
 ### Forschungslücken (für Theorie & Argumentation)
 - ...
+
+## Zitat-Kandidaten (nur falls Volltexte bereits geprüft wurden, siehe Schritt 3 → Recherche-Gate)
+| Paper | Seite | Fundstelle (paraphrasiert/Zitat) | Verwendungszweck (Subsection) |
+|---|---|---|---|
+| ... | ... | ... | ... |
+
+Hinweis: Recherche-Vorarbeit — Nutzer prüft Seitenzahlen/Formulierungen final am Original (IU-KI-Richtlinie).
 
 ## Nächste Schritte
 → schreib-modus: Kapitel nacheinander verfassen

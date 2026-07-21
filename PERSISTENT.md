@@ -1,6 +1,6 @@
 # PERSISTENT.md — arbeitenübergreifende Dauer-Präferenzen
 
-**Stand:** — · **Zuletzt gepflegt in:** — (Seed aus der Vorlage, noch keine Einträge)
+**Stand:** 2026-07-21 · **Zuletzt gepflegt in:** Medienplattformen-Projektbericht
 
 Diese Datei wandert von Projekt zu Projekt: Beim Start einer neuen Arbeit die `PERSISTENT.md` aus dem **vorherigen Projekt** hierher kopieren (diesen Seed einfach überschreiben). Sie enthält nur Präferenzen, die **unabhängig von der konkreten Arbeit** gelten — Stil, Zitier-Sonderfälle, Prozess-/Modellpräferenzen. Alles Projektspezifische gehört in `MEMORY.md`.
 
@@ -11,6 +11,8 @@ Diese Datei wandert von Projekt zu Projekt: Beim Start einer neuen Arbeit die `P
 ---
 
 ## Einträge
+
+[LERNEN:prozess] 2026-07-21 — Nutzer möchte `pages/meta.tex` → `\SubmissionDate` bewusst dauerhaft auf `\today` gesetzt haben, entgegen der Template-Warnung („NIE \today — ändert sich bei jedem Kompilieren"). Auf den Zielkonflikt hingewiesen (Deckblatt zeigt dann Kompilierdatum statt echtem Abgabedatum), Nutzer hat sich informiert dafür entschieden. Gilt projektübergreifend, nicht nur für dieses Projekt.
 
 <!-- Beispiel:
 [LERNEN:stil] 2026-07-18 — Nutzer bevorzugt generell kürzere Absätze (3–4 Sätze), unabhängig vom Papiertyp.
