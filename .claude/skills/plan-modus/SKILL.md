@@ -153,6 +153,15 @@ Sobald Papiertyp feststeht: `.claude/skills/_shared/typen/<typ>.md` laden.
 
 Nur wenn Schritt 0 ergibt, dass Literatur fehlt/ergänzt werden muss — im Kompakt-Modus zusätzlich nur auf Wunsch. Sonst direkt zu Schritt 2.
 
+**Zuerst die vorhandene eigene Literatur sichten, erst danach suchen.** `sources/literature/` ist die Ablage, in die der Nutzer eigene Quellen legt (Ebooks, Paper, Buchkapitel) — auch schon vor dem Setup. Verzeichnis listen (ohne `README.md`) und die vorhandenen Werke erfassen: Titel, Autor, Jahr, und aus Inhaltsverzeichnis beziehungsweise Abstract in einem Satz, wofür das Werk im Plan taugt. **Nicht die Volltexte einlesen** — das sprengt den Kontext; gezielt Inhaltsverzeichnis, Abstract und Einleitung.
+
+Konsequenzen für den Rest des Schritts:
+- **Suchbudget reduzieren**, wo die eigene Literatur ein Sub-Thema bereits abdeckt. Die Tabelle unten nennt Obergrenzen für den Fall „nichts vorhanden".
+- Deckt die vorhandene Literatur das Thema erkennbar ab, kann der Consensus-Teil ganz entfallen — dem Nutzer als Entscheidung vorlegen, nicht selbst festlegen.
+- **Zitierbarkeit prüfen:** Je Werk gegen `references.bib` abgleichen (Grep auf Autor-Nachname). Fehlt der BBT-Key, hier melden und Zotero-Import anstoßen — ohne Key ist das Werk lesbar, aber in `schreib-modus` nicht zitierbar, und dort darf kein Key erfunden werden.
+- Die Sperrliste gilt auch hier: Liegt in `sources/literature/` ein Vorlesungsskript oder Foliensatz, ist es **keine zitierfähige Quelle** (siehe `hard-rules-formal.md` → Zitationen) — auf die Primärquelle ausweichen und das dem Nutzer sagen.
+- Ergebnis in den `[INSIGHT: literaturrecherche]`-Block unter „Eigene Literatur (sources/literature/)" aufnehmen, getrennt von den Consensus-Treffern.
+
 | Papiertyp | Nötig? | Suchbudget |
 |---|---|---|
 | Hausarbeit | Ja | 3–5 Suchen |
@@ -173,6 +182,7 @@ Nach allen Suchen synthetisieren:
 
 ```
 [INSIGHT: literaturrecherche]
+Eigene Literatur (sources/literature/): <Werk — Eignung — BBT-Key vorhanden ja/nein>, oder „— keine —"
 Frameworks: ...
 Sub-Bereiche: 1. ... 2. ... 3. ...
 Gefundene Papers: <Anzahl>
@@ -310,7 +320,7 @@ Beispiel: `Belege: 1. Meyer & Allen 1991 [zitiert] · 2. eigene Sichtung von 5 K
 
 **Recherche-Gate:** Steht bei „Faktenbasis" *eigene Recherche* (Produktfeatures, Marktdaten, Werkzeugvergleiche, Preise), wird der Faktenstand **vor** dem Schreiben erhoben. Solche Angaben tragen meist eine Vergleichstabelle, auf die spätere Kapitel aufsetzen; eine Korrektur nach dem Schreiben schlägt auf jede daran hängende Stelle durch. Das Ergebnis kommt als **Rechercheprotokoll** in den Kapitelblock: je Behauptung Datum, Quelle, Befund — und, bei Aktivitäts- oder Qualitätsurteilen, **das Beobachtungsmerkmal**, an dem das Urteil hängt. Ein Urteil wie „wenig belebt" ohne benennbares Merkmal ist eine Behauptung, keine Erhebung. Die abschließende Verifikation am Original bleibt Nutzer-Pflicht (IU-KI-Richtlinie); das Protokoll ersetzt sie nicht, macht aber sichtbar, *was* zu verifizieren ist.
 
-**Optional — Literatur-Volltexte bereits während der Planung sichten:** Liegen zu Schritt 1 gefundene Paper bereits als PDF vor (z. B. Open-Access-Download), kann es sich lohnen, sie schon jetzt nach zitierfähigen Stellen zu durchsuchen, statt das komplett dem Schreib-Modus zu überlassen — spart eine zweite Lektüre und sichert früh ab, dass die geplante Argumentation wirklich durch den Volltext gedeckt ist (nicht nur durchs Abstract). Ergebnis kommt mit Seitenzahl in `kapitelplan.draft.md` **und** in den finalen `kapitelplan.md`-Output unter „Zitat-Kandidaten" (siehe Output-Template unten) — Schreib-Modus liest nur `kapitelplan.md`, nicht den Draft.
+**Optional — Literatur-Volltexte bereits während der Planung sichten:** Liegen Volltexte vor — in `sources/literature/` abgelegte eigene Werke oder zu Schritt 1 heruntergeladene Open-Access-Paper —, kann es sich lohnen, sie schon jetzt nach zitierfähigen Stellen zu durchsuchen, statt das komplett dem Schreib-Modus zu überlassen — spart eine zweite Lektüre und sichert früh ab, dass die geplante Argumentation wirklich durch den Volltext gedeckt ist (nicht nur durchs Abstract). Ergebnis kommt mit Seitenzahl in `kapitelplan.draft.md` **und** in den finalen `kapitelplan.md`-Output unter „Zitat-Kandidaten" (siehe Output-Template unten) — Schreib-Modus liest nur `kapitelplan.md`, nicht den Draft.
 
 **Checkpoint (Schritt 3, präzisiert)**: Pro Kapitel NUR per Edit:
 1. Kapitelzusammenfassung + INSIGHT an die `## INSIGHT-Sammlung` anhängen.

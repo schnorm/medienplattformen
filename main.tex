@@ -10,11 +10,11 @@
 \usepackage[ngerman]{babel} % German language settings
 \addto\captionsngerman{\renewcommand{\figurename}{Abb.}}
 \addto\captionsngerman{\renewcommand{\tablename}{Tab.}}
-\usepackage[hidelinks]{hyperref} % Hyperlinks without borders
-% Hyperref-Autorefname auf „Kapitel“ setzen (überschreibt Standard „Unterabschnitt“/„Unterunterabschnitt“)
-\renewcommand{\sectionautorefname}{Kapitel}
-\renewcommand{\subsectionautorefname}{Kapitel}
-\renewcommand{\subsubsectionautorefname}{Kapitel}
+% hyperref wird bewusst ZULETZT geladen (Ende der Präambel, direkt vor biblatex):
+% es patcht Makros anderer Pakete und muss sie dafür bereits gesehen haben.
+% Die \...autorefname-Umdefinitionen stehen ausschließlich im \AtBeginDocument-
+% Block weiter unten — babel setzt sie bei \begin{document} sonst zurück, und
+% \renewcommand hier oben wäre ohne geladenes hyperref ein Fehler.
 \usepackage{setspace} % Spacing between paragraphs
 \usepackage[left=2cm, right=2cm, top=2cm, bottom=2cm]{geometry} % Page margins
 \onehalfspacing % 1,5 Zeilenabstand (Uni-Vorgabe)
@@ -74,12 +74,49 @@
 \titlespacing*{\section}{0pt}{12pt}{12pt}     % 12pt vor + 12pt nach
 \titlespacing*{\subsection}{0pt}{12pt}{6pt}    % 12pt vor + 6pt nach
 \titlespacing*{\subsubsection}{0pt}{12pt}{6pt} % 12pt vor + 6pt nach
-\def\UrlFont{\rm} % Print URLs not in Typewriter Font
+% \UrlFont wird zusammen mit hyperref/xurl am Ende der Präambel gesetzt —
+% hyperref definiert das Makro beim Laden selbst und würde eine frühere
+% Zuweisung hier überschreiben (URLs erschienen dann in Schreibmaschinenschrift).
 \renewcommand{\footnotesize}{\fontsize{10pt}{12pt}\selectfont} % 10 Pt. (Uni-Vorgabe für Fußnoten/Quellenzeilen); 12pt baselineskip, sonst überlappen mehrzeilige Fußnoten/Captions
 % Prevent automatic paragraph indentation (Uni-Vorgabe: keine Einrückung, 6pt Abstand nach Umbruch)
 \usepackage{changepage}
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{6pt} % Uni-Vorgabe: 6pt Abstand nach Zeilenumbruch
+
+% === Zeilen- und Seitenumbruch im Blocksatz ===================================
+% \hyphenpenalty leicht über dem LaTeX-Default (50). Nicht höher schrauben: ab
+% etwa 500 werden Trennungen selten, dafür klaffen die Wortabstände — das
+% Problem wäre nur verschoben. Gegen die auffälligen „Trennleitern" am rechten
+% Rand wirken nicht hohe Penalties, sondern die beiden demerits.
+\hyphenpenalty=100
+\exhyphenpenalty=100
+\tolerance=1500
+\doublehyphendemerits=100000   % zwei Trennstriche in Folge
+\finalhyphendemerits=50000     % Trennung in der vorletzten Zeile
+% Notreserve, greift erst im letzten Durchgang für sonst überhängende Zeilen.
+\setlength{\emergencystretch}{2em}
+
+% Seitenumbruch. 10000 = „unendlich", der Umbruch wird damit verboten.
+\clubpenalty=10000          % Schusterjunge: erste Absatzzeile allein am Seitenfuß
+\widowpenalty=10000         % Hurenkind: letzte Absatzzeile allein am Seitenkopf
+\displaywidowpenalty=10000  % dito vor einer abgesetzten Formel (separat nötig)
+\brokenpenalty=10000        % kein getrenntes Wort über den Seitenumbruch
+% Bei article+oneside ohnehin der Default — hier explizit, weil die Penalties
+% oben Seiten bewusst ein bis zwei Zeilen kürzer enden lassen und \flushbottom
+% den fehlenden Platz sonst aus \parskip holen würde (ungleiche Absatzabstände).
+\raggedbottom
+
+% Bindestrich, der die Silbentrennung BEIDER Wortteile erhält. Nach einem
+% normalen „-" wendet TeX die Trennmuster auf den Rest des Wortes nicht mehr an
+% — die häufigste Ursache für Randüberhänge im deutschen Blocksatz.
+% Gemessen mit \showhyphens:
+%   Betriebs-Dokumentation      -> keine einzige Trennstelle
+%   Betriebs\bs Dokumentation   -> Be-triebs-Do-ku-men-ta-ti-on
+% Nutzung im Fließtext: Refresh\bs Token
+% (Das babel-Shorthand "= täte dasselbe und steht hier zur Verfügung, da
+% shorthands NICHT abgeschaltet ist; \bs ist die explizitere Schreibweise und
+% bleibt gültig, falls shorthands später doch deaktiviert wird.)
+\newcommand{\bs}{\babelhyphen{hard}}
 
 % Blank page without page number, next page right
 \newcommand{\blankpage}{
@@ -95,12 +132,18 @@
     font={footnotesize},
     labelfont={bf,footnotesize},
     textfont={footnotesize},
-    labelsep=period
+    labelsep=period,
+    position=top  % IU: Beschriftung ÜBER Abb./Tab. — setzt die Caption-Abstände
+                  % passend zu dieser Position (Skip oberhalb statt unterhalb)
 }
 % Rotating landscape figures (sidewaysfigure)
 \usepackage{rotating}
 % Besserer Blocksatz (weniger overfull boxes, feinere Silbentrennung) — lualatex-kompatibel
 \usepackage{microtype}
+% Falsche Ligaturen an deutschen Morphemgrenzen unterdrücken („Auflage" ohne
+% ffl-Ligatur über die Wortfuge auf|lage). Nur unter LuaLaTeX verfügbar; fehlt
+% das Paket, kompiliert das Dokument unverändert weiter.
+\IfFileExists{selnolig.sty}{\usepackage{selnolig}}{}
 % Kompakte, konfigurierbare Listen (z. B. [nosep] für enge Aufzählungen)
 \usepackage{enumitem}
 % TikZ for diagrams
@@ -141,16 +184,6 @@
 %% Projekt-Metadaten (Titel, Modul, Tutor:in …) — einzige projektspezifische Stelle
 \input{pages/meta}
 
-%% PDF Metadata (zieht sich alles aus pages/meta.tex)
-\hypersetup{
- pdfauthor={\AuthorName},
- pdftitle={\PaperTitle},
- pdfsubject={\PaperType\ (\ModuleCode\ -- \ModuleName)},
- pdfkeywords={\PaperKeywords},
- pdfcreator={lualatex},
- pdfproducer={lualatex},
-}
-
 %% Direktzitate > 40 Wörter (IU-Zitierleitfaden): eigener Absatz, 1,27 cm links
 %% eingerückt, OHNE Anführungszeichen; Quellenangabe nach dem Schlusspunkt.
 \newenvironment{blockzitat}
@@ -161,16 +194,39 @@
 %% Bibliography & Settings
 %%
 \usepackage[babel]{csquotes}
+
+%% --- hyperref ZULETZT (Empfehlung der Paketdokumentation) -------------------
+%% hyperref patcht Makros anderer Pakete und sollte sie deshalb bereits gesehen
+%% haben. Reihenfolge: csquotes -> hyperref -> xurl -> biblatex. biblatex
+%% erkennt geladenes hyperref und stellt das Literaturverzeichnis darauf ein.
+\usepackage[hidelinks]{hyperref} % Hyperlinks without borders
+\usepackage{xurl}   % nach hyperref: erlaubt Umbruch in langen URLs/DOIs —
+                    % im APA-Literaturverzeichnis sonst Quelle von Randüberhängen
+\def\UrlFont{\rm}   % Print URLs not in Typewriter Font (nach hyperref setzen!)
+
 \usepackage[backend=biber, style=apa, pagetracker, apamaxprtauth=20 ]{biblatex}
 \setlength{\bibhang}{1.27cm} % Einzug ab 2. Zeile (Uni-Vorgabe)
+
+%% PDF Metadata (zieht sich alles aus pages/meta.tex; braucht geladenes hyperref)
+\hypersetup{
+ pdfauthor={\AuthorName},
+ pdftitle={\PaperTitle},
+ pdfsubject={\PaperType\ (\ModuleCode\ -- \ModuleName)},
+ pdfkeywords={\PaperKeywords},
+ pdfcreator={lualatex},
+ pdfproducer={lualatex},
+}
 
 %%
 %% Source Code Setup
 %%
 \usepackage{listings}
-\usepackage{color}
+% xcolor statt color: Obermenge, beherrscht Mischungen wie black!30 und wird von
+% tikz/pgf ohnehin geladen — parallel geladenes color ist eine Konfliktquelle.
+\usepackage{xcolor}
 \definecolor{dkgreen}{rgb}{0,0.6,0}
-\definecolor{gray}{rgb}{0.5,0.5,0.5}
+% NICHT „gray" nennen: xcolor definiert diesen Namen bereits vor.
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
 \definecolor{mauve}{rgb}{0.58,0,0.82}
 
 \lstset{frame=tb,
@@ -181,7 +237,7 @@
   columns=flexible,
   basicstyle={\small\ttfamily},
   numbers=none,
-  numberstyle=\tiny\color{gray},
+  numberstyle=\tiny\color{codegray},
   keywordstyle=\color{blue},
   commentstyle=\color{dkgreen},
   stringstyle=\color{mauve},
@@ -236,10 +292,10 @@
 
 % IU-Richtlinien: Tabellenverzeichnis erst AB DREI Tabellen einbinden —
 % Default ist deaktiviert; ab 3 Tabellen die folgenden 4 Zeilen einkommentieren.
-\blankpage
-\phantomsection
-\addcontentsline{toc}{section}{Tabellenverzeichnis}
-\listoftables % List of Tables
+%\blankpage
+%\phantomsection
+%\addcontentsline{toc}{section}{Tabellenverzeichnis}
+%\listoftables % List of Tables
 
 \blankpage
 \phantomsection

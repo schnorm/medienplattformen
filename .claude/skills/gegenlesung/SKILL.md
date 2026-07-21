@@ -65,7 +65,7 @@ Jede einzeln abarbeiten, auch wenn sie unergiebig scheint:
 4. **Wird ein Zentralbegriff der Aufgabenstellung stillschweigend verengt?** Verengung ist legitim, unbegründete Verengung nicht.
 5. **Widerspricht sich die Arbeit in ihren eigenen Festlegungen?** Besonders bei Rollen, Zugängen und Ausschließlichkeitsformulierungen. Und: Erhebt die Arbeit einen Einwand gegen sich selbst, den sie nirgends beantwortet?
 6. **Wirkt eine eigene Bewertung ergebnisorientiert?** Bekommt das Objekt, gegen das die These sich richtet, durchweg die schlechtesten Werte, ohne dass der Text diesen Anschein entkräftet?
-7. **Hätte das so ein Mensch geschrieben, oder wirkt es wie ein KI-Text?** Wenn letzteres, ist das ein Befund — nicht, weil KI schlecht ist, sondern weil die Aufgabenstellung eine menschliche Autorenschaft verlangt. Achte darauf, dass die Arbeit nicht nur inhaltlich, sondern auch stilistisch wie ein menschlicher Text wirkt. KI-typische Muster (z. B. übermäßige Wiederholungen, generische Formulierungen, fehlende persönliche Reflexion) sind zu notieren. Gleiche die Muster mit `hard-rules-formal.md` ab, um zu prüfen, ob sie gegen die formalen Anforderungen verstoßen. Wenn du den Eindruck hast, dass KI-Text vorliegt, markiere die entsprechenden Stelle und schlage dem User vor, diese zu überarbeiten, um den menschlichen Schreibstil zu gewährleisten.
+7. **Hätte das so ein Mensch geschrieben?** Liest sich der Text wie ein KI-Aufsatz, ist das ein Befund. Anhaltspunkte: generische Formulierungen, wiederkehrende Satzbaumuster, verdichtete Pointen-Schlusssätze, fehlende eigene Reflexion. Verdächtige Stellen mit Fundstelle notieren und gegen `hard-rules-formal.md` → Schreibstil abgleichen.
 
 ### Schritt 5 — Bewertungskriterien je Dimension
 
@@ -73,7 +73,7 @@ Jedes Kriterium aus `aufgabe.md` in seine Dimensionen zerlegen und einzeln beurt
 
 ### Schritt 6 — Ausgabe
 
-Befunde als **neue Runde in `AENDERUNGEN.md`**, Konvention wie in `CLAUDE.md` → Ordnerstruktur. Je Befund:
+Befunde als **neue Runde in `AENDERUNGEN.md`**, Format: `_shared/aenderungen-format.md` (jetzt laden). Je Befund:
 
 - **Befund** — was steht da beziehungsweise was fehlt, mit Fundstelle
 - **Warum ein Prüfer das anstreicht** — der Bewertungsbezug, nicht die Geschmacksfrage

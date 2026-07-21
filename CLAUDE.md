@@ -47,7 +47,7 @@ Kern des Workflows: **viele kurze Sessions statt einer großen.** Lange Sessions
 ```
 <latex-projektordner>/
 ├── CLAUDE.md                    # diese Datei, immer automatisch geladen
-├── handbuch.md                  # Nutzer-Handbuch (einzige Quelle; workflow-anleitung.pdf ist optionales Derivat)
+├── handbuch.md                  # Nutzer-Handbuch (einzige Quelle; handbuch.pdf ist daraus erzeugtes Derivat — generate_handbuch_pdf.py)
 ├── MEMORY.md                    # Korrekturen/Lernpunkte NUR für dieses Projekt
 ├── PERSISTENT.md                # projektübergreifende Dauer-Präferenzen — wandert per Kopie von Projekt zu Projekt
 ├── aufgabe.md                   # destillierte Aufgabenstellung (Plan-Modus Schritt 0) — Single Source statt Aufgaben-PDF
@@ -70,8 +70,9 @@ Kern des Workflows: **viele kurze Sessions statt einer großen.** Lange Sessions
 ├── images/<kapitel>/            # Abbildungen, gespiegelt zur Kapitelstruktur (Konvention: hard-rules-formal.md → LaTeX)
 ├── logos/ · tables/             # Logos bzw. Tabellen-Fragmente
 ├── sources/                     # IU-Leitfäden pro Papiertyp (Zweifelsfall) + Anmerkungen vom Prüfer.md (Pflichtquelle, siehe plan-modus Schritt 0)
+│   └── literature/              # EIGENE Quellen (Ebooks, Paper) — jederzeit befüllbar, auch vor dem Setup; Anleitung in literature/README.md. Wird in plan-modus Schritt 1 VOR der Consensus-Suche gesichtet. Nicht versioniert (.gitignore)
 └── .claude/skills/
-    ├── _shared/                 # hard-rules-formal.md, typen/<typ>.md, scripts/
+    ├── _shared/                 # hard-rules-formal.md, typen/<typ>.md, aenderungen-format.md, scripts/
     ├── setup-check/             # einmaliger Umgebungscheck
     ├── plan-modus/              # Betriebsarten kompakt/ausführlich, Schritt 0–4
     ├── schreib-modus/           # Kapitel schreiben
@@ -93,12 +94,26 @@ Kern des Workflows: **viele kurze Sessions statt einer großen.** Lange Sessions
 | Stresstest | `stresstest` | Jederzeit einzelnes Argument · Gesamt-Stresstest über die ganze Arbeit, **sobald alle Kapitel FERTIG sind — nach der Gegenlesung, vor dem Voll-Audit** (Stresstest prüft Inhalt, Prüf-Modus prüft Regeln; inhaltliche Befunde ändern den Text und würden ein vorher gefahrenes Audit entwerten) | Gegenargumente + Stärke · Gesamt: neue Runde in `AENDERUNGEN.md` |
 | Prüfen | `pruef-modus` | Kapitel-Audit nach Kapitel 1 · Voll-Audit vor Abgabe, **erst nach abgearbeiteter Gegenlesung und abgearbeitetem Gesamt-Stresstest** (Umfänge: siehe Skill) | `pruefbericht.md` mit Score |
 
+**Kompakt-Prüfkette (nur Hausarbeit & Projektbericht):** Bei den beiden kleinsten Formaten ist der Gesamt-Stresstest **optional** — Default-Kette dort: Gegenlesung → Abarbeiten → Voll-Audit. Grund: Bei 7–10 Seiten prüft die Gegenlesung dieselben wenigen Kernargumente ohnehin mit; ein voller Extra-Durchgang kostet mehr Session, als er findet. Auf Wunsch oder bei erkennbar wackliger Argumentation bleibt die volle Kette jederzeit möglich; ein bewusst übersprungener Gesamt-Stresstest wird im Prüfbericht vermerkt. **Fallstudie und Seminararbeit fahren immer die volle Kette** (eigene Analysen bzw. Empirie sind die typischen Overclaim-Quellen).
+
 **Mehrsession-Fähigkeit Plan-Modus**: Zwischenstand liegt fortlaufend in `kapitelplan.draft.md` (Checkpoint nach jedem Schritt). Bei Sessionstart immer zuerst prüfen, ob `kapitelplan.draft.md` existiert, statt bei Schritt 0 neu zu beginnen. Schreib-Modus liest `kapitelplan.md` per Read-Tool, nie aus dem Gesprächsverlauf.
+
+## Format `AENDERUNGEN.md`
+
+Verbindliches Runden-Format in `.claude/skills/_shared/aenderungen-format.md` — laden nur die Skills, die die Datei schreiben oder abarbeiten (`gegenlesung`, `stresstest` → Gesamt, `schreib-modus` → Abarbeiten). Kurzfassung: Befunde in Runden unter „## Offen" (je Punkt Befund · Warum · Anweisung), `[FREIGABE]` bei These-/Kernargument-Bezug nur nach aktiver Rückfrage umsetzen, abgearbeitete Runden ins Erledigt-Log; „Offen" ist leer, bevor ein Voll-Audit läuft.
 
 ## Papiertyp- und Formalia-Regeln
 
 - **Papiertyp-spezifisch** (Pflichtregeln, Bewertungsgewichte, Kapitelgerüst, Kernfragen, Voice, Audit-Checks): eine Datei pro Typ in `.claude/skills/_shared/typen/<typ>.md` — geladen, sobald der Papiertyp feststeht, bewusst nicht hier. Quellen-Zahlen dort sind Richtwerte aus der Praxis, keine IU-Vorgabe.
 - **Formale Hard Rules** (Zitationen, LaTeX, Pronomen, Struktur, Schreibstil): `.claude/skills/_shared/hard-rules-formal.md` — braucht nur `schreib-modus`/`pruef-modus`. Die sicherheitskritische Ausnahme (`main.tex`/`cover.tex`/`references.bib` nie ändern) steht oben in den Grundprinzipien.
+
+## „Wo stehen wir?" (Status-Anfrage — definierter Ablauf)
+
+Reine Lese-Operation, keine Arbeitssession:
+1. Statustabelle unten + „Aktuelle Richtung" + „Fristen" lesen (sind ohnehin geladen).
+2. `python .claude/skills/_shared/scripts/check_status.py` laufen lassen — meldet Widersprüche Tabelle ↔ Dateisystem deterministisch.
+3. Antwort in höchstens 8 Zeilen: Stand heute (1 Satz) · zuletzt abgeschlossener Schritt · **nächster Schritt** als konkreter Session-Einstieg · offene Blocker/Fristen · check_status-Funde, falls vorhanden.
+4. Keine Kapitel, keinen Plan, kein MEMORY pauschal laden. Bei Widerspruch Tabelle ↔ Dateisystem gilt das Dateisystem — Status korrigieren und quittieren ist die einzige zulässige Änderung in dieser Anfrage.
 
 ## Aktueller Projektstatus
 

@@ -1,6 +1,6 @@
 ---
 name: pruef-modus
-description: Prüft eine wissenschaftliche Arbeit oder einen Kapitelplan an der IU gegen Formalia, Argumentationsqualität, Struktur und Abgabe-Voraussetzungen (Turnitin, Eidesstattliche Erklärung) vor der Abgabe, mit numerischem Score und Abgabe-Schwelle. Nutzen, wenn ein Entwurf, ein fertiges Kapitel oder ein kapitelplan.md vorliegt und ein Audit gewünscht ist. Prüft nur die für den jeweiligen Papiertyp laut Typ-Datei pflichtigen Kriterien, nicht pauschal alle. Dies ist der einzige Einstiegspunkt für Audits — führt intern mehrere fokussierte Teil-Checks nacheinander aus, statt sich auf separat aufgerufene Skills zu verlassen.
+description: Prüft eine wissenschaftliche Arbeit oder einen Kapitelplan an der IU gegen Formalia, Argumentationsqualität, Struktur und Abgabe-Voraussetzungen (Turnitin, Eidesstattliche Erklärung) vor der Abgabe, mit numerischem Score und Abgabe-Schwelle. Nutzen, wenn ein Entwurf, ein fertiges Kapitel oder ein kapitelplan.md vorliegt und ein Audit gewünscht ist — oder wenn benotetes Tutor-Feedback in Lernpunkte übersetzt werden soll („Feedback einarbeiten", Umfang Feedback-Destillat). Prüft nur die für den jeweiligen Papiertyp laut Typ-Datei pflichtigen Kriterien, nicht pauschal alle. Dies ist der einzige Einstiegspunkt für Audits — führt intern mehrere fokussierte Teil-Checks nacheinander aus, statt sich auf separat aufgerufene Skills zu verlassen.
 compatibility: .claude/skills/_shared/scripts/check_bib_keys.py benötigt Python 3 und Zugriff auf references.bib. Teil-Check D (Build) benötigt lualatex + biber; falls nicht verfügbar, wird er übersprungen und im Bericht vermerkt.
 ---
 
@@ -26,9 +26,17 @@ compatibility: .claude/skills/_shared/scripts/check_bib_keys.py benötigt Python
   - [ ] Jeder Papiertyp-Pflichtpunkt aus `typen/<typ>.md` hat ein zuständiges Kapitel in `kapitelplan.md`.
 
   Ergebnis als PASS/FAIL-Liste im Chat, kein `pruefbericht.md` (zu kurzlebig für einen Snapshot). Bei FAIL: den fehlenden Schritt konkret benennen (z. B. „BBT-Key für Konkurrenzquelle X fehlt — Zotero-Export nachholen"), nicht nur „nicht bereit" melden.
-- **Voll-Audit** („Audit"): alle Teil-Checks A–D + Score + `pruefbericht.md`, Teil-Check E informativ — der Ablauf unten. **Vorbedingung:** Ein Voll-Audit wird erst gefahren, wenn **Gegenlesung und Gesamt-Stresstest** gelaufen sind und `AENDERUNGEN.md` → „Offen" leer ist. Andernfalls melden und den fehlenden Schritt vorschlagen. Der Nutzer kann das überstimmen — dann im Bericht vermerken.
+- **Voll-Audit** („Audit"): alle Teil-Checks A–D + Score + `pruefbericht.md`, Teil-Check E informativ — der Ablauf unten. **Vorbedingung:** Ein Voll-Audit wird erst gefahren, wenn **Gegenlesung und Gesamt-Stresstest** gelaufen sind und `AENDERUNGEN.md` → „Offen" leer ist. **Ausnahme Kompakt-Prüfkette:** Bei Hausarbeit und Projektbericht genügt die abgearbeitete Gegenlesung — ein bewusst übersprungener Gesamt-Stresstest ist dort Default und wird im Bericht als „übersprungen (Kompakt-Kette)" vermerkt. Andernfalls melden und den fehlenden Schritt vorschlagen. Der Nutzer kann alles überstimmen — dann im Bericht vermerken.
 - **Re-Audit nach Überarbeitung**: Delta statt Vollprüfung — nur die FAIL-Punkte aus dem letzten `pruefbericht.md` gezielt nachprüfen, dazu beide Skripte und Teil-Check D (Build ist billig und fängt Regressionen). Nicht alle Kapitel erneut lesen. Score aktualisieren, `pruefbericht.md` überschreiben.
 - **Abgabe-Audit** (letzter Lauf vor der Einreichung): Voll-Audit + Teil-Check E als Abschluss-Hinweisliste. Teil-Check E fließt **nie** in den Score ein — die Verwaltungsschritte (myCampus) liegen außerhalb der Arbeit und würden einen textseitig fertigen Stand verzerren; sie stehen stattdessen als „Vor der Einreichung"-Hinweis am Ende des Berichts.
+  **Sprachstichprobe (nur im Abgabe-Audit):** pro Hauptkapitel zwei Absätze ausschließlich auf Sprachfehler lesen — Rechtschreibung, Grammatik, Kommasetzung, Bezugsfehler, verwaiste Satzreste nach Umbauten — nicht auf Stil (den prüft Teil-Check A). Zielgruppe der Stichprobe sind Nutzer-Nachbearbeitungen; KI-generierter Text ist grammatisch meist sauber, von Hand eingefügte Halbsätze nicht. Mechanische Wortdopplungen findet bereits `check_formalia.py` (DOPPELWORT). Funde als Formalia-Hinweise; für die **flächige** Prüfung gehört „LanguageTool-Durchgang (lokal) über den Gesamttext" als Punkt in die „Vor der Einreichung"-Checkliste — das ist Nutzer-Schritt, kein Audit-Bestandteil.
+- **Feedback-Destillat** („Feedback einarbeiten" — nach Rückgabe einer benoteten Arbeit oder substanziellem Tutor-Feedback): kein Audit der Arbeit, sondern die Lernschleife des Workflows — Benotungs-Feedback ist die wertvollste Korrekturquelle und geht ohne diesen Schritt verloren. Eigener, schlanker Ablauf, kein Score, kein `pruefbericht.md`:
+  1. Feedback-Dokument (PDF/Text/Mail) vollständig lesen; jeden Kritik- **und** Lobpunkt einzeln erfassen.
+  2. Je Punkt die betroffene Stelle in der Arbeit identifizieren und klassifizieren: Stil / Zitation / Struktur / Argumentation / Prozess.
+  3. **Workflow-Ursache bestimmen**: Welcher Skill oder Check hätte den Punkt fangen müssen — und warum hat er nicht? (Regel fehlt · Regel zu schwach · Regel vorhanden, aber nicht angewendet.)
+  4. Je Punkt einen `[LERNEN:kategorie]`-Eintrag schreiben — Default `PERSISTENT.md`, denn Benotungs-Feedback ist fast immer projektübergreifend; nur rein themenspezifische Punkte nach `MEMORY.md`. Auch bestätigtes Lob festhalten („so weitermachen: …") — die nächste Arbeit darf Stärken nicht wegschreiben.
+  5. Zeigt Schritt 3 eine Regel-Lücke: konkrete Ergänzung für `hard-rules-formal.md`, `stilprofil.md`, `typen/<typ>.md` oder einen `check_formalia.py`-Check **vorschlagen** — dem Nutzer zur Freigabe vorlegen, nicht still einbauen.
+  6. Sichtbar quittieren, welche Einträge geschrieben wurden.
 
 **Plan-Audit-Ablauf (eigener, schlanker Ablauf — nicht der Ablauf unten):** `kapitelplan.md` vollständig lesen, `aufgabe.md` als Maßstab lesen. Kein `hard-rules-formal.md`, keine Skripte, keine Teil-Checks A–D, kein Score, kein `pruefbericht.md`. Die sechs Prüfpunkte oben durchgehen, Befunde als kurze Fundliste im Chat ausgeben (Format: `[Prüfpunkt] Fund — betroffene Stelle in kapitelplan.md — Empfehlung`). Bei Funden: dem Nutzer vorschlagen, vor `schreib-modus` in einer neuen `plan-modus`-Session nachzuschärfen — nicht selbst in `kapitelplan.md` schreiben (Prüfer/Autor trennen).
 
@@ -41,8 +49,8 @@ compatibility: .claude/skills/_shared/scripts/check_bib_keys.py benötigt Python
 1. **`PERSISTENT.md` + `MEMORY.md`** (falls vorhanden) lesen — `[LERNEN:...]`-Einträge können abweichende Audit-Kriterien oder Sonderfälle enthalten, die Vorrang vor den Standard-Checks haben (z. B. „Methodik-Kapitel entfällt auch empirisch"); bei Widerspruch gewinnt `MEMORY.md`. Im Bericht als Hinweis vermerken, nicht stillschweigend übergehen.
 2. Papiertyp bestimmen → `.claude/skills/_shared/typen/<typ>.md` laden (Pflichtregeln, Bewertung, Audit-Checks, Outline-Check, Claim-Extraction). **`aufgabe.md`** (falls vorhanden) lesen — die dortigen wörtlichen Leitfragen sind Prüfmaßstab für den Outline-Check (beantwortet die Arbeit die gestellte Frage?). **Lese-Trigger Prüfer-Steuerungen**: Taucht bei einem Fund eine Frage zu Formalia/Anforderungen/Methodik auf, bevor er als FAIL gewertet wird `aufgabe.md` → „## Prüfer-Steuerungen" gegenprüfen — eine dort dokumentierte Steuerung kann die Standardregel für dieses Projekt außer Kraft setzen (siehe `CLAUDE.md` → „Erst prüfen, dann behaupten").
 3. `.claude/skills/_shared/hard-rules-formal.md` laden — Grundlage für Teil-Check A (Zitationen, LaTeX, Pronomen, Struktur, Schreibstil, Verständlichkeit), bewusst nicht in `CLAUDE.md`. Für den Verständlichkeits-Prüfpunkt zusätzlich `.claude/skills/_shared/stilprofil.md` als Kalibrier-Referenz. Teil-Check B wertet nur die „Pflicht"-Punkte aus `typen/<typ>.md` als FAIL.
-4. BBT-Keys deterministisch validieren (inkl. ungenutzter Einträge): `python3 .claude/skills/_shared/scripts/check_bib_keys.py references.bib --dir chapters/ --report-unused` (vom Projekt-Root aus).
-5. Mechanische Formalia deterministisch prüfen: `python3 .claude/skills/_shared/scripts/check_formalia.py chapters/` — die Skript-Funde direkt in Teil-Check A übernehmen, diese Punkte **nicht** zusätzlich per Durchlesen prüfen (Tokenersparnis, keine False Negatives). **Bekannte False-Positive-Quelle**: PRONOMEN schlägt auch innerhalb wörtlicher Zitate an (`\enquote{…ich…}`, `blockzitat`-Umgebung), FLOAT meldet `\begin{figure}` fälschlich, wenn `[H]` erst in der Folgezeile steht. Solche Funde vor der Übernahme kurz im Kontext gegenprüfen, nicht blind als FEHLER werten.
+4. BBT-Keys deterministisch validieren (inkl. ungenutzter Einträge): `python .claude/skills/_shared/scripts/check_bib_keys.py references.bib --dir chapters/ --report-unused` (vom Projekt-Root aus).
+5. Mechanische Formalia deterministisch prüfen: `python .claude/skills/_shared/scripts/check_formalia.py chapters/` — die Skript-Funde direkt in Teil-Check A übernehmen, diese Punkte **nicht** zusätzlich per Durchlesen prüfen (Tokenersparnis, keine False Negatives). **Bekannte False-Positive-Quelle**: PRONOMEN schlägt auch innerhalb wörtlicher Zitate an (`\enquote{…ich…}`, `blockzitat`-Umgebung), FLOAT meldet `\begin{figure}` fälschlich, wenn `[H]` erst in der Folgezeile steht. Solche Funde vor der Übernahme kurz im Kontext gegenprüfen, nicht blind als FEHLER werten.
 6. **Teil-Check A — Formalia** ausführen (nur die nicht skript-prüfbaren Punkte lesen).
 7. **Teil-Check B — Argumentationsqualität** ausführen (nur Matrix-Pflichtzeilen als FAIL).
 8. **Teil-Check C — Struktur** ausführen (inkl. Outline-Check gegen bestätigtes Kapitelgerüst).
@@ -50,7 +58,7 @@ compatibility: .claude/skills/_shared/scripts/check_bib_keys.py benötigt Python
 9b. **Teil-Check E — Abgabe** ausführen (immer informativ, nie Score-relevant — siehe unten).
 10. Score berechnen (siehe „Score-Regel" unten).
 11. Feedback-Bericht mit Score ausgeben **und als `pruefbericht.md` im Projekt-Root speichern** (bei jedem Audit überschreiben — der Bericht ist ein Snapshot, kein Verlauf; Datum + geprüfter Stand in die Kopfzeile). Ohne diese Datei sind die Handlungsempfehlungen beim nächsten Sessionstart verloren.
-12. `CLAUDE.md` → „Aktueller Projektstatus" aktualisieren: Prüf-Audit-Zeile (Score + Datum) **und** betroffene Kapitel-Zeilen auf ÜBERARBEITUNG NÖTIG setzen (mit Kurzverweis „siehe pruefbericht.md"), sichtbar quittiert im Chat.
+12. `CLAUDE.md` → „Aktueller Projektstatus" aktualisieren: Prüf-Audit-Zeile (Score + Datum) **und** betroffene Kapitel-Zeilen auf ÜBERARBEITUNG NÖTIG setzen (mit Kurzverweis „siehe pruefbericht.md"), sichtbar quittiert im Chat. Danach `python .claude/skills/_shared/scripts/check_status.py` — der deterministische Abgleich Tabelle ↔ Dateisystem gehört zu jedem Voll-/Abgabe-Audit; Funde in den Bericht übernehmen.
 13. **Nach bestandenem Abgabe-Audit** (Score ≥ 80): Den Bericht und die Chat-Zusammenfassung mit dem „Vor der Einreichung"-Hinweis abschließen — alle noch offenen Teil-Check-E-Punkte + alle offenen `% UNVERIFIED:`-Marker mit Datei und Zeile als Nutzer-Checkliste, ohne Score-Wirkung. Zusätzlich `MEMORY.md` **Eintrag für Eintrag** mit dem Nutzer durchgehen und je Eintrag entscheiden: projektspezifisch (bleibt) oder projektübergreifend (wandert nach `PERSISTENT.md`). Nicht nur allgemein erinnern — die Datei bleibt sonst leer, während `MEMORY.md` das gesamte Gelernte enthält und mit dem Projekt endet.
 
 **Audit und Überarbeitung trennen**: Nach dem Audit nicht in derselben Session mit dem Überarbeiten beginnen — der Kontext ist voll mit allen geprüften Kapiteln, und `pruefbericht.md` trägt alles Nötige (priorisierte Handlungsempfehlungen) in die nächste Session hinüber. Dem Nutzer stattdessen den Einstieg nennen: neue Session, „Schreib-Modus: Überarbeitung nach Prüfbericht" (laut Modellempfehlung, siehe `_shared/modell-empfehlung.md`, zudem günstiger: Audit Opus, Abarbeiten der Liste Sonnet).
@@ -59,7 +67,7 @@ compatibility: .claude/skills/_shared/scripts/check_bib_keys.py benötigt Python
 
 ## Teil-Check A: Formalia
 
-**Skript-gedeckt** (Ergebnis aus `check_formalia.py` übernehmen, nicht erneut lesen): Pronomen · `\enquote{}` statt gerader Anführungszeichen · quote-Env statt `blockzitat` · Float `[H]` · Caption vor `\label{}` · `\underline` · `\include` in Kapiteln · `~\autoref` · Gedankenstrich-Häufung · **Blockzitat-Heuristik** (`\enquote{}` > 40 Wörter) · **½-Seiten-Heuristik** (Subsection-Datei < ~150 Wörter) · **Überschriften-Dopplung** (Subsection ≈ Section bzw. ≈ `\PaperTitle`) · **Satzlängen-Heuristik** (Sätze > 30 Wörter, Datei-Durchschnitt > 22) · **Meta-Verben-/Nominalstil-Marker** („entfaltet/bündelt/verortet", „erfolgt", „im Rahmen der" …).
+**Skript-gedeckt** (Ergebnis aus `check_formalia.py` übernehmen, nicht erneut lesen): Pronomen · `\enquote{}` statt gerader Anführungszeichen · quote-Env statt `blockzitat` · Float `[H]` · Caption vor `\label{}` · `\underline` · `\include` in Kapiteln · `~\autoref` · Gedankenstrich-Häufung · **Blockzitat-Heuristik** (`\enquote{}` > 40 Wörter) · **½-Seiten-Heuristik** (Subsection-Datei < ~150 Wörter) · **Überschriften-Dopplung** (Subsection ≈ Section bzw. ≈ `\PaperTitle`) · **Satzlängen-Heuristik** (Sätze > 30 Wörter, Datei-Durchschnitt > 22) · **Meta-Verben-/Nominalstil-Marker** („entfaltet/bündelt/verortet", „erfolgt", „im Rahmen der" …) · **Dreier-Aufzählungs-Häufung** (TRIAS) · **Absatz-Gleichförmigkeit** (ABSATZ-UNIFORM) · **Fragesätze im Fließtext** (RHETFRAGE — die wörtlich formulierte Leitfrage/Forschungsfrage ist legitim, im Kontext gegenprüfen) · **Wortdopplungen** (DOPPELWORT — Tippfehler oder fehlendes Komma).
 
 Manuell nur noch diese Punkte:
 
@@ -110,6 +118,8 @@ Enger Fokus, nur diese Punkte (½-Seiten-Regel und Überschriften-Dopplung liefe
 
 **Roter Faden (nur Voll- und Abgabe-Audit — kapitelübergreifend prüfen, nicht pro Kapitel; Funde zählen als Struktur-Verstoß in die Score-Regel):** Diese Punkte findet weder ein Skript noch der Build — der Build prüft nur, ob ein Label existiert, nicht, ob es auf die richtige Stelle zeigt.
 
+**Doppelarbeit vermeiden:** Ist der Gesamt-Stresstest gelaufen (erkennbar an seiner Runde in `AENDERUNGEN.md`), hat er genau diese kapitelübergreifenden Dimensionen bereits mit vollem Kontext geprüft. Dann hier **nicht** alle Kapitel erneut querlesen, sondern: die Stresstest-Runde referenzieren, prüfen, ob deren einschlägige Punkte im Erledigt-Log abgearbeitet sind, und nur stichprobenartig auf Regressionen durch die Überarbeitung achten (geänderte Stellen gegen ihre Querverweise und Zählungen). Vollständig selbst geprüft wird dieser Block nur, wenn der Gesamt-Stresstest übersprungen wurde (Kompakt-Prüfkette bei Hausarbeit/Projektbericht) — das erspart dem teuersten Audit einen kompletten Lesedurchgang, ohne eine Prüfdimension zu verlieren.
+
 - [ ] Querverweise **semantisch** korrekt: Steht an der Stelle, auf die ein `\autoref` zeigt, tatsächlich der behauptete Inhalt (z. B. „die in X offengebliebene Frage" — ist sie dort wirklich offen geblieben)?
 - [ ] Zeitlinien-Konsistenz Entwurf ↔ Iteration: Was das Iterationskapitel als Ergebnis/Anpassung einführt, darf im Konzeptkapitel nicht bereits als Bestandteil des ursprünglichen Entwurfs stehen — und der gewählte Darstellungsstand (Vor-Iteration vs. final) muss für **alle** Anpassungen einheitlich sein, nicht nur für einige.
 - [ ] Zentrale Begriffe der Leitfrage in Einleitung, Hauptteil-Überschriften (inkl. Inhaltsverzeichnis), Tabellen und Fazit identisch benannt?
@@ -139,6 +149,7 @@ Alle vier IU-Prüfungsleitfäden: Abgabe ausschließlich über Turnitin im myCam
 - [ ] Anleitung zur Einreichung im myCampus-Kurs gelesen?
 - [ ] Umfang im Soll (`typen/<typ>.md`; Fallstudie: 7–10 Seiten ohne Master-Variante)?
 - [ ] Erinnerung: keine externe Plagiatssoftware vorab nutzen (Turnitin-Selbsttreffer-Risiko)?
+- [ ] Erinnerung: LanguageTool-Durchgang (lokal) über den Gesamttext — die Sprachstichprobe des Abgabe-Audits ersetzt keine Vollprüfung (Sprache zählt in die Bewertung)?
 
 Diese Punkte werden in **keinem** Audit-Umfang mit Score-Abzug bewertet (Nutzer-Festlegung 2026-07-19, siehe `MEMORY.md`): Sie betreffen Verwaltungsschritte außerhalb des Textes. Offene Punkte als `[OFFEN]` listen und am Ende des Berichts sowie der Chat-Zusammenfassung als „Vor der Einreichung"-Checkliste an den Nutzer wiederholen — das ist ihre einzige Konsequenz. Ausnahme: „Umfang im Soll" wird bereits in Teil-Check D score-relevant geprüft und hier nur gespiegelt.
 
@@ -157,7 +168,7 @@ Abzüge von 100 Punkten, nach Schweregrad — nicht additiv über beliebig viele
 | Build schlägt fehl (Teil-Check D) | −20 | −20 |
 | Undefined reference/citation, fehlendes Bild, doppeltes Label (Teil-Check D) | −5 | −15 |
 | Seitenumfang außerhalb der Vorgabe (Teil-Check D) | −10 | −10 |
-| Anti-KI-Stil-Verstoß, gehäuft (>3 Vorkommen in einem Kapitel) | −5 | −10 |
+| Anti-KI-Stil-Verstoß, gehäuft (>3 Vorkommen in einem Kapitel; Skript-Funde GEDANKENSTRICH/TRIAS/RHETFRAGE/ABSATZ-UNIFORM zählen mit) | −5 | −10 |
 | Verständlichkeits-Verstoß, gehäuft (>3 Vorkommen in einem Kapitel; Skript-Funde SATZLAENGE/SATZSCHNITT/META-VERB/NOMINALSTIL zählen mit) | −5 | −15 |
 
 Teil-Check E fließt nicht in den Score ein — offene Abgabe-Punkte erscheinen ausschließlich als „Vor der Einreichung"-Hinweis (siehe Teil-Check E).
@@ -178,6 +189,7 @@ Score ist ein Hilfswert zur Priorisierung, keine Zusicherung; die inhaltliche En
 ```markdown
 # Prüfbericht — <Papiertyp>
 
+**Datum**: <TT.MM.JJJJ> · **Geprüfter Stand**: <Kapitel <name> / alle Kapitel> · **Audit-Typ**: <Kapitel / Voll / Re-Audit / Abgabe>
 **Score: <N>/100 — <abgabereif / Überarbeitung empfohlen / nicht einreichen>**
 
 ## Teil-Check A — Formalia

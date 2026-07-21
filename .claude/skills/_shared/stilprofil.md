@@ -55,9 +55,27 @@ Muster: `<Fachbegriff> beschreibt/bezeichnet/liegt vor, wenn <Alltagssprache>`. 
 > ✗ „Diese Beobachtung bezieht sich auf die untersuchte Stichprobe. Sie erlaubt keine Verallgemeinerung. Sie liefert aber einen Ansatzpunkt."
 > ✓ „Diese Beobachtung gilt nur für die untersuchte Stichprobe und lässt sich nicht verallgemeinern; als Ansatzpunkt für das Konzept reicht sie aber aus."
 
+## Menschliche Textur (Positiv-Muster)
+
+Die Verbotsregeln in `hard-rules-formal.md` entfernen KI-Marker — menschlich klingt ein Text aber erst durch das, was er *tut*, nicht nur durch das, was er unterlässt:
+
+**Narrative Zitate mischen (nicht jede Quelle in Klammern ans Satzende):**
+> ✗ „Es werden drei Komponenten des Commitments unterschieden (Meyer & Allen, 1991, S. 67). Die emotionale Komponente hat den stärksten Effekt (Meyer et al., 2002, S. 33). Das Modell wurde vielfach kritisiert (Solinger et al., 2008, S. 71)."
+> ✓ „Meyer und Allen (1991, S. 67) unterscheiden drei Komponenten des Commitments. Eine Metaanalyse bestätigte später, dass die emotionale Komponente den stärksten Effekt hat (Meyer et al., 2002, S. 33). Solinger et al. (2008, S. 71) halten das Modell dagegen für empirisch nicht haltbar."
+
+LaTeX: narrative Form mit `\textcite[S. 67]{key}`, Klammer-Form mit `\parencite`. Kein festes Verhältnis — narrativ immer dann, wenn die Autorenposition selbst Thema des Satzes ist.
+
+**Abwägung endet mit Urteil, nicht mit Symmetrie:**
+> ✗ „Einerseits bietet das Modell eine klare Struktur. Andererseits ist seine empirische Basis umstritten. Beide Perspektiven haben ihre Berechtigung."
+> ✓ „Das Modell bietet eine klare Struktur, seine empirische Basis ist jedoch umstritten. Für diese Arbeit überwiegt der strukturelle Nutzen: Die Kritik von Solinger et al. (2008) betrifft die Trennschärfe der Komponenten, nicht ihre Existenz — und nur Letztere wird hier vorausgesetzt."
+
+**Dosierte Natürlichkeit** (sparsam — ein Element alle paar Absätze): ein Klammer-Einschub mit Beispiel oder Kurzerklärung, Konnektoren-Vielfalt („allerdings", „dabei", „immerhin" statt durchgehend „jedoch"/„zudem"), gelegentlich eine nachgeschobene Präzisierung („genauer gesagt: nur für Befragte unter zwei Jahren Betriebszugehörigkeit").
+
+**Keine rhetorischen Fragen** als Einstieg oder Übergang („Doch was folgt daraus?") — die wörtlich formulierte Leitfrage ist die einzige legitime Frage im Text.
+
 ## Absatzbau — wie ein guter wissenschaftlicher Absatz aussieht
 
-**Richtwert: 4–7 Sätze pro Absatz.** Unter 3 Sätzen ist es meist kein eigenständiger Gedanke (mit dem Vorgänger-Absatz zusammenlegen), über 8 Sätzen verliert der Leser den roten Faden (aufteilen). Ausnahme: kurze Übergangs- oder Einleitungsabsätze (2–3 Sätze sind dort in Ordnung).
+**Richtwert: 4–7 Sätze pro Absatz — als Rahmen, nicht als Raster.** Unter 3 Sätzen ist es meist kein eigenständiger Gedanke (mit dem Vorgänger-Absatz zusammenlegen), über 8 Sätzen verliert der Leser den roten Faden (aufteilen). Ausnahme: kurze Übergangs- oder Einleitungsabsätze (2–3 Sätze sind dort in Ordnung). **Wichtig: Die Längen innerhalb des Rahmens streuen** — ein Text, in dem jeder Absatz exakt fünf Sätze hat, wirkt maschinell gleichförmig, selbst wenn jeder einzelne Absatz gut gebaut ist. Ein kurzer Absatz nach zwei langen ist ein Rhythmuswechsel, kein Fehler.
 
 ### Grundmuster: Claim → Beleg → Erklärung → Einordnung
 
@@ -108,3 +126,8 @@ Klischee-Übergänge („Darüber hinaus", „Zudem", „Des Weiteren") sind ver
 5. Endet ein Absatz mit einem verdichteten Merksatz/Aphorismus? → streichen oder entpointen.
 6. Mehr als eine Kontrastkonstruktion („nicht X, sondern Y" · „kein X. Es ist Y" · „X statt Y") pro Seite? → auflösen.
 7. Häufen sich Doppelpunkt-Ankündigungen („Daraus folgt: …") oder Betonungswörter („bewusst", „genau", „gezielt", „belastbar")? → reduzieren.
+8. Hängt jede Quelle als Klammer am Satzende? → an geeigneten Stellen auf narrative Zitation (`\textcite`) umstellen.
+9. Mehr als eine Dreier-Aufzählung („X, Y und Z") pro Seite, ohne dass es sachlich genau drei Dinge sind? → auf zwei oder vier Glieder umbauen oder auflösen.
+10. Haben fast alle Absätze dieselbe Satzzahl? → Längen streuen (kurzer Übergangsabsatz, ein längerer Analyseabsatz).
+11. Rhetorische Frage außerhalb der wörtlichen Leitfrage? → als Aussagesatz umformulieren.
+12. Endet eine Abwägung urteilslos („beide Perspektiven haben ihre Berechtigung")? → begründet gewichten.

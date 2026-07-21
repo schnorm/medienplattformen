@@ -208,5 +208,55 @@ class TestReadability(unittest.TestCase):
         self.assert_cat(findings, "SATZLAENGE", expected=False)
 
 
+class TestTextur(unittest.TestCase):
+    """Menschliche-Textur-Heuristiken: TRIAS, RHETFRAGE, ABSATZ-UNIFORM, DOPPELWORT."""
+
+    def assert_cat(self, findings, cat, expected=True):
+        hit = any(f"[HINWEIS:{cat}]" in f for f in findings)
+        self.assertEqual(hit, expected, f"{cat}: {findings}")
+
+    def test_doppelwort(self):
+        findings, errors = run_on("Die Studie zeigt die die Ergebnisse deutlich.\n")
+        self.assert_cat(findings, "DOPPELWORT")
+        self.assertEqual(errors, 0)  # HINWEIS, kein harter Fehler
+
+    def test_doppelwort_nach_komma_ok(self):
+        # Relativpronomen nach Komma ist legitim: „…, die die Plattform nutzen"
+        findings, _ = run_on("Die Personen, die die Plattform nutzen, antworten schneller.\n")
+        self.assert_cat(findings, "DOPPELWORT", expected=False)
+
+    def test_rhetfrage(self):
+        findings, _ = run_on("Doch was bedeutet das für die Praxis? Es zeigt sich ein klares Bild.\n")
+        self.assert_cat(findings, "RHETFRAGE")
+
+    def test_rhetfrage_ohne_frage_ok(self):
+        findings, _ = run_on("Die Befunde zeigen ein klares Bild. Sie stützen die These deutlich.\n")
+        self.assert_cat(findings, "RHETFRAGE", expected=False)
+
+    def test_trias_haeufung(self):
+        text = ("Der Ansatz ist schnell, einfach und robust. "
+                "Die Methode wirkt klar, direkt und sparsam. "
+                "Das Ergebnis bleibt stabil, messbar und belastbar.\n")
+        findings, _ = run_on(text)
+        self.assert_cat(findings, "TRIAS")
+
+    def test_trias_einzeln_ok(self):
+        findings, _ = run_on("Der Ansatz ist schnell, einfach und robust. Die Methode überzeugt.\n")
+        self.assert_cat(findings, "TRIAS", expected=False)
+
+    def test_absatz_uniform(self):
+        para = "Das Modell zeigt klare Werte. Es trägt die Argumentation sicher.\n\n"
+        findings, _ = run_on(para * 6)
+        self.assert_cat(findings, "ABSATZ-UNIFORM")
+
+    def test_absatz_variiert_ok(self):
+        kurz = "Das Modell zeigt klare Werte. Es trägt die Argumentation sicher.\n\n"
+        lang = ("Das Modell zeigt klare Werte. Es trägt die Argumentation sicher. "
+                "Die Befunde stammen aus drei Quellen. Jede Quelle wurde einzeln geprüft. "
+                "Die Prüfung ergab keine Widersprüche.\n\n")
+        findings, _ = run_on(kurz * 3 + lang * 3)
+        self.assert_cat(findings, "ABSATZ-UNIFORM", expected=False)
+
+
 if __name__ == "__main__":
     unittest.main()

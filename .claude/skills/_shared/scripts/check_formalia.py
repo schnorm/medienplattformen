@@ -82,6 +82,15 @@ ABBREV_RE = re.compile(
     r"\b(z\.\s?B\.|d\.\s?h\.|u\.\s?a\.|u\.\s?U\.|o\.\s?Ä\.|bzw\.|vgl\.|ca\.|inkl\.|ggf\.|evtl\.|sog\.|etc\.|et al\.|Abb\.|Tab\.|Kap\.|Nr\.|S\.\s?\d+)")
 SENT_SPLIT_RE = re.compile(r"(?<=[.!?])\s+")
 
+# Menschliche-Textur-Heuristiken (hard-rules-formal.md → Schreibstil, stilprofil.md)
+TRIAS_RE = re.compile(r"\b[\w-]+,\s+[\w-]+\s+und\s+[\w-]+\b")
+MAX_TRIAS_PER_FILE = 2       # mehr Dreier-Aufzählungen pro Datei → HINWEIS
+MAX_RHET_REPORTS = 5         # pro Datei höchstens so viele Fragesatz-Funde listen
+MIN_PARAS_FOR_RHYTHM = 6     # Absatz-Gleichförmigkeit erst ab so vielen Textabsätzen
+#   „…, die die Ergebnisse zeigt" ist legitim (Relativpronomen nach Komma) —
+#   deshalb Ausschluss, wenn direkt ein Komma vorausgeht.
+DOUBLE_WORD_RE = re.compile(r"(?<![\w-])(?<!, )([A-Za-zÄÖÜäöüß]{2,})\s+\1(?![\w-])", re.IGNORECASE)
+
 
 def _normalize_title(s: str) -> str:
     """Titel für den Dopplungs-Vergleich normalisieren (Kleinschreibung, ohne Makros/Satzzeichen)."""
@@ -137,6 +146,13 @@ def check_readability(path: Path, text: str) -> list[str]:
         if avg > AVG_SENT_WORDS:
             findings.append(
                 f"{path}: [HINWEIS:SATZSCHNITT] Durchschnittliche Satzlänge ~{avg:.0f} Wörter (> {AVG_SENT_WORDS}) — Verständlichkeitsregeln prüfen (kürzere Sätze, siehe stilprofil.md).")
+    # Rhetorische Fragen: Fragesätze im Fließtext sind ein KI-Marker.
+    # Ausnahme (im Kontext prüfen): die wörtlich formulierte Leitfrage/Forschungsfrage.
+    questions = [s for s in sents if s.rstrip().endswith("?")]
+    for s in questions[:MAX_RHET_REPORTS]:
+        excerpt = " ".join(s.split()[:8])
+        findings.append(
+            f"{path}: [HINWEIS:RHETFRAGE] Fragesatz im Fließtext: „{excerpt} …“ — rhetorische Fragen vermeiden; nur die wörtliche Leitfrage/Forschungsfrage ist legitim.")
     return findings
 
 
@@ -167,8 +183,24 @@ def check_file(path: Path) -> tuple[list[str], int, dict]:
     content_parts: list[str] = []
     readability_parts: list[str] = []
 
+    # Absatz-Rhythmus: Sätze je Textabsatz (Absatzgrenze = echte Leerzeile im Quelltext;
+    # reine Kommentarzeilen beenden in LaTeX keinen Absatz und trennen deshalb nicht).
+    para_buf: list[str] = []
+    para_sent_counts: list[int] = []
+
+    def _flush_para() -> None:
+        if para_buf:
+            n = len(_split_sentences(_detex(" ".join(para_buf))))
+            if n >= 2:
+                para_sent_counts.append(n)
+            para_buf.clear()
+
     lines = path.read_text(encoding="utf-8", errors="replace").splitlines()
     for no, raw in enumerate(lines, start=1):
+        if not raw.strip():
+            if skip_depth == 0:
+                _flush_para()
+            continue
         line = strip_comment(raw)
         if not line.strip():
             continue
@@ -210,6 +242,11 @@ def check_file(path: Path) -> tuple[list[str], int, dict]:
                 if severity == "FEHLER":
                     errors += 1
 
+        dw = DOUBLE_WORD_RE.search(line)
+        if dw:
+            findings.append(
+                f"{path}:{no}: [HINWEIS:DOPPELWORT] „{dw.group(0)}“ — Wortdopplung (Tippfehler) oder fehlendes Komma davor?")
+
         dash_count += len(DASH_RE.findall(line))
 
         for kind, title in SECTION_RE.findall(line):
@@ -219,9 +256,10 @@ def check_file(path: Path) -> tuple[list[str], int, dict]:
                 meta["subsection_titles"].append(title)
         meta["word_count"] += _count_words(line)
         content_parts.append(line)
-        # Für die Satzlängen-Heuristik: Überschriften- und Caption-Zeilen ausnehmen
+        # Für Satzlängen- und Absatz-Heuristik: Überschriften- und Caption-Zeilen ausnehmen
         if not SECTION_RE.search(line) and r"\caption" not in line:
             readability_parts.append(line)
+            para_buf.append(line)
 
     if dash_count > 3:
         findings.append(
@@ -240,7 +278,22 @@ def check_file(path: Path) -> tuple[list[str], int, dict]:
         findings.append(
             f"{path}: [HINWEIS:HALBSEITE] Nur ~{meta['word_count']} Wörter in dieser Subsection-Datei (< {MIN_WORDS_SUBSECTION}) — ½-Seiten-Regel pro Unterkapitel prüfen.")
 
-    findings.extend(check_readability(path, _detex(" ".join(readability_parts))))
+    _flush_para()
+    # Absatz-Gleichförmigkeit: viele Textabsätze mit (fast) identischer Satzzahl
+    if len(para_sent_counts) >= MIN_PARAS_FOR_RHYTHM \
+            and max(para_sent_counts) - min(para_sent_counts) <= 1:
+        findings.append(
+            f"{path}: [HINWEIS:ABSATZ-UNIFORM] {len(para_sent_counts)} Textabsätze mit nahezu gleicher Länge ({min(para_sent_counts)}–{max(para_sent_counts)} Sätze) — Absatzlängen bewusst variieren (stilprofil.md → Absatzbau).")
+
+    detexed_read = _detex(" ".join(readability_parts))
+
+    # Dreier-Aufzählungs-Häufung („X, Y und Z" als Standardmuster)
+    trias_matches = TRIAS_RE.findall(detexed_read)
+    if len(trias_matches) > MAX_TRIAS_PER_FILE:
+        findings.append(
+            f"{path}: [HINWEIS:TRIAS] {len(trias_matches)}× Dreier-Aufzählung (z. B. „{trias_matches[0]}“) — KI-Standardmuster; nur belassen, wo es sachlich genau drei Dinge sind (hard-rules-formal.md → Schreibstil).")
+
+    findings.extend(check_readability(path, detexed_read))
 
     return findings, errors, meta
 
