@@ -124,3 +124,92 @@ Der eine Befund, der alles andere überlagert, ist Befund 1: Solange die Mockups
 ### Nächster Schritt
 
 Umsetzung **nicht in dieser Sitzung** (Prüfer- und Autorrolle getrennt). In frischer Sitzung: „Schreib-Modus: AENDERUNGEN.md abarbeiten". Der Nutzer entscheidet über jeden Befund einzeln.
+
+---
+
+## Runde 2 — Gesamt-Stresstest (2026-07-21)
+
+Inhaltliche Prüfung der ganzen Arbeit gegen ihre eigene Argumentation und gegen `aufgabe.md`. Alle Kapitel FERTIG. Mockup-Platzhalter (Runde-1-Befund 1) auf Nutzerwunsch ausgeklammert — bleibt separat offen. Doppelbefunde der Gegenlesung nicht erneut aufgeführt. Verifikations-Gate für die Markt-Nichtexistenzbehauptung ausgeführt (Websuche).
+
+### Befund GS-1 — USP-Behauptung durch reale App widerlegbar: „Leftovercooking"  🟠 mittel · **[FREIGABE]** (berührt Kernargument/Marktlücke + eigene Recherche)
+
+**Status: ERLEDIGT (2026-07-21).** Nutzer-Entscheidung nach Rückfrage: volle Aufnahme, mit gründlicher Online-Recherche (Verbraucherzentrale-Test 2024 + leftovercooking.app). leftovercooking als 6. Plattform in `01_wettbewerbsanalyse.tex` aufgenommen (eigener Absatz + Tabellenzeile: Rezept-Austausch mittel, Community mittel, Nachhaltigkeitsfokus stark, Reste-Matching stark), viertes Gegenargument im Fließtext ergänzt, Lücken-Absatz präzisiert. Recherche-Nachweis in `kapitelplan.md` → Rechercheprotokoll ergänzt. Folgeanpassungen „fünf" → „sechs Plattformen" in `06_evaluation_reflexion.tex`, `01_kernergebnisse_und_ausblick.tex`, `02_limitationen.tex` (dort auch „drei" → „vier Plattform-Kategorien").
+
+**Befund:** Das tragende Kernargument lautet, keine breit genutzte Plattform kombiniere Reste-Matching mit einer echten Social-Community (`01_wettbewerbsanalyse.tex:29`, `03_konzept.tex:9`, Fazit `01_kernergebnisse_und_ausblick.tex:3,7`). Die Websuche (Verifikations-Gate) fördert mit **Leftovercooking** (leftovercooking.app, von der Verbraucherzentrale getestet) eine reale App zutage, die Zutaten-Matching mit einer Creator-/Community-Ebene (Kurzprofile von Food-Creator:innen und Hobbyköch:innen, community-basierte Rezepte) und Zero-Waste-Tipps verbindet — also näher an Resterias Pitch liegt als die fünf untersuchten Plattformen. Brisanz: Genau dieser Verbraucherzentrale-Test war ursprünglich als Quelle im Text (Runde-1-Befund 2, entfernt) — die App war der Projektgruppe bekannt und fehlt dennoch in der Analyse.
+
+**Warum ein Prüfer das anstreicht:** Ein Prüfer, der eine bekannte Reste-App kennt, die die behauptete Lücke teilweise schon füllt, liest die USP als zu selbstbewusst. Die strikte Formulierung („keine der **untersuchten** Plattformen", Fazit „keine der **fünf** untersuchten") ist durch die Scoping-Wortwahl formal gedeckt und die Limitationen (`02_limitationen.tex:7`) räumen die Nicht-Vollständigkeit ausdrücklich ein — der Befund bricht die These also nicht. Aber die konkrete, prominente Gegen-App ausgerechnet auszulassen, obwohl sie schon im eigenen Entwurf stand, ist der wahrscheinlichste Angriffspunkt auf Kreativität (Vergleich zu Bestehendem) und Qualität.
+
+**Anweisung (Nutzerentscheidung, [FREIGABE]):** Bevorzugt Leftovercooking als sechste Plattform in `01_wettbewerbsanalyse.tex` + `tab:wettbewerbsvergleich` aufnehmen und einordnen — mutmaßlich Rezept-Austausch/Community „mittel", Reste-Matching „stark", womit die USP (Matching **plus voll ausgebaute** Social-Community mit Feed/Gamification/Challenges) geschärft, nicht widerlegt wird. Mindestvariante: Leftovercooking in `02_limitationen.tex:7` als konkretes Beispiel der „weiteren, kleineren Reste-Matching-Apps" namentlich nennen, damit die Auslassung bewusst und begründet wirkt statt übersehen. Die Entscheidung, ob und wie tief die App aufgenommen wird, liegt beim Nutzer (Kernargument + eigene Recherche).
+
+### Befund GS-2 — Barker-„Reminders" trägt die Reste-Level-Herleitung nur bedingt  🟠 mittel
+
+**Status: ERLEDIGT (2026-07-21).** Reste-Level in `03_konzept.tex` als Feedback-/Fortschritts-Mechanik umformuliert; echter Reminder als geplante Erinnerungsbenachrichtigung („Deine Reste warten") ergänzt, die den Barker-Beleg jetzt sauber trägt. `tab:funktionsuebersicht`-Zelle entsprechend angepasst.
+
+**Befund:** `03_konzept.tex:28` (und `tab:funktionsuebersicht:45`, Fazit `01_kernergebnisse_und_ausblick.tex:5`) leitet die Rettungspunkt-/Reste-Level-Mechanik u. a. aus Barkers Nudge-Typ „Reminders" ab: „das steigende Reste-Level erinnert Nutzer:innen implizit daran, weiterzumachen." Ein passiver Fortschritts-/Statusbalken ist aber kein Reminder im Sinne der Nudge-Literatur — Reminders sind aktive, wiederkehrende Anstöße (Push-Nachricht, E-Mail). Ein sichtbares Level ist funktional näher an Feedback/Zielgradient/Belohnung.
+
+**Warum ein Prüfer das anstreicht:** Die Arbeit macht ihre Sorgfalt gerade daran fest, Funktionen sauber aus Hebeln herzuleiten (`06_evaluation_reflexion.tex:9`, „bewusste Trennung zwischen literaturbasierten Hebeln und eigenen Konzeptentscheidungen"). Eine schiefe Zuordnung (Level = Reminder) unterläuft genau diesen Anspruch und ist leicht zu bemerken.
+
+**Anweisung:** Entweder die Zuordnung präzisieren — das Level als Feedback-/Zielgradient-Mechanik ausweisen und den echten „Reminder" an die Stelle setzen, an die er gehört (z. B. eine geplante Erinnerungs-Benachrichtigung „Deine Reste warten"), was Barker sauber trägt — oder den Reminder-Bezug am Level abschwächen zu „stützt sich u. a. auf". Ein bis zwei Sätze, keine Struktur­änderung.
+
+### Befund GS-3 — Zeitpuffer behauptet, in der Phasentabelle nicht sichtbar  🟠 mittel
+
+**Status: ERLEDIGT (2026-07-21).** `tab:phasenplanung` angepasst: MVP-Entwicklung Woche 8–17 (inklusive zweiwöchigem Puffer), Beta-Test Woche 18–20, Launch ab Woche 21. Fließtext-Aussage (Zeitpuffer von zwei Wochen) jetzt durch die Tabelle gedeckt.
+
+**Befund:** `05_phasenplanung.tex:23` nennt als Risikopuffer „einen Zeitpuffer von zwei Wochen zwischen \ac{MVP}-Entwicklung und Beta-Test". Die Phasentabelle `tab:phasenplanung` (`:13`–`:14`) führt \ac{MVP}-Entwicklung in Woche 8–15 und Beta-Test in Woche 16–18 — lückenlos aneinander, kein Puffer. Text und eigene Tabelle widersprechen sich.
+
+**Warum ein Prüfer das anstreicht:** Zählungen/Zeitangaben gegen die eigene Tabelle sind der klassische Konsistenz-Check. Ein Prüfer, der die Wochen nachrechnet, findet den fehlenden Puffer sofort — das trifft Dokumentation und Prozess-Reflexion.
+
+**Anweisung:** Eines von beiden angleichen. Entweder den Puffer in die Tabelle einbauen (\ac{MVP} bis Woche 15, Beta ab Woche 18, Wochen 16–17 als Puffer/Stabilisierung ausweisen; Launch-Wochen entsprechend verschieben) oder die Puffer-Aussage in `:23` als „innerhalb der \ac{MVP}-Phase eingeplant" umformulieren, sodass sie nicht mehr eine Lücke zwischen zwei Tabellenzeilen behauptet, die dort nicht steht.
+
+### Befund GS-4 — Foodsharing.de: Tabellenwertung „Community stark" gegen die eigene Abgrenzung im Fließtext  🟡 leicht
+
+**Status: ERLEDIGT (2026-07-21).** Halbsatz in `01_wettbewerbsanalyse.tex` ergänzt: Mitglieder-Community rund um Fairteiler/Abholungen ist aktiv und real (rechtfertigt „stark"), bezieht sich aber auf die Weitergabe-Organisation, nicht auf Rezeptaustausch. Chefkoch-Wertung geprüft, nicht geändert (Anweisung: „nur prüfen, nicht zwingend ändern").
+
+**Befund:** `tab:wettbewerbsvergleich` gibt Foodsharing.de „Community-Funktionen: stark". Der Fließtext (`01_wettbewerbsanalyse.tex:9`) spricht der Plattform aber „eine Rezept-Community im engeren Sinn" ausdrücklich ab und grenzt sie als „anderes Nutzungsszenario" (Weitergabe vor dem Verderb) ab. Ein Prüfer, der Zelle und Absatz nebeneinanderlegt, sieht die Spannung: entweder ist Foodsharings Community stark (dann ein näherer Wettbewerber als zugegeben) oder nicht (dann Zelle zu großzügig). Nebenbei: Chefkoch „Nachhaltigkeits-/Restefokus: mittel" wirkt für eine Plattform, die laut Text nur „einzelne Rezeptsammlungen zu bestimmten Zutaten" bietet, ebenfalls eher großzügig.
+
+**Warum ein Prüfer das anstreicht:** Die Kriteriendefinition (`:11`) macht Community an „tatsächlichem Austausch zwischen Nutzer:innen" fest — für Foodsharing verteidigbar (Abhol-Koordination, Mitglieder). Der Konflikt ist daher mild, aber sichtbar, weil der Fließtext die Community-Qualität selbst relativiert.
+
+**Anweisung:** Einen Halbsatz in `:9` ergänzen, der die Tabellenwertung deckt — z. B. dass Foodsharing zwar eine aktive Mitglieder-Community (daher „stark") hat, diese aber der Lebensmittel-Weitergabe und nicht dem Rezept-Austausch dient. Damit lesen Zelle und Text konsistent. Chefkoch-Wertung nur prüfen, nicht zwingend ändern.
+
+### Befund GS-5 — Verengung auf bereits Überzeugte gegen den gesellschaftlichen Wirkungsanspruch (SDG 12.3) + kritische Masse  🟠 mittel
+
+**Status: ERLEDIGT (2026-07-21).** Neuer Absatz in `06_evaluation_reflexion.tex` (nach dem Berichtsinhalte-Abgleich, vor der Methoden-Reflexion): löst die Zange auf, indem Resteria als Vertiefungs-/Bindungsangebot für eine realistische Nische statt als Werkzeug für die Gesamtbevölkerung gerahmt wird, Breitenwirkung als mittelbare, partnerschaftsabhängige Perspektive erklärt und das Reichweitenrisiko des Feeds explizit benannt wird. Limitationen-Struktur (3 Schichten) unverändert gelassen, kein 4. Limitationspunkt.
+
+**Befund:** Die Einleitung begründet die gesellschaftliche Relevanz über SDG 12.3, die Halbierung der Lebensmittelverschwendung „auf Handels- und Verbraucherebene" (`01_ausgangslage_und_problem.tex:5`). Zugleich verengt der Bericht die Zielgruppe bewusst auf **bereits** nachhaltigkeitsorientierte Hobbyköch:innen (`02_zielsetzung_und_verengung.tex:5`) — mit der Begründung, Gamification wirke nur für ohnehin Motivierte. Beides zusammen erzeugt eine Zange: Die breite Wirkung, mit der die Arbeit ihre Relevanz begründet, erfordert Verhaltensänderung bei den Nicht-Überzeugten, während das Konzept ausdrücklich nur die Überzeugten adressiert. Verstärkend ruht die Community-Mechanik (Osmosis/Feed, `04_community_und_feedback.tex:5`) auf Sichtbarkeit vieler Beiträge — sie braucht also kritische Masse, gerade in einer engen Nische. Die Phasenplanung adressiert Beta-Repräsentativität und \ac{MVP}-Verzug (`05_phasenplanung.tex:23`), aber nicht dieses Adoptions-/Reichweitenrisiko.
+
+**Warum ein Prüfer das anstreicht:** Die Arbeit nennt eine Bedingung ihres eigenen Gelingens (Breitenwirkung bzw. genügend aktive Nutzer:innen), ohne sie mit der selbst gewählten Verengung zu versöhnen. Das ist ein klassischer selbst erhobener, unbeantworteter Einwand — Transfer (gesellschaftliche Bedeutung) und Qualität sind betroffen.
+
+**Anweisung (Nutzerentscheidung bei These-Nähe — hier aber ohne [FREIGABE], weil die Verengung nicht geändert, nur ihr Verhältnis zum Wirkungsanspruch geklärt wird):** Einen kurzen Absatz — am ehesten in `06_evaluation_reflexion.tex` oder als vierte Limitation — der die Zange benennt und auflöst: Resteria zielt auf Vertiefung/Bindung bei bereits Motivierten (realistische Nische), nicht auf die Gesamtbevölkerung; Breitenwirkung Richtung SDG 12.3 ist eine mittelbare, skalierungs- und partnerschaftsabhängige Perspektive (Anknüpfung an die bereits genannten Kooperationen im Ausblick, `01_kernergebnisse_und_ausblick.tex:11`). Das entschärft den Einwand, ohne die Verengung anzutasten. Alternativ das SDG-12.3-Framing in der Einleitung eine Spur bescheidener an die Nische koppeln.
+
+### Befund GS-6 — Soma selektiv: „passive Informationsgruppe ebenso wirksam" lädt zur Rückfrage nach der Gamification-Notwendigkeit ein  🟡 leicht
+
+**Status: ERLEDIGT (2026-07-21).** Satz in `04_community_und_feedback.tex` ergänzt: Rettungs-Feed = passiver Osmosis-Kanal aus der Studie, Rettungspunkte/Reste-Level setzen den belegten Dosis-Effekt obendrauf statt zu ersetzen.
+
+**Befund:** `04_community_und_feedback.tex:7` stützt den Verzicht auf Forum/Gruppen darauf, dass bei Soma et al. „sowohl eine passive Informationsgruppe als auch eine Gamification-Gruppe deutlich höhere Teilnahme" erreichten als die Diskussionsgruppe. Dieselbe Studie trägt in `03_konzept.tex:30` die Gamification-Entscheidung. Ein kritischer Leser kann `:7` gegen `:30` wenden: Wenn die **passive** Gruppe ebenso gut abschnitt, warum dann der ganze Rettungspunkt-/Level-Apparat? (Die Arbeit hat de facto eine gute Antwort — der Rettungs-Feed **ist** der passive Osmosis-Kanal, Gamification liefert zusätzlich den Dosis-Effekt Vielspieler 51 % vs. Wenigspieler 39 % —, macht sie an dieser Stelle aber nicht sichtbar.)
+
+**Warum ein Prüfer das anstreicht:** Zwei Aussagen aus einer Quelle, die sich auf den ersten Blick gegenseitig relativieren, ohne dass der Text die Auflösung ausspricht — das lädt zur genau dieser Nachfrage ein.
+
+**Anweisung:** Einen halben Satz in `04_community_und_feedback.tex` ergänzen, der beide Soma-Nutzungen verklammert: Resterias Feed nimmt den wirksamen passiven Kanal auf, die Gamification setzt obendrauf (Dosis-Effekt aus derselben Studie). Damit liest sich die doppelte Berufung als kohärent statt widersprüchlich.
+
+---
+
+### Gesamteinschätzung (Anforderung → Argument-Robustheit)
+
+| Anforderung aus `aufgabe.md` | Argumentativ tragfähig? |
+|---|---|
+| Teilaufgabe 1: Analyse bestehender Plattformen | ja, aber USP-Behauptung durch reale Gegen-App angreifbar (GS-1); Tabellenwertung vs. Text bei Foodsharing (GS-4) |
+| Teilaufgabe 2: Konzeptentwicklung | ja; Herleitung überwiegend sauber, eine schiefe Nudge-Zuordnung (GS-2) |
+| Teilaufgabe 3: Iteratives Design/Feedback | ja, als geplantes Vorgehen sauber gekennzeichnet; Zeitpuffer-Widerspruch (GS-3) |
+| Transfer (gesellschaftlich ↔ wirtschaftlich) | wirtschaftlich seit Runde 1 bedient; gesellschaftlicher Anspruch in Spannung zur Verengung (GS-5) |
+| Community-Building | ja; Verzicht auf Forum/Gruppen begründet, Soma-Doppelnutzung präzisierbar (GS-6) |
+| UI/UX-Lieferobjekt | **weiter offen** — Mockup-Platzhalter (Runde-1-Befund 1), hier ausgeklammert |
+
+Insgesamt eine argumentativ solide Arbeit, deren Kern (Marktlücke → literaturgestütztes Konzept, mit vorbildlicher Trennung von Beleg und eigener Leistung) trägt. Kein Befund dieser Runde ist abgabekritisch. Der gewichtigste ist GS-1 (reale Gegen-App), weil er das tragende Kernargument berührt und billig zu schärfen ist; GS-3 (Zeitpuffer) ist ein harter, sofort nachrechenbarer Konsistenzfehler. GS-2/GS-4/GS-5/GS-6 heben Präzision und Glaubwürdigkeit. Der einzige abgabekritische Punkt bleibt außerhalb dieser Runde: die fehlenden Mockups (Runde-1-Befund 1).
+
+**Bekannter Hinweis (kein eigener Auftrag):** Die von der Gegenlesung (Prüferfrage 7) notierte USP-/„also"-Wiederholung über die Subsections besteht weiter — beim Abarbeiten ein bis zwei Wiederholungen straffen.
+
+### Nächster Schritt
+
+**Abgearbeitet (2026-07-21):** GS-1 bis GS-6 vollständig umgesetzt (GS-1 nach aktiver Rückfrage: volle Aufnahme von leftovercooking als 6. Plattform, mit Web-Recherche). Runde-1-Befund 1 (UI/UX-Mockups) bleibt weiterhin bewusst offen — auf Nutzerwunsch nicht Teil dieser Abarbeitung, gesondert zu klären. `check_formalia.py` und `check_bib_keys.py` liefen fehlerfrei (0 FEHLER) auf allen betroffenen Kapiteln.
+
+Nächster Schritt laut Fahrplan: **Voll-Audit** (`pruef-modus`), sobald Befund 1 (Mockups) geklärt ist — kein Delta-Re-Audit, da noch kein Vorbericht vorliegt.
