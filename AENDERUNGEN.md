@@ -215,3 +215,147 @@ Insgesamt eine argumentativ solide Arbeit, deren Kern (Marktlücke → literatur
 **Abgearbeitet (2026-07-23):** Runde-1-Befund 1 (UI/UX-Mockups) ebenfalls erledigt — vier echte Mockups eingebunden (siehe Befund-1-Status oben). Damit ist „Offen" jetzt vollständig leer.
 
 Nächster Schritt laut Fahrplan: **Voll-Audit** (`pruef-modus`) — kein Delta-Re-Audit, da noch kein Vorbericht vorliegt.
+
+---
+
+## Runde 3 — Gegenlesung (2026-07-23)
+
+Zweite kalte Prüfer-Gegenlesung gegen `aufgabe.md`, unabhängig durchgeführt: Erwartung erst aus `aufgabe.md` gebildet, dann Text + Anhang + Einbindung gelesen, erst danach diese Datei geöffnet. Kapitelplan, Prüfbericht, Projektstatus und Änderungshistorie wurden nicht als Maßstab herangezogen. Befunde sind gegen den **aktuellen Text** geprüft; wo ein Punkt Bereiche berührt, die frühere Runden bereits ansahen, steht er nur, weil er im aktuellen Text noch **lebt**.
+
+### Soll-Ist-Tabelle (Schritt 3)
+
+| Geforderter Inhalt (wörtlich aus `aufgabe.md`) | Erfüllung |
+|---|---|
+| Teilaufgabe 1: Analyse bestehender Plattformen (Stärken/Schwächen: Rezept-Austausch, **-Entdeckung**, Kommunikation) | erfüllt, aber „Rezept-Entdeckung" nicht als eigene Vergleichsdimension geführt (3.5); Matrix-Kalibrierung bei Chefkoch/leftovercooking fraglich (3.2, 3.3) — `sec:wettbewerbsanalyse`, `tab:wettbewerbsvergleich` (6 Plattformen) |
+| Teilaufgabe 2: Konzeptentwicklung (Rezept-Teilen, Kochtipp-Austausch, gegenseitige Inspiration) | erfüllt — `sec:konzept`, `tab:funktionsuebersicht` |
+| Teilaufgabe 3: Iteratives Design/Feedback (Beschreibung genügt) | erfüllt — `sec:community_und_feedback`, Beta-Gruppe/Sprints als geplantes Vorgehen |
+| Berichtsinhalt: Zielgruppe | erfüllt — `sec:zielgruppe` + Persona `tab:persona` (Anhang A) |
+| Berichtsinhalt: Funktionalitäten | erfüllt — `sec:konzept` |
+| Berichtsinhalt: UI/UX | erfüllt — `sec:konzept` (3 Bereiche) + 4 Mockups Anhang B; alle 4 PNG real unter `images/durchfuehrung/`; Einbindung ins Gesamtdokument nicht aus zulässigen Dateien prüfbar (3.8) |
+| Berichtsinhalt: Community-Building | erfüllt — Rettungs-Feed + Challenges; Forum/Gruppen begründet ausgeschlossen |
+| Objekt: Wettbewerbsvergleich (Tabelle) | erfüllt — `tab:wettbewerbsvergleich` |
+| Objekt: Persona (Text/Abb.) | erfüllt — `tab:persona` |
+| Objekt: UI/UX-Mockup (ggf. KI-generiert, gekennzeichnet) | erfüllt — 4 PNG, KI-Kennzeichnung im Pflichtmuster |
+| Objekt: Plattformname | erfüllt — „Resteria", hergeleitet, gegen „Restlos Glücklich" abgegrenzt |
+| Objekt: Funktionsübersicht | erfüllt — `tab:funktionsuebersicht` |
+| Objekt: Phasenplanung (Tabelle) | erfüllt — `tab:phasenplanung` mit Zeitrahmen + Ressourcen |
+| Schlüsselbegriff: Rezept-Uploads (Foto/Video) | erfüllt |
+| Schlüsselbegriff: Kommentar-/Bewertungssystem | erfüllt |
+| Schlüsselbegriff: Personalisierte Empfehlungen | erfüllt |
+| Schlüsselbegriff: Gruppen/Foren | erfüllt — beide begründet ausgeschlossen (Soma et al.) |
+| Schlüsselbegriff: Event-Kalender (bei Auslassung begründen) | erfüllt — Verzicht in `sec:konzept` begründet |
+| Schlüsselbegriff: Lebensmittel-Journaling/Menüplanung | erfüllt — Reste-Journal an Rettungspunkte gekoppelt |
+| Verengung Zielgruppe (begründet) | erfüllt — Einleitung + `sec:zielgruppe`, argumentativ |
+| Nachprüfbarkeit der Wettbewerbsanalyse | erfüllt, aber „App-Test der Verbraucherzentrale" namentlich genannt, ohne `\parencite`/Bib-Eintrag (3.4); Marktbehauptung unbelegt (3.6) |
+| Materialien Hansch & Rentschler (2012); Kapoor et al. (2018) | nicht erfüllt — fehlen in Text und `references.bib`; laut `aufgabe.md` nicht Pflicht (3.7) |
+| Formal: 5–10 Quellen | erfüllt — 6 Einträge in `references.bib` |
+| Formal: 7–10 Seiten / Struktur-% | nicht aus dem Text prüfbar (Build/`pruef-modus`) |
+
+---
+
+### Befund 3.1 — Zähl-/Aufzählungsdrift nach Aufnahme der sechsten Plattform  🔴 hart
+
+- **Befund**: Zwei Zählangaben stimmen nach der Aufnahme von leftovercooking nicht mehr mit dem eigenen Text überein:
+  - `chapters/02_durchfuehrung/01_wettbewerbsanalyse.tex:34`: „Gegen diese Einschätzung lassen sich **drei** Einwände vorbringen." — aufgezählt werden aber **vier** (Erstens / Zweitens / Drittens / **Viertens** = leftovercooking).
+  - `chapters/03_fazit/02_limitationen.tex:7`: „sechs Vertreter aus drei Plattform-Kategorien … bei der **jede Kategorie mit ein bis zwei Vertretern** belegt ist." Die Reste-Matching-Kategorie hat jedoch **drei** Vertreter (Restegourmet, BMEL-App, leftovercooking).
+- **Warum ein Prüfer das anstreicht**: Zählangaben gegen den eigenen Text sind der billigste Konsistenz-Check überhaupt. „Drei" unmittelbar vor vier sichtbar nummerierten Punkten ist ein harter, sofort auffallender Fehler; er trifft Qualität (Sorgfalt) und Dokumentation und wirkt wie ein nicht nachgezogener Editierstand.
+- **Anweisung**: In `01_wettbewerbsanalyse.tex:34` „drei Einwände" → „vier Einwände". In `02_limitationen.tex:7` „ein bis zwei Vertretern" → „ein bis drei Vertretern" (oder Satz so umformulieren, dass die Reste-Matching-Kategorie mit drei Vertretern gedeckt ist). Rein mechanisch, keine inhaltliche Änderung.
+
+### Befund 3.2 — Chefkoch: Prosa „aktiver Austausch" gegen Matrix-Wertung „Community mittel"  🟠 mittel  [FREIGABE]
+
+- **Befund**: `01_wettbewerbsanalyse.tex:3` beschreibt Chefkoch.de so, dass Nutzer:innen „bewerten fremde Beiträge und kommentieren sie, wodurch ein **aktiver Austausch** rund um einzelne Gerichte entsteht." `tab:wettbewerbsvergleich` (`:21`) wertet Chefkoch bei Community-Funktionen jedoch nur **„mittel"**. Die Kriteriendefinition (`:13`) macht „stark" an „tatsächlichem Austausch zwischen Nutzer:innen, etwa über Kommentare" fest — genau das schreibt die Prosa Chefkoch zu.
+- **Warum ein Prüfer das anstreicht**: Fazit und Kreativitäts-Bewertung (Vergleich zu Bestehendem) ruhen auf der Matrix. Wer die als „aktiv" beschriebene Chefkoch-Community neben die „mittel"-Zelle legt, liest die Wertung als ergebnisorientiert: Die Community-Plattformen werden tendenziell heruntergestuft, damit die USP-Lücke größer erscheint. Das ist der klassische Verdacht der Selbstbewertung zum eigenen Vorteil.
+- **Anweisung**: Optionen — **(a)** Chefkoch Community-Funktionen auf „stark" heben und im Fließtext klarstellen, warum Chefkoch die Lücke dennoch nicht schließt (kein Reste-Matching-Werkzeug); **(b)** im Chefkoch-Absatz präzisieren, warum der Austausch trotz Aktivität nur „mittel" trägt (z. B. rezept- statt reste-fokussiert, keine Gamification), sodass Prosa und Zelle konsistent lesen. Berührt eine eigene Bewertung → **[FREIGABE]**.
+
+### Befund 3.3 — leftovercooking: die USP-tragende Community-Zelle „mittel" gegen das eigene Kriterium  🟠 mittel  [FREIGABE]
+
+- **Befund**: `01_wettbewerbsanalyse.tex:9` schreibt leftovercooking „ein **Belohnungspunkte-System**" zu (= Gamification). Das Matrix-Kriterium (`:13`) zählt „Gamification" ausdrücklich als Merkmal, das Community-„stark" begründet. Dennoch erhält leftovercooking Community **„mittel"** (`:25`) — und genau diese eine Zelle trägt die gesamte USP-Behauptung („leftovercooking kommt am nächsten, bleibt aber auf Creator-Inhalte beschränkt", `:32`, Fazit `01_kernergebnisse_und_ausblick.tex:7`).
+- **Warum ein Prüfer das anstreicht**: Das tragende Kernargument (Reste-Matching **plus** echte Social-Community sei einzigartig) steht und fällt mit dieser Wertung. Solange nicht ausdrücklich steht, warum leftovercookings Punktesystem **nicht** die vom Kriterium gemeinte „Gamification" ist, wirkt die entscheidende Zelle zu bequem für die eigene These. Kreativität und Qualität sind betroffen.
+- **Anweisung**: In `01_wettbewerbsanalyse.tex` einen Halbsatz ergänzen, der leftovercookings Belohnungspunkte als **individuelles Spar-Feedback** (Anzeige gesparter Geldbeträge, kein Austausch zwischen Nutzer:innen) vom kriterienrelevanten, **sozial-interaktiven** Gamification-Begriff abgrenzt — dann trägt „mittel". Alternativ die Kriteriendefinition (`:13`) so schärfen, dass „Gamification" nur zählt, wenn sie interaktiv zwischen Nutzer:innen wirkt. Berührt Kernargument + eigene Recherche → **[FREIGABE]**.
+
+### Befund 3.4 — „App-Test der Verbraucherzentrale" namentlich, aber unbelegt  🟠 mittel  [FREIGABE]
+
+- **Befund**: `01_wettbewerbsanalyse.tex:9`: „Nach eigener Sichtung (Stand: Juli 2026), **gestützt durch einen unabhängigen App-Test der Verbraucherzentrale**, erfasst leftovercooking …". Auf diesen Test stützen sich konkrete Tatsachenangaben (über zwanzig Food-Creator:innen, Belohnungspunkte-System, kein belegter Peer-Austausch). `references.bib` enthält dazu keinen Eintrag (nur 6 Keys: barker, nivedhitha, shen, soma, un, vittuari).
+- **Warum ein Prüfer das anstreicht**: Eine namentlich genannte externe Quelle ohne `\parencite` ist nicht nachprüfbar — das wirkt schwächer, als sie gar nicht zu nennen. Trifft Nachvollziehbarkeit/Dokumentation, zusätzlich verschärft, weil die konkrete Einordnung der wichtigsten Gegen-App (leftovercooking) auf diesem Test beruht.
+- **Anweisung**: Entweder den Verbraucherzentrale-App-Test in Zotero/BBT aufnehmen und in `01_wettbewerbsanalyse.tex:9` per `\parencite` belegen (bevorzugt), **oder** — falls kein zitierfähiger Test greifbar ist — den namentlichen Verweis streichen und die leftovercooking-Bewertung ausschließlich als „eigene Sichtung (Stand: Juli 2026)" führen. Berührt eigene Recherche → **[FREIGABE]**.
+
+### Befund 3.5 — „Rezept-Entdeckung" fehlt als eigene Vergleichsdimension  🟠 mittel  [FREIGABE]
+
+- **Befund**: Teilaufgabe 1 verlangt wörtlich Stärken/Schwächen bzgl. „Rezept-Austausch, **-Entdeckung** und Kommunikation" (`aufgabe.md`). `tab:wettbewerbsvergleich` führt die vier Achsen Rezept-Austausch, Community-Funktionen, Nachhaltigkeits-/Restefokus, Reste-Matching-Werkzeug — „Rezept-Entdeckung" ist **keine eigene Achse**. Im Prosatext wird Suche/Auffindbarkeit je Plattform gestreift („Wer nach einem bestimmten Gericht sucht, findet auf Chefkoch.de schnell Ergebnisse"), aber nicht systematisch verglichen.
+- **Warum ein Prüfer das anstreicht**: Qualität misst u. a. Vollständigkeit gegen die wörtliche Aufgabenstellung. Eine der drei ausdrücklich genannten Analyse-Achsen taucht nicht als Vergleichskriterium auf; ein Prüfer, der die Aufgabe neben die Matrix legt, sieht die Auslassung sofort.
+- **Anweisung**: Optionen — **(a)** eine Spalte „Rezept-Entdeckung/Auffindbarkeit" in `tab:wettbewerbsvergleich` ergänzen und je Plattform bewerten; **(b)** im Fließtext je Plattform-Kategorie einen Satz ergänzen, der die Auffindbarkeit ausdrücklich als eine der drei geforderten Achsen adressiert und benennt, dass „Reste-Matching-Werkzeug" die reste-spezifische Entdeckung abbildet. Berührt die Wettbewerbsmatrix (eigene Recherche) → **[FREIGABE]**.
+
+### Befund 3.6 — Unbelegte Marktbehauptung stützt die wirtschaftliche Transfer-Dimension  🟡 leicht
+
+- **Befund**: `03_konzept.tex:5`: „Der **wachsende Markt** für Zero-Waste-Produkte und -Dienstleistungen macht dieses kommerzielle Umfeld tragfähig." Diese Marktaussage trägt die wirtschaftliche Seite des Transfer-Kriteriums, ist aber ohne Quelle.
+- **Warum ein Prüfer das anstreicht**: Transfer (15 %) verlangt eine begründete wirtschaftliche Einordnung. Eine unbelegte Marktwachstums-Behauptung ist die schwächste Stelle einer sonst sauber belegten Argumentation und lädt zur Rückfrage „woher?" ein.
+- **Anweisung**: Entweder mit einer Quelle (Marktstudie/Branchenzahl) belegen, **oder** vorsichtiger als Annahme formulieren („angesichts der steigenden Aufmerksamkeit für Nachhaltigkeit …"), sodass keine belegbedürftige Tatsachenbehauptung stehen bleibt. Ein Satz genügt.
+
+### Befund 3.7 — Genannte Einstiegsliteratur (Hansch & Rentschler; Kapoor et al.) nicht aufgegriffen  🟢 Hinweis (optional)
+
+- **Befund**: Beide in `aufgabe.md` genannten Materialien (Hansch & Rentschler 2012 — Emotion@Web; Kapoor et al. 2018 — Advances in Social Media Research) tauchen weder in `references.bib` noch im Text auf.
+- **Warum ein Prüfer das anstreicht**: `aufgabe.md` markiert sie ausdrücklich als „nicht Pflicht, aber sinnvoller Einstieg" — also **kein FAIL**. Manche Prüfer werten es dennoch positiv, wenn die selbst empfohlene Einstiegsliteratur wenigstens gestreift wird.
+- **Anweisung (optional)**: Falls beim Abarbeiten inhaltlich passend, eine der beiden Quellen einbauen (Kapoor et al. bei den Social-Media-Funktionen, Hansch & Rentschler bei der UI/UX-Emotionalität). Nur wenn es sich natürlich fügt — nicht erzwingen.
+
+### Befund 3.8 — Anhang-Einbindung nicht aus zulässigen Dateien verifizierbar  🟢 Grenzvermerk
+
+- **Befund**: `pages/chapters.tex` bindet ausschließlich die drei Kapitel ein; `pages/appendix.tex` (Persona + 4 Mockups) wird dort **nicht** referenziert. Fünf `\autoref`-Ziele — `tab:persona`, `fig:mockup_start`, `fig:mockup_start_bookmarks`, `fig:mockup_profil`, `fig:mockup_feed` — liegen in `appendix.tex`. Ob der Anhang ins kompilierte Dokument gelangt, wird in `main.tex` entschieden; `main.tex` liegt laut Auftrag **außerhalb meines Lesebereichs**, daher kalt nicht abschließend prüfbar.
+- **Warum ein Prüfer das anstreicht**: Wären Anhang und Mockups nicht eingebunden, blieben fünf `\autoref` unaufgelöst und ein wörtlich gefordertes Lieferobjekt (UI/UX) fehlte im PDF, obwohl die Dateien vorhanden sind. Kalt gelesen ist das ein offener Punkt.
+- **Anweisung**: Grenzvermerk, kein Textänderungsauftrag. Im Voll-Audit (`pruef-modus`, Build-Check) bzw. beim lokalen Kompilieren sicherstellen, dass `main.tex` den Anhang einbindet und die fünf Anhang-`\autoref` sauber auflösen.
+
+---
+
+### Die sieben Prüferfragen (Schritt 4)
+
+1. **Existiert, was behauptet wird?** → Ja. Alle vier Mockup-PNG liegen real unter `images/durchfuehrung/`, alle Tabellen (Wettbewerb, Funktionen, Persona, Phasen) und die Funktionslogik-Abbildung existieren. Offen bleibt nur die **Einbindung** des Anhangs ins Gesamtdokument (3.8, Grenzvermerk).
+2. **Teilaufgabe ersetzt statt ausgeführt?** → Nein. Feedback-Schleifen sauber als „geplantes Vorgehen" gekennzeichnet (von `aufgabe.md` gedeckt), fehlender Nutzertest ebenfalls gedeckt und offen als Limitation benannt.
+3. **Jede Behauptung nachprüfbar?** → Verhaltensliteratur durchweg mit `\parencite` + Seitenzahlen. Lücken: Verbraucherzentrale-App-Test namentlich, aber unbelegt (3.4); Marktbehauptung „wachsender Markt" unbelegt (3.6).
+4. **Zentralbegriff stillschweigend verengt?** → Zielgruppen-Verengung explizit benannt und begründet (legitim). „Rezept-Entdeckung" als Analyse-Achse still absorbiert statt ausgewiesen (3.5).
+5. **Widerspruch in eigenen Festlegungen?** → „drei Einwände" + vier gelistet, „ein bis zwei Vertreter" trotz drei Reste-Apps (3.1); Chefkoch „aktiver Austausch" (Prosa) vs. „mittel" (Matrix, 3.2). Die SDG-12.3-vs-Verengung-Spannung wird dagegen **selbst erhoben und beantwortet** (`sec:evaluation_reflexion`) — das ist eine Stärke, kein Befund.
+6. **Eigene Bewertung ergebnisorientiert?** → Die beiden Community-Wertungen, auf denen die USP ruht, laden dazu ein: Chefkoch „mittel" trotz Prosa „aktiver Austausch" (3.2) und leftovercooking „mittel" trotz eigenem Gamification-Kriterium (3.3). Kein Beweis für Ergebnisorientierung, aber der wahrscheinlichste Angriffspunkt.
+7. **Wirkt es wie ein KI-Text?** → Überwiegend menschlich, mit echter Reflexion (Lessons Learned, Auflösung der SDG-Spannung, vorsichtige Einordnung der Soma-Zahl). Mild auffällig: durchgängig triadische „Erstens/Zweitens/Drittens"-Gerüste (Zielgruppe, Limitationen, Lessons Learned, Einwände). Der „drei Einwände/vier"-Bruch (3.1) ist zugleich ein Editier-Artefakt genau dieses Musters. Kein Regelverstoß gegen `hard-rules-formal.md`.
+
+---
+
+### Bewertungskriterien je Dimension (Schritt 5)
+
+| Kriterium (Gewicht) | Dimension | Urteil |
+|---|---|---|
+| Qualität (25 %) | Vollständigkeit der Teilaufgaben | abgedeckt |
+| | Inhaltliche Richtigkeit | schwach — Matrix-Kalibrierung (3.2, 3.3), Zählfehler (3.1) |
+| | Zielerreichung | abgedeckt (`sec:evaluation_reflexion` prüft explizit) |
+| Prozess (25 %) | Vorgehen dokumentiert | abgedeckt |
+| | Reflektiert | abgedeckt |
+| | Grenzen aufgezeigt | abgedeckt (dreischichtige Limitationen) |
+| Transfer (15 %) | Gesellschaftliche Bedeutung | abgedeckt (SDG 12.3, Haushaltsabfall) |
+| | Wirtschaftliche Bedeutung | schwach — Freemium/Kooperationen da, aber unbelegte Marktbehauptung (3.6) |
+| | Ansätze/Modelle begründen | abgedeckt (Drivers/Levers, Nudges, Gamification) |
+| Kreativität (15 %) | Vergleich zu bestehendem Produkt | abgedeckt (6 Plattformen) — Überzeugungskraft leidet unter 3.2/3.3 |
+| | Innovationskraft | abgedeckt (Kombination als USP, ehrlich als inkrementell gerahmt) |
+| Dokumentation (10 %) | Entstehungsgeschichte | abgedeckt |
+| | Lückenlosigkeit/Nachvollziehbarkeit | schwach — unbelegter Verbraucherzentrale-Test (3.4), „eigene Sichtung" ohne dokumentierte Grundlage |
+| Ressourcen (10 %) | Zeiteinsatz | abgedeckt (Phasenplanung, Zeitpuffer) |
+| | Materialeinsatz | abgedeckt (Ressourcen-Spalte) |
+
+---
+
+### Tragende Stärken (Ehrlichkeitspflicht — beim Überarbeiten nicht wegschreiben)
+
+- **Trennung von Beleg und Eigenleistung**: `03_konzept.tex:30` ordnet die Soma-Zahl (51 % vs. 39 %) ausdrücklich nur der grundsätzlichen Gamification-Wirkung zu, nicht der konkreten Resteria-Mechanik. Diese Vorsicht ist ein Qualitätsmerkmal und **darf nicht geglättet werden**.
+- **Selbst erhobener, beantworteter Einwand**: Die Spannung zwischen SDG-12.3-Breitenanspruch und der Verengung auf bereits Motivierte wird in `sec:evaluation_reflexion` benannt **und** aufgelöst (Nische → mittelbare Breitenwirkung über Partnerschaften). Das nimmt einem Prüfer den naheliegendsten Angriff vorweg.
+- **Begründete Auslassungen statt stiller Lücken**: Event-Kalender und Forum/Gruppen werden aktiv und mit Beleg (Soma et al.) ausgeschlossen, nicht übergangen.
+- **Verengung sauber deklariert**, Verhaltensliteratur durchgehend belegt, Limitationen dreischichtig, Phasenplanung mit Abhängigkeiten und Risiken — die Prozess-Dimension ist durchweg stark.
+
+---
+
+### Gesamteinschätzung
+
+Eine inhaltlich tragfähige, formal weit gediehene Arbeit, die alle drei Teilaufgaben und alle wörtlich geforderten Berichtsinhalte mit **real vorhandenen** Artefakten bedient. **Kein Befund dieser Runde ist abgabekritisch.** Die gewichtigsten Punkte konzentrieren sich auf die Wettbewerbsmatrix — den Kern der eigenen Recherche und damit den wahrscheinlichsten Angriffspunkt auf Qualität und Kreativität: der harte Zählfehler (3.1) sowie die Kalibrierung der beiden Community-Wertungen, auf denen die USP ruht (3.2 Chefkoch, 3.3 leftovercooking), plus die unbelegte Stütze der leftovercooking-Einordnung (3.4). **3.1 ist der einzige harte Fehler und rein mechanisch zu beheben.** 3.5 (fehlende Entdeckungs-Achse) betrifft die wörtliche Erfüllung der Aufgabe. 3.6–3.8 sind Feinschliff bzw. ein Build-Grenzvermerk.
+
+**Umfangshinweis**: Alle Zugaben sind klein — Halbsätze (3.2, 3.3, 3.4, 3.6), ein bis zwei geänderte Zahlwörter (3.1), optional eine zusätzliche Matrixspalte (3.5), optional ein Bib-Eintrag (3.4/3.7). Bei 7–10 Seiten Zielkorridor entsteht **kein Kürzungsdruck**; eine zusätzliche Matrixspalte verbreitert nur die bestehende Tabelle.
+
+**Freigabepflichtig**: 3.2, 3.3, 3.4 und 3.5 berühren die eigene Wettbewerbsbewertung, das Kernargument bzw. eigene Rechercheergebnisse und sind daher **[FREIGABE]** — im `schreib-modus` aktiv per `AskUserQuestion` klären, nicht stillschweigend umsetzen. 3.1, 3.6, 3.7, 3.8 sind ohne Freigabe umsetzbar (Zahlkorrektur, Belegformulierung, optionaler Einbau, Build-Check).
+
+### Nächster Schritt
+
+Umsetzung **nicht in dieser Sitzung** (Prüfer- und Autorrolle getrennt). In frischer Sitzung: „Schreib-Modus: AENDERUNGEN.md abarbeiten". Der Nutzer entscheidet über jeden Befund einzeln; die vier `[FREIGABE]`-Punkte werden aktiv rückgefragt.
