@@ -34,7 +34,7 @@ Kalte Prüfer-Gegenlesung gegen `aufgabe.md`. Blickrichtung: Erfüllt die Arbeit
 
 ### Befund 1 — Die UI/UX-Mockups existieren nicht; der Text behauptet, sie lägen vor  🔴 schwer
 
-**Status: OFFEN — wird zum Schluss gesondert mit dem Nutzer besprochen (2026-07-21), nicht Teil dieser Abarbeitungsrunde.**
+**Status: ERLEDIGT (2026-07-23).** Nutzer hat vier echte Mockup-Screenshots geliefert (Startseite, Startseite mit ausgeklappten „Gespeicherte Rezepte", Profil, Rettungs-Feed) unter `images/durchfuehrung/`. Alle drei Platzhalter in `pages/appendix.tex` durch `\includegraphics` ersetzt, ein viertes Mockup (Bookmarks) neu ergänzt und im Fließtext (`03_konzept.tex`) nach Rückfrage referenziert. `\quelle{}`-Zeilen folgen dem Pflichtmuster „Erstellt mit dem Prompt [...] durch Claude Design (Claude Sonnet 5)", mit Zusatz „, Abbildung nachträglich manuell bearbeitet." nach Prüfung von `sources/Zitierleitfaden.pdf` Kap. 2.2.5. `check_formalia.py` 0 FEHLER auf `03_konzept.tex` und `appendix.tex`.
 
 **Befund:** Anhang B (`pages/appendix.tex`, `fig:mockup_start`, `fig:mockup_profil`, `fig:mockup_feed`) enthält drei leere gestrichelte Rahmen mit dem Text „Platzhalter für KI-generiertes Mockup … vor Abgabe durch tatsächliches Mockup ersetzen". Der Fließtext behauptet dagegen an drei Stellen, das Mockup existiere und sei fertig:
 - `chapters/02_durchfuehrung/03_konzept.tex:53`: „Für alle drei Bereiche liegt je eine grafische Mockup-Skizze in Anhang B vor … Die Mockups sind als KI-generierte Darstellung gekennzeichnet, wie es der IU-Zitierleitfaden … vorsieht."
@@ -202,14 +202,16 @@ Inhaltliche Prüfung der ganzen Arbeit gegen ihre eigene Argumentation und gegen
 | Teilaufgabe 3: Iteratives Design/Feedback | ja, als geplantes Vorgehen sauber gekennzeichnet; Zeitpuffer-Widerspruch (GS-3) |
 | Transfer (gesellschaftlich ↔ wirtschaftlich) | wirtschaftlich seit Runde 1 bedient; gesellschaftlicher Anspruch in Spannung zur Verengung (GS-5) |
 | Community-Building | ja; Verzicht auf Forum/Gruppen begründet, Soma-Doppelnutzung präzisierbar (GS-6) |
-| UI/UX-Lieferobjekt | **weiter offen** — Mockup-Platzhalter (Runde-1-Befund 1), hier ausgeklammert |
+| UI/UX-Lieferobjekt | erledigt (2026-07-23) — echte Mockups eingebunden (Runde-1-Befund 1) |
 
-Insgesamt eine argumentativ solide Arbeit, deren Kern (Marktlücke → literaturgestütztes Konzept, mit vorbildlicher Trennung von Beleg und eigener Leistung) trägt. Kein Befund dieser Runde ist abgabekritisch. Der gewichtigste ist GS-1 (reale Gegen-App), weil er das tragende Kernargument berührt und billig zu schärfen ist; GS-3 (Zeitpuffer) ist ein harter, sofort nachrechenbarer Konsistenzfehler. GS-2/GS-4/GS-5/GS-6 heben Präzision und Glaubwürdigkeit. Der einzige abgabekritische Punkt bleibt außerhalb dieser Runde: die fehlenden Mockups (Runde-1-Befund 1).
+Insgesamt eine argumentativ solide Arbeit, deren Kern (Marktlücke → literaturgestütztes Konzept, mit vorbildlicher Trennung von Beleg und eigener Leistung) trägt. Kein Befund dieser Runde ist abgabekritisch. Der gewichtigste ist GS-1 (reale Gegen-App), weil er das tragende Kernargument berührt und billig zu schärfen ist; GS-3 (Zeitpuffer) ist ein harter, sofort nachrechenbarer Konsistenzfehler. GS-2/GS-4/GS-5/GS-6 heben Präzision und Glaubwürdigkeit. Der zuvor einzige abgabekritische Punkt (fehlende Mockups, Runde-1-Befund 1) ist seit 2026-07-23 ebenfalls erledigt.
 
 **Bekannter Hinweis (kein eigener Auftrag):** Die von der Gegenlesung (Prüferfrage 7) notierte USP-/„also"-Wiederholung über die Subsections besteht weiter — beim Abarbeiten ein bis zwei Wiederholungen straffen.
 
 ### Nächster Schritt
 
-**Abgearbeitet (2026-07-21):** GS-1 bis GS-6 vollständig umgesetzt (GS-1 nach aktiver Rückfrage: volle Aufnahme von leftovercooking als 6. Plattform, mit Web-Recherche). Runde-1-Befund 1 (UI/UX-Mockups) bleibt weiterhin bewusst offen — auf Nutzerwunsch nicht Teil dieser Abarbeitung, gesondert zu klären. `check_formalia.py` und `check_bib_keys.py` liefen fehlerfrei (0 FEHLER) auf allen betroffenen Kapiteln.
+**Abgearbeitet (2026-07-21):** GS-1 bis GS-6 vollständig umgesetzt (GS-1 nach aktiver Rückfrage: volle Aufnahme von leftovercooking als 6. Plattform, mit Web-Recherche). `check_formalia.py` und `check_bib_keys.py` liefen fehlerfrei (0 FEHLER) auf allen betroffenen Kapiteln.
 
-Nächster Schritt laut Fahrplan: **Voll-Audit** (`pruef-modus`), sobald Befund 1 (Mockups) geklärt ist — kein Delta-Re-Audit, da noch kein Vorbericht vorliegt.
+**Abgearbeitet (2026-07-23):** Runde-1-Befund 1 (UI/UX-Mockups) ebenfalls erledigt — vier echte Mockups eingebunden (siehe Befund-1-Status oben). Damit ist „Offen" jetzt vollständig leer.
+
+Nächster Schritt laut Fahrplan: **Voll-Audit** (`pruef-modus`) — kein Delta-Re-Audit, da noch kein Vorbericht vorliegt.
