@@ -57,7 +57,7 @@ Die Plattform „Resteria" differenziert sich von generischen Rezept-/Social-Med
   - [STRESSTEST 2026-07-21] Namenskollision entdeckt: „Restlos Glücklich" e.V. (Berlin, seit 2015, Zero-Waste-Rezepte) + gleichnamige App — https://www.restlos-gluecklich.berlin/ — betrifft Plattformnamen, siehe Papierinfo
 - **[ZITIERREGEL Wettbewerbsanalyse — für schreib-modus verbindlich, 2026-07-21]**: Die Wettbewerbsanalyse ist **eigene Vergleichsanalyse** (Prüfer-Anmerkung Pkt. 2: „nachvollziehbare Vergleichsanalyse bestehender Plattformen, z. B. SWOT"). Die Plattformen (Chefkoch, TikTok Food, Restegourmet, BMEL-App, leftovercooking, Foodsharing.de) und die Verbraucherzentrale-Tests (Restegourmet + leftovercooking) sind **Untersuchungsgegenstände / eigene Sichtung (Stand: Juli 2026), KEIN `\parencite`** — die obigen URLs sind Recherche-Nachweis, **keine Zitierquellen**, und kommen **nicht** nach `references.bib`. Vergleichstabelle und SWOT tragen `\quelle{Eigene Darstellung.}`. `\parencite` **ausschließlich** für die 5 akademischen Paper (Vittuari, Barker, Soma, Nivedhitha, Shen — alle in `references.bib`). Plattform-Aussagen als eigene Beobachtung formulieren, nicht als Fremdzitat.
 - **Lieferobjekte**: UI/UX-Mockup (Anhang, KI-generiert mit Claude + Kennzeichnung) · Wettbewerbsvergleich-Tabelle · SWOT-Übersicht (eigene Konzept-Position) · Persona-Skizze (Anhang) · Funktionsübersicht · Phasenplanungs-Tabelle
-- **Budget-Verteilung innerhalb Durchführung (Richtwert)**: 01_wettbewerbsanalyse (~25 %) + 03_konzept (~30 %) = Kernpaar ~55 % der Durchführung; übrige 4 Subsections teilen sich ~45 %. Bei Mindestumfang 7 Seiten: SWOT kompakt halten (3–4 Stichpunkte) oder in Anhang verlagern; ab 8 Seiten komfortabel. Gesamtumfang ≥ 8 Seiten anpeilen.
+- **Budget-Verteilung innerhalb Durchführung (Richtwert)**: 01_wettbewerbsanalyse (~25 %) + 03_konzept (~30 %) = Kernpaar ~55 % der Durchführung; übrige 5 Subsections (inkl. 07_iteratives_design, ergänzt 2026-07-24) teilen sich ~45 %. Bei Mindestumfang 7 Seiten: SWOT kompakt halten (3–4 Stichpunkte) oder in Anhang verlagern; ab 8 Seiten komfortabel. Gesamtumfang ≥ 8 Seiten anpeilen.
 
 **Zu verifizieren vor dem Schreiben** (Nutzer-Pflicht laut IU-KI-Richtlinie):
 - Chefkoch.de: genaue aktuelle Funktionsdetails, falls im Text konkret zitiert
@@ -97,11 +97,17 @@ Die Plattform „Resteria" differenziert sich von generischen Rezept-/Social-Med
   - Bewusster Verzicht auf Event-Kalender als eigene Funktion, kurz begründet (Fokus-Schärfung)
 
 ### Subsection: 04_community_und_feedback — Rettungs-Feed und Challenges
-- **Argumentationsfluss**: Zeigt, wie Community-Aufbau und geplantes Feedback den Zero-Waste-Fokus verstärken.
+- **Argumentationsfluss**: Zeigt, wie Community-Aufbau den Zero-Waste-Fokus verstärkt.
 - **Inhaltspunkte**:
-  - Rettungs-Feed: geteilte Reste-Kreationen (Foto + verwendete Reste-Zutat als Tag), kommentierbar/bewertbar
-  - Zeitlich begrenzte Challenges (z. B. monatliche „Zero-Waste-Woche" mit Rangliste) statt klassischer Foren — begründet über Soma et al. (Community-Diskussion = schwächste Teilnahme)
-  - Geplantes iteratives Feedback-Vorgehen (Beta-Gruppe, Sprints) — als geplant beschrieben, nicht real durchgeführt
+  - Rettungs-Feed: geteilte Reste-Kreationen (Foto + verwendete Reste-Zutat als Tag), kommentierbar/bewertbar, Following über sichtbaren Nutzernamen
+  - Zeitlich begrenzte Challenges (z. B. monatliche „Zero-Waste-Woche" mit Rangliste) statt klassischer Foren/Gruppen — begründet über Soma et al. (Community-Diskussion = schwächste Teilnahme)
+
+### Subsection: 07_iteratives_design — Iteratives Design und Feedback
+- **[STRUKTURÄNDERUNG 2026-07-24]**: Aus 04_community_und_feedback herausgelöst (Gegenlesung Runde 5, Befund 5.2) — eigene Überschrift für Teilaufgabe 3, damit sie im Inhaltsverzeichnis sichtbar ist. Datei liegt nach 06 in der Nummerierung, wird aber inhaltlich zwischen 04 und 05 eingebunden (siehe `\input`-Reihenfolge in `durchfuehrung.tex`).
+- **Argumentationsfluss**: Bearbeitet Teilaufgabe 3 (Iteratives Design und Feedback) als eigenständigen, im Inhaltsverzeichnis sichtbaren Abschnitt.
+- **Inhaltspunkte**:
+  - Design-Anteil: Mockup/Klick-Prototyp durchlaufen in der Design-Phase (Woche 5–7) eine erste Rückkopplungsschleife vor der MVP-Entwicklung
+  - Geplantes Feedback-Vorgehen (Beta-Gruppe, Sprints) — als geplant beschrieben, nicht real durchgeführt
 
 ### Subsection: 05_phasenplanung — Umsetzungsfahrplan
 - **Argumentationsfluss**: Verankert das Konzept in einem realistischen Fahrplan — bedient Prozess/Ressourcen/Dokumentation.

@@ -498,3 +498,190 @@ Diese Runde ist die erste, die **ausschließlich subtrahiert**. Erwarteter Gesam
 **Abgearbeitet (2026-07-24):** Alle neun Punkte (4.0–4.8) umgesetzt. 4.0 ohne Messwert (lualatex/latexmk fehlen weiterhin), Nutzer-Entscheidung: alle Punkte trotzdem umsetzen. `[FREIGABE]`-Punkte 4.1, 4.2, 4.5 und 4.7 per `AskUserQuestion` einzeln geklärt und wie vorgeschlagen umgesetzt, bei 4.5 mit einer bewusst konservativeren Abweichung (3 statt 4 Stellen gekürzt, siehe Befund-Status oben). 4.4 ebenfalls leicht abweichend (vier statt zwei Sätze in `03_vorgehen_und_aufbau.tex`, um die HALBSEITE-Schwelle nicht zu unterschreiten). `check_formalia.py`: 0 FEHLER (10 HINWEIS, überwiegend bekannte Tabellen-Satzlängen-Artefakte). `check_bib_keys.py`: alle 6 Keys valide. Tatsächlicher Wortzahl-Ertrag ca. 394 Wörter (~8,7 %) statt der geschätzten ~715 (~16 %) — geringer, weil mehrere Punkte bewusst konservativer umgesetzt wurden, um HALBSEITE-Schwelle, Matrixbias-Mitigation (Runde 1) und den geschützten Prozess-Reflexions-Absatz (Befund 4.3) nicht zu gefährden. Damit ist „Offen" wieder vollständig leer.
 
 Nächster Schritt laut Fahrplan: **Delta-Re-Audit** (`pruef-modus`) — die Kürzungen berühren Kapitel, für die der Voll-Audit vom 2026-07-23 (Score 100/100) den alten, ungekürzten Textstand bewertet hat. Weiterhin offen (Nutzer-Schritt): lokaler Build zur Seitenumfangs-Verifikation.
+
+---
+
+## Runde 5 — Gegenlesung (2026-07-24)
+
+Kalte Prüfer-Gegenlesung gegen `aufgabe.md`. Gelesen wurden ausschließlich `aufgabe.md`, alle 14 `chapters/**/*.tex`, `pages/appendix.tex`, `pages/acronyms.tex`, `pages/chapters.tex`, die vier Mockup-Bilder in `images/durchfuehrung/` sowie `references.bib` zur reinen Eintragszählung. Kapitelplan, Prüfbericht, Statustabelle und die Runden 1–4 dieser Datei wurden nicht herangezogen. Alle Punkte sind **offen**.
+
+### Soll-Ist-Tabelle (Schritt 3)
+
+| Geforderter Inhalt (aus `aufgabe.md`) | Erfüllung |
+|---|---|
+| Teilaufgabe 1: Analyse bestehender Plattformen | erfüllt, aber ohne Instagram und ohne durchgängigen Erhebungsnachweis — `sec:wettbewerbsanalyse`, 6 Plattformen, `tab:wettbewerbsvergleich` (Befunde 5.1, 5.3) |
+| — Achse „Rezept-Austausch" | erfüllt — eigene Matrixspalte |
+| — Achse „Rezept-Entdeckung" | erfüllt — eigene Matrixspalte |
+| — Achse „Kommunikation" | erfüllt, aber umbenannt — läuft als „Community-Funktionen"; der Begriff der Aufgabenstellung fällt nie (Befund 5.4) |
+| Teilaufgabe 2: Konzeptentwicklung | erfüllt — `sec:konzept`, `tab:funktionsuebersicht`, `fig:konzeptfluss` |
+| Teilaufgabe 3: Iteratives Design und Feedback | erfüllt, aber ohne eigene Überschrift und nur als Feedback-Teil — 1 Absatz in `sec:community_und_feedback` (Befund 5.2) |
+| Berichtsinhalt: Zielgruppe | erfüllt — `sec:zielgruppe` + `tab:persona` (Anhang A) |
+| Berichtsinhalt: Funktionalitäten | erfüllt — `sec:konzept` + `tab:funktionsuebersicht` |
+| Berichtsinhalt: User Interface und User Experience | erfüllt, aber eine Tabellenfunktion ohne UI-Entsprechung — vier Mockups in Anhang B (Befund 5.7) |
+| Berichtsinhalt: Community-Building | erfüllt — Rettungs-Feed + Challenges; Verzicht auf Forum/Gruppen begründet |
+| Objekt: Wettbewerbsvergleich (Tabelle) | erfüllt — `tab:wettbewerbsvergleich`, 6 Plattformen × 5 Kriterien |
+| Objekt: Persona (Text/Abb.) | erfüllt — `tab:persona` |
+| Objekt: UI/UX-Skizze/Mockup (Abb.) | erfüllt — 4 Abbildungen, KI-Herkunft je Bild ausgewiesen; eine Prompt-Zeile stimmt nicht mit dem Bild überein (Befund 5.8) |
+| Objekt: Plattformname | erfüllt — „Resteria", hergeleitet in `sec:konzept` |
+| Objekt: Funktionsübersicht (Tab./Abb.) | erfüllt — `tab:funktionsuebersicht` |
+| Objekt: Phasenplanung (Tabelle) | erfüllt, aber Ressourcenträger der längsten Phase offen — `tab:phasenplanung` (Befund 5.10) |
+| Schlüsselbegriff: Rezept-Uploads (Foto/Video) | erfüllt |
+| Schlüsselbegriff: Kommentar-/Bewertungssysteme | erfüllt |
+| Schlüsselbegriff: Personalisierte Empfehlungen | erfüllt |
+| Schlüsselbegriff: Gruppen/Foren | erfüllt — Verzicht mit Soma et al. begründet; erzeugt aber einen Doppelmaßstab zur Wettbewerbsanalyse (Befund 5.5) |
+| Schlüsselbegriff: Event-Kalender (bei Auslassung begründen) | erfüllt — `03_konzept.tex:55`, eigener Absatz |
+| Schlüsselbegriff: Lebensmittel-Journaling/Menüplanung | erfüllt im Text, ohne UI-Entsprechung (Befund 5.7) |
+| Verengung Zielgruppe (begründet) | erfüllt — Einleitung + `sec:zielgruppe`, Spannung zu SDG 12.3 in `sec:evaluation_reflexion` selbst aufgelöst |
+| Anonymisierung personenbezogener Daten | erfüllt — keine realen Personen; Persona ausdrücklich als fiktiv gekennzeichnet |
+| Struktur 10–15 / 70–80 / 10–15 % | erfüllt — 13,5 / 71,5 / 15,0 % (Wortbasis) |
+| Quellen 5–10 | erfüllt — 6 Einträge in `references.bib`, alle genutzt |
+| Materialien Hansch & Rentschler (2012), Kapoor et al. (2018) | nicht erfüllt — kommen nicht vor; laut `aufgabe.md:26` nicht Pflicht |
+
+### Bewertungskriterien je Dimension (Schritt 5)
+
+| Kriterium | Dimension | Stand |
+|---|---|---|
+| Qualität 25 % | Ergebnis erfüllt die Aufgabenstellung | abgedeckt — bis auf 5.1 und 5.2 |
+| Prozess 25 % | Vorgehen dokumentieren | abgedeckt — `sec:vorgehen_und_aufbau`, `tab:phasenplanung` |
+| Prozess 25 % | reflektieren | **schwach** — ein Absatz, „verlief weitgehend planmäßig" (Befund 5.6) |
+| Prozess 25 % | Grenzen aufzeigen | abgedeckt, stark — `sec:limitationen`, dreischichtig |
+| Transfer 15 % | gesellschaftliche Bedeutung | abgedeckt — SDG 12.3, Vittuari et al. |
+| Transfer 15 % | wirtschaftliche Bedeutung | abgedeckt, knapp — Freemium/Kooperationen, `03_konzept.tex:5`, unbelegt („erscheint tragfähig") |
+| Transfer 15 % | Ansätze/Modelle begründen | abgedeckt, stark — Drivers/Levers, Nudges, Osmose |
+| Kreativität 15 % | Vergleich zu bestehendem Produkt | abgedeckt — Matrix + narrative Einordnung; Resteria selbst steht nicht in der Matrix |
+| Kreativität 15 % | Innovationskraft | abgedeckt — Kombination Matching + Peer-Community |
+| Dokumentation 10 % | Entstehungsgeschichte lückenlos | **schwach** — verworfene Alternativen sind dokumentiert (Event-Kalender, Forum), der Entstehungsweg selbst nicht (Befund 5.6) |
+| Ressourcen 10 % | Zeit effizient | abgedeckt — 5 Phasen, Zeitrahmen, 2 Wochen Puffer |
+| Ressourcen 10 % | Material effizient | **schwach** — Träger der längsten Phase offen, keine Aufwands-/Kostengröße (Befund 5.10) |
+
+---
+
+#### 5.1 Instagram fehlt in der Wettbewerbsanalyse vollständig  [FREIGABE]
+
+**Status: ERLEDIGT (2026-07-24), Nutzer-Entscheidung nach Rückfrage: Option B.** In `01_wettbewerbsanalyse.tex` (TikTok-Absatz) einen Halbsatz ergänzt, der TikTok stellvertretend für allgemeine Social-Media-Plattformen einschließlich Instagram setzt (vergleichbare, visuell ausgelegte Content-Logik ohne eigene Reste-Funktion). Keine neue Matrixzeile, kein Recherche-Aufwand.
+
+- **Befund**: `aufgabe.md:10` beschreibt das Rahmenthema wörtlich als Abgrenzung „im Unterschied zu allgemeinen Plattformen wie Instagram/TikTok". Ein Grep über alle Kapitel und `pages/` ergibt für „Instagram" **keinen einzigen Treffer**. Untersucht werden Chefkoch.de, TikTok, Restegourmet, BMEL-App, leftovercooking und Foodsharing.de.
+- **Warum**: Qualität (25 %) und Kreativität (15 %, „Vergleich zu bestehendem Produkt"). Die Aufgabenstellung nennt genau zwei allgemeine Plattformen namentlich; eine davon wird bearbeitet, die andere kommt nicht vor — und der Text sagt nirgends, dass das eine Entscheidung war. Für Hobbyköch:innen ist Instagram zudem die naheliegendste Bild-Plattform. Ein Prüfer, der seine eigene Formulierung im Text sucht, findet sie halb bedient.
+- **Anweisung**: Drei Wege, absteigend nach Aufwand.
+  - *Option A*: Instagram als siebte Zeile in `tab:wettbewerbsvergleich` (`01_wettbewerbsanalyse.tex:19–27`) aufnehmen und im Fließtext mit zwei bis drei Sätzen einordnen (eigene Sichtung, analog TikTok). Kostet Recherche und ~60 Wörter — Umfangshinweis unten beachten.
+  - *Option B* (billig): In `01_wettbewerbsanalyse.tex:5` einen Halbsatz ergänzen, der TikTok ausdrücklich stellvertretend für die allgemeinen Social-Media-Plattformen einschließlich Instagram setzt, mit kurzer Begründung (vergleichbare Content-Logik, keine Reste-Funktion).
+  - *Option C*: In `02_limitationen.tex:7` bei der dritten Grenze Instagram namentlich als bewusst nicht einzeln untersuchte Plattform aufführen.
+
+#### 5.2 Teilaufgabe 3 hat keine eigene Überschrift und besteht aus einem Absatz
+
+**Status: ERLEDIGT (2026-07-24).** Absatz aus `04_community_und_feedback.tex` herausgelöst in neue Datei `chapters/02_durchfuehrung/07_iteratives_design.tex` (`\subsection{Iteratives Design und Feedback}\label{sec:iteratives_design}`), eingebunden in `durchfuehrung.tex` zwischen 04 und 05. Um den Design-Anteil ergänzt (Mockup/Klick-Prototyp durchlaufen in Woche 5–7 eine Rückkopplungsschleife vor der MVP-Entwicklung, verzahnt mit der Abhängigkeit aus `05_phasenplanung.tex`). Verweis in `06_evaluation_reflexion.tex:3` auf `sec:iteratives_design` umgestellt. `kapitelplan.md` im Durchführungs-Block nachgezogen.
+
+- **Befund**: `aufgabe.md:15` führt „Iteratives Design und Feedback" als dritte, gleichrangige Leitfrage. Im Text steht sie als letzter Absatz von `chapters/02_durchfuehrung/04_community_und_feedback.tex:9` unter der Überschrift „Rettungs-Feed und Challenges" — 96 Wörter. Zum Vergleich: Teilaufgabe 1 hat 794 Wörter, eigene Subsection und Tabelle; Teilaufgabe 2 hat 921 Wörter, Tabelle und Abbildung. Im Inhaltsverzeichnis erscheint die dritte Teilaufgabe überhaupt nicht. Inhaltlich beschreibt der Absatz fast ausschließlich *Feedback* (Beta-Gruppe, Fragebögen, Sprints); der *Design*-Anteil des „iterativen Designs" — Iterationen an Mockup und Klick-Prototyp — kommt nicht vor, obwohl `tab:phasenplanung` eine eigene Phase „Design & Prototyp" (Woche 5–7) kennt.
+- **Warum**: Qualität (25 %). Ein Prüfer hakt die drei Leitfragen einzeln ab und sucht sie zuerst im Inhaltsverzeichnis. Eine Teilaufgabe, die dort nicht auftaucht, muss er sich selbst zusammensuchen — und wird sie im Zweifel als schwächer bearbeitet werten, als sie ist.
+- **Anweisung**: Den Absatz `04_community_und_feedback.tex:9` als eigene Subsection herauslösen: neue Datei `chapters/02_durchfuehrung/07_iteratives_design.tex` mit `\subsection{Iteratives Design und Feedback}\label{sec:iteratives_design}`, eingebunden in `durchfuehrung.tex`. Inhaltlich um zwei bis drei Sätze zum Design-Anteil ergänzen: dass Mockup und Klick-Prototyp aus Woche 5–7 vor der MVP-Entwicklung eine erste Rückkopplungsschleife durchlaufen und Bedienführungs-Entscheidungen dort korrigiert werden, bevor sie in Code gegossen sind (verzahnt sich mit dem Abhängigkeitsabsatz `05_phasenplanung.tex:21`). Verweis in `06_evaluation_reflexion.tex:3` von `sec:community_und_feedback` auf das neue Label umstellen.
+
+#### 5.3 Die Wettbewerbsanalyse trägt null Beleg, und für die Hälfte der Plattformen fehlt sogar der Sichtungsvermerk
+
+**Status: ERLEDIGT (2026-07-24).** Einheitlichen Methodensatz vor `tab:wettbewerbsvergleich` ergänzt (eigene Sichtung aller sechs Plattformen im Juli 2026, Kriterien aus den drei Aufgabenstellungs-Achsen plus zwei nischenspezifischen abgeleitet). Die beiden Einzelvermerke „Nach eigener Sichtung (Stand: Juli 2026)" bei Restegourmet/BMEL-App und leftovercooking gestrichen — Asymmetrie beseitigt, Wörter gespart.
+
+- **Befund**: `chapters/02_durchfuehrung/01_wettbewerbsanalyse.tex` ist mit 794 Wörtern die größte Subsection der Arbeit und enthält **kein einziges `\parencite`**. Der Erhebungsnachweis „Nach eigener Sichtung (Stand: Juli 2026)" steht nur bei Restegourmet/BMEL-App (Z. 7) und leftovercooking (Z. 9). Für Chefkoch.de (Z. 3), TikTok (Z. 5) und Foodsharing.de (Z. 11) gibt es weder Quelle noch Sichtungsvermerk noch Datum — obwohl `tab:wettbewerbsvergleich` allen dreien je fünf Einstufungen zuweist.
+- **Warum**: Prozess (25 %, „Vorgehen dokumentieren") und Dokumentation (10 %). Eigene Sichtung ist eine völlig legitime Erhebungsgrundlage für Desk-Research — aber nur, wenn sie durchgängig als solche ausgewiesen ist. Halb ausgewiesen ist schlechter als gar nicht: Der Prüfer sieht den Vermerk bei drei Plattformen, sucht ihn bei den anderen drei und findet nichts.
+- **Anweisung**: Nach `01_wettbewerbsanalyse.tex:13` (also unmittelbar vor der Tabelle) einen Methodensatz einfügen, der die Erhebung für alle sechs Plattformen einheitlich deklariert — Grundlage der Einstufungen ist eine eigene Sichtung der jeweiligen Web-Auftritte und Apps im Juli 2026, die Kriterien sind aus den drei in der Aufgabenstellung genannten Achsen abgeleitet und um zwei nischenspezifische ergänzt. Anschließend die beiden Einzelvermerke in Z. 7 und Z. 9 streichen: Das beseitigt die Asymmetrie und spart zugleich Wörter.
+
+#### 5.4 Das Kriterium „Kommunikation" aus der Aufgabenstellung fällt im Text nie
+
+**Status: ERLEDIGT (2026-07-24).** Spaltenüberschrift und alle Textverweise auf das Kriterium in `01_wettbewerbsanalyse.tex` von „Community-Funktionen" auf „Kommunikation \& Community" umgestellt (Tabellenkopf, Kriteriendefinition, drei Fließtextstellen). Einstufungen aller sechs Plattformen unverändert.
+
+- **Befund**: `aufgabe.md:13` verlangt Stärken und Schwächen bezüglich „Rezept-Austausch, -Entdeckung und Kommunikation". `tab:wettbewerbsvergleich` führt die Spalten Rezept-Austausch, Rezept-Entdeckung, **Community-Funktionen**, Nachhaltigkeits-/Restefokus, Reste-Matching-Werkzeug. Das Wort „Kommunikation" kommt in der gesamten Arbeit genau einmal vor — als Herleitungs-Label in einer Tabellenzelle (`03_konzept.tex:45`).
+- **Warum**: Qualität (25 %). Zwei der drei wörtlich verlangten Achsen sind namensgleich abgebildet, die dritte ist umbenannt. Inhaltlich deckt „Community-Funktionen" die Kommunikation ab — die Definition in Z. 13 nennt Kommentare und Gruppen ausdrücklich. Aber der Prüfer muss diese Übersetzung selbst leisten, und beim Abhaken der eigenen Leitfrage ist das genau der Moment, in dem ein Häkchen ausbleibt. Von allen Befunden dieser Runde der billigste Fix bei größter Wirkung.
+- **Anweisung**: Spaltenüberschrift in `01_wettbewerbsanalyse.tex:19` von „Community-Funktionen" auf „Kommunikation \& Community" ändern und die Kriteriendefinition in Z. 13 im ersten Wort mitziehen. Die Einstufungen aller sechs Plattformen bleiben unverändert. Falls die Spaltenbreite darunter leidet, alternativ die Überschrift belassen und in Z. 13 einen Halbsatz ergänzen, der die Gleichsetzung ausspricht.
+
+#### 5.5 Doppelmaßstab: Der Text hält Wettbewerbern fehlende Gruppen und fehlendes Folgen vor — Resteria bietet beides ebenfalls nicht  [FREIGABE]
+
+**Status: ERLEDIGT (2026-07-24), Nutzer-Entscheidung nach Rückfrage: (a) + (b) ergänzen.** (a) „Gruppen" aus der Kriteriendefinition und aus den Defizit-Nennungen bei Restegourmet/BMEL-App und leftovercooking gestrichen. (b) In `04_community_und_feedback.tex` einen Satz ergänzt, der Following über den im Rettungs-Feed bereits sichtbaren Nutzernamen einführt — bewusst an die vorhandene Mockup-Struktur (Avatar + Nutzername je Beitrag) angebunden, ohne einen im Bild nicht vorhandenen Folgen-Button zu behaupten. Kein neues Mockup nötig.
+
+- **Befund**: `01_wettbewerbsanalyse.tex:13` definiert das Kriterium Community-Funktionen als „tatsächlicher Austausch zwischen Nutzer:innen, etwa über Kommentare, **Gruppen** oder Gamification". Z. 7 hält Restegourmet und der BMEL-App vor, „Following, **Gruppen**, Kommentar-Communities und Gamification" fehlten. Z. 9 hält leftovercooking vor, ein Austausch „etwa über Kommentare zu fremden Beiträgen, **gegenseitiges Folgen** oder **Gruppen**" sei nicht belegt. `04_community_und_feedback.tex:7` legt für Resteria dagegen fest: „Ein offenes Diskussionsforum ist dagegen ebenso wenig vorgesehen wie feste thematische oder regionale Nutzergruppen." Eine Folgen- oder Abonnier-Funktion beschreibt die Arbeit für Resteria an keiner Stelle (Grep über alle Kapitel: Treffer ausschließlich innerhalb der Wettbewerbsanalyse, dort als Fremdplattform-Merkmal).
+- **Warum**: Prüferfrage nach der Ergebnisorientiertheit der eigenen Bewertung, dazu Kreativität (15 %, Vergleich zum bestehenden Produkt) und Qualität. Der Maßstab, an dem die Konkurrenz gemessen wird, wird von der eigenen Plattform an zwei von drei genannten Merkmalen selbst nicht erfüllt. Der Verzicht auf Gruppen ist gut und literaturgestützt begründet — aber diese Begründung steht drei Subsections später, während die Wettbewerbsanalyse die fehlenden Gruppen vorher als Minuspunkt gegen andere verbucht. Das ist ein Einwand, den die Arbeit selbst aufwirft und nirgends beantwortet.
+- **Anweisung**: Zwei Stellschrauben, beide ohne Substanzverlust und ohne Änderung an einer einzigen Matrixzelle.
+  - *(a)* In `01_wettbewerbsanalyse.tex:13` „Gruppen" aus der Kriteriendefinition streichen und durch das ersetzen, was Resteria tatsächlich bietet: Kommentare, Bewertungen und einen öffentlichen Feed. Dieselbe Bereinigung in Z. 7 und Z. 9, wo „Gruppen" als Defizit anderer aufgeführt wird.
+  - *(b)* Für „Following"/„gegenseitiges Folgen" entweder **ergänzen** — ein Satz in `03_konzept.tex` (Abschnitt Rettungs-Feed/UI, Z. 53) genügt, dass Nutzer:innen anderen folgen können; das passt zum Osmose-Argument in `04_community_und_feedback.tex:5` und ist im Feed-Mockup durch die Beitragsstruktur mit Nutzernamen bereits angelegt — **oder streichen**, sodass kein Merkmal als Defizit angeführt wird, das Resteria selbst nicht hat. Ergänzen ist die stärkere Variante, weil sie den Peer-zu-Peer-Anspruch aus Z. 32 tatsächlich einlöst.
+
+#### 5.6 Die Prozess-Reflexion nennt keine einzige Schwierigkeit
+
+**Status: ERLEDIGT (2026-07-24).** Leerformel „Der Prozess selbst verlief weitgehend planmäßig …" in `06_evaluation_reflexion.tex` durch zwei konkrete Prozessereignisse ersetzt: Verwerfen des Forum/Gruppen-Zuschnitts nach dem Soma-Befund zugunsten der Challenges; Korrektur des Arbeitstitels nach der Namenskollision.
+
+- **Befund**: `aufgabe.md:39` verlangt für „Prozess" — mit 25 % das höchstgewichtete Kriterium gemeinsam mit Qualität — ausdrücklich „Vorgehen dokumentieren + reflektieren + Grenzen aufzeigen". Dokumentation und Grenzen sind stark bedient. Die Reflexion selbst besteht aus einem Absatz (`06_evaluation_reflexion.tex:7`, 88 Wörter), dessen Kern lautet: „Der Prozess selbst verlief weitgehend planmäßig: Auf die Recherche folgte zügig die Konzeptentwicklung, ohne dass grundlegende Kursänderungen nötig wurden." Die einzige Selbstkritik ist, es wäre „etwas mehr Zeit für die Suche nach zusätzlichen Vergleichsplattformen sinnvoll gewesen".
+- **Warum**: Prozess 25 % und Dokumentation 10 % („Entstehungsgeschichte lückenlos"). „Alles lief nach Plan" ist die schwächste mögliche Form der Reflexion und wird als Nicht-Reflexion gelesen. Bemerkenswert ist, dass der Bericht die Substanz für eine echte Reflexion bereits enthält, sie an dieser Stelle aber nicht nutzt: Der Verzicht auf Forum und Gruppen (`04_community_und_feedback.tex:7`) ist eine echte, literaturgetriebene Abkehr von der naheliegenden Standardlösung, und die Namensprüfung wird in Z. 9 nur als abstrakte Lehre erwähnt, nicht als Vorfall im Prozess.
+- **Anweisung**: `06_evaluation_reflexion.tex:7` umschreiben, ohne zu verlängern. Den Satz „Der Prozess selbst verlief weitgehend planmäßig … Kursänderungen nötig wurden" durch zwei konkrete Prozessereignisse ersetzen: (i) der ursprünglich naheliegende Community-Zuschnitt mit Forum und Nutzergruppen wurde nach Auswertung des Soma-Befunds zugunsten zeitlich begrenzter Challenges verworfen; (ii) die Prüfung des Plattformnamens erzwang eine Korrektur, bevor das Konzept darauf aufbaute. Beides ist wortneutral einsetzbar und ersetzt eine Leerformel durch nachvollziehbare Prozessgeschichte.
+
+#### 5.7 Menüplanung und Reste-Journal stehen als Kernfunktion in der Tabelle, haben aber in keinem Mockup einen Zugang
+
+**Status: ERLEDIGT (2026-07-24), Option A (Nutzer-Entscheidung: vorsichtig planen, kein neues Mockup).** In `03_konzept.tex:53` einen Halbsatz ergänzt, der Menüplanung/Reste-Journal als Zugang der Startseite verortet — erklärt, warum die Navigation drei statt vier Hauptbereiche zeigt, ohne neues Bild.
+
+- **Befund**: `tab:funktionsuebersicht` (`03_konzept.tex:47`) führt „Menüplanung \& Reste-Journal" als eine von sechs Kernfunktionen; `03_konzept.tex:34` widmet ihr einen eigenen Absatz und bindet sie an den Rettungspunkte-Mechanismus. Die vier Mockups in Anhang B zeigen jedoch durchgängig eine Tab-Leiste mit genau drei Einträgen: Start, Rettungs-Feed, Profil. Ein Einstiegspunkt für Menüplanung oder Reste-Journal fehlt. `03_konzept.tex:53` benennt selbst nur „drei Hauptbereiche" für UI und UX und zählt die Menüplanung dort nicht mit.
+- **Warum**: Prüferfrage „Existiert, was behauptet wird?", hier in abgeschwächter Form: Der Text führt eine Kernfunktion, die das eigene UI-Konzept nicht kennt. Sowohl „Funktionalitäten" als auch „User Interface und User Experience" sind wörtlich geforderte Berichtsinhalte (`aufgabe.md:73–74`). Ein Prüfer, der Funktionsübersicht und Mockup nebeneinanderlegt, sieht die Lücke sofort — es ist derselbe Abgleich, der bei Upload-Button und Einsparangabe bereits geführt wurde.
+- **Anweisung**: Zwei Wege.
+  - *Option A* (ohne neues Bild, bei Umfangsdruck bevorzugt): In `03_konzept.tex:53` einen Halbsatz ergänzen, der Menüplanung und Reste-Journal ausdrücklich als Unterbereich der Startseite verortet, und damit erklären, warum die Navigation drei statt vier Hauptbereiche führt.
+  - *Option B*: Ein fünftes Mockup für den Menüplan-Screen erzeugen lassen (Nutzer-Schritt, Prompt analog `sources/claude-design-nachbesserung.md`) und in Anhang B aufnehmen. Kostet Anhangsseiten, aber keine Textseiten — und schließt die Lücke sichtbar statt erklärend.
+
+#### 5.8 Die Prompt-Quellenzeile für den Rettungs-Feed beschreibt einen Tag, den das Bild nicht zeigt
+
+**Status: ERLEDIGT (2026-07-24).** `pages/appendix.tex` — „den Tag \enquote{gerettet: [Zutat]}" durch „einen Tag mit der geretteten Zutat" ersetzt. Rein mechanisch, kein Bildwechsel.
+
+- **Befund**: `pages/appendix.tex:55` gibt den Erstellungs-Prompt für `fig:mockup_feed` wörtlich wieder, einschließlich „den Tag \enquote{gerettet: [Zutat]}". Das abgedruckte Mockup zeigt den Tag ohne Präfix („Bananenschale"), und `04_community_und_feedback.tex:3` beschreibt ihn ebenfalls ohne Präfix („zum Beispiel \enquote{Brokkoli-Strunk}"). Fließtext und Bild stimmen also überein — nur die zitierte Prompt-Zeile passt zu keinem von beiden.
+- **Warum**: Dokumentation (10 %). Die `\quelle{}`-Zeile ist der geforderte Transparenznachweis für die KI-Erzeugung. Wenn sie beschreibt, was im Bild nachweislich nicht steht, entwertet sie genau den Nachweis, den sie leisten soll — und ist für einen Prüfer beim Blick von der Bildunterschrift aufs Bild in Sekunden auffindbar.
+- **Anweisung**: In `pages/appendix.tex:55` „den Tag \enquote{gerettet: [Zutat]}" durch „einen Tag mit der geretteten Zutat" ersetzen. Rein mechanisch, keine inhaltliche Folge, keine Änderung am Bild.
+
+#### 5.9 Die Zahlen im Profil-Mockup widersprechen der Punkte-Regel im Text
+
+**Status: ERLEDIGT (2026-07-24).** Starre 1:1-Regel in `03_konzept.tex:28` gelockert: Rettungspunkte bemessen sich jetzt nach Menge und Art der verwerteten Zutat statt exakt einem Punkt pro Zutat. `tab:funktionsuebersicht`-Zeile entsprechend angepasst. Mockup-Zahlen (1.240 Punkte / 12,4 kg) sind damit widerspruchsfrei, kein neues Bild nötig.
+
+- **Befund**: `03_konzept.tex:28` legt fest: „sammelt jede verwertete Reste-Zutat einen Rettungspunkt." Das Profil-Mockup (`fig:mockup_profil`) zeigt für die Persona Mara K. **1.240 Rettungspunkte** neben **„12,4 kg Lebensmittel gerettet"**. Nach der Textregel entspräche das 1.240 einzeln verwerteten Zutaten zu je exakt 10 Gramm — bei einer Persona, die laut `tab:persona` vier- bis fünfmal pro Woche kocht.
+- **Warum**: Prüferfrage nach innerer Widerspruchsfreiheit. Das Mockup ist ein gefordertes Lieferobjekt und wird gelesen, nicht überblättert. Eine Zahl, die der selbst definierten Mechanik widerspricht, ist ein billiger Fund und untergräbt ausgerechnet die Gamification-Herleitung, die sonst zu den saubersten Passagen der Arbeit gehört.
+- **Anweisung**: Kein neues Bild nötig. In `03_konzept.tex:28` die starre 1:1-Regel lockern — etwa: Rettungspunkte bemessen sich nach Menge und Art der verwerteten Zutat. Das macht die Mockup-Zahlen widerspruchsfrei, ist die plausiblere Mechanik und kostet kein zusätzliches Wort. Alternative (teurer, nicht empfohlen): Kennzahlen im Mockup neu erzeugen lassen.
+
+#### 5.10 Für die längste Phase bleibt offen, wer sie leistet
+
+**Status: ERLEDIGT (2026-07-24).** Ressourcen-Spalte in `tab:phasenplanung` für „Design \& Prototyp" (Eigenleistung) und „\ac{MVP}-Entwicklung" (Eigenleistung, ergänzt um mögliche externe Entwicklungsunterstützung) ergänzt. Nach dem Abhängigkeiten-Absatz in `05_phasenplanung.tex` einen Satz eingefügt, der benennt, welche Phasen ohne Fremdleistung auskommen und ab welcher Phase Budget nötig wird.
+
+- **Befund**: `tab:phasenplanung` (`05_phasenplanung.tex:11–15`) nennt in der Ressourcen-Spalte viermal ausdrücklich „Eigenleistung". Für die MVP-Entwicklung (Woche 8–17, mit zehn Wochen die längste Phase) steht dagegen „Frontend-/Backend-Entwicklung; Entwicklungsframework, Datenbank, Hosting" — ohne Angabe, ob diese Entwicklung ebenfalls Eigenleistung ist oder eingekauft wird. Dieselbe Unklarheit bei „UI/UX-Design" in der Design-Phase. Eine Aufwands-, Personen- oder Kostengröße nennt die Arbeit an keiner Stelle.
+- **Warum**: Ressourcen sind ein eigenes Bewertungskriterium (10 %, „Zeit/Material effizient", `aufgabe.md:39`). Die Zeitachse ist sauber geplant und mit Puffer versehen; die Ressourcenachse bleibt ausgerechnet für die teuerste Phase unbestimmt. Wer Effizienz beurteilen soll, braucht mindestens die Information, ob dort eine Person, ein Team oder ein Dienstleister arbeitet. Der Kontrast zu den vier expliziten „Eigenleistung"-Zellen macht die Auslassung sichtbar, statt sie zu kaschieren.
+- **Anweisung**: In `05_phasenplanung.tex` die Ressourcen-Spalte für „Design \& Prototyp" und „MVP-Entwicklung" um den Träger ergänzen (etwa „externe Entwicklungsleistung" oder „Eigenleistung, ergänzt um …"). Zusätzlich nach Z. 21 einen Satz einfügen, der die Ressourcenlogik benennt: welche Phasen ohne Fremdleistung auskommen und ab welcher Phase Budget nötig wird. Zwei Sätze genügen und bedienen ein bislang nur zur Hälfte belegtes 10-%-Kriterium.
+
+#### 5.11 Wiederkehrendes Satzschlussmuster über alle Kapitel
+
+**Status: ERLEDIGT (2026-07-24).** Drei der empfohlenen Pointen-Schlusssätze gestrichen: `01_ausgangslage_und_problem.tex:3` („… statt es nur privat zu betreiben."), `03_konzept.tex:3` (Schlusssatz der Namensherleitung), `03_konzept.tex:34` („Wer plant, sieht auch, wie viel dieser Plan tatsächlich einspart."). `02_limitationen.tex:3` unangetastet gelassen wie angewiesen.
+
+- **Befund**: Absätze enden auffällig regelmäßig mit einer antithetischen Zweiteilung nach dem Muster „X, nicht/statt Y" oder „für A gut, für B kaum". Fundstellen: `01_ausgangslage_und_problem.tex:3` („… statt es nur privat zu betreiben."), `:5` („… nicht nur zu einer Randnotiz …"), `01_wettbewerbsanalyse.tex:3` („Wer nach einem bestimmten Gericht sucht, findet …. Wer stattdessen …, muss …"), `:5` („Für Inspiration eignet sich TikTok damit gut, für strukturierte Resteverwertung kaum."), `:11` („… die Weitergabe von Lebensmitteln vor dem Verderb, nicht deren Verarbeitung in der eigenen Küche."), `02_zielgruppe.tex:7` („Für Letztere … Nebeneffekt, für die … Teilgruppe … eigenständiges Ziel."), `03_konzept.tex:3` („… nicht nur als reines Werkzeug zur Rezeptsuche."), `:7` („… statt allgemein auf Nachhaltigkeit zu setzen."), `:34` („Wer plant, sieht auch, wie viel dieser Plan tatsächlich einspart."), `02_limitationen.tex:3` („… nicht das gewählte Vorgehen, sondern die Geltung der Ergebnisse").
+- **Warum**: Der Text ist sprachlich sauber und gut lesbar — das Problem ist nicht der einzelne Satz, sondern die Regelmäßigkeit. Zehn gleichgebaute Pointen-Schlüsse in vierzehn Dateien sind ein Muster, das in menschlichem Schreiben selten so gleichförmig auftritt. Bei einer Arbeit, die laut `aufgabe.md:23` ohnehin durch Plagiatssoftware läuft, ist stilistische Gleichförmigkeit das falsche Signal.
+- **Anweisung**: Drei bis vier dieser Schlusssätze auflösen — entweder ersatzlos streichen (spart zugleich Umfang) oder in eine andere Satzform überführen. Empfohlen zur Streichung, weil sie den vorangehenden Absatz nur wiederholen: `01_ausgangslage_und_problem.tex:3` (Schlusssatz), `03_konzept.tex:3` (Schlusssatz der Namensherleitung), `03_konzept.tex:34` (Schlusssatz). **Nicht anfassen**: `02_limitationen.tex:3` — dort trägt die Zweiteilung eine echte inhaltliche Unterscheidung zwischen Vorgehen und Geltung.
+
+---
+
+### Tragende Stärken (nicht wegschreiben)
+
+Die Überarbeitung darf an diesen Stellen nichts kürzen oder glätten — sie sind der Grund, warum die Arbeit trotz der Befunde oben gut dasteht:
+
+- **Die selbst aufgelöste SDG-Spannung** (`06_evaluation_reflexion.tex:5`). Die Arbeit erhebt einen ernsten Einwand gegen sich selbst — gesellschaftliche Legitimation über SDG 12.3 bei gleichzeitiger Verengung auf bereits Überzeugte — und beantwortet ihn. Das ist genau der Zug, dessen Fehlen sonst Punkte kostet.
+- **Die vorsichtige Einordnung der Soma-Zahl** (`03_konzept.tex:30`). Die 51 Prozent werden angeführt und im selben Atemzug gegen Übertragung auf die eigene Mechanik abgegrenzt. Diese Zurückhaltung ist selten und wird von Prüfern bemerkt.
+- **Die dreischichtigen Limitationen** (`02_limitationen.tex`). Nutzertest, Mockup-Herkunft, Marktabdeckung — jede Grenze mit Konsequenz für die Geltung der Aussagen, nicht als Pflichtübung.
+- **Die begründeten Verzichte**. Event-Kalender (`03_konzept.tex:55`) und Forum/Gruppen (`04_community_und_feedback.tex:7`) werden nicht ausgelassen, sondern ausgeschlossen — mit Begründung, im zweiten Fall sogar literaturgestützt. Befund 5.5 verlangt eine Bereinigung der Wettbewerbs-Kriterien, **nicht** die Rücknahme des Verzichts.
+- **Die Trennung zwischen literaturbasierten Hebeln und eigener Konzeptleistung** (`01_kernergebnisse_und_ausblick.tex:5`). Der Text sagt ausdrücklich, dass das Alleinstellungsmerkmal aus eigener Marktbeobachtung stammt und nicht aus der Verhaltensliteratur.
+- **Die Kapitelanteile** (13,5 / 71,5 / 15,0 %) liegen sauber im geforderten Korridor.
+
+### Umfangshinweis
+
+Fließtext über alle 14 Kapiteldateien inklusive Tabelleninhalte: **rund 4.250 Wörter**, geschätzt **9–10 Seiten** Textteil gegen die Vorgabe 7–10 (`aufgabe.md:18`). Die Arbeit liegt damit am oberen Rand; nach Runde 4 ist der einfache Kürzungsspielraum weitgehend ausgeschöpft.
+
+Konsequenz für diese Runde: **Additive Befunde brauchen Kompensation.** Netto-Zugaben entstehen bei 5.2 (~40 Wörter), 5.3 (~25, davon ein Teil durch die gestrichenen Einzelvermerke gegenfinanziert), 5.7 Option A (~15), 5.10 (~35) und, falls Option A gewählt wird, 5.1 (~60). Netto-Abzüge liefern 5.11 (~40) und 5.6 (wortneutral). Ohne 5.1 Option A geht die Runde etwa auf null auf; mit ihr sollte vorher ein lokaler Build den tatsächlichen Seitenstand messen.
+
+**Nutzer-Schritt vor der Umsetzung**: `latexmk -lualatex main.tex` laufen lassen und den Seitenumfang des Textteils ablesen. Bei ≤ 9 Seiten ist 5.1 Option A gefahrlos; bei ≥ 9,5 Seiten auf Option B oder C ausweichen.
+
+### Gesamteinschätzung
+
+Die Arbeit erfüllt die Aufgabenstellung in der Substanz. Alle sechs Lieferobjekte liegen vor, alle drei Teilaufgaben sind bearbeitet, alle geforderten Berichtsinhalte und Schlüsselbegriffe kommen vor, die Verengung der Zielgruppe ist begründet, und die Arbeit geht an mehreren Stellen über das Geforderte hinaus — insbesondere in der Selbstkritik. Es gibt keinen schweren Befund im Sinne eines fehlenden Artefakts oder einer unbelegten Kernbehauptung.
+
+Die Befunde dieser Runde teilen sich in drei Gruppen. **Sichtbarkeit** (5.1, 5.2, 5.4): Geleistetes ist da, aber an der Stelle, an der ein Prüfer es sucht, nicht auffindbar — das sind die Befunde mit dem besten Verhältnis von Aufwand zu Wirkung. **Nachweisbarkeit** (5.3, 5.10, 5.6): Ein 25-%- und ein 10-%-Kriterium sind jeweils nur zur Hälfte bedient, obwohl das Material für die andere Hälfte im Text schon vorhanden ist. **Konsistenz** (5.5, 5.7, 5.8, 5.9, 5.11): kleine Widersprüche zwischen Text, Tabelle und Mockup, einzeln harmlos, in Summe der Eindruck, dass Text und Artefakte nicht letztgeprüft wurden.
+
+Priorität, falls nur ein Teil umgesetzt wird: **5.4 und 5.2 zuerst** (billig, direkt auf Qualität 25 %), dann **5.3 und 5.6** (beide auf Prozess 25 %), dann **5.1**, dann der Rest.
+
+### Nächster Schritt
+
+**Abgearbeitet (2026-07-24).** Alle elf Befunde (5.1–5.11) umgesetzt. Die beiden `[FREIGABE]`-Punkte (5.1, 5.5) wurden per `AskUserQuestion` geklärt: 5.1 Option B (TikTok stellvertretend für Instagram), 5.5 (a)+(b) vollständig umgesetzt (Following ergänzt, an vorhandene Mockup-Struktur angebunden, kein neues Bild). Der lokale Build zur Seitenmessung (Umfangshinweis) blieb aus — Nutzer-Entscheidung: konservativ planen, alle wortarmen Optionen (B/A ohne neues Bild) gewählt, kein Risiko für den 7–10-Seiten-Korridor. `check_formalia.py`: 0 FEHLER, 11 HINWEIS (ausschließlich bekannte Tabellen-/Satzlängen-Artefakte). `check_bib_keys.py`: alle 5 in Kapitel 2 genutzten Keys valide. Strukturänderung (neue Subsection `sec:iteratives_design`) in `kapitelplan.md` nachgezogen.
+
+„Offen" ist damit vollständig leer. Nächster Schritt laut Fahrplan: Gesamt-Stresstest (bei Papiertyp Projektbericht optional, siehe `CLAUDE.md` → Kompakt-Prüfkette) oder direkt Voll-Audit.
