@@ -28,8 +28,18 @@ Folge-Prompt im bestehenden Profil-Screen:
 
 > Ergänze unterhalb des Rettungspunkte-Fortschrittsbalkens eine zweite, kleinere Kennzahl mit einer konkreten Mengenangabe, z.\,B. „12,4 kg Lebensmittel gerettet", die die Rettungspunkte in eine greifbare Einsparung übersetzt. Layout und Farben sonst unverändert lassen.
 
+## Anpassung 3: Rettungs-Feed — Plus-Button-Position, Foto-Platzhalter (Gegenlesung Runde 6, Befund 6.3)
+
+Anlass: Der schwebende Plus-Button überlappt im aktuellen `resteria_rettungsfeed.png` die Aktionsleiste des ersten Beitrags und verdeckt dort teilweise das Lesezeichen-Icon. Zusätzlich tragen die Foto-Platzhalter in allen vier Mockups die Beschriftung „Foto:" mit Doppelpunkt ohne Folgetext, was wie ein abgeschnittener Platzhalter-String wirkt. Der Prüfer erlaubt KI-generierte Mockups ausdrücklich nur, sofern sie keine gestalterischen Fehler enthalten.
+
+Folge-Prompt im bestehenden Rettungs-Feed-Screen:
+
+> Positioniere den Plus-Button am Rettungs-Feed-Screen so, dass er die Aktionsleiste des ersten Beitrags nicht überlappt, und ersetze die Foto-Platzhalter-Beschriftung „Foto:" durch „Foto" ohne Doppelpunkt.
+
+Die Platzhalter-Beschriftung „Foto:" betrifft alle vier Mockups gleichermaßen. Nur der Rettungs-Feed-Screen hat zusätzlich das Überlappungsproblem; die `\quelle{}`-Zeile ist dafür bereits vorbereitet (siehe unten). Werden Startseite, Bookmarks-Ansicht oder Profil ebenfalls neu exportiert, um dieselbe Platzhalter-Korrektur einzuarbeiten, müssen die jeweiligen `\quelle{}`-Zeilen in `pages/appendix.tex` um denselben Folge-Prompt ergänzt werden.
+
 ## Nach der Erstellung nicht vergessen
 
-1. Beide aktualisierten Screens exportieren und die bestehenden Dateien in `images/durchfuehrung/` überschreiben (`resteria_rettungsfeed.png`, `resteria_profil.png`).
-2. Die `\quelle{}`-Zeilen in `pages/appendix.tex` sind bereits auf die kombinierten Prompts (Runde 1 + diese Anpassung) vorbereitet — nach dem Bild-Austausch nur noch prüfen, ob der zitierte Prompt-Text exakt der tatsächlich verwendeten Folgeanweisung entspricht, und bei Abweichung nachziehen.
+1. Den aktualisierten Rettungs-Feed-Screen exportieren und die bestehende Datei in `images/durchfuehrung/` überschreiben (`resteria_rettungsfeed.png`).
+2. Die `\quelle{}`-Zeile für `fig:mockup_feed` in `pages/appendix.tex` ist bereits auf die kombinierten Prompts (Runde 1 + Anpassung 1 + Anpassung 3) vorbereitet — nach dem Bild-Austausch nur noch prüfen, ob der zitierte Prompt-Text exakt der tatsächlich verwendeten Folgeanweisung entspricht, und bei Abweichung nachziehen.
 3. Danach `check_formalia.py` erneut laufen lassen.
