@@ -369,3 +369,121 @@ Eine inhaltlich tragfähige, formal weit gediehene Arbeit, die alle drei Teilauf
 **Abgearbeitet (2026-07-23):** Alle acht Befunde (3.1–3.8) bearbeitet. 3.1, 3.6 mechanisch ohne Freigabe umgesetzt. 3.2–3.5 (`[FREIGABE]`) per `AskUserQuestion` einzeln geklärt: 3.2 Chefkoch-Zelle auf „stark" gehoben (mit Web-Faktencheck zur Community-Aktivität), 3.3 Halbsatz zur Gamification-Abgrenzung bei leftovercooking, 3.4 unbelegter Verbraucherzentrale-Verweis gestrichen, 3.5 neue Matrixspalte „Rezept-Entdeckung" ergänzt. 3.7 (optionale Literatur) übersprungen wie in Runde 1. 3.8 ist ein reiner Build-Grenzvermerk ohne Textauftrag. `check_formalia.py` (0 FEHLER, nur bekannte Satzlängen-Hinweise) und `check_bib_keys.py` (alle 6 Keys valide) auf allen betroffenen Dateien bestätigt. Damit ist „Offen" wieder vollständig leer.
 
 Nächster Schritt laut Fahrplan: **Voll-Audit** (`pruef-modus`) — prüft insbesondere die neue Matrixspalte, die veränderten Chefkoch-/leftovercooking-Wertungen und Teil-Check D (Build/Anhang-Einbindung, Befund 3.8).
+
+---
+
+## Runde 4 — Nutzer-Feedback / Umfangsanalyse (2026-07-24)
+
+Anlass: gezielte Suche nach Kürzungspotenzial im Fließtext, ohne Informationsverlust. Grundlage ist eine Wortzählung über alle 14 `chapters/**/*.tex` (Tabellen-/Abbildungsumgebungen und Zitationsbefehle herausgerechnet) plus das Layout aus `main.tex` (11pt, 2 cm Ränder, `\onehalfspacing`).
+
+### Ausgangsbefund
+
+- **4.508 Wörter Fließtext.** Bei 17 cm Satzbreite und 11pt/1,5-zeilig entspricht das grob **8,5–9 Seiten reinem Text**, plus 3 Tabellen und 1 Abbildung im Textteil (~1,5–2 Seiten) → geschätzt **10–11 Seiten Textteil**. Vorgabe laut `aufgabe.md:18`: **7–10 Seiten**.
+- Der letzte vorliegende Build (`main.pdf`, Stand 2026-07-23) hat **17 Seiten gesamt** inkl. Front-Matter, Literaturverzeichnis und Anhang. Der Textteil daraus ließ sich ohne Renderer nicht sauber isolieren.
+- Kapitelanteile aktuell: Einleitung 14,3 % · Durchführung 70,8 % · Fazit 14,9 % — alle innerhalb der Vorgabe (`aufgabe.md:20`), aber Einleitung und Fazit stehen **am oberen Rand** ihrer Bänder. Kürzungen dürfen deshalb nicht ausschließlich in der Durchführung erfolgen, sonst kippen die Anteile.
+
+**Zielkorridor dieser Runde: 600–900 Wörter (13–20 %).** Diese Menge lässt sich vollständig aus Redundanz holen; keiner der Punkte unten verlangt, eine Information aufzugeben.
+
+### 4.0 Vorbedingung — Build vor der Umsetzung  🟢 Nutzer-Schritt
+
+- **Befund**: Der tatsächliche Textteil-Umfang ist nicht verifiziert. Die 10–11 Seiten sind eine Schätzung aus Wortzahl und Layout, kein Messwert; `pruef-modus` Teil-Check D (Build) war in allen bisherigen Läufen ÜBERSPRUNGEN, weil `lualatex`/`biber` in der Session-Umgebung fehlen.
+- **Warum**: `hard-rules-formal.md:67` — Nicht-Erfüllung des Seitenumfangs kann Punktabzug bedeuten. Die Kürzungsmenge hängt direkt am Messwert.
+- **Anweisung**: Vor Umsetzung dieser Runde lokal `latexmk -lualatex main.tex` fahren und den Textteil ab „1 Einleitung" bis vor das Literaturverzeichnis zählen. Ergebnis hier eintragen. **Landet der Textteil bei ≤ 9,5 Seiten, genügen die Punkte 4.1–4.4** (~500 Wörter); die restlichen Punkte sind dann optionaler Feinschliff, keine Pflicht.
+
+---
+
+### Befund 4.1 — Die vier Einwände am Ende der Wettbewerbsanalyse wiederholen den eigenen Fließtext  🟠 mittel · **[FREIGABE]** (berührt die Verteidigung des Kernarguments/USP)
+
+- **Befund**: `chapters/02_durchfuehrung/01_wettbewerbsanalyse.tex:34` — ein Absatz von **216 Wörtern**, der größte Einzelposten der Arbeit. Drei der vier Einwände sind bereits im Fließtext desselben Kapitels abgehandelt: Einwand 1 (Reste-Matching nicht neu) in Absatz 3, Einwand 3 (Foodsharing.de) in Absatz 5, Einwand 4 (leftovercooking) in Absatz 4. Der Text gibt die Doppelung selbst zu — die Formulierung „wie oben gezeigt" steht zweimal darin. Nur Einwand 2 (eine reine Zero-Waste-Community ohne Matching-Werkzeug würde genügen) bringt ein Argument, das an keiner anderen Stelle steht.
+- **Warum**: Reine Redundanz, kein Informationsverlust bei Kürzung. Zusätzlich Wirkung auf „Qualität": Ein Prüfer liest dieselbe Verteidigung dreifach als Unsicherheit, nicht als Gründlichkeit. Der Absatz ist ein sichtbares Artefakt des Gesamt-Stresstests, kein organischer Teil der Argumentation.
+- **Anweisung**: Einwand 2 vollständig erhalten (er ist das einzige neue Argument). Einwände 1, 3 und 4 zu **einem** Satz zusammenziehen, der auf die bereits gegebenen Belege verweist statt sie zu wiederholen — etwa: dass Reste-Matching, Foodsharing.de und leftovercooking den Befund je aus anderer Richtung berühren, ohne die Kombination aus Matching und wechselseitiger Peer-Community zu leisten (Begründung jeweils oben). Der Schlusssatz zur USP („nicht im bloßen Verbinden beider Elemente, sondern in einer echten, wechselseitigen Social-Community obendrauf") **bleibt wörtlich erhalten** — er trägt das Kernargument.
+- **Erwarteter Ertrag**: ~150 Wörter
+
+---
+
+### Befund 4.2 — Der Kernbefund steht fünfmal ausformuliert  🟠 mittel · **[FREIGABE]** (berührt die Darstellung des Kernarguments)
+
+- **Befund**: Die Aussage „Community-Plattformen bieten kein Reste-Matching, Matching-Apps keine echte Community, leftovercooking kommt am nächsten, bleibt aber bei Creator-Inhalten" steht ausformuliert an fünf Stellen: `chapters/01_einleitung/01_ausgangslage_und_problem.tex:7`, `chapters/02_durchfuehrung/01_wettbewerbsanalyse.tex:32`, nochmals in `:34`, `chapters/03_fazit/01_kernergebnisse_und_ausblick.tex:3` **und** ein zweites Mal in Absatz 3 derselben Datei (85 + 79 Wörter, inhaltlich stark überlappend), schließlich im Schlussabsatz von `chapters/03_fazit/02_limitationen.tex:9`.
+- **Warum**: `hard-rules-formal.md:88` verlangt ausdrücklich, dass Fazit und Reflexion Kernaussagen **paraphrasieren** statt nahezu wortgleich zu übernehmen. Zugleich der wirksamste Hebel für das Fazit, das mit 14,9 % am oberen Rand seines 10–15-%-Bandes liegt.
+- **Anweisung**: Die Erstnennung in der Einleitung und die Herleitung in der Wettbewerbsanalyse (`:32`) bleiben unverändert — dort gehört der Befund hin. Im Fazit **Absatz 1 und Absatz 3 zu einem Absatz verschmelzen**: Die Marktlücke einmal nennen, direkt gefolgt von der Feststellung, dass die Differenzierung aus der eigenen Wettbewerbsanalyse stammt und nicht aus der Literatur. Der Schlussabsatz der Limitationen kürzt sich auf die Kernaussage ohne erneute Aufzählung der Plattformkategorien.
+- **Nicht anfassen**: Der Satz in Fazit-Absatz 3, der die Trennung zwischen literaturbasierten Hebeln und eigener Marktbeobachtung explizit macht („hält den Bericht davon ab, den gesamten Marktvorteil … als wissenschaftlich bewiesen darzustellen"), ist eine tragende Stärke laut Runde 3 und **darf nicht wegfallen** — nur seine Einbettung wird gestrafft.
+- **Erwarteter Ertrag**: ~120 Wörter
+
+---
+
+### Befund 4.3 — `06_evaluation_reflexion.tex` beginnt mit zwei Abhaklisten  🟠 mittel
+
+- **Befund**: `chapters/02_durchfuehrung/06_evaluation_reflexion.tex` — Absatz 1 (67 Wörter) hakt die drei Teilaufgaben ab, Absatz 2 (107 Wörter) hakt die vier geforderten Berichtsinhalte ab. Zusammen **174 Wörter**, die ausschließlich auf Kapitel verweisen, die der Prüfer unmittelbar zuvor gelesen hat.
+- **Warum**: Die Selbstprüfung gegen die Aufgabenstellung ist sinnvoll und soll bleiben, aber zwei getrennte Listen mit identischer Funktion sind eine Verdopplung. Ein verdichteter Absatz erfüllt denselben Zweck.
+- **Anweisung**: Absätze 1 und 2 zu einem Absatz zusammenführen: Teilaufgaben und Berichtsinhalte in einem Durchgang benennen, je mit `\autoref` statt ausformulierter Beschreibung des jeweiligen Kapitelinhalts.
+- **Nicht anfassen**: Absatz 3 (SDG-12.3-Spannung und ihre Auflösung) und Absatz 5 (drei Lehren) sind Substanz — „Prozess" (25 %) und „Transfer" (15 %) sind zusammen 40 % der Bewertung, und die selbst erhobene und beantwortete SDG-Spannung ist laut Runde 3 eine tragende Stärke. Ebenso bleibt Absatz 4 (Reflexion des Vorgehens) unverändert.
+- **Erwarteter Ertrag**: ~80 Wörter
+
+---
+
+### Befund 4.4 — Ankündigungs- und Meta-Text kündigt an, was der nächste Absatz ohnehin tut  🟠 mittel
+
+- **Befund**: Der Bericht beschreibt wiederholt seinen eigenen Ablauf. Konkret:
+  - `chapters/01_einleitung/03_vorgehen_und_aufbau.tex:5` beschreibt den Aufbau von Kapitel 2 in **110 Wörtern**, inklusive Nennung praktisch jeder Subsection — und `chapters/02_durchfuehrung/durchfuehrung.tex:3` beschreibt denselben Aufbau direkt danach noch einmal.
+  - `chapters/01_einleitung/02_zielsetzung_und_verengung.tex:3`: „Kapitel 2 beschreibt dieses Konzept im Detail; die vorliegende Einleitung benennt zunächst, wofür die Plattform steht und für wen sie gedacht ist."
+  - `chapters/02_durchfuehrung/02_zielgruppe.tex:3`: „Dieser Abschnitt füllt die Zielgruppe mit konkreten Merkmalen, damit die folgenden Konzeptentscheidungen nicht abstrakt bleiben."
+  - `chapters/02_durchfuehrung/03_konzept.tex:36`: „Alle Kernfunktionen mit ihrer jeweiligen Herleitung fasst~\autoref{tab:funktionsuebersicht} zusammen." — die Tabelle trägt bereits eine Caption mit derselben Aussage. Analog `01_wettbewerbsanalyse.tex:13` Satz 1.
+- **Warum**: `hard-rules-formal.md:61` — „Ein Vorverweis unmittelbar vor der Überschrift, die dasselbe ankündigt, ist redundant und entfällt." Zugleich der sauberste Hebel für die Einleitung, die mit 14,3 % ihr 10–15-%-Band fast ausschöpft.
+- **Anweisung**: In `03_vorgehen_und_aufbau.tex:5` die Subsection-für-Subsection-Aufzählung auf zwei Sätze reduzieren (Trichter-Logik von Marktanalyse über Konzept zu Umsetzung und Reflexion; danach Kapitel 3). Die vier oben zitierten Meta-Sätze ersatzlos streichen. `durchfuehrung.tex:3` bleibt unverändert — die Kapitel-Einleitung ist der richtige Ort dafür, die Vorwegnahme in Kapitel 1 nicht.
+- **Achtung**: `03_vorgehen_und_aufbau.tex` wurde am 2026-07-23 als Prüfbericht-Handlungsempfehlung 3 **absichtlich verlängert**, weil die Datei unter die ½-Seiten-Heuristik gefallen war. Nach der Kürzung `check_formalia.py` prüfen: Bleibt die Datei über der HALBSEITE-Schwelle (~150 Wörter)? Falls nicht, weniger kürzen — Absatz 1 (methodische Verzahnung) ist inhaltlich tragend und bleibt ohnehin vollständig erhalten.
+- **Erwarteter Ertrag**: ~120 Wörter
+
+---
+
+### Befund 4.5 — Der Vorbehalt „kein realer Nutzertest" steht an sieben Stellen  🟡 leicht · **[FREIGABE]** (berührt den Geltungsanspruch der Ergebnisse)
+
+- **Befund**: Sieben Fundstellen: `01_einleitung/02_zielsetzung_und_verengung.tex:7` · `02_durchfuehrung/02_zielgruppe.tex:9` · `02_durchfuehrung/01_wettbewerbsanalyse.tex:32` („die Schwäche im fehlenden Nutzertest") · `02_durchfuehrung/04_community_und_feedback.tex:9` · `02_durchfuehrung/06_evaluation_reflexion.tex:9` · `03_fazit/01_kernergebnisse_und_ausblick.tex:9` · `03_fazit/02_limitationen.tex:3`.
+- **Warum**: Der Vorbehalt selbst ist richtig und laut `aufgabe.md:45` gedeckt (Feedback-Schleifen nur als geplantes Vorgehen). Seine siebenfache Wiederholung ist reine Absicherungs-Redundanz.
+- **Anweisung**: `02_limitationen.tex:3` bleibt **vollständig unverändert** — dort gehört der Vorbehalt hin und wird ausgeführt. Ebenso bleibt `04_community_und_feedback.tex:9` erhalten, weil er dort eine Aufgabenstellungs-Anforderung explizit erfüllt. Die übrigen vier Vorwegnahmen auf Halbsätze reduzieren oder streichen, wo der Kontext sie ohnehin trägt.
+- **Grenze**: Es darf an keiner Stelle der Eindruck entstehen, ein Nutzertest habe stattgefunden. Im Zweifel weniger kürzen.
+- **Erwarteter Ertrag**: ~100 Wörter
+
+---
+
+### Befund 4.6 — Doppelte und entbehrliche Erklär-Appositionen  🟡 leicht
+
+- **Befund**: Die Unterscheidung Drivers/Levers wird **zweimal** definiert: `02_durchfuehrung/03_konzept.tex:7` („also psychologischen und sozialen Einflussfaktoren … den konkret nutzbaren Hebeln …") und erneut in `03_fazit/01_kernergebnisse_und_ausblick.tex:5` („also erklärenden Einflussfaktoren und gezielt nutzbaren Hebeln"). Dazu entbehrliche Einschübe: „also die Bildschirmaufteilung und Bedienführung von Resteria" (`03_konzept.tex:55`) und die 15-Wörter-Definition von Nudge-Forschung in `03_konzept.tex:28`.
+- **Warum**: Die Erstdefinition eines Fachbegriffs ist korrekt und bleibt. Die Zweitdefinition im Fazit ist überflüssig, weil der Begriff bereits eingeführt wurde.
+- **Anweisung**: Im Fazit die Drivers/Levers-Apposition ersatzlos streichen (der Begriff steht dort nur noch als Rückverweis). „also die Bildschirmaufteilung und Bedienführung von Resteria" streichen — UI und UX sind unmittelbar davor ausgeschrieben. Die Nudge-Definition in `03_konzept.tex:28` auf einen knappen Halbsatz kürzen. Alle übrigen Ersteinführungen bleiben.
+- **Erwarteter Ertrag**: ~70 Wörter
+
+---
+
+### Befund 4.7 — Die „kurze Abgrenzung" zu Foodsharing.de ist der zweitlängste Absatz des Kapitels  🟡 leicht · **[FREIGABE]** (berührt eigenes Rechercheergebnis)
+
+- **Befund**: `chapters/02_durchfuehrung/01_wettbewerbsanalyse.tex:11` — **117 Wörter**, eingeleitet mit „verdient an dieser Stelle eine kurze Abgrenzung". Die Länge widerspricht der eigenen Ankündigung. Sobald Einwand 3 aus Befund 4.1 entfällt, trägt dieser Absatz die Abgrenzung allein und kann sie kompakter leisten.
+- **Warum**: Die Abgrenzung ist inhaltlich nötig — sie rechtfertigt die Matrixwertung „Community stark" bei gleichzeitig fehlendem Rezeptbezug und beantwortet einen naheliegenden Prüfereinwand. Nur ihr Umfang steht in keinem Verhältnis.
+- **Anweisung**: Auf ~55 Wörter kürzen. Erhalten bleiben müssen: das Nutzungsszenario (Weitergabe vor dem Verderb statt Verarbeitung in der eigenen Küche) und die ausdrückliche Begründung der Matrixwertung „stark" bei Community-Funktionen — beides ist gegen Runde-2-Befund GS-4 gezielt eingefügt worden und darf nicht wieder verschwinden. Die Erklärung des Begriffs „Fairteiler" kann auf eine knappe Apposition schrumpfen.
+- **Erwarteter Ertrag**: ~60 Wörter
+
+---
+
+### Befund 4.8 — Die Soma-Zahlen stehen zweimal ausgeschrieben  🟢 Hinweis
+
+- **Befund**: „51 Prozent bei Vielspieler:innen gegenüber 39 Prozent bei Wenigspieler:innen" steht in `chapters/02_durchfuehrung/03_konzept.tex:30` und wird in `chapters/02_durchfuehrung/04_community_und_feedback.tex:7` in Klammern wiederholt — dort bereits mit `\autoref{sec:konzept}` daneben.
+- **Warum**: Der `\autoref` leistet die Verknüpfung; die Zahlenwiederholung ist überflüssig.
+- **Anweisung**: In `04_community_und_feedback.tex:7` die Klammer auf den reinen Verweis reduzieren. **Die Einordnung in `03_konzept.tex:30` bleibt wörtlich unverändert** — sie trennt ausdrücklich die belegte Gamification-Wirkung von der eigenen Resteria-Mechanik und ist laut Runde 3 eine tragende Stärke, die beim Überarbeiten nicht geglättet werden darf.
+- **Erwarteter Ertrag**: ~15 Wörter
+
+---
+
+### Nicht kürzen (geprüft und bewusst ausgenommen)
+
+- **Freemium- und Kooperations-Absatz** (`03_konzept.tex:5`, 91 Wörter): sieht wie ein Exkurs aus, ist aber die einzige Stelle, die die **wirtschaftliche** Hälfte des Transfer-Kriteriums bedient (`aufgabe.md:39`, 15 % der Bewertung). Zudem war er die Antwort auf Runde-1-Befund 3.
+- **Event-Kalender-Begründung** (`03_konzept.tex:57`): `aufgabe.md:84` verlangt bei Auslassung ausdrücklich eine explizite Begründung.
+- **`02_zielgruppe.tex`** (280 Wörter) und der Fließtext von **`05_phasenplanung.tex`** (184 Wörter): bereits die dichtesten Dateien der Arbeit; `05_phasenplanung.tex` liegt nahe an der ½-Seiten-Schwelle.
+- **Die drei Limitationen** (`02_limitationen.tex`, Absätze 1–3): dreischichtige Grenzziehung, direkt bewertungsrelevant für „Prozess".
+- **Alle vier Punkte der Liste „Tragende Stärken" aus Runde 3** — insbesondere die vorsichtige Soma-Einordnung und die selbst aufgelöste SDG-Spannung.
+
+### Umfangshinweis
+
+Diese Runde ist die erste, die **ausschließlich subtrahiert**. Erwarteter Gesamtertrag aller acht Punkte: **~715 Wörter (≈ 16 %)**, verteilt auf Einleitung (~150), Durchführung (~430) und Fazit (~135) — die Kapitelanteile bleiben damit annähernd erhalten. Kein Punkt entfernt eine Information, einen Beleg oder ein Artefakt; entfernt werden ausschließlich Wiederholungen bereits getroffener Aussagen.
+
+### Nächster Schritt
+
+Abarbeiten im `schreib-modus` in eigener Session. Reihenfolge: erst 4.0 (Build als Messwert), dann 4.1–4.4 (größter Ertrag), danach 4.5–4.8 nur, falls der Messwert es verlangt. `[FREIGABE]`-Punkte 4.1, 4.2, 4.5 und 4.7 per `AskUserQuestion` einzeln klären. Nach Abschluss: `check_formalia.py` über alle Kapitel (besonders HALBSEITE bei `03_vorgehen_und_aufbau.tex`) und `check_bib_keys.py`, danach **Delta-Re-Audit** — die Kürzungen berühren Kapitel, für die der Voll-Audit vom 2026-07-23 (Score 100/100) den alten Textstand bewertet hat.
