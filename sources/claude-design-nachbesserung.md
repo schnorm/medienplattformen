@@ -10,13 +10,15 @@ Beim Abgleich von `chapters/02_durchfuehrung/02_zielgruppe.tex`, `03_konzept.tex
 
 1. **Rezept-Upload nicht sichtbar**: `03_konzept.tex` und die Funktionsübersicht-Tabelle (`tab:funktionsuebersicht`) nennen den Foto-/Video-Upload eigener Reste-Kreationen als eigene Kernfunktion (von der Aufgabenstellung explizit gefordert). In keinem der vier Mockups gibt es einen sichtbaren „Beitrag erstellen"-Button.
 2. **Einsparangabe fehlt**: `02_zielgruppe.tex` verlangt, dass die Plattform sichtbar macht, „wie viel eine Person durch Resteverwertung tatsächlich einspart". Das Profil-Mockup zeigt bisher nur abstrakte Rettungspunkte/Level, keine konkrete Mengenangabe.
-3. **Challenges/Rangliste fehlen im Feed**: `04_community_und_feedback.tex` beschreibt die zeitlich begrenzte „Zero-Waste-Woche"-Challenge mit Rangliste als zentrales, studienbasiert begründetes Interaktionsformat. Im Rettungs-Feed-Mockup ist davon nichts zu sehen. Zusätzlich weicht das Tag-Format leicht vom Text ab: Der Text nennt als Beispiel „gerettet: Brokkoli-Strunk", das Mockup zeigt am Beitrag nur die Zutat ohne das Präfix „gerettet:".
+3. **Challenges/Rangliste fehlen im Feed**: `04_community_und_feedback.tex` beschreibt die zeitlich begrenzte „Zero-Waste-Woche"-Challenge mit Rangliste als zentrales, studienbasiert begründetes Interaktionsformat. Im Rettungs-Feed-Mockup ist davon nichts zu sehen.
 
-## Anpassung 1: Rettungs-Feed — Beitrag-Button, Challenge-Banner, Tag-Format
+Hinweis zum Tag-Format: Der Text nannte ursprünglich als Beispiel „gerettet: Brokkoli-Strunk", das Mockup zeigt am Beitrag aber nur die Zutat ohne das Präfix „gerettet:". Das ist bewusst **nicht** als Bild-Anpassung aufgenommen — stattdessen wurde der Text an das bestehende, schlankere Mockup angeglichen (Nutzerentscheidung: Präfix wirkt auf dem kleinen Screen überladen, der Kontext „Rettungs-Feed" macht es ohnehin klar).
 
-Folge-Prompt im bestehenden Rettungs-Feed-Screen (alle drei Punkte können in einer Nachricht gegeben werden, da derselbe Screen betroffen ist):
+## Anpassung 1: Rettungs-Feed — Beitrag-Button, Challenge-Banner
 
-> Ergänze am Rettungs-Feed-Screen einen schwebenden Terracotta-Plus-Button unten rechts zum Beitrag-Erstellen, ein schmales Challenge-Banner oben für die „Zero-Waste-Woche"-Rangliste und ändere die Tag-Pille zu „gerettet: Bananenschale".
+Folge-Prompt im bestehenden Rettungs-Feed-Screen (beide Punkte können in einer Nachricht gegeben werden, da derselbe Screen betroffen ist):
+
+> Ergänze am Rettungs-Feed-Screen einen schwebenden Terracotta-Plus-Button unten rechts zum Beitrag-Erstellen sowie ein schmales Challenge-Banner oben für die „Zero-Waste-Woche"-Rangliste.
 
 (Bewusst unter 40 Wörtern gehalten — der Prompt-Text wird wörtlich in `\quelle{}` zitiert, und `hard-rules-formal.md` verlangt für Zitate > 40 Wörter die `blockzitat`-Umgebung statt `\enquote{}`, was in einer Bildquellenzeile unpassend wäre.)
 
