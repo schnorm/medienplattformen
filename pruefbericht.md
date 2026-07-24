@@ -1,97 +1,103 @@
 # Prüfbericht — Projektbericht
 
-**Datum**: 23.07.2026 · **Geprüfter Stand**: alle Kapitel (Einleitung, Durchführung, Fazit) nach Abarbeitung Gegenlesung Runde 1+3 und Gesamt-Stresstest Runde 2 · **Audit-Typ**: Voll-Audit
-**Score: 100/100 — abgabereif** (Teil-Check D Build lokal zu bestätigen, siehe unten)
+**Datum**: 24.07.2026 · **Geprüfter Stand**: alle Kapitel nach `AENDERUNGEN.md` Runde 4 (Kürzungsrunde) · **Audit-Typ**: Delta-Re-Audit
+**Score: 90/100 — abgabereif** (ein Zählwiderspruch als Kürzungs-Regression, vor Abgabe beheben; Teil-Check D Build weiterhin lokal zu bestätigen)
 
-Vorbedingung erfüllt: Gegenlesung (Runde 1, Runde 3) und Gesamt-Stresstest (Runde 2) sind gelaufen, `AENDERUNGEN.md` → „Offen" ist leer. Prüfer-Anmerkungen (`sources/Anmerkungen vom Prüfer.md`) wurden als zusätzlicher Prüfmaßstab herangezogen (Abgleich am Ende).
+Delta-Umfang laut Skill-Regel: geprüft wurden die durch Runde 4 geänderten Stellen (10 Kapiteldateien, `git diff HEAD~2 HEAD -- chapters/`), beide Skripte vollständig, `check_status.py`, sowie die kapitelübergreifenden Folgen der Kürzungen (Querverweise, Begriffserklärungen, Zählangaben, Abhakliste-Abdeckung). Nicht erneut vollständig gelesen wurden unveränderte Passagen — deren Befund aus dem Voll-Audit vom 23.07.2026 (100/100) bleibt gültig.
 
 `PERSISTENT.md`/`MEMORY.md` gelesen — keine abweichenden Audit-Kriterien; Teil-Check E bleibt score-neutral (MEMORY-Festlegung 2026-07-19).
 
 ## Teil-Check A — Formalia
-- [PASS] Zitationen — `check_bib_keys.py`: alle 6 Keys valide, keine erfundenen, keine ungenutzten. Stellenbezogene Zitate mit `\parencite[S. X]{}` (vittuari S. 1/106, barker S. 10, soma S. 9); werkbezogene Paraphrasen ohne Seite (un = SDG-Gesamtdokument, shen, nivedhitha) korrekt.
-- [PASS] Eigene Werke — `\quelle{Eigene Darstellung.}` auf allen 5 eigenen Abb./Tab. KI-Mockups mit Pflichtmuster „Erstellt mit dem Prompt „…" durch Claude Design (Claude Sonnet 5), Abbildung nachträglich manuell bearbeitet."
-- [PASS] Pronomen — `check_formalia.py` 0 FEHLER; dritte Person streng („Die Projektgruppe …").
-- [PASS] LaTeX-Format — 0 FEHLER; Caption vor `\label`, Floats `[H]`, `~\autoref`, `\enquote{}` durchgehend.
-- [PASS] Akronyme — `\ac{MVP}` verwendet, in `pages/acronyms.tex` definiert. UI/UX bei Erstnennung ausgeschrieben und kurz erklärt (nicht als `\ac{}` geführt — geläufig, kein Verstoß).
-- [PASS] Cross-References & Labels — `sec:`/`fig:`/`tab:` konsistent; alle `\autoref`-Ziele definiert.
-- [PASS] Anti-KI-Stil — kein GEDANKENSTRICH-Treffer; 3× TRIAS nur in `05_phasenplanung.tex` (sachlich, echte Phasen-/Ressourcenaufzählungen), unter dem Häufungs-Deckel.
-- [PASS] Verständlichkeit — SATZSCHNITT-Hinweise (community ~23, phasenplanung ~26) durch Tabelleninhalt verzerrt; Fließtext liest klar, ein Gedanke pro Satz. Nicht gehäuft.
+- [PASS] Zitationen — `check_bib_keys.py`: alle 6 Keys valide, keine erfundenen, keine ungenutzten. Die Kürzungen haben keine `\parencite` entfernt; Barkers Beleg wandert im Fazit korrekt auf die Erinnerungsbenachrichtigung (Propagationslücke aus GS-2 geschlossen).
+- [PASS] Eigene Werke — `\quelle{}`-Zeilen unverändert, alle 5 eigenen Abb./Tab. und die 4 KI-Mockups weiterhin korrekt gekennzeichnet.
+- [PASS] Pronomen — `check_formalia.py` 0 FEHLER.
+- [PASS] LaTeX-Format — 0 FEHLER über alle 14 Dateien.
+- [PASS] Akronyme — `\ac{MVP}` unverändert korrekt.
+- [PASS] Cross-References & Labels — alle `\autoref`-Ziele weiterhin definiert; kein Verweis ist durch die Kürzungen verwaist. `tab:funktionsuebersicht` hat nach Streichung des Einleitungssatzes noch genau einen Textverweis (aus `06_evaluation_reflexion.tex`) — formal ausreichend, siehe HINWEIS unter Teil-Check C.
+- [PASS] Anti-KI-Stil — kein GEDANKENSTRICH-Treffer; 3× TRIAS weiterhin nur in `05_phasenplanung.tex` (echte Phasen-/Ressourcenaufzählungen), unter dem Häufungs-Deckel.
+- [PASS] Verständlichkeit — 10 HINWEISE, davon 4 durch Tabelleninhalt verzerrte SATZLAENGE-Treffer (die Skript-Heuristik liest Tabellenzeilen als Sätze). Kein Kapitel überschreitet die Häufungsschwelle. Ein Einzelbefund zur entfallenen UI/UX-Erläuterung siehe HINWEIS 2 unten (nicht gehäuft, kein Abzug).
+- [PASS] Keine offenen `% UNVERIFIED:`-Marker.
+- [PASS] `main.tex`/`pages/cover.tex` durch Runde 4 nicht berührt.
 
-## Teil-Check B — Argumentationsqualität (nur Pflicht-Punkte der Typ-Datei als FAIL)
-- [PASS] These erkennbar — Leitfrage/Ziel (Konzeption Resteria) und These (Kombination Reste-Matching + echte Social-Community ist die Marktlücke) getrennt.
+## Teil-Check B — Argumentationsqualität
+- [PASS] These erkennbar — Leitfrage/Ziel und These durch die Kürzungen unberührt.
 - [N.A.] Forschungslücke in Einleitung — laut `projektbericht.md` nur „Optional".
-- [PASS] Aktualität/Zeitbezug in Einleitung — Pflicht: SDG 12.3, private Haushaltsverschwendung, aktuelle Plattformlandschaft als projektbezogener Anlass.
-- [PASS] Gegenargumente reflektiert & entkräftet — vier Einwände gegen die USP explizit erhoben und einzeln entkräftet (`01_wettbewerbsanalyse.tex:34`).
-- [PASS] Syntheseleistung pro Hauptkapitel — Durchführung verknüpft Wettbewerbsanalyse + Verhaltensliteratur + eigenes Konzept; Evaluation reflektiert Zielerreichung.
-- [PASS] Limitationen dreischichtig — drei Grenzen (Nutzertest, KI-Mockup, Marktabdeckung) je mit warum · Mitigation · zukünftigem Schritt.
+- [PASS] Aktualität/Zeitbezug in Einleitung — unverändert (SDG 12.3, Plattformlandschaft).
+- [FAIL-nah, siehe Struktur] Gegenargumente reflektiert & entkräftet — inhaltlich weiterhin erfüllt: alle vier Einwände stehen nach wie vor im Text und werden einzeln entkräftet. Der Fehler liegt allein in der Ankündigungszahl (siehe Struktur-Verstoß 1), nicht in der Substanz.
+- [PASS] Syntheseleistung pro Hauptkapitel — Verknüpfung Wettbewerbsanalyse + Verhaltensliteratur + Konzept bleibt erhalten; die Kürzung im Fazit hat die Trennung „literaturbasierte Hebel vs. eigenständige Differenzierung" beim Verschmelzen bewusst mitgenommen.
+- [PASS] Limitationen dreischichtig — drei Grenzen je mit warum · Mitigation · zukünftigem Schritt; der gekürzte Schlussabsatz streicht nur die Wiederholung des Kernbefunds, nicht eine Schicht.
 - [N.A.] Ergebnisse ≠ Interpretation — nur empirische Seminararbeit.
-- [PASS] Typspezifisch (Projektbericht) — Phasenplanung als Tabelle vorhanden; „Quelle: Eigene Darstellung." auf jeder eigenen Abb./Tab.; Produkt sichtbar dokumentiert (Funktionslogik + 4 Mockups); dritte Person streng.
-- [PASS] Leitfragen aus `aufgabe.md` beantwortet — alle drei Teilaufgaben real ausgeführt (`06_evaluation_reflexion.tex:3` prüft explizit); Feedback-Schleifen als geplantes Vorgehen (von `aufgabe.md` gedeckt); Abhakliste vollständig, Event-Kalender und Gruppen/Foren je begründet ausgeschlossen.
-- [PASS] Dimensionsabgleich — jede Bewertungsdimension im Text vertreten (auch Transfer/wirtschaftlich: Freemium + Kooperationen).
+- [PASS] Typspezifisch (Projektbericht) — Phasenplanung (5 Phasen, Tabelle stimmt mit Fließtext überein), Eigendarstellungs-Quellen, Produktdokumentation, dritte Person: unverändert.
+- [PASS] Leitfragen aus `aufgabe.md` beantwortet — der stark gekürzte Abgleich in `06_evaluation_reflexion.tex` benennt alle drei Teilaufgaben weiterhin mit Fundstelle und verweist für die Berichtsinhalte jetzt auf `tab:funktionsuebersicht` statt sie aufzuzählen.
+- [PASS] Abhakliste-Abdeckung nachgeprüft (Grep, nicht Leseeindruck): Rezept-Uploads (`03_konzept.tex:32,44`), Kommentar-/Bewertungssystem (`:32,45`), personalisierte Empfehlungen (`:32,46`), Menüplanung/Journaling (`:34,47`), Gruppen/Foren und Event-Kalender je begründet ausgeschlossen. Kein Schlüsselbegriff ist der Kürzung zum Opfer gefallen.
+- [PASS] Dimensionsabgleich — alle Bewertungsdimensionen weiterhin im Text vertreten.
 
 ## Teil-Check C — Struktur
-- [PASS] ½-Seiten-Regel — `03_vorgehen_und_aufbau.tex` mit ~143 Wörtern grenzwertig (Skript-HINWEIS, kein FEHLER), enthält aber zwei vollständige Absätze (Methodik + Aufbau). Kein Stub → kein Verstoß; optional 1–2 Sätze ergänzbar.
-- [PASS] Max. 3 Kapitelstufen — Body nutzt section > subsection (2 Ebenen).
-- [PASS] Front-/Backmatter — Titelblatt, Inhaltsverzeichnis, Abbildungsverzeichnis (5 Abb. ≥ 3), Tabellenverzeichnis (4 Tab. ≥ 3), Abkürzungsverzeichnis, Literaturverzeichnis, Anhang A/B gekennzeichnet + Anhangsverzeichnis; je ≥ 1 Textverweis pro Anhang.
-- [PASS] Outline-Check — Einleitung (10–15 %) → Durchführung inkl. Evaluation/Reflexion als Subsection (70–80 %) → Fazit (10–15 %) entspricht dem Kapitelgerüst aus `projektbericht.md`.
+- [PASS] ½-Seiten-Regel — kein HALBSEITE-Treffer mehr. Knappste Dateien: `02_zielsetzung_und_verengung.tex` (155 Wörter) und `03_vorgehen_und_aufbau.tex` (156 Wörter), beide über der 150-Wörter-Schwelle. Die konservativere Umsetzung von 4.4 hat hier genau richtig gebremst.
+- [PASS] Max. 3 Kapitelstufen · Front-/Backmatter · Outline-Check — durch die Kürzungen unberührt; Kapitelanteile bleiben im Soll (Einleitung/Fazit lagen am oberen Rand und wurden gezielt entlastet).
+- **[FAIL] Zahlenangaben gegen die zugehörige Aufzählung** — siehe Struktur-Verstoß 1.
 
-**Roter Faden (kapitelübergreifend, Gesamt-Stresstest Runde 2 als Vorlauf referenziert, nur Regressions-Stichprobe):**
-- [PASS] Querverweise semantisch korrekt (`\autoref{sec:wettbewerbsanalyse}` aus Konzept/Fazit zeigt auf die Analyse; Persona-/Mockup-Verweise treffen Anhang A/B).
-- [PASS] Zählangaben gegen eigene Tabellen nachgezählt: „vier Einwände" = 4 gelistet · „fünf Kriterien" = 5 Matrixspalten · „sechs Plattformen" = 6 Zeilen · „sechs Vertreter aus drei Kategorien, ein bis drei Vertreter" = 2+3+1 stimmig · Zeitpuffer (Text „innerhalb der MVP-Phase, zwei Wochen" ↔ Tabelle MVP Woche 8–17 „inkl. zweiwöchigem Zeitpuffer", Beta 18–20) konsistent.
-- [PASS] Tabellenwertungen spaltenweise mit Kriteriendefinition vereinbar: Community-Spalte (Chefkoch stark, TikTok stark, Foodsharing stark, leftovercooking mittel) jeweils im Fließtext begründet; leftovercookings Belohnungspunkte ausdrücklich als individuelles Spar-Feedback vom sozial-interaktiven Gamification-Begriff abgegrenzt.
-- [PASS] Resteria erhält keine Bestwerte-Zeile (bewusst aus der Vergleichstabelle entfernt — kein Zirkelschluss-Anschein).
-- [PASS] Selbst erhobener Einwand (SDG-12.3-Breitenanspruch vs. Zielgruppen-Verengung) in `06_evaluation_reflexion.tex` benannt UND aufgelöst; Reichweitenrisiko des Feeds explizit genannt.
+**Roter Faden (Regressions-Stichprobe auf die geänderten Stellen):**
+- [PASS] Querverweise semantisch korrekt — die neu gesetzten Verweise in `06_evaluation_reflexion.tex` treffen: iteratives Design steht tatsächlich in `sec:community_und_feedback`, die Funktionalitäten in `tab:funktionsuebersicht`, die Persona in Anhang A. Der neue Vorverweis im Fazit („nicht aus der im Folgenden beschriebenen Verhaltensliteratur") zeigt korrekt auf den Folgeabsatz.
+- [PASS] Begriffserklärungen nach Kürzung — „Drivers/Levers" ist weiterhin bei Erstnennung in `03_konzept.tex:7` definiert; im Fazit wurde nur die Zweitdefinition gestrichen. „Nudge-Forschung" bleibt erklärt (verkürzt, aber vollständig).
+- [PASS] Übrige Zählangaben nachgezählt: „drei weitere Kernfunktionen" = 3 · „drei Hauptbereiche" = 3 · „fünf Phasen" = 5 Tabellenzeilen · „sechs Vertreter aus drei Plattform-Kategorien, ein bis drei Vertreter" = 2+3+1 · „drei Merkmale" · „drei Grenzen" · „zwei methodische Bausteine" · „zwei Risiken" — alle stimmig. Die gestrichene Angabe „fünf Kriterien" hinterlässt keine offene Behauptung.
+- [PASS] Zeitpuffer-Konsistenz Text ↔ Tabelle (innerhalb der MVP-Phase, zwei Wochen) unverändert korrekt.
+- [PASS] Tabellenwertungen und Akteurskonsistenz durch die Kürzungen nicht berührt (keine Matrixzelle geändert).
+
+### Struktur-Verstoß 1 — Zählwiderspruch (neu durch Runde 4)
+`chapters/02_durchfuehrung/01_wettbewerbsanalyse.tex:34` kündigt an: „Gegen diese Einschätzung lassen sich **zwei** Einwände vorbringen." Es folgen jedoch vier: drei kurz abgehandelte („Drei naheliegende Gegenargumente greifen bei genauerem Hinsehen zu kurz: …" — Reste-Matching nicht neu, Foodsharing.de, leftovercooking) plus einer als „Gewichtiger ist der Einwand, …" (reine Community-Plattform). Der Umbau von vier ausformulierten Einwänden auf eine gestaffelte Darstellung hat den Zählsatz nicht mitgeführt.
+
+Genau dieser Fehlertyp wurde bereits in Runde 3 (Befund 3.1) korrigiert — die Kürzung hat ihn an derselben Stelle neu erzeugt. **Fix:** „zwei Einwände" durch eine Formulierung ohne Zahl ersetzen, etwa „Gegen diese Einschätzung lassen sich mehrere Einwände vorbringen." — oder auf „vier" setzen und die Staffelung als „Drei davon greifen … zu kurz" formulieren. Einzeiler, kein inhaltlicher Eingriff.
 
 ## Teil-Check D — Build
-- [ÜBERSPRUNGEN] Kompiliert fehlerfrei — lualatex/biber/latexmk in dieser Umgebung nicht verfügbar. Statisch geprüft: keine doppelten Labels, `main.tex` bindet `pages/appendix` (Z. 339), `\listoffigures` (Z. 291) und `\listoftables` (Z. 298) ein.
-- [ÜBERSPRUNGEN → statisch PASS] Keine undefined references/citations, fehlenden Bilder — alle `\autoref`-Ziele definiert (inkl. der 5 Anhang-Ziele), alle 4 Mockup-PNG unter `images/durchfuehrung/` vorhanden, alle 6 Citations valide.
-- [ÜBERSPRUNGEN] Seitenumfang Textteil (Soll 7–10 S.) — ohne Kompilat nicht messbar; lokal prüfen.
+- [ÜBERSPRUNGEN] Kompiliert fehlerfrei — `latexmk`, `lualatex` und `biber` sind in dieser Umgebung weiterhin nicht installiert. Statisch geprüft: keine doppelten Labels, keine verwaisten Verweise, alle 4 Mockup-PNG unter `images/durchfuehrung/` vorhanden.
+- [ÜBERSPRUNGEN → statisch PASS] Keine undefined references/citations, fehlenden Bilder.
+- [ÜBERSPRUNGEN] Seitenumfang Textteil (Soll 7–10 S.) — **der zentrale offene Punkt.** Die Umfangsanalyse vom 24.07.2026 schätzte vor Runde 4 rund 4.508 Wörter ≈ 10–11 Seiten; die Kürzungen haben ca. 394 Wörter (~8,7 %) entfernt, womit rechnerisch etwa 4.114 Wörter ≈ 9–10 Seiten bleiben. Das liegt im Soll, ist aber eine Schätzung, kein Messwert — der lokale Build muss sie bestätigen.
 
 ## Teil-Check E — Abgabe (informativ, kein Score-Abzug)
 - [OFFEN] Eidesstattliche Erklärung elektronisch über myCampus abgegeben — Status laut `CLAUDE.md` → Fristen: [offen].
 - [OFFEN] Einreichungs-Anleitung im myCampus-Kurs gelesen.
-- [OFFEN → lokal] Umfang im Soll — Spiegel aus Teil-Check D, ohne Build nicht bestätigt.
+- [OFFEN → lokal] Umfang im Soll — Spiegel aus Teil-Check D.
 - [ERINNERT] Keine externe Plagiatssoftware vorab (Turnitin-Selbsttreffer-Risiko).
 
 ## Claims
-- Ungesicherte FACTUAL CLAIMS: keine. Marktbehauptung „wachsender Markt" (Transfer) wurde in Runde 3 zu einer nicht belegbedürftigen Annahme abgeschwächt; Verbraucherzentrale-Verweis entfernt.
+- Ungesicherte FACTUAL CLAIMS: keine. Die Kürzungen haben keinen neuen Fakten-Claim eingeführt; die abgeschwächten Formulierungen aus Runde 3 und der Terminologie-Korrektur bleiben erhalten.
 - Fehlende OWN WORK-Markierungen: keine.
-- Ungenutzte Bib-Einträge: keine (`check_bib_keys.py --report-unused`).
-- Offene `% UNVERIFIED:`-Marker: keine im Text.
+- Ungenutzte Bib-Einträge: keine.
+- Offene `% UNVERIFIED:`-Marker: keine.
 
 ## Punkteabzug im Detail
-- Keine Abzüge. BBT-Keys 0 · Pflicht-Punkte Typ-Datei 0 · Formalia 0 · Struktur 0 · Anti-KI/Verständlichkeit unter Häufungsschwelle.
-- Teil-Check D (Build/Seitenumfang) nicht bewertet (ÜBERSPRUNGEN — keine spekulativen Abzüge), sondern in „Vor der Einreichung" ausgelagert.
+- Struktur-Verstoß (Teil-Check C, Zählwiderspruch `01_wettbewerbsanalyse.tex:34`): **−10** (1 Vorkommen, Deckel −30).
+- Alle übrigen Kategorien: 0. BBT-Keys 0 · Pflicht-Punkte Typ-Datei 0 · Formalia 0 · Anti-KI/Verständlichkeit unter Häufungsschwelle.
+- Teil-Check D (Build/Seitenumfang) nicht bewertet (ÜBERSPRUNGEN — keine spekulativen Abzüge).
+
+## Weitere Hinweise (ohne Score-Wirkung)
+1. **Unangekündigte Tabelle** — `chapters/02_durchfuehrung/03_konzept.tex:36`: Der Einleitungssatz zu `tab:funktionsuebersicht` wurde gestrichen (Runde 4). Die Tabelle steht jetzt ohne Anmoderation zwischen zwei Absätzen; ihr einziger Textverweis liegt im späteren `06_evaluation_reflexion.tex`. Formal zulässig, für den Lesefluss aber ein Bruch — ein Halbsatz am Ende des Menüplanungs-Absatzes („…, wie~\autoref{tab:funktionsuebersicht} zusammenfasst.") stellt die Führung mit vier Wörtern wieder her.
+2. **UI/UX ohne Erläuterung** — `chapters/02_durchfuehrung/03_konzept.tex:53`: Die Klammer-Erklärung („also die Bildschirmaufteilung und Bedienführung") ist entfallen; die Begriffe sind bei Erstnennung nur noch ausgeschrieben. Einzelbefund, nicht gehäuft, daher kein Abzug — im Sinne der Verständlichkeitsregel („Fachbegriffe bei erster Nennung erklären") aber die schwächste der Runde-4-Kürzungen.
+3. **Dangling „dabei"** — `chapters/02_durchfuehrung/01_wettbewerbsanalyse.tex:13`: Der Absatz beginnt jetzt mit „\enquote{Stark} bedeutet **dabei** …", nachdem der vorangehende Satz mit dem Tabellenbezug gestrichen wurde. Das Rückbezugswort hat keinen lokalen Bezugspunkt mehr. „dabei" ersatzlos streichen genügt.
+4. `check_status.py` meldet 9 HINWEISE: acht `DATEI-OHNE-ZEILE` (bekanntes Artefakt — die Statustabelle führt Kapitel, nicht einzelne Subsections) und einen `STATUS-WERT`-Hinweis auf den nicht-standardisierten Wert „ÜBERHOLT" in der Prüf-Audit-Zeile, der mit diesem Bericht aufgelöst wird.
 
 ## Bewertungsschwerpunkte (Projektbericht)
-- **Qualität (25 %)**: [ABGEDECKT] Alle drei Teilaufgaben real ausgeführt, Matrix nach Runde 3 kalibriert (Chefkoch/leftovercooking-Wertungen im Text begründet), Zählfehler behoben.
-- **Prozess (25 %)**: [ABGEDECKT] Vorgehen dokumentiert, reflektiert (Lessons Learned), Grenzen dreischichtig.
-- **Transfer (15 %)**: gesellschaftlich [ABGEDECKT] (SDG 12.3) · wirtschaftlich [ABGEDECKT] (Freemium, Kooperationen; Marktaussage als Annahme entschärft) · Ansätze/Modelle begründen [ABGEDECKT] (Drivers/Levers, Nudges, Gamification).
-- **Kreativität (15 %)**: [ABGEDECKT] Vergleich zu 6 Plattformen; USP ehrlich als Kombination gerahmt, nicht als bewiesener Marktvorteil.
-- **Dokumentation (10 %)**: [ABGEDECKT] Entstehungsgeschichte lückenlos; „eigene Sichtung (Stand Juli 2026)" als Erhebungsgrundlage deklariert.
-- **Ressourcen (10 %)**: [ABGEDECKT] Phasenplanung mit Zeitrahmen, Ressourcen-Spalte, Zeitpuffer, Abhängigkeiten/Risiken.
+- **Qualität (25 %)**: [ABGEDECKT] Alle Teilaufgaben real ausgeführt; einzige Einschränkung ist der Zählwiderspruch, der einen Prüfer beim Nachzählen auffällt.
+- **Prozess (25 %)**: [ABGEDECKT] Vorgehen dokumentiert und reflektiert; Reflexion durch die Kürzung gestrafft, nicht entkernt.
+- **Transfer (15 %)**: gesellschaftlich [ABGEDECKT] · wirtschaftlich [ABGEDECKT] · Ansätze/Modelle begründen [ABGEDECKT].
+- **Kreativität (15 %)**: [ABGEDECKT] Vergleich zu 6 Plattformen, USP als Kombination gerahmt.
+- **Dokumentation (10 %)**: [ABGEDECKT] Entstehungsgeschichte lückenlos.
+- **Ressourcen (10 %)**: [ABGEDECKT] Phasenplanung mit Zeitrahmen, Ressourcen, Puffer, Risiken.
 
 ## Lieferobjekt-Abgleich
-- [PASS] Alle 6 Lieferobjekte real vorhanden: Wettbewerbsvergleich (`tab:wettbewerbsvergleich`), Persona (`tab:persona`), UI/UX-Mockup (4 PNG), Plattformname (Resteria), Funktionsübersicht (`tab:funktionsuebersicht`), Phasenplanung (`tab:phasenplanung`). `pages/appendix.tex` mit echtem Inhalt; visuelle Konzeptdarstellung (Funktionslogik + Mockups) vorhanden; kein behauptetes, aber fehlendes Artefakt.
+- [PASS] Alle 6 Lieferobjekte unverändert vorhanden: Wettbewerbsvergleich, Persona, UI/UX-Mockups (4 PNG, inkl. der am 24.07. nachgebesserten Profil- und Feed-Screens), Plattformname, Funktionsübersicht, Phasenplanung.
 
-## Prüfer-Anmerkungen-Abgleich (`sources/Anmerkungen vom Prüfer.md`)
-- [ERFÜLLT] Eigenständigkeit/Kreativität in Auswahl & Argumentation — selektive, begründete Plattform- und Funktionsauswahl.
-- [ERFÜLLT] 7–10-Seiten-Projektvorschlag mit bewusster Schwerpunktsetzung — Visuals + Persona in den Anhang ausgelagert (Seitenbudget geschont).
-- [ERFÜLLT] Vergleichsanalyse mit SWOT-Charakter, auf der die weiteren Entscheidungen beruhen — SWOT-Einordnung Resterias (Stärke/Schwäche/Chancen/Risiko) in `01_wettbewerbsanalyse.tex:32`; Konzept leitet sich explizit aus der Marktlücke ab.
-- [ERFÜLLT] Zielgruppe ohne Primärdaten, argumentativ begründet.
-- [ERFÜLLT] KI-Mockup zulässig, transparent gekennzeichnet + manuelle Weiterbearbeitung angegeben — Pflichtmuster im Anhang B erfüllt genau die Prüfer-Vorgabe.
-- [ERFÜLLT] Literatur zur Objektivierung der Vorschläge (nicht zur UX-Definition) — 6 Quellen belegen Verhaltens-Hebel, UX selbst wird nicht mit Quellen „erklärt".
-
-## Handlungsempfehlungen (nach Priorität)
-1. **Lokalen Build fahren** (`latexmk -lualatex main.tex`) und Log auf `undefined`/`multiply defined`/`not found` prüfen — der einzige Punkt, der maschinell hier nicht abschließbar war. Erwartung nach statischer Prüfung: sauber.
-2. **Seitenumfang des Textteils** (ab „1 Einleitung" bis vor Literaturverzeichnis, inkl. Abb./Tab. im Text) gegen 7–10 Seiten halten. Anhang, Verzeichnisse, Literatur zählen nicht.
-3. Optional: `03_vorgehen_und_aufbau.tex` um 1–2 Sätze verlängern (grenzwertige ½-Seite) — kosmetisch.
-4. Optional: eine der Einstiegsquellen (Kapoor et al. / Hansch & Rentschler) einbauen, falls sich beim Feinschliff eine natürliche Stelle ergibt — laut `aufgabe.md` nicht Pflicht.
+## Handlungsempfehlungen (nach Priorität, größter Score-Hebel zuerst)
+1. **Zählwiderspruch beheben** (`01_wettbewerbsanalyse.tex:34`, „zwei Einwände" → „mehrere Einwände"). Einziger Score-Hebel: +10 → 100/100.
+2. **Lokalen Build fahren** (`latexmk -lualatex main.tex`) und **Seitenumfang messen** — jetzt mit dem gekürzten Stand. Erwartung ≈ 9–10 Seiten, damit im Soll; bestätigt zugleich Teil-Check D.
+3. Optional, kosmetisch: Anmoderation für `tab:funktionsuebersicht` wieder einsetzen (Hinweis 1), „dabei" in `01_wettbewerbsanalyse.tex:13` streichen (Hinweis 3), UI/UX-Kurzerklärung wieder ergänzen (Hinweis 2) — zusammen etwa 15 Wörter, ohne den Kürzungserfolg zu gefährden.
 
 ## Vor der Einreichung (Nutzer-Checkliste, ohne Score-Wirkung)
+- [ ] Handlungsempfehlung 1 umsetzen (Einzeiler, `schreib-modus` oder von Hand).
 - [ ] Lokalen Build (`latexmk -lualatex main.tex`) fehlerfrei durchlaufen lassen; Log auf undefined references/citations, fehlende Bilder, doppelte Labels prüfen.
-- [ ] Textteil-Seitenumfang 7–10 S. bestätigen.
-- [ ] LanguageTool-Durchgang (lokal) über den Gesamttext (Sprache zählt in die Bewertung; das Voll-Audit ersetzt keine Vollprüfung).
+- [ ] Textteil-Seitenumfang 7–10 S. am Kompilat bestätigen.
+- [ ] LanguageTool-Durchgang (lokal) über den Gesamttext — besonders wichtig nach Runde 4, weil mehrere Sätze verschmolzen und umformuliert wurden (typische Quelle verwaister Satzreste).
 - [ ] Eidesstattliche Erklärung elektronisch über myCampus abgeben (Voraussetzung, bevor Turnitin die Einreichung annimmt).
-- [ ] Einreichungs-Anleitung im myCampus-Kurs lesen; keine externe Plagiatssoftware vorab nutzen (Turnitin-Selbsttreffer-Risiko).
+- [ ] Einreichungs-Anleitung im myCampus-Kurs lesen; keine externe Plagiatssoftware vorab nutzen.
 - [ ] Nutzer-Restpflichten: Namensverfügbarkeit „Resteria" (DPMA / .de-Domain); Nivedhitha/Shen bei Bedarf am Volltext gegenprüfen.
