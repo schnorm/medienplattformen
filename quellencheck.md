@@ -1,6 +1,6 @@
 # Quellencheck – Volltextabgleich aller Zitationen
 
-Stand: 28.07.2026 · 19 Zitationen · OK 10 · offen 9
+Stand: 28.07.2026 · 19 Zitationen · OK 14 · offen 5
 
 > Erzeugt von `check_quellentreue.py`. Der Bericht wird pro Lauf überschrieben; die Urteile liegen in `quellencheck-state.json`. Statuswerte nie von Hand ändern – Urteil per `--verdikt <hash>=OK --notiz "…"` eintragen.
 
@@ -9,26 +9,26 @@ Stand: 28.07.2026 · 19 Zitationen · OK 10 · offen 9
 | Hash | Stelle | Quelle | S./Kap. | Status | Befund |
 |---|---|---|---|---|---|
 | `d0224da39b` | 01_ausgangslage_und_problem.tex:5 | `unTransformingOutWorld2030Agenda` | – | **LIVE PRÜFEN** | kein PDF-Snapshot im file-Feld – Webquelle live prüfen: https://digitallibrary.un.org/record/3923923 |
-| `cfe6948a24` | 01_ausgangslage_und_problem.tex:5 | `vittuariHowReduceConsumer2023` | 106 | **SEITE VERDÄCHTIG** | S. 106 liegt außerhalb des PDFs (23 Seiten, Versatz 1) |
-| `bf3b5511b4` | 03_konzept.tex:5 | `vittuariHowReduceConsumer2023` | 1 | **PRÜFEN** | wörtliches Zitat exakt gefunden – Seitenangabe bestätigen |
 | `0c277668f2` | 03_konzept.tex:9 | `nivedhithaHowGreenSocial2024` | – | **LIVE PRÜFEN** | kein PDF-Snapshot im file-Feld – Webquelle live prüfen: https://onlinelibrary.wiley.com/doi/10.1111/ijcs.13038 |
 | `9ecb5d4f77` | 03_konzept.tex:22 | `nivedhithaHowGreenSocial2024` | – | **LIVE PRÜFEN** | kein PDF-Snapshot im file-Feld – Webquelle live prüfen: https://onlinelibrary.wiley.com/doi/10.1111/ijcs.13038 |
 | `7e4ae535b0` | 04_community_und_feedback.tex:5 | `shenInfluenceOsmosisSocial2023` | – | **LIVE PRÜFEN** | kein PDF-Snapshot im file-Feld – Webquelle live prüfen: https://linkinghub.elsevier.com/retrieve/pii/S0747563223000572 |
-| `71c628dbad` | 04_community_und_feedback.tex:7 | `somaFoodWasteReduction2020` | 9 | **PRÜFEN** | Sprachwechsel Text/Quelle – Seitenangabe S. 9 maschinell nicht prüfbar, im semantischen Schritt mitprüfen |
-| `6b2918e999` | 01_kernergebnisse_und_ausblick.tex:5 | `vittuariHowReduceConsumer2023` | 1 | **PRÜFEN** | Sprachwechsel Text/Quelle – Seitenangabe S. 1 maschinell nicht prüfbar, im semantischen Schritt mitprüfen |
 | `821fbfd925` | 01_kernergebnisse_und_ausblick.tex:5 | `nivedhithaHowGreenSocial2024` | – | **LIVE PRÜFEN** | kein PDF-Snapshot im file-Feld – Webquelle live prüfen: https://onlinelibrary.wiley.com/doi/10.1111/ijcs.13038 |
 
 ## Geprüft und in Ordnung
 
 | Hash | Stelle | Quelle | S./Kap. | Notiz |
 |---|---|---|---|---|
+| `bdf041cb6b` | 01_ausgangslage_und_problem.tex:5 | `vittuariHowReduceConsumer2023` | Kap. 1 | Soma 2020, S. 10-12 (Abschnitt 3.2) am Volltext geprueft: Information-Gruppe S.10 (84% nutzten Material), Community-Gruppe S.11 (nur 16% besuchten ein Event, 3 von 8 Workshops mit einem Haushalt), Game-Gruppe S.12 (61% spielten alle 12 Level). Teilnahme Community deutlich niedriger als Information/Game. Deckt den Trägersatz vollständig; vorherige Seitenangabe S.9 verwies auf Tabelle 3 (Abfallmengen), nicht auf die Teilnahmequoten. |
+| `b7402f55c9` | 03_konzept.tex:5 | `vittuariHowReduceConsumer2023` | Kap. 1 | Soma 2020, S. 10-12 (Abschnitt 3.2) am Volltext geprueft: Information-Gruppe S.10 (84% nutzten Material), Community-Gruppe S.11 (nur 16% besuchten ein Event, 3 von 8 Workshops mit einem Haushalt), Game-Gruppe S.12 (61% spielten alle 12 Level). Teilnahme Community deutlich niedriger als Information/Game. Deckt den Trägersatz vollständig; vorherige Seitenangabe S.9 verwies auf Tabelle 3 (Abfallmengen), nicht auf die Teilnahmequoten. |
 | `8fc31f38f4` | 03_konzept.tex:9 | `barkerWhatNudgeTechniques2021` | 10 | Barker et al. 2021, S. 10 am Volltext geprueft: vier als reliabel eingestufte Studien, darunter Shearer et al. mit visual prompt nudge reminder, statistisch signifikant. Abstract S. 1 nennt Reminders ausdruecklich unter den wirksamen Nudge-Typen. Gedeckt. Praezisionshinweis: Die Evidenz betrifft ueberwiegend Food-Waste-Recycling, die Diskussion S. 13 raeumt begrenzte Evidenz fuer Reduktion ein. |
 | `f0a821c871` | 03_konzept.tex:11 | `somaFoodWasteReduction2020` | 9 | Soma 2020, S. 9, Tabelle 3 am Volltext geprueft: Frequent (11-12 Wochen, n=14) 1,37 -> 0,67 kg/Woche/Person = 51 %; Infrequent (0-10 Wochen, n=12) 1,64 -> 1,00 = 39 %. Mann-Whitney U Audit 2 p=0,030 (Audit 1 p=0,200). Prozentwerte und Signifikanz gedeckt. |
 | `fad66492fe` | 03_konzept.tex:22 | `barkerWhatNudgeTechniques2021` | 10 | Barker et al. 2021, S. 10 - gleiche Fundstelle, Tabellenzelle tab:funktionsuebersicht. Gedeckt. |
 | `4925dd340e` | 03_konzept.tex:22 | `somaFoodWasteReduction2020` | 9 | Soma 2020, S. 9, Tabelle 3 - gleiche Fundstelle wie 03_konzept.tex:11, Tabellenzelle tab:funktionsuebersicht. Gedeckt. |
+| `2cf08d7b84` | 04_community_und_feedback.tex:7 | `somaFoodWasteReduction2020` | 10-12 | Soma 2020, S. 10-12 (Abschnitt 3.2) am Volltext geprueft: Information-Gruppe S.10 (84% nutzten Material), Community-Gruppe S.11 (nur 16% besuchten ein Event, 3 von 8 Workshops mit einem Haushalt), Game-Gruppe S.12 (61% spielten alle 12 Level). Teilnahme Community deutlich niedriger als Information/Game. Deckt den Trägersatz vollständig; vorherige Seitenangabe S.9 verwies auf Tabelle 3 (Abfallmengen), nicht auf die Teilnahmequoten. |
 | `f57dbb7ae0` | 07_iteratives_design.tex:5 | `erlhoferWebsiteKonzeptionUndRelaunch2017` | Kap. 17.2.2 | Erlhofer 2017, Kap. 17.2.2 (Praxistipp 'Fuenf Test-User reichen meist') am Original geprueft (Session 28.07.): wenige Testpersonen decken die gravierenden, wiederkehrenden Bedienhuerden auf. Deckt die Aussage; 10-15 Personen sind damit nicht unterdimensioniert. |
 | `9892a0fe5c` | 07_iteratives_design.tex:5 | `sauroLewisQuantifying2016` | Kap. 8 | Sauro & Lewis 2016, Kap. 8 (Standardized Usability Questionnaires, S. 192): SEQ als Post-Task-Einzelfrage gelistet und empfohlen; siebenstufige Skala an anderer Stelle im Buch bestaetigt. Die Schwelle >=5 ist im Text als eigene Festlegung ausgewiesen, nicht der Quelle zugeschrieben. |
 | `7a3985eecf` | 07_iteratives_design.tex:5 | `nielsenUsabilityEngineering1993` | Kap. 6.8 | Nielsen 1993, Kap. 6.8 'Thinking Aloud', S. 195 im Volltext geprueft: Verbalisierung macht 'major misconceptions' sichtbar, Methode taugt ausdruecklich nicht fuer Performance-Messung - deckt die Textaussage exakt. |
+| `cdb06f5355` | 01_kernergebnisse_und_ausblick.tex:5 | `vittuariHowReduceConsumer2023` | Kap. 1 | Soma 2020, S. 10-12 (Abschnitt 3.2) am Volltext geprueft: Information-Gruppe S.10 (84% nutzten Material), Community-Gruppe S.11 (nur 16% besuchten ein Event, 3 von 8 Workshops mit einem Haushalt), Game-Gruppe S.12 (61% spielten alle 12 Level). Teilnahme Community deutlich niedriger als Information/Game. Deckt den Trägersatz vollständig; vorherige Seitenangabe S.9 verwies auf Tabelle 3 (Abfallmengen), nicht auf die Teilnahmequoten. |
 | `fe0207cf44` | 01_kernergebnisse_und_ausblick.tex:5 | `barkerWhatNudgeTechniques2021` | 10 | Barker et al. 2021, S. 10 - gleiche Fundstelle, Fazit. Gedeckt. |
 | `2210669db0` | 01_kernergebnisse_und_ausblick.tex:5 | `somaFoodWasteReduction2020` | 9 | Soma 2020, S. 9, Tabelle 3: Gamification-Wirksamkeit gegen Lebensmittelverschwendung belegt (Vielspieler:innen wasten signifikant weniger). Gedeckt. |
 | `72d212d903` | 02_limitationen.tex:3 | `barkerWhatNudgeTechniques2021` | – | Barker et al. 2021 ohne Stellenangabe (werkbezogene Paraphrase auf die Reminder-Wirkung als Kernbefund des Reviews, Abstract S. 1). Gedeckt. |
