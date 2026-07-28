@@ -1,5 +1,21 @@
 {
- "urteile": {},
+ "urteile": {
+  "7a3985eecf": {
+   "status": "OK",
+   "notiz": "Nielsen 1993, Kap. 6.8 'Thinking Aloud', S. 195 im Volltext geprueft: Verbalisierung macht 'major misconceptions' sichtbar, Methode taugt ausdruecklich nicht fuer Performance-Messung - deckt die Textaussage exakt.",
+   "datum": "2026-07-28"
+  },
+  "9892a0fe5c": {
+   "status": "OK",
+   "notiz": "Sauro & Lewis 2016, Kap. 8 (Standardized Usability Questionnaires, S. 192): SEQ als Post-Task-Einzelfrage gelistet und empfohlen; siebenstufige Skala an anderer Stelle im Buch bestaetigt. Die Schwelle >=5 ist im Text als eigene Festlegung ausgewiesen, nicht der Quelle zugeschrieben.",
+   "datum": "2026-07-28"
+  },
+  "f57dbb7ae0": {
+   "status": "OK",
+   "notiz": "Erlhofer 2017, Kap. 17.2.2 (Praxistipp 'Fuenf Test-User reichen meist') am Original geprueft (Session 28.07.): wenige Testpersonen decken die gravierenden, wiederkehrenden Bedienhuerden auf. Deckt die Aussage; 10-15 Personen sind damit nicht unterdimensioniert.",
+   "datum": "2026-07-28"
+  }
+ },
  "versatz": {
   "vittuariHowReduceConsumer2023": 1,
   "barkerWhatNudgeTechniques2021": -8,
