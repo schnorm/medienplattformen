@@ -33,17 +33,26 @@ Gesamt: 7–10 S. (B.Sc.) / 12–15 S. (M.Sc.). Einl. 10–15 % / Haupt 70–80 
 
 **Durchführung** – Phasen/Meilensteine? Was ist das Produkt? Phasenplanung (Tabelle)? Abweichungen von der Planung und Umgang damit? Ressourcen/Einsatzmittel-/Kostenplanung? Beteiligte Personen/Rollen? Ggf. Risikoanalyse?
 
-**Evaluation/Reflexion** – Zielerreichung? Methoden-Reflexion? Lessons learned? Wie lassen sich nachhaltige Strukturen zur Verankerung der Erkenntnisse/Ergebnisse schaffen? Was würde die Projektgruppe beim nächsten Mal anders machen?
+**Evaluation/Reflexion** – Zielerreichung? Methoden-Reflexion? Lessons learned? Wie lassen sich nachhaltige Strukturen zur Verankerung der Erkenntnisse/Ergebnisse schaffen? Was würde beim nächsten Mal anders gemacht?
 
 **Fazit** – Kernergebnisse? Entwicklung/Erkenntnisse? Ausblick? Limitationen dreischichtig (warum · Mitigation · zukünftige Projekte)?
 
 ## Voice, Claims, Absätze
 
-**Voice**: 3. Person streng: „Die Projektgruppe …" – keine Ausnahme. Sprachniveau: einfach und verständlich, Fachbegriffe bei erster Nennung erklären (siehe `hard-rules-formal.md` → Verständlichkeit).
+**Voice**: 3. Person streng, **aber die Selbstbezeichnung hängt an der Autorenschaft** (steht in `aufgabe.md` → „Autorenschaft", erhoben in `plan-modus` Schritt 0):
+
+| Autorenschaft | Selbstbezug | Beispiel |
+|---|---|---|
+| **Gruppenarbeit** | „Die Projektgruppe …" | „Die Projektgruppe wählte ein iteratives Vorgehen." |
+| **Einzelarbeit** | pronomenfrei, wie in den anderen Papiertypen | „Dieser Bericht dokumentiert …" · „Das Projekt folgte einem iterativen Vorgehen." · „Die Umsetzung erfolgte in drei Phasen." |
+
+„Ich/wir/man" bleibt in beiden Fällen verboten (`hard-rules-formal.md` → Pronomen). **Bei Einzelarbeit ist „Die Projektgruppe" ein Fehler, kein Stilmittel** – es behauptet eine Autorenschaft, die es nicht gab, und fällt beim Prüfer sofort auf. `check_formalia.py` meldet solche Stellen, sobald `aufgabe.md` die Autorenschaft als Einzelarbeit ausweist.
+
+Sprachniveau: einfach und verständlich, Fachbegriffe bei erster Nennung erklären (siehe `hard-rules-formal.md` → Verständlichkeit).
 
 **Synthese pro Kapitel**: Pro Leitfrage: Projekt-Kontext, Theorie-Bezug, Reflexion, Lessons learned. Phasen-Überblick als Tabelle.
 
-**Claim-Regeln**: Viel OWN WORK (eigene Phasen, Ergebnisse, Reflexionen – „Quelle: Eigene Darstellung." auf jeder eigenen Abb./Tab.). Methodik-Bezüge brauchen `\parencite{}`. „Die Projektgruppe machte …" = FACTUAL ohne Citation, aber dritte Person.
+**Claim-Regeln**: Viel OWN WORK (eigene Phasen, Ergebnisse, Reflexionen – „Quelle: Eigene Darstellung." auf jeder eigenen Abb./Tab.). Methodik-Bezüge brauchen `\parencite{}`. Eigene Vorgehensschritte („Die Projektgruppe machte …" bzw. bei Einzelarbeit „Im Projekt wurde … umgesetzt") = FACTUAL ohne Citation, immer dritte Person.
 
 **Absätze pro Subsection (Richtwert)**: 4–8 (viele Eigenwerke)
 
@@ -59,4 +68,4 @@ Gesamt: 7–10 S. (B.Sc.) / 12–15 S. (M.Sc.). Einl. 10–15 % / Haupt 70–80 
 **Outline-Check (Soll-Struktur, identisch mit Plan-Modus Schritt 2.5):**
 Einl. (Umfeld, Problem, Ziel, Vorgehen, Methodik, Aufbau, 10–15 %) → Hauptteil (Phasen, Durchführung, Meilensteine, Evaluation, Reflexion, 70–80 %) → Fazit (Erkenntnisse, Lessons learned, Ausblick, 10–15 %)
 
-**Claim-Extraction**: Viel OWN WORK. Methodik = FACTUAL. „Die Projektgruppe machte …" = FACTUAL ohne Citation, 3. Person.
+**Claim-Extraction**: Viel OWN WORK. Methodik = FACTUAL. Eigene Vorgehensschritte = FACTUAL ohne Citation, 3. Person – Selbstbezeichnung je nach Autorenschaft (siehe Voice).

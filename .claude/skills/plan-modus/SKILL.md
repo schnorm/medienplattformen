@@ -53,6 +53,7 @@ Fragen an den Nutzer:
 1. Leitfrage formuliert (ein Satz) oder aus Aufgabenstellung übernommen?
 2. Systematische Literaturrecherche bereits durchgeführt?
 3. Papiertyp? (Hausarbeit/Fallstudie/Seminararbeit/Projektbericht)
+3b. **Autorenschaft: Einzel- oder Gruppenarbeit?** Nicht annehmen, sondern fragen – auch dann, wenn die Aufgabenstellung von einem „Projekt" spricht. Die Antwort entscheidet über den Selbstbezug im ganzen Text (`typen/projektbericht.md` → Voice: Gruppe → „Die Projektgruppe …", Einzelperson → pronomenfrei). Ein falsch gesetzter Selbstbezug zieht sich durch jedes Kapitel und wird von keinem Audit gefunden, weil er formal korrekt ist.
 4. Fehlen geforderte Materialien?
 5. **Forschungstyp** (nur bei Seminararbeit relevant): empirisch (eigene Erhebung) oder Literaturarbeit (nur Sekundärquellen)? – **Achtung**: Auch bei Literaturarbeit bleibt das Methodik-Kapitel bestehen (als „Vorgehen der Literaturanalyse"), weil die IU 20 % Methodik IMMER bewertet (Details: `typen/seminararbeit.md` → Forschungstyp-Zusatzregel). Entscheidung im Draft dokumentieren.
 
@@ -62,6 +63,7 @@ Daraus ergibt sich die **Betriebsart** (siehe oben): empirische Seminararbeit �
 [READINESS CHECK: PASS / NOT READY]
 Aufgabenstellung: <vorhanden / fehlt>
 Papiertyp: ... · Betriebsart: kompakt / ausführlich
+Autorenschaft: <Einzelarbeit / Gruppenarbeit>
 Forschungstyp: <empirisch / Literaturarbeit>
 Rahmenthema: ...
 Konkrete Leitfragen: ...
@@ -70,7 +72,13 @@ Materialien: ...
 Eigenanteil: ...
 ```
 
-**`aufgabe.md` schreiben (Single Source für die Aufgabenstellung):** Die extrahierten Punkte einmalig nach `aufgabe.md` im Projekt-Root destillieren – Papiertyp, Rahmenthema, **wörtliche** Leitfragen/Wahlaufgabe, formale Vorgaben (Seiten, Abgabefrist, geforderte Materialien), Bewertungsbezüge aus der Aufgabenstellung, Eigenanteil. Alle späteren Sessions (auch Schreib-/Prüf-Modus) lesen `aufgabe.md` statt des Aufgaben-PDFs – schneller, tokeneffizient, und die Aufgabenstellung ist Teil des Gedächtnisses. Die Abgabefrist zusätzlich in `CLAUDE.md` → „Fristen" eintragen.
+**`aufgabe.md` schreiben (Single Source für die Aufgabenstellung):** Die extrahierten Punkte einmalig nach `aufgabe.md` im Projekt-Root destillieren – Papiertyp, **Autorenschaft**, Rahmenthema, **wörtliche** Leitfragen/Wahlaufgabe, formale Vorgaben (Seiten, Abgabefrist, geforderte Materialien), Bewertungsbezüge aus der Aufgabenstellung, Eigenanteil. Die Autorenschaft in genau dieser Form als eigene Zeile, damit `check_formalia.py` sie lesen kann:
+
+```markdown
+**Autorenschaft**: Einzelarbeit
+```
+
+(bzw. `Gruppenarbeit`). Bei Einzelarbeit meldet das Skript jede Stelle im Text, die sich als „Projektgruppe" oder „Projektteam" bezeichnet. Alle späteren Sessions (auch Schreib-/Prüf-Modus) lesen `aufgabe.md` statt des Aufgaben-PDFs – schneller, tokeneffizient, und die Aufgabenstellung ist Teil des Gedächtnisses. Die Abgabefrist zusätzlich in `CLAUDE.md` → „Fristen" eintragen.
 
 **Prüfer-Anmerkungen destillieren (Pflichtbestandteil, falls die Datei existiert):** `sources/Anmerkungen vom Prüfer.md` (oder ähnlich benannt) auf **bindende Steuerungen** prüfen – Vorgaben, die von der reinen Aufgabenstellung abweichen oder sie präzisieren (z. B. „Wettbewerbsanalyse gilt als eigene Analyse, nicht als Zitat", „keine Primärdaten nötig", „KI-generierte Mockups kennzeichnen"). Diese **wörtlich** in `aufgabe.md` → eigener Abschnitt **„## Prüfer-Steuerungen"** übernehmen, je Steuerung mit kurzer Einordnung, wo sie im Plan wirkt. Existiert die Datei nicht, den Abschnitt mit „– keine Prüfer-Anmerkungen vorhanden –" anlegen, nicht stillschweigend weglassen (macht sichtbar, dass geprüft wurde). Grund: Diese Steuerungen sind bindend, tauchen aber in keiner anderen Pflichtquelle auf – ohne aktive Destillation werden sie nur gefunden, wenn der Nutzer zufällig darauf zeigt.
 
@@ -183,7 +191,12 @@ Grenzen: ...
 **Zweck**: Bevor Schritt 3 in Detailfragen pro Kapitel geht, das Kapitel-Skelett sichtbar machen und vom Nutzer bestätigen lassen. Verhindert, dass Strukturprobleme (z. B. „Ergebnisse/Diskussion soll zusammengelegt werden", „kein Methodik-Kapitel nötig") erst nach mehreren investierten Dialogrunden auffallen.
 
 1. `typen/<typ>.md` → Abschnitte „Bewertung" und „Kapitelgerüst & Kernfragen" heranziehen.
-2. Skelett als Tabelle vorlegen: Kapitel, Wortanteil (%), Zweck in einem Satz.
+2. Skelett als Tabelle vorlegen: Kapitel, Wortanteil (%), **absolutes Wortbudget**, Zweck in einem Satz.
+2b. **Aus der Seitenvorgabe ein absolutes Wortbudget ableiten** – Prozentanteile allein geben dem Schreib-Modus keine Zielgröße, gegen die er schreiben könnte. Rechnung: Seitenvorgabe aus `aufgabe.md` beziehungsweise `typen/<typ>.md` × **375 Wörter je Seite** (IU-Format: Arial 11, 1,5-zeilig, 2 cm Ränder). Eine Fallstudie mit 7–10 Seiten ergibt also rund **2 600–3 700 Wörter**; davon bekommt jedes Kapitel seinen Prozentanteil als Spanne. Beides in `kapitelplan.md` eintragen:
+   - Kopfzeile `**Gesamtwortzahl (Richtwert)**: 2.600–3.700`
+   - je Kapitelüberschrift `## Kapitel 2: Analyse (900–1.200 Wörter)`
+
+   Genau diese beiden Stellen liest `check_umfang.py` und meldet ab dann in **jeder** Session, wie der Ist-Stand zum Budget steht – unabhängig davon, ob gerade ein Build läuft. Abbildungen und Tabellen verbrauchen zusätzlich Platz; das Wortbudget ist deshalb eine Untergrenze, keine Punktlandung.
 3. **Seitenbudget an den Bewertungsgewichten ausrichten** (aus `typen/<typ>.md` → Bewertung) und dem Nutzer die Ableitung kurz zeigen – Beispiele: Hausarbeit: Argumentation 40 % → Diskussion ist das größte Kapitel; Fallstudie: Analyse + Konzepte + Ergebnis = 75 % → Theorie bewusst knapp (IU-Reproduktionsverbot); Projektbericht: Prozess + Qualität = 50 % → Durchführung + Reflexion dominieren. So fließt das Bewertungsraster direkt in die Budgetverteilung ein, statt erst im Audit aufzutauchen.
    **Abdeckung statt nur Gewicht:** Neben dem Seitenbudget bekommt jedes Bewertungskriterium aus `aufgabe.md` beziehungsweise `typen/<typ>.md` ein **zuständiges Kapitel** zugewiesen – und, wo das Kriterium mehrere Dimensionen nennt, **jede Dimension einzeln**. Ein Kriterium wie „Transfer: Technologie ↔ gesellschaftliche und wirtschaftliche Bedeutung" hat drei Dimensionen; zwei davon abzudecken und die dritte auszulassen ist der wahrscheinlichste Fehler, weil zwei starke Dimensionen den Eindruck von Vollständigkeit erzeugen. Ergebnis als Tabelle in `kapitelplan.md`:
    | Bewertungskriterium | Dimension | Zuständiges Kapitel | Wie eingelöst |

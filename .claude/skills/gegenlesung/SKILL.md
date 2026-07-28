@@ -60,6 +60,11 @@ Zulässige Werte: `erfüllt` · `erfüllt, aber <Einschränkung>` · `nur ersatz
 Jede einzeln abarbeiten, auch wenn sie unergiebig scheint:
 
 1. **Existiert, was behauptet wird?** Jede Textstelle, die ein Artefakt behauptet („als Prototyp diente …", „das Formular gliedert …", „die Erhebung ergab …"), gegen den tatsächlichen Bestand prüfen. Grep-Ansatz: `Prototyp`, `Formular`, `Skizze`, `Erhebung`, `Anhang`. Behauptete und nicht beiliegende Artefakte sind schwere Befunde – sie schwächen die Aussage, statt sie zu stützen.
+
+   **Und bei gestalteten Artefakten: zeigt das Bild, was der Text behauptet?** Existenz genügt hier nicht. Wenn die Arbeit ein Mockup, eine Konzeptskizze, einen Prototyp oder ein Interface beschreibt („der Upload-Button …", „im Profil erscheint die Einsparung …", „die Rangliste zeigt …"), muss die Abbildung diese Elemente tatsächlich enthalten. Text und Entwurf driften beim Überarbeiten auseinander: Der Text wird geschärft, das Bild bleibt stehen.
+   - Bei `tikzpicture` und `pgfplots` ist der Bildinhalt Quelltext – gratis lesbar, einfach mitprüfen.
+   - Bei `\includegraphics` die Bilddatei per `Read`-Tool ansehen. **Nur dort, wo es um ein gestaltetes Artefakt geht** – nicht bei Diagrammen, die aus den eigenen Daten erzeugt wurden, und nicht bei übernommenen Abbildungen aus Quellen. Sonst zahlt diese ohnehin teure Session für jede Abbildung Tokens ohne Ertrag.
+   - Je Abweichung notieren, welches im Text genannte Element im Bild fehlt. Das ist ein inhaltlicher Befund, kein Formfehler: Die Arbeit beschreibt etwas, das sie nicht vorlegt.
 2. **Wurde eine Teilaufgabe ersetzt statt ausgeführt?** Falls ja: Steht die Begründung im Text, und beantwortet sie die naheliegende Rückfrage nach dem billigsten realen Ersatz? Saubere Kennzeichnung des hypothetischen Charakters ist nicht dasselbe wie eine Begründung.
 3. **Ist jede Behauptung nachprüfbar?** Kapitel mit Recherche- oder Analysecharakter ohne eine einzige Quellenangabe oder dokumentierte Erhebungsgrundlage sind ein Befund, unabhängig davon, wie plausibel der Inhalt wirkt. Eigenleistung entbindet nicht von Nachvollziehbarkeit.
 4. **Wird ein Zentralbegriff der Aufgabenstellung stillschweigend verengt?** Verengung ist legitim, unbegründete Verengung nicht.
@@ -80,7 +85,7 @@ Befunde als **neue Runde in `AENDERUNGEN.md`**, Format: `_shared/aenderungen-for
 - **Anweisung** – konkret, ausführbar, mit Datei und Stelle; bei mehreren gangbaren Wegen als benannte Optionen
 - **`[FREIGABE]`** bei allem, was These, Kernargumente, Leitfrage, Zielgruppendefinition oder eigene Rechercheergebnisse berührt
 
-Zusätzlich in die Runde: die Soll-Ist-Tabelle aus Schritt 3, eine nüchterne Gesamteinschätzung und ein Umfangshinweis, falls Zugaben Kürzungen erzwingen.
+Zusätzlich in die Runde: die Soll-Ist-Tabelle aus Schritt 3, eine nüchterne Gesamteinschätzung und ein **Umfangshinweis auf den Gesamtstand nach dieser Runde** – nicht auf das Delta. Datengrundlage ist `python .claude/skills/_shared/scripts/check_umfang.py`, nicht eine Schätzung: Ist-Wortzahl plus die Zugaben dieser Runde gegen die Zielgröße aus `kapitelplan.md`. Der Unterschied ist nicht akademisch – ein Hinweis „diese Runde erzwingt keine Kürzungen" kann zutreffen, während die Arbeit insgesamt längst über der Vorgabe liegt. Liegt der Gesamtstand darüber, gehört in die Runde ein eigener Punkt „Kürzen", mit konkretem Vorschlag: mehrfach ausformulierte Kernbefunde sind die erste Reserve, nicht die Belege.
 
 **Ehrlichkeitspflicht:** Auch benennen, was gut ist – aber nicht als Trostpflaster, sondern damit die Überarbeitung weiß, was sie nicht anfassen darf. Eine Gegenlesung, die nur Mängel listet, verleitet dazu, tragende Stärken wegzuschreiben.
 

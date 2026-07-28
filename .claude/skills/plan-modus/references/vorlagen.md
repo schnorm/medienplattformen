@@ -25,7 +25,7 @@ Letzte Aktualisierung: <Datum>
 5. [<kapitel>_zusammenfassung] ... (je fertiges Kapitel aus Schritt 3)
 
 ## Kapitelgerüst (bestätigt, sobald Schritt 2.5 erreicht)
-| Kapitel | Wortanteil | Zweck |
+| Kapitel | Wortanteil | Wortbudget | Zweck |
 |---|---|---|
 | ... | ... | ... |
 
@@ -73,7 +73,7 @@ Alle Inhalte liegen bereits in `kapitelplan.draft.md` (Checkpoints aus Schritt 0
 ## Papierinfo
 - **Titel**: ...
 - **Papiertyp**: ... · **Forschungstyp**: ...
-- **Gesamtwortzahl (Richtwert)**: ...
+- **Gesamtwortzahl (Richtwert)**: ...   ← Seitenvorgabe × 375 W./Seite, z. B. `2.600–3.700` bei 7–10 Seiten. `check_umfang.py` liest genau diese Zeile und die Wortbudgets in den Kapitelüberschriften.
 - **Erstellt am**: <Datum> · **Plan-Session-Checkpoints**: `kapitelplan.draft.md` (Archiv)
 
 ## Kapitel 1: <Name> (X–Y Wörter)

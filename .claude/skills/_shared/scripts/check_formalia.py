@@ -760,6 +760,49 @@ def anhang_buchstaben(root: Path) -> set[str]:
 
 PLATZHALTER_RE = re.compile(r"\\newcommand\{\\(\w+)\}\{([^}]*)\}")
 
+# Selbstbezeichnung als Gruppe, obwohl die Arbeit allein geschrieben wurde.
+# Bewusst eng: nur die beiden eindeutigen Komposita. „die Gruppe" oder „das
+# Team" k\u00f6nnen im Fachtext legitim vorkommen (Zielgruppe, Entwicklungsteam der
+# untersuchten Firma) – ein Treffer darauf w\u00e4re Rauschen statt Befund.
+AUTORENSCHAFT_RE = re.compile(r"(?mi)^\s*\**\s*Autorenschaft\s*\**\s*:\s*\**\s*(\w+)")
+GRUPPENBEZUG_RE = re.compile(r"\b(Projektgruppe|Projektteams?|Projektgruppen)\b")
+
+
+def autorenschaft(root: Path) -> str | None:
+    """„Einzelarbeit" / „Gruppenarbeit" aus aufgabe.md – None, wenn nicht gesetzt."""
+    p = root / "aufgabe.md"
+    if not p.is_file():
+        return None
+    m = AUTORENSCHAFT_RE.search(p.read_text(encoding="utf-8", errors="replace"))
+    return m.group(1).lower() if m else None
+
+
+def check_gruppenbezug(metas: dict[Path, dict], root: Path) -> list[str]:
+    """Bei Einzelarbeit: Selbstbezeichnung als Projektgruppe ist ein Sachfehler.
+
+    Die Typ-Datei `projektbericht.md` schrieb bis 07/2026 unbedingt „Die
+    Projektgruppe …" vor. Ein daraus entstandener falscher Selbstbezug ist
+    formal einwandfrei und überlebt deshalb jedes Audit – er behauptet nur eine
+    Autorenschaft, die es nicht gab. Deterministisch prüfbar, sobald
+    `aufgabe.md` die Autorenschaft ausweist.
+    """
+    if autorenschaft(root) != "einzelarbeit":
+        return []
+    findings: list[str] = []
+    for path in sorted(metas):
+        if "pages" in path.parts:
+            continue
+        text = path.read_text(encoding="utf-8", errors="replace")
+        for no, zeile in enumerate(text.splitlines(), start=1):
+            m = GRUPPENBEZUG_RE.search(strip_comment(zeile))
+            if m:
+                findings.append(
+                    f"{path}:{no}: [FEHLER:GRUPPENBEZUG] „{m.group(1)}“ bei Einzelarbeit "
+                    f"(laut `aufgabe.md`) – die Arbeit behauptet damit eine Autorenschaft, "
+                    f"die es nicht gab. Pronomenfrei umformulieren: „Dieser Bericht …“, "
+                    f"„Das Projekt folgte …“, „Die Umsetzung erfolgte …“.")
+    return findings
+
 
 def check_meta_platzhalter(root: Path) -> list[str]:
     """Stehen in pages/meta.tex noch CAPS-Platzhalter der Vorlage?
@@ -841,7 +884,7 @@ def main() -> int:
     # deshalb nur bei einem Verzeichnis-Lauf und nicht bei einer Einzeldatei.
     if any(t.is_dir() for t in args.targets):
         root = _projekt_root(args.targets[0])
-        struktur = check_unterpunkte(metas)
+        struktur = check_unterpunkte(metas) + check_gruppenbezug(metas, root)
         # Abbildungs-/Tabellenzahl und Anhang-Verweise nur bewerten, wenn der
         # GESAMTE Kapitelbestand im Lauf war. Bei `check_formalia.py
         # chapters/02_theorie/` zählte man sonst die Abbildungen eines einzelnen

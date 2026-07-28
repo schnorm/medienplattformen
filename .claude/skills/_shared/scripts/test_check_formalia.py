@@ -8,9 +8,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 from check_formalia import (  # noqa: E402
-    anhang_buchstaben, check_aktivierung, check_anhang_verweise, check_file,
-    check_meta_platzhalter, check_title_duplication, check_unterpunkte,
-    strip_comment)
+    anhang_buchstaben, autorenschaft, check_aktivierung, check_anhang_verweise,
+    check_file, check_gruppenbezug, check_meta_platzhalter,
+    check_title_duplication, check_unterpunkte, strip_comment)
 
 
 def run_on(content: str):
@@ -605,6 +605,64 @@ class TestStrukturUndAktivierung(unittest.TestCase):
                 "\\subsection{Modelle}\\label{sec:modelle}\nText.\n", encoding="utf-8")
             funde = check_unterpunkte(self.metas(root))
             self.assertEqual(funde, [], funde)
+
+    def gruppen_projekt(self, root: Path, autorenschaft_zeile: str | None, text: str):
+        (root / "chapters" / "02_umsetzung").mkdir(parents=True, exist_ok=True)
+        if autorenschaft_zeile is not None:
+            (root / "aufgabe.md").write_text(
+                "# Aufgabenstellung\n\n" + autorenschaft_zeile + "\n", encoding="utf-8")
+        (root / "chapters" / "02_umsetzung" / "01_a.tex").write_text(text, encoding="utf-8")
+        return self.metas(root)
+
+    def test_gruppenbezug_bei_einzelarbeit(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            metas = self.gruppen_projekt(
+                root, "**Autorenschaft**: Einzelarbeit",
+                "\\subsection{U}\\label{sec:u}\nDie Projektgruppe waehlte ein iteratives Vorgehen.\n")
+            funde = check_gruppenbezug(metas, root)
+            self.assertEqual(len(funde), 1, funde)
+            self.assertIn("GRUPPENBEZUG", funde[0])
+
+    def test_gruppenbezug_bei_gruppenarbeit_still(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            metas = self.gruppen_projekt(
+                root, "**Autorenschaft**: Gruppenarbeit",
+                "\\subsection{U}\\label{sec:u}\nDie Projektgruppe waehlte ein iteratives Vorgehen.\n")
+            self.assertEqual(check_gruppenbezug(metas, root), [])
+
+    def test_gruppenbezug_ohne_aufgabe_md_still(self):
+        # Ohne Angabe wird nicht geraten – in der Bachelor-Vorlage gibt es die Datei gar nicht.
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            metas = self.gruppen_projekt(
+                root, None,
+                "\\subsection{U}\\label{sec:u}\nDie Projektgruppe waehlte ein Vorgehen.\n")
+            self.assertEqual(check_gruppenbezug(metas, root), [])
+
+    def test_gruppenbezug_ignoriert_kommentar(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            metas = self.gruppen_projekt(
+                root, "**Autorenschaft**: Einzelarbeit",
+                "\\subsection{U}\\label{sec:u}\n% Die Projektgruppe stand hier mal.\nText.\n")
+            self.assertEqual(check_gruppenbezug(metas, root), [])
+
+    def test_gruppenbezug_keine_fehlalarme_auf_zielgruppe(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            metas = self.gruppen_projekt(
+                root, "**Autorenschaft**: Einzelarbeit",
+                "\\subsection{U}\\label{sec:u}\nDie Zielgruppe umfasst Studierende; "
+                "das Team des Anbieters pflegt die Plattform.\n")
+            self.assertEqual(check_gruppenbezug(metas, root), [])
+
+    def test_autorenschaft_liest_verschiedene_schreibweisen(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            (root / "aufgabe.md").write_text("Autorenschaft: Einzelarbeit\n", encoding="utf-8")
+            self.assertEqual(autorenschaft(root), "einzelarbeit")
 
     def test_meta_platzhalter_gefunden(self):
         with tempfile.TemporaryDirectory() as d:

@@ -11,14 +11,11 @@ Führt nacheinander aus und fasst zusammen:
 
   1. check_bib_keys.py     – erfundene/fehlende BBT-Keys, ungenutzte Einträge
   2. check_formalia.py     – Formalia, Stil-, Struktur- und Aktivierungs-Checks
-  3. check_bib_hygiene.py  – Feld-Hygiene in references.bib (Zotero-Arbeitsliste)
-  4. check_status.py       – Statustabelle gegen das Dateisystem
-  5. check_quellentreue.py – Volltextabgleich (nur mit --mit-quellen; dauert,
+  3. check_umfang.py       – Wörter je Kapitel gegen die Budgets aus kapitelplan.md
+  4. check_bib_hygiene.py  – Feld-Hygiene in references.bib (Zotero-Arbeitsliste)
+  5. check_status.py       – Statustabelle gegen das Dateisystem
+  6. check_quellentreue.py – Volltextabgleich (nur mit --mit-quellen; dauert,
                              weil jedes Quell-PDF gelesen wird)
-
-Einen Umfangs-Check gibt es hier bewusst nicht: Die Seitenvorgabe steht je
-Papiertyp in `_shared/typen/<typ>.md` und wird im pruef-modus gegen den Build
-geprueft, nicht ueber eine Woerterschaetzung.
 
 Warum ein Sammelaufruf: Diese vier bis fünf Läufe stehen in jedem Audit und in
 jeder Schreib-Session ohnehin an. Einzeln aufgerufen kostet jeder einen eigenen
@@ -68,6 +65,7 @@ def main() -> int:
     aufgaben: list[tuple[str, list[str]]] = [
         ("check_bib_keys.py", ["references.bib", "--dir", ziel, "--report-unused"]),
         ("check_formalia.py", [ziel, "pages/"] if not kapitel else [ziel]),
+        ("check_umfang.py", []),
         ("check_bib_hygiene.py", []),
         ("check_status.py", []),
     ]
