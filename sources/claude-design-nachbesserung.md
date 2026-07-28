@@ -56,6 +56,12 @@ Betrifft **beide** Startseiten-Screens, da die Bookmarks-Ansicht derselbe Screen
 
 Da ohnehin beide Startseiten neu exportiert werden, lässt sich die noch offene Platzhalter-Korrektur aus Anpassung 3 („Foto:" → „Foto") im selben Zug miterledigen; dann bleibt sie nur noch im Profil-Screen offen.
 
+### Stand Anpassung 4: umgesetzt am 2026-07-28
+
+Beide Startseiten-Screens tragen jetzt identisch das Banner „Wochenplan · Heute: Brokkoli-Suppe" unterhalb des Headers; die Tab-Leiste bleibt bei drei Einträgen. Die Aussage in `03_konzept.tex:13` ist damit am Bild belegt. `\quelle{}`-Zeilen für `fig:mockup_start` und `fig:mockup_start_bookmarks` entsprechend ergänzt.
+
+Zwei Punkte bewusst so belassen: Das Banner nennt nur den Wochenplan, nicht das Reste-Journal — der Text führt das Journal als „begleitend" zum Wochenplan, es liegt also hinter demselben Einstieg; belegt ist es nicht, widerlegt aber auch nicht. Und der Prompt beschreibt eine Karte unterhalb der Rezeptvorschläge, entstanden ist ein Banner oben: Der Zitierleitfaden (S. 20) verlangt „den verwendeten Prompt", also die Eingabe, nicht eine Beschreibung des Ergebnisses; der Zusatz „und in weiteren Iterationsschritten verfeinert" hält die Abweichung transparent, ohne ein Prompt-Protokoll zu behaupten.
+
 ## Stand Anpassung 3 (Befund 6.3), geprüft am 2026-07-28
 
 Am Rettungs-Feed **erledigt**: Der Plus-Button überlappt die Aktionsleiste nicht mehr, das Lesezeichen-Icon des ersten Beitrags ist frei, und der Foto-Platzhalter trägt dort keinen Doppelpunkt mehr. Die Beschriftung „Foto:" steht aber weiterhin in `resteria_startseite.png`, `resteria_startseite_bookmarks.png` und `resteria_profil.png` — Anpassung 3 galt ausdrücklich für alle vier Screens.
