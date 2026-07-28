@@ -11,10 +11,10 @@ Dann in Opus Session die Screenshots prüfen lassen ob das mit dem Fließtext so
 Kann der Absatz "Diese Trennung hält den Bericht davon ab, den gesamten Marktvorteil von Resteria als wissenschaftlich bewiesen darzustellen, obwohl er auf eigener Marktbeobachtung beruht." in 01_kernergebnisse_und_ausblick.tex so bleiben? Falls ja, sollten wir diesen jedoch umformulieren. Prüfe außerdem "Abgemildert wird das durch die transparent gekennzeichnete Herkunft und die Beschränkung auf die drei Hauptbereiche der Navigation." innerhalb von 02_limitationen.tex. Wenn es hier eine bessere Formulierung gibt, bitte umformulieren.
 
 # 5. Claude Code
-Gleiche die Probleme und Anpassungen die wir im Laufe dieser Konversation mit unserem Workflow, CLAUDE.md sowie den Skills ab. Sollten wir etwas anpassen, damit die Konversationen und die Arbeit mit Claude effizienter und diese Probleme in Zukunft von Anfang an schon vermieden werden?
+Gleiche die Probleme und Anpassungen denen wir im Laufe dieser Konversation begegnet sind mit unserem Workflow, CLAUDE.md sowie den Skills ab. Sollten wir dort etwas anpassen, damit die Konversationen und die Arbeit mit Claude effizienter und diese Probleme in Zukunft von Anfang an schon vermieden werden? Erstelle wenn du Vorschläge hasteine SKILL-ANPASSUNGEN.md Datei, in der die Anpassungen dokumentiert werden um diese in einer nächsten Sitzung anzugehen.
 
 # 3. Claude Code (neue Sitzung)
-In der vorherigen Projektarbeit wurden Konzepte zum nutzerzentrierten Testen eines Prototyps verwendet. Schaue in sources/vorherige-projektarbeit nach, ob die verwendeten Konzepte samt Quellen und indirekten Zitaten für das Projekt hier sinnvoll wären.
+In der vorherigen Projektarbeit wurden Konzepte zum nutzerzentrierten Testen eines Prototyps verwendet. Wir referenzieren in dem neuen Projekt User-Testing. Schaue in sources/vorherige-projektarbeit nach, ob die verwendeten Konzepte samt Quellen und indirekten Zitaten für das Projekt hier sinnvoll wären.
 
 # 6. Claude Code (neue Sitzung)
 Delta-Re-Audit
