@@ -14,6 +14,41 @@
    "status": "OK",
    "notiz": "Erlhofer 2017, Kap. 17.2.2 (Praxistipp 'Fuenf Test-User reichen meist') am Original geprueft (Session 28.07.): wenige Testpersonen decken die gravierenden, wiederkehrenden Bedienhuerden auf. Deckt die Aussage; 10-15 Personen sind damit nicht unterdimensioniert.",
    "datum": "2026-07-28"
+  },
+  "f0a821c871": {
+   "status": "OK",
+   "notiz": "Soma 2020, S. 9, Tabelle 3 am Volltext geprueft: Frequent (11-12 Wochen, n=14) 1,37 -> 0,67 kg/Woche/Person = 51 %; Infrequent (0-10 Wochen, n=12) 1,64 -> 1,00 = 39 %. Mann-Whitney U Audit 2 p=0,030 (Audit 1 p=0,200). Prozentwerte und Signifikanz gedeckt.",
+   "datum": "2026-07-28"
+  },
+  "4925dd340e": {
+   "status": "OK",
+   "notiz": "Soma 2020, S. 9, Tabelle 3 - gleiche Fundstelle wie 03_konzept.tex:11, Tabellenzelle tab:funktionsuebersicht. Gedeckt.",
+   "datum": "2026-07-28"
+  },
+  "2210669db0": {
+   "status": "OK",
+   "notiz": "Soma 2020, S. 9, Tabelle 3: Gamification-Wirksamkeit gegen Lebensmittelverschwendung belegt (Vielspieler:innen wasten signifikant weniger). Gedeckt.",
+   "datum": "2026-07-28"
+  },
+  "8fc31f38f4": {
+   "status": "OK",
+   "notiz": "Barker et al. 2021, S. 10 am Volltext geprueft: vier als reliabel eingestufte Studien, darunter Shearer et al. mit visual prompt nudge reminder, statistisch signifikant. Abstract S. 1 nennt Reminders ausdruecklich unter den wirksamen Nudge-Typen. Gedeckt. Praezisionshinweis: Die Evidenz betrifft ueberwiegend Food-Waste-Recycling, die Diskussion S. 13 raeumt begrenzte Evidenz fuer Reduktion ein.",
+   "datum": "2026-07-28"
+  },
+  "fad66492fe": {
+   "status": "OK",
+   "notiz": "Barker et al. 2021, S. 10 - gleiche Fundstelle, Tabellenzelle tab:funktionsuebersicht. Gedeckt.",
+   "datum": "2026-07-28"
+  },
+  "fe0207cf44": {
+   "status": "OK",
+   "notiz": "Barker et al. 2021, S. 10 - gleiche Fundstelle, Fazit. Gedeckt.",
+   "datum": "2026-07-28"
+  },
+  "72d212d903": {
+   "status": "OK",
+   "notiz": "Barker et al. 2021 ohne Stellenangabe (werkbezogene Paraphrase auf die Reminder-Wirkung als Kernbefund des Reviews, Abstract S. 1). Gedeckt.",
+   "datum": "2026-07-28"
   }
  },
  "versatz": {
