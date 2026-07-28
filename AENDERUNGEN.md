@@ -831,3 +831,76 @@ Die Arbeit erfüllt die gestellte Aufgabe. Alle drei Teilaufgaben sind bearbeite
 `check_formalia.py`: 0 FEHLER, 12 HINWEIS (ausschließlich bekannte Tabellen-/Satzlängen-Artefakte plus ein neuer Satzschnitt-Hinweis in einer nicht bearbeiteten Datei — kein neuer Regelverstoß). `check_bib_keys.py`: alle 6 Keys valide. Netto-Umfangsänderung dieser Runde: rund +100 bis +140 Wörter (6.4- und 6.7-Zugaben abzüglich der durch 6.9 gestrafften Sätze und der in 6.2 gekürzten Startseiten-Beschreibung) — bei einem Ausgangswert von rund 4.680 Wörtern bleibt die Arbeit im geschätzten 9–10-Seiten-Korridor, ein lokaler Build zur Bestätigung steht weiterhin aus (Nutzer-Schritt, `lualatex`/`latexmk` in dieser Umgebung nicht verfügbar).
 
 „Offen" ist damit bis auf den ausstehenden Bildaustausch (6.3) vollständig leer. Nächster Schritt laut Fahrplan: Gesamt-Stresstest (bei Papiertyp Projektbericht optional, siehe `CLAUDE.md` → Kompakt-Prüfkette) oder direkt Voll-Audit — sobald der Mockup-Austausch für 6.3 erfolgt ist, empfiehlt sich vorher ein kurzer `check_formalia.py`-Lauf wie im Nachbesserungsdokument vermerkt.
+
+### Runde 7 — Nutzer-Feedback / Methodenfundierung Beta-Test (2026-07-28)
+
+Anlass: Abgleich der eigenen Vorprojektarbeit (`sources/vorherige-projektarbeit/`, Volltext unter `/home/normi/Documents/projekt-ui-design/latex/`) gegen den Resteria-Textstand. Dort sind Usability-Tests real durchgeführt und methodisch belegt; hier ist der Beta-Test rein organisatorisch beschrieben. Die Runde überträgt **ausschließlich Konzepte und deren Primärquellen**, keine Formulierungen und keine Ergebnisse (siehe Abschnitt „Eigenplagiat-Grenze" am Ende).
+
+Betroffene Stelle: `chapters/02_durchfuehrung/07_iteratives_design.tex:5` nennt „zehn bis fünfzehn Personen", „kurze Fragebögen" und „ein moderiertes Feedback-Gespräch" — ohne benanntes Verfahren, ohne Erfolgskriterium, ohne Begründung der Gruppengröße. `05_phasenplanung.tex:14` wiederholt dieselbe Leerstelle in der Tabellenzelle.
+
+Vier `references.bib`-Einträge wurden für diese Runde bereits angelegt (einmalige Nutzer-Freigabe, siehe „Bib-Vorbehalt" am Ende): `sauroLewisQuantifying2016`, `nielsenUsabilityEngineering1993`, `erlhoferWebsiteKonzeptionUndRelaunch2017`, `iso_9241_210`.
+
+#### 7.1 Beta-Test ohne messbares Erfolgskriterium
+
+- **Befund**: `07_iteratives_design.tex:5` sammelt Rückmeldungen „über kurze Fragebögen", legt aber nicht fest, was gemessen wird und ab wann eine Funktion als bedienbar gilt. Damit bleibt die einzige geplante Evaluationsstufe der Arbeit ohne Prüfmaßstab.
+- **Warum**: Prozess (25 %) verlangt laut `aufgabe.md` „Vorgehen dokumentieren + reflektieren"; ein Testplan ohne Kriterium ist nicht nachvollziehbar bewertbar. Zugleich Teilaufgabe 3.
+- **Anweisung**: In `07_iteratives_design.tex:5` nach der Nennung der Fragebögen ergänzen, sinngemäß: die Fragebögen erheben je Kernaufgabe die Single Ease Question — eine einzelne Frage zur empfundenen Aufgabenschwierigkeit auf einer siebenstufigen Skala `\parencite[Kap.~8]{sauroLewisQuantifying2016}` — und als Schwelle für eine gelungene Aufgabe ist ein Mittelwert von mindestens fünf vorgesehen. **Nicht** die Ist-/Soll-Zahlen der Vorarbeit übernehmen; Resteria hat keine Messwerte. Wird „SEQ" mehr als einmal verwendet (siehe 7.5), dazu `\acro{SEQ}{Single Ease Question}` in `pages/acronyms.tex` ergänzen und durchgängig `\ac{SEQ}` setzen; bei nur einer Verwendung ausgeschrieben lassen.
+- **Kosten**: rund 30 Wörter.
+
+#### 7.2 „Moderiertes Feedback-Gespräch" ohne Verfahren
+
+- **Befund**: `07_iteratives_design.tex:5` kündigt ein moderiertes Gespräch an, benennt aber kein Verfahren. Der Satz beschreibt damit einen Termin, keine Methode.
+- **Warum**: Transfer (15 %) verlangt laut Aufgabenstellung, „Ansätze/Modelle" zu begründen. Ein benanntes, belegtes Verfahren ist genau das; ein unspezifisches Gespräch ist es nicht.
+- **Anweisung**: Denselben Absatz um einen Satz erweitern, sinngemäß: Das moderierte Gespräch folgt dem Think-Aloud-Verfahren, bei dem die Testperson während der Bearbeitung laut ausspricht, was sie tut und erwartet; so werden Fehlannahmen über die Bedienführung sichtbar, die eine reine Erfolgsmessung nicht erfasst `\parencite[Kap.~6.8]{nielsenUsabilityEngineering1993}`.
+- **Kosten**: rund 25 Wörter.
+
+#### 7.3 Gruppengröße „zehn bis fünfzehn Personen" unbegründet
+
+- **Befund**: Die Zahl steht in `07_iteratives_design.tex:5` und in `05_phasenplanung.tex:14` ohne jede Herleitung. Sie ist der naheliegendste Prüfereinwand gegen den Testplan („warum genau so viele?").
+- **Warum**: Ressourcen (10 %) — „Zeit und Material effizient"; eine Gruppengröße ist eine Ressourcenentscheidung und gehört begründet.
+- **Anweisung**: Einen Satz ergänzen, sinngemäß: Für die Gruppengröße gibt `\textcite[Kap.~17.2.2]{erlhoferWebsiteKonzeptionUndRelaunch2017}` den Maßstab — bereits wenige Testpersonen legen die schwerwiegenden und mehrfach auftretenden Bedienhürden offen, sodass zehn bis fünfzehn Personen ausreichend dimensioniert sind. **Richtungsfehler vermeiden**: Erlhofer begründet, dass *wenige* genügen, nicht dass zehn bis fünfzehn *erforderlich* sind. Formulierungen wie „mindestens zehn Personen sind nötig" wären eine Quellenverfälschung und würden im Volltextabgleich (`check_quellentreue.py`) auffallen.
+- **Kosten**: rund 30 Wörter.
+
+#### 7.4 Kein benannter Prozessrahmen für das Gesamtvorgehen  [FREIGABE]
+
+- **Befund**: Die Arbeit durchläuft faktisch die vier Aktivitäten menschzentrierter Gestaltung — Nutzungskontext (`sec:zielgruppe`), Anforderungen (`sec:konzept`), Designlösungen (Mockups, Anhang B), Evaluation (`sec:iteratives_design`) — benennt diesen Rahmen aber nirgends. `06_evaluation_reflexion.tex:9` erzählt die Abfolge als Chronologie, nicht als Methode.
+- **Warum**: Prozess (25 %) und Transfer (15 %). Ein anerkannter Normbezug hebt die Abfolge von „so ist es gelaufen" auf „so wurde es methodisch geführt". Das ist der größte inhaltliche Gewinn dieser Runde — und der teuerste.
+- **`[FREIGABE]`, weil** der Punkt den Prozessrahmen der gesamten Arbeit betrifft und nicht nur eine Einzelstelle; zudem ist er allein nicht aus dieser Runde gegenfinanzierbar (siehe Umfangshinweis).
+- **Anweisung — Optionen**:
+  - **Option A (schlank, ~30 Wörter)**: Ein Satz in `07_iteratives_design.tex:3`, der die Rückkopplungsschleifen als Evaluationsaktivität menschzentrierter Gestaltung nach `\parencite{iso_9241_210}` einordnet. Rahmt nur die Iteration, nicht die ganze Arbeit.
+  - **Option B (voll, ~60 Wörter)**: Zusätzlich zwei Sätze in `06_evaluation_reflexion.tex:9`, die die vier Aktivitäten den vier Kapitelabschnitten zuordnen. Wirkt am stärksten auf Prozess und Dokumentation, erfordert aber eine zusätzliche Kürzung außerhalb dieser Runde.
+  - **Option C**: nicht übernehmen. Kein Regelverstoß — der Prozessrahmen ist nirgends gefordert, die Arbeit ist ohne ihn vollständig.
+- **Nicht übernehmen**: die Umsetzungstabelle der Vorarbeit (`tab:iso_aktivitaeten`). Eine fünfte Tabelle kostet Platz, den die Arbeit nicht hat, und die Zuordnung trägt in zwei Sätzen genauso.
+
+#### 7.5 Gegenfinanzierung — Dublette zwischen Iterations- und Phasenkapitel
+
+- **Befund**: `07_iteratives_design.tex:3` schließt mit „Auffälligkeiten lassen sich an dieser Stelle noch ohne Programmieraufwand korrigieren; genau das begründet die Abhängigkeit, die~`\autoref{sec:phasenplanung}` zwischen Design- und Entwicklungsphase festlegt." Dieselbe Begründung steht bereits ausformuliert in `05_phasenplanung.tex:21` („weil sonst Entscheidungen zur Bedienführung nachträglich korrigiert werden müssten"). Der Satz verweist auf eine Stelle, um deren Inhalt zu wiederholen.
+- **Warum**: Der Textteil steht gemessen bei exakt 10 Seiten, also auf der Obergrenze der Vorgabe 7–10 (`aufgabe.md`). Die Runde muss sich selbst tragen.
+- **Anweisung**: Den Halbsatz ab „genau das begründet" streichen; der Verweis auf `sec:phasenplanung` bleibt über den ersten Halbsatz erhalten. Ertrag rund 25 Wörter. Zusätzlich in `05_phasenplanung.tex:14` die Zelle „Test mit kleiner Nutzergruppe, Fragebögen, Feedback-Gespräche" auf die jetzt benannten Verfahren umstellen (etwa „Think-Aloud-Sitzungen, SEQ-Fragebogen") — umfangsneutral und beseitigt zugleich die Doppelnennung.
+
+#### Umfangshinweis
+
+7.1 bis 7.3 kosten zusammen rund 85 Wörter, 7.5 bringt rund 25 zurück — netto **rund +60 Wörter**. `07_iteratives_design.tex` wächst damit von 163 auf rund 225 Wörter und bleibt sicher über der HALBSEITE-Schwelle von 150. Bei 10 Seiten Textstand ist das die Größenordnung, die ein einzelner Absatzumbruch wieder auffangen kann — **vor dem Commit neu bauen** (`latexmk -lualatex main.tex`) und die Seitenzahl prüfen. Bleibt sie bei 10, ist die Runde umsetzbar. Springt sie auf 11, zuerst 7.4 verwerfen (Option C) und danach in `06_evaluation_reflexion.tex:5` kürzen.
+
+7.4 Option B ist in dieser Rechnung **nicht** enthalten und braucht eine eigene Kürzung.
+
+#### Eigenplagiat-Grenze — verbindlich für die Umsetzung
+
+Die Vorarbeit ist eine eigene, bereits eingereichte Prüfungsleistung (`20260706_Pelz_Sascha_3210267_DLBMIUID02.pdf`). Für die Umsetzung gilt:
+
+1. **Keine Satzübernahme.** Alle Anweisungen oben sind bewusst als „sinngemäß" formuliert und weichen in Satzbau und Wortwahl von der Vorarbeit ab. Die drei Sätze, die am ehesten zur Übernahme verleiten, sind `02aa_methodisches_vorgehen.tex:3` (ISO-Einleitung) sowie `02g_usability.tex:7` und `:11` (Think-Aloud-Begründung, Stichprobengröße). Vor dem Speichern gegenlesen: Kein Satz darf in der Vorarbeit wörtlich wiederauffindbar sein.
+2. **Keine Ergebnisübernahme.** SEQ-Werte, Zeitmessungen, Testpersonen-Tabellen und Verbesserungspotenziale der Vorarbeit betreffen ein anderes Produkt (DocSecBox) und sind hier fremde Empirie. Resteria hat keinen durchgeführten Test — `02_limitationen.tex:3` sagt das korrekt und bleibt unverändert gültig. Ein methodisch schärfer beschriebener Beta-Test **verstärkt** diese Limitation, statt sie zu entkräften.
+3. **Keine Zitation der Vorarbeit nötig.** Übernommen werden ausschließlich fremde Primärquellen (Sauro & Lewis, Nielsen, Erlhofer, ISO), die hier direkt zitiert werden. Damit liegt keine Wiederverwendung eigenen Textes vor, die einen Selbstverweis auslösen würde. Bestätigung durch die IU-Regelung steht aus (siehe „Bitte manuell prüfen").
+4. **Norman und Tidwell bleiben draußen.** Beide dienten in der Vorarbeit der Deutung beobachteten Nutzerverhaltens. Ohne Beobachtungsdaten hinge ein solches Zitat hier in der Luft und wäre Zitat-Dekoration.
+
+#### Bib-Vorbehalt
+
+Die vier Einträge sind **von Hand** in `references.bib` eingetragen (einmalige Nutzer-Freigabe vom 2026-07-28) und stammen aus der händisch gepflegten Bib der Vorarbeit — sie sind **keine BBT-Exporte**. Ein künftiger Zotero/BBT-Auto-Export überschreibt die Datei und löscht sie. Vor der Abgabe entweder die vier Titel in Zotero anlegen und regulär exportieren, oder keinen Export mehr fahren. `check_bib_keys.py --report-unused` meldet bis zur Umsetzung dieser Runde alle vier als ungenutzt — das ist erwartet und kein Fehler.
+
+`check_bib_hygiene.py` meldet für die vier Einträge elf Hinweise, die die sechs BBT-exportierten Quellen nicht haben. Drei davon sind vor der Abgabe zu bereinigen, und zwar **nur über Zotero**, nicht in der Datei:
+
+- **`iso_9241_210`: Autor `DIN` abgekürzt.** Die IU verlangt ausgeschriebene Institutionennamen im Literaturverzeichnis („Deutsches Institut für Normung"). Fürs Kurzzitat genügt `tex.shortauthor: DIN` im Zotero-Feld Extra — `biblatex-apa` führt die Abkürzung dann beim ersten Zitat selbst ein. Betrifft nur 7.4; entfällt bei Option C.
+- **`location` bei Erlhofer, Nielsen, Sauro & Lewis.** APA 7 führt keinen Verlagsort.
+- **Fehlendes Sprachfeld bei allen vier.** Ohne `langid` greifen Sentence-Case und Silbentrennung des Stils nicht.
+
+Der Key `iso_9241_210` folgt zudem nicht dem BBT-Schema der übrigen Einträge; bei einem Neuexport ändert er sich und die `\parencite`-Stelle muss nachgezogen werden.
