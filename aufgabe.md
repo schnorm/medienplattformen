@@ -4,6 +4,7 @@
 - **Papiertyp**: Projektbericht (B.Sc.)
 - **Kurs**: DLBMIMPFS01-01 – Projekt: Medienplattformen und -systeme
 - **Gewählte Aufgabenstellung**: Aufgabenstellung 2 — Social-Media-Plattform für Hobbyköch:innen
+- **Autorenschaft**: Einzelarbeit (Prüfer-Anmerkung: „Du bist also Projektverantwortliche" — kein Team; Selbstbezug daher pronomenfrei, nie „Die Projektgruppe")
 - **Nischenfokus (eigene Setzung)**: Nachhaltigkeit/Zero-Waste-Kochen — Resteverwertung, saisonale/regionale Zutaten, Reduktion von Lebensmittelverschwendung
 
 ## Rahmenthema
