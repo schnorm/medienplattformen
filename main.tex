@@ -274,6 +274,13 @@
 % Seite I (ohne sichtbare Nummer), das Inhaltsverzeichnis beginnt auf II (IU-Vorgabe)
 \setcounter{page}{2}
 
+% AKTIVIERUNGSBLOCK „Gender-Disclaimer" (OPTIONAL, IU-Richtlinien Anhang A) —
+% separate Seite vor dem Hauptteil bei Nutzung des generischen Maskulinums.
+% Im Auslieferungszustand AKTIV: An der IU besteht keine generelle Genderpflicht,
+% und der Disclaimer macht aus der Sprachwahl eine sichtbare Entscheidung.
+% Auskommentieren, wenn der Studiengang gendersensible Sprache verlangt.
+% \include{pages/gender}
+
 \newpage
 %% ++++++++++++++++++++++++++++++++++++++++++
 %% Tables of Contents
@@ -285,17 +292,17 @@
 % IU-Richtlinien: Abbildungsverzeichnis erst AB DREI Abbildungen einbinden —
 % Default ist deaktiviert (die meisten Arbeiten starten mit 0 Abbildungen);
 % ab 3 Abbildungen die folgenden 4 Zeilen einkommentieren.
-\blankpage
-\phantomsection
-\addcontentsline{toc}{section}{Abbildungsverzeichnis}
-\listoffigures % List of Figures
+%\blankpage
+%\phantomsection
+%\addcontentsline{toc}{section}{Abbildungsverzeichnis}
+%\listoffigures % List of Figures
 
 % IU-Richtlinien: Tabellenverzeichnis erst AB DREI Tabellen einbinden —
 % Default ist deaktiviert; ab 3 Tabellen die folgenden 4 Zeilen einkommentieren.
-\blankpage
-\phantomsection
-\addcontentsline{toc}{section}{Tabellenverzeichnis}
-\listoftables % List of Tables
+%\blankpage
+%\phantomsection
+%\addcontentsline{toc}{section}{Tabellenverzeichnis}
+%\listoftables % List of Tables
 
 \blankpage
 \phantomsection
@@ -323,18 +330,16 @@
 % %% Appendix
 % %% ++++++++++++++++++++++++++++++++++++++++++
 \blankpage
-%\phantomsection
-%\section*{Anhangsverzeichnis}
-%\addcontentsline{toc}{section}{Anhangsverzeichnis}
-%\begin{tabular}{p{2.5cm}p{10cm}}
-%Anhang A & Stakeholder-Interview-Formular \\
-%Anhang B & Einverständniserklärung \\
-%Anhang C & Eingesetzte Werkzeuge und Bibliotheken \\
-%\end{tabular}
+\phantomsection
+\section*{Anhangsverzeichnis}
+\addcontentsline{toc}{section}{Anhangsverzeichnis}
+\begin{tabular}{p{2.5cm}p{10cm}}
+Anhang A & Persona-Skizze \\
+Anhang B & UI/UX-Mockups Resteria (Startseite, Startseite mit gespeicherten Rezepten, Profil, Rettungs-Feed) \\
+\end{tabular}
 
  % Appendix % TODO: Add Appendix?
 
-\blankpage
 \appendix
 \include{pages/appendix}
 
