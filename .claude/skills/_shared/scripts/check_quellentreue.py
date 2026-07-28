@@ -24,6 +24,15 @@ Prüft drei Dinge, die sonst niemand mechanisch prüft:
      ganze Dokument geprüft und die Seitenangabe als maschinell unbestätigt
      ausgewiesen – geprüft wird trotzdem, nur eben nicht seitengenau.
 
+**E-Books ohne Seitenzahlen** (`[Kap. X]`-Locator, IU-Vorgabe): Das `file`-Feld
+darf statt eines PDFs auch ein `.epub` tragen. Statt eines Seitenversatzes wird
+dann das eigene NCX-Inhaltsverzeichnis des E-Books ausgewertet – "17.2.2" im
+Text wird gegen die dort hinterlegte Kapitelnummer aufgelöst, nicht gegen eine
+Seite. Löst das Inhaltsverzeichnis die zitierte Unterebene nicht auf (viele
+E-Books nummerieren nur die oberste Ebene), gilt dieselbe Ausweich-Logik wie
+bei PDFs ohne bestimmbaren Seitenversatz: Prüfung gegen das ganze Buch, die
+Stellenangabe bleibt maschinell unbestätigt statt den Lauf abzubrechen.
+
 Was das Skript **nicht** entscheidet: ob die Aussage inhaltlich von der Quelle
 gedeckt ist. Das ist der zweite Schritt und Aufgabe des Modells; das Skript
 liefert dafür die Prüfpaare (Trägersatz + Seitentext) und nimmt das Urteil per
@@ -37,10 +46,12 @@ Nutzung (vom Projekt-Root):
     python .claude/skills/_shared/scripts/check_quellentreue.py --verdikt <hash>=OK --notiz "S. 47 deckt die Aussage"
     python .claude/skills/_shared/scripts/check_quellentreue.py --seite <bibkey> 453
         (nur den Text der zitierten Seite ausgeben – fuer den Schreibschritt,
-         der den Satz aus der Quelle heraus formuliert; kein Prueflauf)
+         der den Satz aus der Quelle heraus formuliert; kein Prueflauf. Bei
+         E-Books statt der Seite die Kapitelnummer angeben, z. B. 17.2.2)
     python .claude/skills/_shared/scripts/check_quellentreue.py --offset <bibkey>=-906
         (Versatz = PDF-Seite wie im Reader minus gedruckte Seite; ein Artikel,
-         der auf S. 907 beginnt und dessen PDF bei 1 anfaengt: 1 - 907 = -906)
+         der auf S. 907 beginnt und dessen PDF bei 1 anfaengt: 1 - 907 = -906.
+         Gilt nur fuer PDFs -- E-Books brauchen keinen Versatz.)
 
 Ergebnis: `quellencheck.md` (Bericht, wird pro Lauf überschrieben) und
 `quellencheck-state.json` (Urteile je Zitation, überdauert Läufe – nicht von
@@ -57,9 +68,12 @@ Prüflauf vorbehalten, der ihn in Ketten wie `check && latexmk` braucht.
 
 import argparse
 import hashlib
+import html
 import json
+import posixpath
 import re
 import sys
+import zipfile
 from dataclasses import dataclass, field
 from datetime import date
 from pathlib import Path
@@ -84,6 +98,10 @@ KEY_RE = re.compile(r"\{([^}]*)\}")
 SEITE_RE = re.compile(
     r"S\.?\s*~?\s*(\d+(?:\s*(?:--|–|-)\s*\d+)?(?:\s*,\s*\d+(?:\s*(?:--|–|-)\s*\d+)?)*)")
 SEITE_TEIL_RE = re.compile(r"(\d+)(?:\s*(?:--|–|-)\s*(\d+))?")
+# Kapitel-Locator für E-Books ohne feste Seitenzahlen (IU-Vorgabe, siehe
+# hard-rules-formal.md: "[Kap. X] / [Abs. X]"). Hierarchische Nummern wie
+# "17.2.2" werden vollständig erfasst, nicht nur die erste Ziffer.
+KAPITEL_RE = re.compile(r"Kap\.?\s*~?\s*(\d+(?:\.\d+)*)")
 BIB_ENTRY_RE = re.compile(r"@(\w+)\s*\{\s*([^,\s]+)\s*,", re.MULTILINE)
 ENQUOTE_RE = re.compile(r"\\enquote\{((?:[^{}]|\{[^{}]*\})*)\}")
 BLOCKZITAT_RE = re.compile(r"\\begin\{blockzitat\}(.*?)\\end\{blockzitat\}", re.S)
@@ -140,6 +158,7 @@ class Zitation:
     seite: str          # "43", "43-45" oder "" (werkbezogen)
     satz: str
     woertlich: str      # Text in \enquote{}/blockzitat, sonst ""
+    kapitel: str = ""   # "17.2.2" bei [Kap. X]-Locators (E-Books ohne Seitenzahlen)
     status: str = "PRÜFEN"
     befund: str = ""
     seitentext: str = ""
@@ -149,7 +168,7 @@ class Zitation:
     @property
     def hash(self) -> str:
         if not self._hash:
-            roh = f"{self.key}|{self.seite}|{normalisiere(self.satz)}"
+            roh = f"{self.key}|{self.seite}|{self.kapitel}|{normalisiere(self.satz)}"
             self._hash = hashlib.sha1(roh.encode("utf-8")).hexdigest()[:10]
         return self._hash
 
@@ -312,6 +331,7 @@ def lies_tex(pfade: list[Path]) -> list[Zitation]:
             # zusammenwirft, hängt die Seite des einen Werks an das andere und
             # erzeugt lauter falsche Seitenbefunde.
             seite = ""
+            kapitel = ""
             for tok in ARG_TOKEN_RE.finditer(m.group(1)):
                 opt, gruppe = tok.group(1), tok.group(2)
                 if opt is not None:
@@ -322,13 +342,19 @@ def lies_tex(pfade: list[Path]) -> list[Zitation]:
                         seite = ",".join(
                             f"{v}-{b}" if b != v else f"{v}"
                             for v, b in seiten_liste(s.group(1)))
+                    else:
+                        k = KAPITEL_RE.search(opt)
+                        if k:
+                            kapitel = k.group(1)
                     continue
                 for key in (k.strip() for k in gruppe.split(",") if k.strip()):
                     out.append(Zitation(
                         datei=str(pfad).replace("\\", "/"),
                         zeile=text[:m.start()].count("\n") + 1,
-                        key=key, seite=seite, satz=satz, woertlich=woertlich))
-                seite = ""  # nächster Block beginnt ohne Seitenangabe
+                        key=key, seite=seite, satz=satz, woertlich=woertlich,
+                        kapitel=kapitel))
+                seite = ""     # nächster Block beginnt ohne Seitenangabe
+                kapitel = ""
     return out
 
 
@@ -354,13 +380,42 @@ def lies_bib(pfad: Path) -> dict[str, dict[str, str]]:
     return eintraege
 
 
+def _datei_kandidaten(feld: str) -> list[str]:
+    """Kandidaten-Pfade aus dem `file`-Feld, roheste Form zuerst.
+
+    Das ganze Feld zuerst unverändert versuchen: Handisch eingetragene
+    Dateinamen (z. B. von Anna's Archive) enthalten selbst oft ein ';' –
+    speziell bei mehreren Autor:innen oder Verlagen im Titel –, was mit
+    Zoteros Mehrfeld-Trennzeichen kollidiert. Erst wenn das ganze Feld
+    keinen Treffer ergibt, wird nach der Zotero-Konvention aufgeteilt
+    (mehrere Dateien durch ';' getrennt, teils mit Typ-Suffix).
+    """
+    out = [feld.strip()]
+    out += [t.strip() for t in feld.split(";")]
+    return out
+
+
 def pdf_pfad(feld: str, root: Path) -> Path | None:
-    """Zotero schreibt mehrere Dateien mit ';' getrennt, teils mit Typ-Suffix."""
-    for teil in feld.split(";"):
-        teil = teil.strip().replace("\\:", ":").replace("\\\\", "\\")
+    for teil in _datei_kandidaten(feld):
+        teil = teil.replace("\\:", ":").replace("\\\\", "\\")
         teil = re.sub(r":(?:application/pdf|PDF)$", "", teil, flags=re.I)
         teil = re.sub(r"^[^:]*:(?=[A-Za-z]:[\\/]|/)", "", teil)
         if teil.lower().endswith(".pdf"):
+            p = Path(teil)
+            if not p.is_absolute():
+                p = root / p
+            if p.exists():
+                return p
+    return None
+
+
+def epub_pfad(feld: str, root: Path) -> Path | None:
+    """Wie `pdf_pfad`, nur für `.epub`."""
+    for teil in _datei_kandidaten(feld):
+        teil = teil.replace("\\:", ":").replace("\\\\", "\\")
+        teil = re.sub(r":(?:application/epub\+zip|EPUB)$", "", teil, flags=re.I)
+        teil = re.sub(r"^[^:]*:(?=[A-Za-z]:[\\/]|/)", "", teil)
+        if teil.lower().endswith(".epub"):
             p = Path(teil)
             if not p.is_absolute():
                 p = root / p
@@ -375,6 +430,125 @@ def seiten_texte(pdf: Path) -> list[str]:
     import pdfplumber
     with pdfplumber.open(str(pdf)) as doc:
         return [(s.extract_text() or "") for s in doc.pages]
+
+
+# ----------------------------------------------------------------- EPUB-Zugriff
+#
+# E-Books haben keine feste Seitenzahl – die IU sieht dafür `[Kap. X]` vor
+# (hard-rules-formal.md). Statt eines PDF-Seitenversatzes wird hier die
+# eigene Kapitelstruktur des E-Books ausgewertet: container.xml -> OPF ->
+# NCX-Inhaltsverzeichnis liefert für jede nummerierte Überschrift ("17.2.2
+# Websites benutzerorientiert optimieren…") die Zieldatei plus Anker
+# ("17_002.html#u17.2.2"). Zwischen zwei aufeinanderfolgenden Ankern **in
+# derselben Datei** liegt genau der Text dieses Unterkapitels – mehrere
+# Unterkapitel teilen sich oft eine gemeinsame HTML-Datei. Reine Stdlib
+# (zipfile/re), kein zusätzliches Pip-Paket (ebooklib ist hier nicht
+# installiert und für dieses schmale Extraktionsziel auch nicht nötig).
+
+_EPUB_TAG_RE = re.compile(r"<[^>]+>")
+_EPUB_NAVPOINT_RE = re.compile(
+    r"<text>(.*?)</text>\s*</navLabel>\s*<content\s+src=\"([^\"]+)\"", re.S)
+_EPUB_NUMMER_RE = re.compile(r"^\s*(\d+(?:\.\d+)*)\b")
+
+
+def _epub_text_ohne_tags(roh: str) -> str:
+    return " ".join(html.unescape(_EPUB_TAG_RE.sub(" ", roh)).split())
+
+
+def epub_kapitel(epub: Path) -> tuple[list[str], dict[str, int]]:
+    """Liefert (Kapiteltexte in Lesereihenfolge, Kapitelnummer -> Index).
+
+    Wirft bei unlesbarem/unerwartet strukturiertem E-Book eine Exception –
+    der Aufrufer behandelt das wie ein defektes PDF (NICHT PRÜFBAR).
+    """
+    with zipfile.ZipFile(str(epub)) as z:
+        container = z.read("META-INF/container.xml").decode("utf-8", errors="replace")
+        m = re.search(r'full-path="([^"]+)"', container)
+        if not m:
+            raise ValueError("kein rootfile in META-INF/container.xml")
+        opf_pfad = m.group(1)
+        opf_dir = posixpath.dirname(opf_pfad)
+        opf = z.read(opf_pfad).decode("utf-8", errors="replace")
+
+        ncx_href = None
+        m = re.search(r'<spine[^>]*\btoc="([^"]+)"', opf)
+        if m:
+            mi = re.search(r'<item\b[^>]*\bid="' + re.escape(m.group(1)) +
+                           r'"[^>]*\bhref="([^"]+)"', opf)
+            if not mi:  # href kann vor id stehen – Attributreihenfolge ist frei
+                mi = re.search(r'<item\b[^>]*\bhref="([^"]+)"[^>]*\bid="' +
+                               re.escape(m.group(1)) + r'"', opf)
+            ncx_href = mi.group(1) if mi else None
+        if ncx_href is None:  # Fallback: erstes Manifest-Item vom NCX-Medientyp
+            mi = re.search(r'<item\b[^>]*\bhref="([^"]+)"[^>]*'
+                           r'\bmedia-type="application/x-dtbncx\+xml"', opf)
+            ncx_href = mi.group(1) if mi else None
+        if ncx_href is None:
+            raise ValueError("kein NCX-Inhaltsverzeichnis im Manifest gefunden "
+                             "(nur EPUB2/NCX wird unterstützt)")
+        ncx_pfad = posixpath.normpath(posixpath.join(opf_dir, ncx_href))
+        ncx = z.read(ncx_pfad).decode("utf-8", errors="replace")
+
+        # (Nummer, href, Anker) in Dokument-/Lesereihenfolge – nur nummerierte
+        # Einträge zählen als zitierfähiges Kapitel (Vorwort/Register o. Ä.
+        # ohne führende Zahl werden übersprungen, sie tragen keine [Kap. X]-Angabe).
+        eintraege: list[tuple[str, str, str]] = []
+        for nm in _EPUB_NAVPOINT_RE.finditer(ncx):
+            label = html.unescape(_EPUB_TAG_RE.sub(" ", nm.group(1))).strip()
+            nummer_m = _EPUB_NUMMER_RE.match(label)
+            if not nummer_m:
+                continue
+            src = nm.group(2)
+            href, _, anker = src.partition("#")
+            href = posixpath.normpath(posixpath.join(opf_dir, href))
+            eintraege.append((nummer_m.group(1), href, anker))
+
+        # Je Zieldatei einmal lesen, Anker-Offsets bestimmen, dazwischen slicen.
+        text_je_nummer: dict[str, str] = {}
+        for href in dict.fromkeys(e[1] for e in eintraege):  # Reihenfolge erhalten
+            try:
+                roh = z.read(href).decode("utf-8", errors="replace")
+            except KeyError:
+                continue
+            in_datei = [(nr, anker) for nr, h, anker in eintraege if h == href]
+            positionen: list[tuple[int, str]] = []
+            for nr, anker in in_datei:
+                if not anker:
+                    positionen.append((0, nr))
+                    continue
+                am = re.search(r'\bid=["\']' + re.escape(anker) + r'["\']', roh)
+                if am:
+                    # Ab dem öffnenden Tag schneiden, nicht mitten im Attribut –
+                    # sonst bleibt das Tag-Ende ("... class=\"t3\">") als
+                    # nicht erkannter Rumpf-Text vor dem eigentlichen Inhalt
+                    # stehen (der Tag-Anfang "<h3 " ist ja schon abgeschnitten).
+                    tag_start = roh.rfind("<", 0, am.start())
+                    positionen.append((tag_start if tag_start != -1 else am.start(), nr))
+            positionen.sort(key=lambda p: p[0])
+            for i, (start, nr) in enumerate(positionen):
+                ende = positionen[i + 1][0] if i + 1 < len(positionen) else len(roh)
+                text_je_nummer[nr] = _epub_text_ohne_tags(roh[start:ende])
+
+        texte: list[str] = []
+        index_von_nummer: dict[str, int] = {}
+        for nummer, _, _ in eintraege:
+            if nummer in index_von_nummer or nummer not in text_je_nummer:
+                continue  # Dubletten/nicht auffindbare Anker überspringen
+            index_von_nummer[nummer] = len(texte)
+            texte.append(text_je_nummer[nummer])
+        return texte, index_von_nummer
+
+
+def resolve_kapitel(nummer: str, index: dict[str, int]) -> tuple[int | None, str]:
+    """Exakte Kapitelnummer, sonst schrittweise zur übergeordneten Ebene
+    zurückfallen ("17.2.2" -> "17.2" -> "17") – viele E-Book-Inhaltsverzeichnisse
+    lösen nicht jede Unterebene einzeln auf."""
+    teile = nummer.split(".")
+    for n in range(len(teile), 0, -1):
+        kandidat = ".".join(teile[:n])
+        if kandidat in index:
+            return index[kandidat], kandidat
+    return None, ""
 
 
 def seitenbereich(pages: str) -> tuple[int, int] | None:
@@ -520,6 +694,15 @@ def schreib_state(pfad: Path, state: dict) -> None:
                     encoding="utf-8")
 
 
+def ortsangabe(z: Zitation) -> str:
+    """Seite oder – bei E-Books – Kapitelnummer für Bericht/Prüfpaare."""
+    if z.seite:
+        return z.seite
+    if z.kapitel:
+        return f"Kap. {z.kapitel}"
+    return "–"
+
+
 def bericht(zitate: list[Zitation], root: Path) -> str:
     offen = [z for z in zitate if z.status in STATUS_BEFUND | STATUS_OFFEN]
     ok = [z for z in zitate if z.status == "OK"]
@@ -537,19 +720,19 @@ def bericht(zitate: list[Zitation], root: Path) -> str:
     ]
     if offen:
         zeilen += ["## Offen", "",
-                   "| Hash | Stelle | Quelle | S. | Status | Befund |",
+                   "| Hash | Stelle | Quelle | S./Kap. | Status | Befund |",
                    "|---|---|---|---|---|---|"]
         for z in offen:
             stelle = f"{Path(z.datei).name}:{z.zeile}"
-            zeilen.append(f"| `{z.hash}` | {stelle} | `{z.key}` | {z.seite or '–'} "
+            zeilen.append(f"| `{z.hash}` | {stelle} | `{z.key}` | {ortsangabe(z)} "
                           f"| **{z.status}** | {z.befund or ''} |")
         zeilen.append("")
     if ok:
         zeilen += ["## Geprüft und in Ordnung", "",
-                   "| Hash | Stelle | Quelle | S. | Notiz |", "|---|---|---|---|---|"]
+                   "| Hash | Stelle | Quelle | S./Kap. | Notiz |", "|---|---|---|---|---|"]
         for z in ok:
             stelle = f"{Path(z.datei).name}:{z.zeile}"
-            zeilen.append(f"| `{z.hash}` | {stelle} | `{z.key}` | {z.seite or '–'} "
+            zeilen.append(f"| `{z.hash}` | {stelle} | `{z.key}` | {ortsangabe(z)} "
                           f"| {z.notiz or ''} |")
         zeilen.append("")
     return "\n".join(zeilen) + "\n"
@@ -559,7 +742,7 @@ def bericht(zitate: list[Zitation], root: Path) -> str:
 
 def pruefe(zitate: list[Zitation], bib: dict, state: dict, root: Path,
            mindest: int, alle: bool) -> None:
-    cache: dict[str, list[str]] = {}
+    cache: dict[str, object] = {}
     ausnahmen = [normalisiere(a) for a in state.get("ausnahmen", [])]
     for z in zitate:
         alt = state["urteile"].get(z.hash)
@@ -571,7 +754,8 @@ def pruefe(zitate: list[Zitation], bib: dict, state: dict, root: Path,
             z.status, z.befund = "NICHT GEFUNDEN", "Key fehlt in references.bib"
             continue
         pdf = pdf_pfad(eintrag.get("file", ""), root)
-        if pdf is None:
+        epub = None if pdf is not None else epub_pfad(eintrag.get("file", ""), root)
+        if pdf is None and epub is None:
             if eintrag.get("url"):
                 z.status = "LIVE PRÜFEN"
                 z.befund = ("kein PDF-Snapshot im file-Feld – Webquelle live "
@@ -580,23 +764,68 @@ def pruefe(zitate: list[Zitation], bib: dict, state: dict, root: Path,
                 z.status = "NICHT PRÜFBAR"
                 z.befund = "weder PDF (file) noch URL im Bib-Eintrag"
             continue
-        try:
-            texte = cache.get(str(pdf)) or seiten_texte(pdf)
-        except ImportError:
-            print("FEHLER: pdfplumber fehlt – 'pip install pdfplumber'.",
-                  file=sys.stderr)
-            raise SystemExit(2)
-        except Exception as e:  # defektes/verschlüsseltes PDF
-            z.status, z.befund = "NICHT PRÜFBAR", f"PDF nicht lesbar ({e})"
-            continue
-        cache[str(pdf)] = texte
-        if not any(t.strip() for t in texte):
-            z.status = "NICHT PRÜFBAR"
-            z.befund = "PDF ohne Textebene (Scan) – OCR nötig oder manuell prüfen"
-            continue
+
+        quelle_ist_epub = pdf is None
+        index_von_nummer: dict[str, int] = {}
+        if quelle_ist_epub:
+            try:
+                cached = cache.get(str(epub))
+                texte, index_von_nummer = cached if cached is not None else epub_kapitel(epub)
+            except Exception as e:  # unlesbares/unerwartet strukturiertes EPUB
+                z.status, z.befund = "NICHT PRÜFBAR", f"E-Book nicht lesbar ({e})"
+                continue
+            cache[str(epub)] = (texte, index_von_nummer)
+            if not any(t.strip() for t in texte):
+                z.status = "NICHT PRÜFBAR"
+                z.befund = ("E-Book ohne auswertbares Inhaltsverzeichnis (nur "
+                            "nummerierte NCX-Kapitel werden unterstützt)")
+                continue
+        else:
+            try:
+                texte = cache.get(str(pdf)) or seiten_texte(pdf)
+            except ImportError:
+                print("FEHLER: pdfplumber fehlt – 'pip install pdfplumber'.",
+                      file=sys.stderr)
+                raise SystemExit(2)
+            except Exception as e:  # defektes/verschlüsseltes PDF
+                z.status, z.befund = "NICHT PRÜFBAR", f"PDF nicht lesbar ({e})"
+                continue
+            cache[str(pdf)] = texte
+            if not any(t.strip() for t in texte):
+                z.status = "NICHT PRÜFBAR"
+                z.befund = "PDF ohne Textebene (Scan) – OCR nötig oder manuell prüfen"
+                continue
 
         ohne_versatz = False
-        if not z.seite:
+        if quelle_ist_epub:
+            # Kein Seitenversatz zu kalibrieren – die Kapitelnummer wird direkt
+            # gegen das eigene Inhaltsverzeichnis des E-Books aufgelöst.
+            if z.kapitel:
+                idx, gefunden_nr = resolve_kapitel(z.kapitel, index_von_nummer)
+                if idx is not None:
+                    seitentext = texte[idx]
+                    gedruckt = (f"Kap. {z.kapitel}" if gefunden_nr == z.kapitel else
+                                f"Kap. {z.kapitel} (Inhaltsverzeichnis löst nur bis "
+                                f"Kap. {gefunden_nr} auf)")
+                else:
+                    ohne_versatz = True
+                    seitentext = "\n".join(texte)
+                    gedruckt = f"Kap. {z.kapitel} (im Inhaltsverzeichnis nicht gefunden)"
+            else:
+                ohne_versatz = True
+                seitentext = "\n".join(texte)
+                gedruckt = ("werkbezogen" if not z.seite else
+                            f"S. {z.seite} (E-Book ohne Seitenzahlen – [Kap. X] verwenden)")
+        elif z.kapitel:
+            # PDF, aber mit [Kap. X] statt [S. X] zitiert (z. B. eingescanntes
+            # Buch ohne verlässlich erkennbare Kapitelgrenzen). Kapitelgenau
+            # lässt sich das ohne TOC-Extraktion wie beim epub nicht auflösen –
+            # dieselbe Ausweich-Logik wie bei unkalibrierbaren PDF-Seiten:
+            # gegen das ganze Dokument prüfen, die Stelle bleibt unbestätigt.
+            ohne_versatz = True
+            seitentext = "\n".join(texte)
+            gedruckt = f"Kap. {z.kapitel} (PDF – Kapitelgrenzen nicht bestimmbar)"
+        elif not z.seite:
             seitentext = "\n".join(texte)
             gedruckt = "werkbezogen"
         else:
@@ -647,6 +876,13 @@ def pruefe(zitate: list[Zitation], bib: dict, state: dict, root: Path,
                 seitentext = "\n".join(bloecke)
                 gedruckt = f"S. {z.seite}"
         z.seitentext = seitentext
+        stelle = z.seite or z.kapitel  # Locator-agnostischer Wahrheitswert für die Checks unten
+        nummer_von_index = {v: k for k, v in index_von_nummer.items()}
+
+        def fundstelle_label(idx: int) -> str:
+            if quelle_ist_epub:
+                return f"Kap. {nummer_von_index[idx]}" if idx in nummer_von_index else f"Abschnitt {idx + 1}"
+            return f"S. {idx + 1 - state['versatz'].get(z.key, 0)}"
 
         # 1) Wörtliches Zitat muss exakt stehen – abzüglich der Eingriffe, die
         #    der Zitierleitfaden erlaubt (Klammern, Auslassungen).
@@ -698,9 +934,9 @@ def pruefe(zitate: list[Zitation], bib: dict, state: dict, root: Path,
                         "kennzeichnen")
             continue
 
-        # 3) Passt die Seitenangabe?
+        # 3) Passt die Seitenangabe (bzw. bei E-Books: die Kapitelangabe)?
         begriffe = kernbegriffe(z.satz)
-        if z.seite and begriffe and sprachwechsel(z.satz, seitentext):
+        if stelle and begriffe and sprachwechsel(z.satz, seitentext):
             # Deutscher Satz, englische Quelle: Der Begriffsabgleich kann hier
             # nichts leisten. Kein Befund erfinden – der semantische Schritt
             # entscheidet, der Sprachen vergleichen kann.
@@ -709,7 +945,7 @@ def pruefe(zitate: list[Zitation], bib: dict, state: dict, root: Path,
                         "maschinell nicht prüfbar, im semantischen Schritt "
                         "mitprüfen")
             continue
-        if z.seite and begriffe and treffer_auf_seite(begriffe, seitentext) == 0:
+        if stelle and begriffe and treffer_auf_seite(begriffe, seitentext) == 0:
             if ohne_versatz:
                 # Gegen das ganze Dokument geprüft: Kommt kein Kernbegriff vor,
                 # ist die Aussage in dieser Quelle überhaupt nicht zu finden –
@@ -719,15 +955,28 @@ def pruefe(zitate: list[Zitation], bib: dict, state: dict, root: Path,
                             "Quelle oder Aussage prüfen")
                 continue
             idx, treffer = beste_seite(begriffe, texte)
-            versatz = state["versatz"].get(z.key, 0)
-            hinweis = (f"; Begriffe stehen am ehesten auf S. {idx + 1 - versatz} "
+            hinweis = (f"; Begriffe stehen am ehesten in {fundstelle_label(idx)} "
                        f"({treffer} Treffer)") if treffer else ""
             z.status = "SEITE VERDÄCHTIG"
             z.befund = f"kein Kernbegriff des Satzes auf {gedruckt}{hinweis}"
             continue
 
         z.status = "PRÜFEN"
-        if ohne_versatz:
+        if ohne_versatz and quelle_ist_epub:
+            idx, treffer = beste_seite(begriffe, texte) if begriffe else (0, 0)
+            hinweis = f" (Begriffe am ehesten in {fundstelle_label(idx)})" if treffer else ""
+            z.befund = (f"inhaltlich plausibel, aber {gedruckt} maschinell nicht "
+                        f"bestätigt{hinweis}. Seitenangabe im semantischen Schritt "
+                        f"mitprüfen oder direkt lesen: --seite {z.key} "
+                        f"{z.kapitel or '<Kap.-Nummer>'}")
+        elif ohne_versatz and z.kapitel:
+            # PDF mit [Kap. X]-Locator ohne bestimmbare Kapitelgrenzen (siehe oben).
+            idx, treffer = beste_seite(begriffe, texte) if begriffe else (0, 0)
+            hinweis = f" (Begriffe am ehesten auf PDF-Seite {idx + 1})" if treffer else ""
+            z.befund = (f"inhaltlich plausibel, aber {gedruckt} maschinell nicht "
+                        f"bestätigt{hinweis}. Seitenangabe im semantischen Schritt "
+                        f"mitprüfen oder gezielt lesen: --seite {z.key} <Seitenzahl>")
+        elif ohne_versatz:
             idx, treffer = beste_seite(begriffe, texte) if begriffe else (0, 0)
             z.befund = (f"inhaltlich plausibel, aber S. {z.seite} maschinell nicht "
                         f"bestätigt (Seitenversatz unbekannt; Begriffe am ehesten "
@@ -748,9 +997,27 @@ def zeige_seite(key: str, seite: str, bib: dict, state: dict, root: Path) -> int
         return 2
     pdf = pdf_pfad(eintrag.get("file", ""), root)
     if pdf is None:
-        ziel = eintrag.get("url") or "kein Volltext im Bib-Eintrag"
-        print(f"Kein PDF im file-Feld. Webquelle: {ziel}", file=sys.stderr)
-        return 2
+        epub = epub_pfad(eintrag.get("file", ""), root)
+        if epub is None:
+            ziel = eintrag.get("url") or "kein Volltext im Bib-Eintrag"
+            print(f"Kein PDF/E-Book im file-Feld. Webquelle: {ziel}", file=sys.stderr)
+            return 2
+        try:
+            texte, index_von_nummer = epub_kapitel(epub)
+        except Exception as e:
+            print(f"FEHLER: E-Book nicht lesbar ({e}).", file=sys.stderr)
+            return 2
+        idx, gefunden_nr = resolve_kapitel(str(seite), index_von_nummer)
+        if idx is None:
+            print(f"Kap. {seite} nicht im Inhaltsverzeichnis gefunden – gebe das "
+                  f"ganze E-Book aus ({len(texte)} erkannte Kapitel).",
+                  file=sys.stderr)
+            print("\n".join(texte)[:12000])
+            return 0
+        hinweis = "" if gefunden_nr == str(seite) else f" (nur bis Kap. {gefunden_nr} aufgelöst)"
+        print(f"=== {key} · Kap. {seite}{hinweis} ===")
+        print(texte[idx])
+        return 0
     try:
         texte = seiten_texte(pdf)
     except Exception as e:
@@ -831,7 +1098,7 @@ def paare_ausgeben(zitate: list[Zitation], anzahl: int, voll: bool = False) -> N
     offen = [z for z in zitate if z.status == "PRÜFEN"][:anzahl]
     for z in offen:
         print("\n" + "=" * 70)
-        print(f"HASH {z.hash} · {z.datei}:{z.zeile} · {z.key} · S. {z.seite or '–'}")
+        print(f"HASH {z.hash} · {z.datei}:{z.zeile} · {z.key} · {ortsangabe(z)}")
         print("--- Trägersatz ---")
         print(z.satz.strip()[:1200])
         if voll:
@@ -843,8 +1110,9 @@ def paare_ausgeben(zitate: list[Zitation], anzahl: int, voll: bool = False) -> N
         if gekuerzt:
             print(f"[gekürzt auf den Bereich um die Kernbegriffe. Reicht der "
                   f"Ausschnitt für das Urteil nicht: --paare N --voll, oder "
-                  f"gezielt die ganze Seite mit "
-                  f"--seite {z.key} {z.seite.split(',')[0] if z.seite else '<n>'}]")
+                  f"gezielt die ganze Stelle mit "
+                  f"--seite {z.key} "
+                  f"{z.seite.split(',')[0] if z.seite else (z.kapitel or '<n>')}]")
 
 
 def main() -> int:
@@ -873,7 +1141,8 @@ def main() -> int:
                     help="Wortfolge dauerhaft vom Wortlaut-Test ausnehmen")
     ap.add_argument("--seite", nargs=2, metavar=("KEY", "SEITE"),
                     help="nur den Text der zitierten Seite ausgeben (zum Lesen "
-                         "beim Schreiben) – kein Prüflauf, kein Bericht")
+                         "beim Schreiben) – kein Prüflauf, kein Bericht. Bei "
+                         "E-Books (epub) die Kapitelnummer angeben, z. B. 17.2.2")
     a = ap.parse_args()
 
     root = Path(".").resolve()
