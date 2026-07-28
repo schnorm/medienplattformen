@@ -96,7 +96,7 @@ Die Plattform „Resteria" differenziert sich von generischen Rezept-/Social-Med
   - UI/UX-Skizze: Beschreibung im Fließtext, Mockup im Anhang (KI-generiert mit Claude, gekennzeichnet)
   - Bewusster Verzicht auf Event-Kalender als eigene Funktion, kurz begründet (Fokus-Schärfung)
 
-### Subsection: 04_community_und_feedback — Rettungs-Feed und Challenges
+### Subsection: 04_community_und_feedback — Community-Building: Rettungs-Feed und Challenges
 - **Argumentationsfluss**: Zeigt, wie Community-Aufbau den Zero-Waste-Fokus verstärkt.
 - **Inhaltspunkte**:
   - Rettungs-Feed: geteilte Reste-Kreationen (Foto + verwendete Reste-Zutat als Tag), kommentierbar/bewertbar, Following über sichtbaren Nutzernamen
@@ -116,7 +116,7 @@ Die Plattform „Resteria" differenziert sich von generischen Rezept-/Social-Med
   - Benötigte Ressourcen pro Phase (Tools, Rollen, geschätzter Aufwand)
   - Risiken/Abhängigkeiten kurz benennen
 
-### Subsection: 06_evaluation_reflexion — Zielerreichung und Lessons Learned
+### Subsection: 06_evaluation_reflexion — Zielerreichung und Projektreflexion
 - **Argumentationsfluss**: Schließt das Hauptkapitel mit Reflexion, bereitet die Fazit-Limitationen vor.
 - **Inhaltspunkte**:
   - Zielerreichung gegen `aufgabe.md` → Wörtliche Abhakliste abgleichen

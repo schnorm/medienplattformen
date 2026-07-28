@@ -65,7 +65,7 @@ Alle geforderten Tätigkeiten sind ohne echten Nutzerzugang durchführbar:
 |---|---|
 | 1. Analyse bestehender Plattformen | Durchführung → Wettbewerbsanalyse |
 | 2. Konzeptentwicklung | Durchführung → Konzept |
-| 3. Iteratives Design und Feedback | Durchführung → Community & Feedback |
+| 3. Iteratives Design und Feedback | Durchführung → Iteratives Design |
 
 ### Geforderte Berichtsinhalte
 | Inhalt | Adressiert in |

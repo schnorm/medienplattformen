@@ -38,8 +38,37 @@ Folge-Prompt im bestehenden Rettungs-Feed-Screen:
 
 Die Platzhalter-Beschriftung „Foto:" betrifft alle vier Mockups gleichermaßen. Nur der Rettungs-Feed-Screen hat zusätzlich das Überlappungsproblem; die `\quelle{}`-Zeile ist dafür bereits vorbereitet (siehe unten). Werden Startseite, Bookmarks-Ansicht oder Profil ebenfalls neu exportiert, um dieselbe Platzhalter-Korrektur einzuarbeiten, müssen die jeweiligen `\quelle{}`-Zeilen in `pages/appendix.tex` um denselben Folge-Prompt ergänzt werden.
 
+## Anpassung 4: Startseite — Zugang zu Wochenplan und Reste-Journal (2026-07-28)
+
+Anlass: `chapters/02_durchfuehrung/03_konzept.tex:13` behauptet für die Menüplanung wörtlich „Erreichbar ist der Bereich über die Startseite, sodass die Navigation bei drei Hauptbereichen bleibt." Eine Sichtung aller vier Mockups zeigt: Weder Wochenplan noch Reste-Journal sind irgendwo abgebildet, und auf beiden Startseiten-Screens gibt es keinen Einstiegspunkt dorthin — die Tab-Leiste führt durchgehend nur Start, Rettungs-Feed und Profil. Der Text macht damit eine Aussage, die der Leser am Bild überprüfen kann und die dort widerlegt wird; das wiegt schwerer als eine bloß fehlende Funktion, da der Prüfer KI-Mockups nur ohne gestalterische Fehler zulässt.
+
+Hintergrund: Das ist die Altlast von Gegenlesungs-Befund 5.7 („Menüplanung ohne UI-Zugang"). Der wurde seinerzeit per Option A gelöst — Textzusatz statt neuem Bild. Der Satz sollte die Lücke schließen, hat sie aber in eine überprüfbare Behauptung verwandelt.
+
+Warum nicht stattdessen streichen: Die Kopplung von Menüplanung und Reste-Journal an die Rettungspunkte ist die erste der drei in `03_konzept.tex:32` benannten Innovationen (Kriterium Kreativität, 15 %), sie ist der einzige Beleg für den Schlüsselbegriff „Lebensmittel-Journaling/Menüplanung" aus der Aufgabenstellung, `06_evaluation_reflexion.tex:3` beruft sich in der Abdeckungsliste darauf, und das Freemium-Paket („erweitert die Menüplanung um eine Vorratsübersicht") verlöre seine Basis. Die Bildergänzung kostet dagegen null Wörter und braucht keine fünfte Abbildung.
+
+Folge-Prompt im bestehenden Startseiten-Screen:
+
+> Ergänze am Startseiten-Screen unterhalb der Rezeptvorschläge eine kompakte Karte „Wochenplan & Reste-Journal" mit den nächsten Wochentagen und einer Zeile zu zuletzt verwerteten Zutaten.
+
+(Wie bei Anpassung 1 bewusst unter 40 Wörtern — der Text wird wörtlich in `\quelle{}` zitiert, und `hard-rules-formal.md` verlangt für Zitate über 40 Wörter die `blockzitat`-Umgebung, die in einer Bildquellenzeile unpassend wäre.)
+
+Betrifft **beide** Startseiten-Screens, da die Bookmarks-Ansicht derselbe Screen mit ausgeklapptem Lesezeichen-Bereich ist. Wenn die Karte nur in einem der beiden auftaucht, entsteht ein neuer Widerspruch zwischen zwei Abbildungen desselben Bildschirms.
+
+Da ohnehin beide Startseiten neu exportiert werden, lässt sich die noch offene Platzhalter-Korrektur aus Anpassung 3 („Foto:" → „Foto") im selben Zug miterledigen; dann bleibt sie nur noch im Profil-Screen offen.
+
+## Stand Anpassung 3 (Befund 6.3), geprüft am 2026-07-28
+
+Am Rettungs-Feed **erledigt**: Der Plus-Button überlappt die Aktionsleiste nicht mehr, das Lesezeichen-Icon des ersten Beitrags ist frei, und der Foto-Platzhalter trägt dort keinen Doppelpunkt mehr. Die Beschriftung „Foto:" steht aber weiterhin in `resteria_startseite.png`, `resteria_startseite_bookmarks.png` und `resteria_profil.png` — Anpassung 3 galt ausdrücklich für alle vier Screens.
+
 ## Nach der Erstellung nicht vergessen
 
 1. Den aktualisierten Rettungs-Feed-Screen exportieren und die bestehende Datei in `images/durchfuehrung/` überschreiben (`resteria_rettungsfeed.png`).
 2. Die `\quelle{}`-Zeile für `fig:mockup_feed` in `pages/appendix.tex` ist bereits auf die kombinierten Prompts (Runde 1 + Anpassung 1 + Anpassung 3) vorbereitet — nach dem Bild-Austausch nur noch prüfen, ob der zitierte Prompt-Text exakt der tatsächlich verwendeten Folgeanweisung entspricht, und bei Abweichung nachziehen.
 3. Danach `check_formalia.py` erneut laufen lassen.
+
+### Zusätzlich für Anpassung 4
+
+4. `resteria_startseite.png` und `resteria_startseite_bookmarks.png` neu exportieren und die bestehenden Dateien in `images/durchfuehrung/` überschreiben.
+5. Die `\quelle{}`-Zeilen für `fig:mockup_start` (`pages/appendix.tex:27`) und `fig:mockup_start_bookmarks` (Z. 34) um den Folge-Prompt ergänzen — Muster wie bei `fig:mockup_profil`: nach dem Ursprungs-Prompt `, ergänzt um den Folge-Prompt \enquote{…}` einfügen, davor den schließenden Teil `durch Anthropic, 2026 (Claude Design, Modell Claude Sonnet 5). Abbildung nachträglich manuell bearbeitet.` unverändert stehen lassen. Die Anführungszeichen im Prompt (`\enquote{Wochenplan \& Reste-Journal}`) verschachtelt setzen und das `&` als `\&` maskieren.
+6. **Erst nach dem Bildaustausch** zitieren: Die `\quelle{}`-Zeilen wurden bewusst noch nicht vorbereitet. Stünde dort ein Prompt, der nie ausgeführt wurde, enthielte das abgegebene Dokument eine falsche Quellenangabe — und der Satz in `03_konzept.tex:13` bliebe zusätzlich unbelegt.
+7. Wird die Runde **nicht** gefahren, stattdessen den Fallback setzen: In `03_konzept.tex:13` „Erreichbar ist der Bereich über die Startseite, sodass die Navigation bei drei Hauptbereichen bleibt." durch eine Formulierung ohne überprüfbare Zugangsbehauptung ersetzen, etwa „Der Bereich ergänzt die drei Hauptbereiche, ohne die Navigation zu erweitern." (±0 Wörter).
