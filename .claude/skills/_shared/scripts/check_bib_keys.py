@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-check_bib_keys.py — validiert BibLaTeX-Keys gegen references.bib.
+check_bib_keys.py – validiert BibLaTeX-Keys gegen references.bib.
 
 Verhindert erfundene \\parencite{}-Keys, indem Keys deterministisch statt
 promptbasiert geprüft werden. Kann zusätzlich ungenutzte Bib-Einträge melden
@@ -28,6 +28,15 @@ import argparse
 import re
 import sys
 from pathlib import Path
+
+# Windows-Konsole (cp1252) kann Sonderzeichen wie „→“ in den Meldungen nicht
+# kodieren und bräche beim Ausdruck ab – Ausgabe deshalb auf UTF-8 umstellen.
+for _stream in (sys.stdout, sys.stderr):
+    try:
+        _stream.reconfigure(encoding="utf-8")
+    except (AttributeError, ValueError):
+        pass
+
 
 BIB_KEY_RE = re.compile(r"@\w+\{\s*([^,\s]+)\s*,", re.MULTILINE)
 # Erfasst \parencite, \parencites, \cite, \textcite, \footcite, \autocite etc.

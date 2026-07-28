@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 r"""
-test_check_bib_keys.py — Tests für check_bib_keys.py.
+test_check_bib_keys.py – Tests für check_bib_keys.py.
 
 Ausführen:
     python3 -m unittest test_check_bib_keys.py
@@ -74,7 +74,7 @@ class TestExtractUsedKeys(unittest.TestCase):
         )
 
     def test_command_word_boundary_protects_text(self):
-        # \citekey ist ein hypothetischer anderer Befehl — darf NICHT erfasst
+        # \citekey ist ein hypothetischer anderer Befehl – darf NICHT erfasst
         # werden. Der \b in der Regex stellt das sicher.
         self.assertEqual(extract_used_keys(r"\citekey{keyA}"), set())
 

@@ -1,4 +1,4 @@
-# Fallstudie — Typ-Datei (Pflichtregeln · Bewertung · Planung · Schreiben · Prüfen)
+# Fallstudie – Typ-Datei (Pflichtregeln · Bewertung · Planung · Schreiben · Prüfen)
 
 Einzige Quelle für alle papiertyp-spezifischen Regeln der Fallstudie. **Nutzungsregel:** Nur „Pflicht"-Punkte zählen im Prüf-Modus als FAIL; „empfohlen"/„optional" sind Hinweise, „entfällt" wird gar nicht geprüft. Plan-Modus fragt aktiv nur Pflicht-Punkte ab, Schreib-Modus prüft im Self-Check nur Pflicht-Punkte.
 
@@ -10,13 +10,13 @@ Einzige Quelle für alle papiertyp-spezifischen Regeln der Fallstudie. **Nutzung
 - **Entfällt**: Literatur-Landkarte · Ergebnisse ≠ Interpretation · Methodik-Sektion + Methoden-Reflexion · Phasenplanung als Tabelle
 - „Quelle: Eigene Darstellung." auf eigenen Abb./Tab.: mittel häufig
 
-> **⚠ IU-Warnung Theorie-Kapitel (Reproduktionsverbot):** Der IU-Leitfaden verbietet detaillierte Konzept-Erläuterungen („Es geht … **nicht** darum, gelerntes Wissen zu reproduzieren, also etwa eine Methode oder ein Konzept **im Detail zu erläutern**."). Theorie-Kapitel knapp und **anwendungsorientiert** halten — Konzepte nur insoweit einführen, wie sie für die Fallanalyse gebraucht werden. Hauptgewicht liegt auf der Fallanalyse.
+> **⚠ IU-Warnung Theorie-Kapitel (Reproduktionsverbot):** Der IU-Leitfaden verbietet detaillierte Konzept-Erläuterungen („Es geht … **nicht** darum, gelerntes Wissen zu reproduzieren, also etwa eine Methode oder ein Konzept **im Detail zu erläutern**."). Theorie-Kapitel knapp und **anwendungsorientiert** halten – Konzepte nur insoweit einführen, wie sie für die Fallanalyse gebraucht werden. Hauptgewicht liegt auf der Fallanalyse.
 
 ## Bewertung
 
 Konzepte 25 % · Analyse 25 % · Ergebnis 25 % · Problemerfassung 15 % · Sprache 10 %
 
-→ **Planungskonsequenz**: Analyse + Konzepte + Ergebnis = 75 % — Theorie bewusst knapp (deckt sich mit dem Reproduktionsverbot oben), Fallanalyse ist das größte Kapitel.
+→ **Planungskonsequenz**: Analyse + Konzepte + Ergebnis = 75 % – Theorie bewusst knapp (deckt sich mit dem Reproduktionsverbot oben), Fallanalyse ist das größte Kapitel.
 
 ## Kapitelgerüst & Kernfragen
 
@@ -31,17 +31,17 @@ Gesamt: 7–10 Seiten.
 
 **Kernfragen pro Kapitel (Schritt 3):**
 
-**Einleitung** — Welcher Fall? Wie ist der Fall verortet? Welche Forschungslücke/Frage stellt sich für den Fall? Vorgehen?
+**Einleitung** – Welcher Fall? Wie ist der Fall verortet? Welche Forschungslücke/Frage stellt sich für den Fall? Vorgehen?
 
-**Theorie** (2–3 Konzepte) — Welche Konzepte? Warum diese (Relevanz für den Fall)? Turning Point: welches anerkannte Paper liefert die Folie, die für den Fall weiterentwickelt wird?
+**Theorie** (2–3 Konzepte) – Welche Konzepte? Warum diese (Relevanz für den Fall)? Turning Point: welches anerkannte Paper liefert die Folie, die für den Fall weiterentwickelt wird?
 
-**Fallanalyse** — Fallbeschreibung? Theorie-Anwendung auf den Fall (Anwendungsmatrix Theorie × Fall)? Lösungsvarianten + begründete Empfehlung? Stärkstes Gegenargument gegen die Empfehlung?
+**Fallanalyse** – Fallbeschreibung? Theorie-Anwendung auf den Fall (Anwendungsmatrix Theorie × Fall)? Lösungsvarianten + begründete Empfehlung? Stärkstes Gegenargument gegen die Empfehlung?
 
-**Schluss** — Erkenntnisse? Übertragbarkeit? Limitationen dreischichtig (warum · Mitigation · zukünftige Forschung/Übertragung)?
+**Schluss** – Erkenntnisse? Übertragbarkeit? Limitationen dreischichtig (warum · Mitigation · zukünftige Forschung/Übertragung)?
 
 ## Voice, Claims, Absätze
 
-**Voice**: „Im vorliegenden Fall …" — Theorie-Praxis-Transfer. Sprachniveau: einfach und verständlich, Fachbegriffe bei erster Nennung erklären (siehe `hard-rules-formal.md` → Verständlichkeit).
+**Voice**: „Im vorliegenden Fall …" – Theorie-Praxis-Transfer. Sprachniveau: einfach und verständlich, Fachbegriffe bei erster Nennung erklären (siehe `hard-rules-formal.md` → Verständlichkeit).
 
 **Synthese pro Kapitel**: Pro Leitfrage: relevante Theorie, Anwendung auf den Fall, Lösungsansätze, begründete Empfehlung. Anwendungsmatrix (Theorie × Fall).
 

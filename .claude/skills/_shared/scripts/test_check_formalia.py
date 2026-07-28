@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Tests für check_formalia.py — python3 -m unittest test_check_formalia.py"""
+"""Tests für check_formalia.py – python3 -m unittest test_check_formalia.py"""
 
 import sys
 import tempfile
@@ -8,7 +8,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 from check_formalia import (  # noqa: E402
-    check_file, check_title_duplication, strip_comment)
+    anhang_buchstaben, check_aktivierung, check_anhang_verweise, check_file,
+    check_meta_platzhalter, check_title_duplication, check_unterpunkte,
+    strip_comment)
 
 
 def run_on(content: str):
@@ -44,6 +46,26 @@ class TestChecks(unittest.TestCase):
         findings, _ = run_on("% hier steht man nur im Kommentar\nText ohne Verstoss.\n")
         self.assert_cat(findings, "PRONOMEN", expected=False)
 
+    def test_todo_quelle_marker_in_comment(self):
+        # Arbeitsmarker leben in Kommentaren und müssen trotzdem gefunden werden
+        findings, errors = run_on("% TODO-QUELLE: Meyer 1991 fehlt\nText.\n")
+        self.assert_cat(findings, "TODO-QUELLE")
+        self.assertEqual(errors, 0)  # HINWEIS, kein harter Fehler
+        self.assertTrue(any("Meyer 1991 fehlt" in f for f in findings), findings)
+
+    def test_unverified_marker_in_comment(self):
+        findings, _ = run_on("% UNVERIFIED: Marktzahl pruefen\nText.\n")
+        self.assert_cat(findings, "UNVERIFIED")
+
+    def test_marker_without_detail(self):
+        findings, _ = run_on("% TODO-QUELLE\nText.\n")
+        self.assert_cat(findings, "TODO-QUELLE")
+
+    def test_no_marker_in_plain_text(self):
+        findings, _ = run_on("Der Text erwaehnt kein Marker-Schema.\n")
+        self.assert_cat(findings, "TODO-QUELLE", expected=False)
+        self.assert_cat(findings, "UNVERIFIED", expected=False)
+
     def test_quote_env(self):
         findings, errors = run_on("\\begin{quote}Zitat\\end{quote}\n")
         self.assert_cat(findings, "QUOTE-ENV")
@@ -52,6 +74,50 @@ class TestChecks(unittest.TestCase):
     def test_blockzitat_ok(self):
         findings, errors = run_on("\\begin{blockzitat}Zitat\\end{blockzitat}\n")
         self.assertEqual(errors, 0)
+
+    def test_pronomen_in_blockzitat_ignoriert(self):
+        """Wörtlich zitierter Fremdtext ist nicht die Formulierung des Verfassers."""
+        findings, errors = run_on(
+            "\\begin{blockzitat}\nIch halte das fuer belegt.\n\\end{blockzitat}\n")
+        self.assert_cat(findings, "PRONOMEN", expected=False)
+        self.assertEqual(errors, 0)
+
+    def test_pronomen_in_enquote_ignoriert(self):
+        findings, errors = run_on(
+            "Der Befragte sagt \\enquote{ich sehe das anders} dazu.\n")
+        self.assert_cat(findings, "PRONOMEN", expected=False)
+        self.assertEqual(errors, 0)
+
+    def test_pronomen_neben_enquote_wird_gefunden(self):
+        """Die Maskierung darf den eigenen Text der Zeile nicht mitverdecken."""
+        findings, errors = run_on(
+            "Wir folgern daraus \\enquote{ein stabiles Muster} als Befund.\n")
+        self.assert_cat(findings, "PRONOMEN")
+        self.assertEqual(errors, 1)
+
+    def test_blockzitat_woerter_zaehlen_weiter(self):
+        """Zitattext belegt Seiten – die ½-Seiten-Heuristik muss ihn mitzählen."""
+        zitat = " ".join(["Wort"] * 60)
+        _, _, meta = run_full(
+            "\\subsection{T}\n\\begin{blockzitat}\n" + zitat + "\n\\end{blockzitat}\n")
+        self.assertGreaterEqual(meta["word_count"], 60)
+
+    def test_float_mit_h_in_folgezeile(self):
+        """[H] darf laut LaTeX in der Folgezeile stehen (dokumentierter FP)."""
+        findings, _ = run_on("\\begin{figure}\n[H]\n\\centering\n\\end{figure}\n")
+        self.assert_cat(findings, "FLOAT", expected=False)
+
+    def test_float_ohne_h_wird_weiter_gefunden(self):
+        findings, _ = run_on("\\begin{figure}\n\\centering\n\\end{figure}\n")
+        self.assert_cat(findings, "FLOAT")
+
+    def test_float_mit_h_in_derselben_zeile(self):
+        findings, _ = run_on("\\begin{figure}[H]\n\\centering\n\\end{figure}\n")
+        self.assert_cat(findings, "FLOAT", expected=False)
+
+    def test_float_mit_anderer_platzierung(self):
+        findings, _ = run_on("\\begin{figure}[htbp]\n\\centering\n\\end{figure}\n")
+        self.assert_cat(findings, "FLOAT")
 
     def test_autoref_without_tilde(self):
         findings, _ = run_on("Siehe \\autoref{sec:x}.\n")
@@ -256,6 +322,318 @@ class TestTextur(unittest.TestCase):
                 "Die Prüfung ergab keine Widersprüche.\n\n")
         findings, _ = run_on(kurz * 3 + lang * 3)
         self.assert_cat(findings, "ABSATZ-UNIFORM", expected=False)
+
+
+class TestStriche(unittest.TestCase):
+    """Geviertstrich = Fehler; Halbgeviertstrich („–“) ist der korrekte
+    Gedankenstrich, nur seine Häufung als Satzfüller gibt einen Hinweis."""
+
+    def _has(self, findings, tag):
+        return any(tag in f for f in findings)
+
+    def test_geviertstrich_fehler(self):
+        findings, errors = run_on("Die Studie zeigt X — ein zentraler Befund.\n")
+        self.assertTrue(self._has(findings, "[FEHLER:GEVIERTSTRICH]"), findings)
+        self.assertEqual(errors, 1)
+
+    def test_geviertstrich_ohne_spaces_auch_fehler(self):
+        # Geviertstrich ist immer verboten, auch ohne umgebende Leerzeichen
+        findings, errors = run_on("Wort—Wort steht hier.\n")
+        self.assertTrue(self._has(findings, "[FEHLER:GEVIERTSTRICH]"), findings)
+        self.assertEqual(errors, 1)
+
+    def test_gedankenstrich_einzeln_ok(self):
+        # Halbgeviertstrich mit Leerzeichen ist korrekt; unter der Häufungsschwelle
+        findings, errors = run_on("Das Konzept – so die These – trägt.\n")
+        self.assertFalse(self._has(findings, "[FEHLER:"), findings)
+        self.assertFalse(self._has(findings, "GEDANKENSTRICH"), findings)
+        self.assertEqual(errors, 0)
+
+    def test_gedankenstrich_haeufung_hinweis(self):
+        # Mehr als drei „ – “ insgesamt: weicher Häufungs-Hinweis, kein Fehler
+        findings, errors = run_on("Das – hier – und – dort – überall.\n")
+        self.assertTrue(self._has(findings, "[HINWEIS:GEDANKENSTRICH]"), findings)
+        self.assertEqual(errors, 0)
+
+    def test_bisstrich_ok(self):
+        # „7–10“ ohne umgebende Leerzeichen zählt nicht als Gedankenstrich
+        findings, errors = run_on("Der Textteil umfasst 7–10 Seiten.\n")
+        self.assertFalse(self._has(findings, "GEDANKENSTRICH"), findings)
+        self.assertEqual(errors, 0)
+
+    def test_latex_doppelhyphen_ok(self):
+        # LaTeX-Bis-Strich als zwei Hyphen ist kein Unicode-Strich
+        findings, errors = run_on("Siehe \\parencites[S. 12--13]{key}.\n")
+        self.assertFalse(self._has(findings, "GEVIERTSTRICH"), findings)
+        self.assertFalse(self._has(findings, "GEDANKENSTRICH"), findings)
+        self.assertEqual(errors, 0)
+
+
+class TestRunde4Erweiterungen(unittest.TestCase):
+    """Titel-Phrasen- und Abkürzungs-Check (externe Prüfung ISSE01, 24.07.2026)."""
+
+    def test_shared_phrase_findet_kernphrase(self):
+        from check_formalia import _shared_phrase
+        heading = "verschwimmen der grenze in entwicklung und betrieb"
+        title = ("safety und security im software engineering unterschiede und das "
+                 "verschwimmen der grenze zwischen it und betriebstechnik")
+        self.assertEqual(_shared_phrase(heading, title), "verschwimmen der grenze")
+
+    def test_shared_phrase_ignoriert_stoppwortfolgen(self):
+        from check_formalia import _shared_phrase
+        self.assertIsNone(_shared_phrase("und in der praxis", "theorie und in der folge"))
+
+    def test_titelphrase_wird_gemeldet(self):
+        from check_formalia import check_title_duplication
+        metas = {Path("x.tex"): {"section_titles": [
+            "Verschwimmen der Grenze in Entwicklung und Betrieb"], "subsection_titles": []}}
+        title = ("safety und security im software engineering unterschiede und das "
+                 "verschwimmen der grenze zwischen it und betriebstechnik")
+        findings = check_title_duplication(metas, title)
+        self.assertTrue(any("Titel-Phrase" in f for f in findings), findings)
+
+    def test_unerklaerte_abkuerzung_wird_gemeldet(self):
+        from check_formalia import check_unexplained_acronyms
+        metas = {Path("x.tex"): {"caps_tokens": ["PRISMA"]}}
+        findings = check_unexplained_acronyms(metas, {"SIL", "SL"})
+        self.assertTrue(any("PRISMA" in f for f in findings), findings)
+
+    def test_bekanntes_akronym_bleibt_still(self):
+        from check_formalia import check_unexplained_acronyms
+        metas = {Path("x.tex"): {"caps_tokens": ["SIL"]}}
+        self.assertEqual(check_unexplained_acronyms(metas, {"SIL"}), [])
+
+    def test_ohne_acronyms_datei_keine_meldung(self):
+        from check_formalia import check_unexplained_acronyms
+        metas = {Path("x.tex"): {"caps_tokens": ["PRISMA"]}}
+        self.assertEqual(check_unexplained_acronyms(metas, None), [])
+
+    def test_caps_sammlung_ueberspringt_normbezeichnung_und_klammer(self):
+        findings, errors, meta = run_full(
+            "Die IEC 61508 und die Reihe IEC TR 63069 gelten. "
+            "Das PRISMA-Schema (Preferred Reporting Items) ist erklärt. "
+            "Das SEMA-Rahmenwerk trennt beide Achsen. ")
+        self.assertNotIn("IEC", meta["caps_tokens"])
+        self.assertNotIn("PRISMA", meta["caps_tokens"])
+        self.assertIn("SEMA", meta["caps_tokens"])
+
+
+class TestStellenangabe(unittest.TestCase):
+    """`\\parencite` ohne Seitenangabe – die IU verlangt sie auch bei indirekten
+    Zitaten (Zitierleitfaden Anhang C). Der Check ersetzt einen bis dahin rein
+    manuellen Prüfpunkt, deshalb muss vor allem die Abgrenzung sitzen."""
+
+    def cats(self, text):
+        findings, _errors, _m = run_full(text)
+        return [f for f in findings if "SEITENANGABE" in f]
+
+    def test_ohne_seitenangabe_gemeldet(self):
+        self.assertEqual(len(self.cats("Aussage \\parencite{keyA}.\n")), 1)
+
+    def test_mit_seitenangabe_still(self):
+        self.assertEqual(self.cats("Aussage \\parencite[S. 5]{keyA}.\n"), [])
+
+    def test_kapitel_und_absatz_zaehlen_als_stellenangabe(self):
+        # Quellen ohne Seitenzahlen werden per Kap./Abs./Zeitstempel belegt.
+        self.assertEqual(self.cats("Aussage \\parencite[Kap. 2.1]{keyA}.\n"), [])
+        self.assertEqual(self.cats("Aussage \\parencite[Abs. 4]{keyA}.\n"), [])
+
+    def test_prenote_ohne_stelle_reicht_nicht(self):
+        # `[vgl.]` ist ein Präfix, keine Fundstelle.
+        self.assertEqual(len(self.cats("Aussage \\parencite[vgl.]{keyA}.\n")), 1)
+
+    def test_parencites_je_block_einzeln(self):
+        # Erstes Werk mit Seite, zweites ohne -> genau ein Fund, und zwar für keyB.
+        funde = self.cats("Aussage \\parencites[S. 5]{keyA}{keyB}.\n")
+        self.assertEqual(len(funde), 1)
+        self.assertIn("keyB", funde[0])
+
+    def test_textcite_ebenfalls(self):
+        self.assertEqual(len(self.cats("\\textcite{keyA} zeigt das.\n")), 1)
+
+
+class TestQuelleUndCite(unittest.TestCase):
+    def test_float_ohne_quelle(self):
+        findings, errors, _m = run_full(
+            "\\begin{figure}[H]\n\\caption{X}\\label{fig:x}\n"
+            "\\includegraphics{a.png}\n\\end{figure}\n")
+        self.assertTrue(any("QUELLE-FEHLT" in f for f in findings), findings)
+        self.assertEqual(errors, 1)
+
+    def test_float_mit_quelle_still(self):
+        findings, errors, _m = run_full(
+            "\\begin{figure}[H]\n\\caption{X}\\label{fig:x}\n"
+            "\\includegraphics{a.png}\n\\quelle{Eigene Darstellung.}\n\\end{figure}\n")
+        self.assertFalse(any("QUELLE-FEHLT" in f for f in findings), findings)
+
+    def test_float_ohne_inhalt_kein_fund(self):
+        # Ein Float ohne Bild/Tabelle (z. B. nur Text) braucht keine Quellenzeile.
+        findings, _e, _m = run_full(
+            "\\begin{figure}[H]\n\\caption{X}\\label{fig:x}\nNur Text.\n\\end{figure}\n")
+        self.assertFalse(any("QUELLE-FEHLT" in f for f in findings), findings)
+
+    def test_cite_in_quellenzeile_erlaubt(self):
+        findings, _e, _m = run_full(
+            "\\quelle{Eigene Darstellung in Anlehnung an \\cite{keyA}.}\n")
+        self.assertFalse(any("[HINWEIS:CITE]" in f for f in findings), findings)
+
+    def test_cite_im_sekundaerzitat_erlaubt(self):
+        findings, _e, _m = run_full(
+            "Aussage (Original, 2017, zitiert nach \\cite[S. 5]{keyA}).\n")
+        self.assertFalse(any("[HINWEIS:CITE]" in f for f in findings), findings)
+
+    def test_cite_sonst_gemeldet(self):
+        findings, _e, _m = run_full("Eine Aussage \\cite{keyA} im Text.\n")
+        self.assertTrue(any("[HINWEIS:CITE]" in f for f in findings), findings)
+
+
+class TestStrukturUndAktivierung(unittest.TestCase):
+    """Dateiübergreifende Checks: Unterpunkte, Aktivierungsblöcke, Anhang-Verweise."""
+
+    def projekt(self, root: Path, *, listoffigures_aktiv=False, anhverz_aktiv=False,
+                appendix_aktiv=False, anhaenge=("A",), figuren=0):
+        (root / "pages").mkdir(parents=True, exist_ok=True)
+        (root / "chapters" / "02_theorie").mkdir(parents=True, exist_ok=True)
+        def block(aktiv, zeile):
+            return zeile if aktiv else "%" + zeile
+        (root / "main.tex").write_text("\n".join([
+            "\\documentclass{article}",
+            block(listoffigures_aktiv, "\\listoffigures"),
+            "%\\listoftables",
+            "\\begin{document}",
+            block(anhverz_aktiv, "\\section*{Anhangsverzeichnis}"),
+            block(appendix_aktiv, "\\include{pages/appendix}"),
+            "\\end{document}", ""]), encoding="utf-8")
+        (root / "pages" / "appendix.tex").write_text(
+            "".join(f"\\subsection*{{Anhang {b}: Titel {b}}}\n" for b in anhaenge)
+            + "Fuellinhalt, damit der Anhang als nicht leer gilt und der Block zaehlt.\n",
+            encoding="utf-8")
+        floats = "".join(
+            f"\\begin{{figure}}[H]\n\\caption{{Abb {i}}}\\label{{fig:{i}}}\n"
+            f"\\includegraphics{{a{i}.png}}\n\\quelle{{Eigene Darstellung.}}\n\\end{{figure}}\n"
+            for i in range(figuren))
+        (root / "chapters" / "02_theorie" / "01_a.tex").write_text(
+            "\\subsection{Begriffe}\\label{sec:begriffe}\nText dazu.\n" + floats,
+            encoding="utf-8")
+
+    def metas(self, root: Path):
+        out = {}
+        for tex in sorted(root.rglob("*.tex")):
+            if tex.name in ("main.tex",):
+                continue
+            _f, _e, meta = check_file(tex)
+            out[tex] = meta
+        return out
+
+    def test_eine_subsection_ist_fehler(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            self.projekt(root)
+            funde = check_unterpunkte(self.metas(root))
+            self.assertTrue(any("UNTERPUNKTE" in f for f in funde), funde)
+
+    def test_zwei_subsections_still(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            self.projekt(root)
+            (root / "chapters" / "02_theorie" / "02_b.tex").write_text(
+                "\\subsection{Modelle}\\label{sec:modelle}\nText.\n", encoding="utf-8")
+            self.assertEqual(check_unterpunkte(self.metas(root)), [])
+
+    def test_drei_abbildungen_ohne_verzeichnis(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            self.projekt(root, figuren=3, appendix_aktiv=True, anhverz_aktiv=False)
+            funde = check_aktivierung(self.metas(root), root)
+            self.assertTrue(any("Abbildungsverzeichnis" in f for f in funde), funde)
+
+    def test_drei_abbildungen_mit_verzeichnis_still(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            self.projekt(root, figuren=3, listoffigures_aktiv=True, appendix_aktiv=True)
+            funde = check_aktivierung(self.metas(root), root)
+            self.assertFalse(any("Abbildungsverzeichnis" in f for f in funde), funde)
+
+    def test_anhangsverzeichnis_ab_zwei_pflicht(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            self.projekt(root, anhaenge=("A", "B"), appendix_aktiv=True, anhverz_aktiv=False)
+            funde = check_aktivierung(self.metas(root), root)
+            self.assertTrue(any("FEHLER" in f and "Anhangsverzeichnis" in f for f in funde), funde)
+
+    def test_anhangsverzeichnis_bei_einem_anhang_nur_hinweis(self):
+        # Der reale Fall aus einer abgegebenen Seminararbeit: ein Anhang, Verzeichnis
+        # trotzdem gesetzt. Nicht gefordert, aber auch kein Fehler.
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            self.projekt(root, anhaenge=("A",), appendix_aktiv=True, anhverz_aktiv=True)
+            funde = [f for f in check_aktivierung(self.metas(root), root)
+                     if "Anhangsverzeichnis" in f]
+            self.assertEqual(len(funde), 1, funde)
+            self.assertIn("HINWEIS", funde[0])
+
+    def test_anhang_inhalt_ohne_aktivierung(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            self.projekt(root, appendix_aktiv=False)
+            funde = check_aktivierung(self.metas(root), root)
+            self.assertTrue(any("Block „Anhang“" in f for f in funde), funde)
+
+    def test_anhang_ohne_textverweis(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            self.projekt(root, anhaenge=("A", "B"))
+            funde = check_anhang_verweise(self.metas(root), root)
+            self.assertEqual(len(funde), 2, funde)   # weder A noch B referenziert
+
+    def test_anhang_mit_textverweis_still(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            self.projekt(root, anhaenge=("A",))
+            (root / "chapters" / "02_theorie" / "01_a.tex").write_text(
+                "\\subsection{Begriffe}\\label{sec:x}\nDer Leitfaden liegt bei (siehe Anhang A).\n",
+                encoding="utf-8")
+            self.assertEqual(check_anhang_verweise(self.metas(root), root), [])
+
+    def test_einzelner_anhang_ist_kein_unterpunkte_fehler(self):
+        # Regression: `\subsection*{Anhang A}` in pages/ ist kein Gliederungspunkt.
+        # Vor dem Fix meldete jede Arbeit mit genau einem Anhang einen Fehlalarm.
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            self.projekt(root, anhaenge=("A",))
+            (root / "chapters" / "02_theorie" / "02_b.tex").write_text(
+                "\\subsection{Modelle}\\label{sec:modelle}\nText.\n", encoding="utf-8")
+            funde = check_unterpunkte(self.metas(root))
+            self.assertEqual(funde, [], funde)
+
+    def test_meta_platzhalter_gefunden(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            (root / "pages").mkdir(parents=True)
+            (root / "pages" / "meta.tex").write_text(
+                "\\newcommand{\\PaperTitle}{THESISTITEL}\n"
+                "\\newcommand{\\PaperType}{Bachelorarbeit}\n"
+                "\\newcommand{\\AuthorName}{Max Mustermann}\n", encoding="utf-8")
+            funde = check_meta_platzhalter(root)
+            self.assertEqual(len(funde), 1, funde)
+            self.assertIn("PaperTitle", funde[0])
+            # Ausgefüllte Felder dürfen nicht mitgemeldet werden.
+            self.assertNotIn("PaperType", funde[0])
+            self.assertNotIn("AuthorName", funde[0])
+
+    def test_meta_ohne_platzhalter_still(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            (root / "pages").mkdir(parents=True)
+            (root / "pages" / "meta.tex").write_text(
+                "\\newcommand{\\PaperTitle}{Ein echter Titel}\n", encoding="utf-8")
+            self.assertEqual(check_meta_platzhalter(root), [])
+
+    def test_anhang_buchstaben_ignoriert_fliesstext(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            self.projekt(root, anhaenge=("A", "B"))
+            self.assertEqual(anhang_buchstaben(root), {"A", "B"})
 
 
 if __name__ == "__main__":

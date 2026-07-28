@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Erzeugt handbuch.pdf im Projekt-Root — direkt aus handbuch.md (reportlab benötigt).
+"""Erzeugt handbuch.pdf im Projekt-Root – direkt aus handbuch.md (reportlab benötigt).
 
 Anders als der frühere Generator (generate_anleitung.py, entfernt) enthält dieses Skript KEINEN
 hartkodierten Text: Es rendert die jeweils aktuelle handbuch.md, kann also
@@ -64,7 +64,7 @@ TABLE_WIDTH = 17 * cm
 def inline(md: str) -> str:
     """Inline-Markdown → reportlab-Markup. Code-Spans zuerst schützen,
     damit ** innerhalb von `chapters/**/*.tex` kein Fett auslöst."""
-    # Emoji fehlen auch in Arial — immer ersetzen
+    # Emoji fehlen auch in Arial – immer ersetzen
     for a, b in (("✅", "[OK]"), ("📝", "[Notiz]")):
         md = md.replace(a, b)
     if FONT == "Helvetica":  # Fallback ohne Unicode-Font
@@ -84,7 +84,7 @@ def inline(md: str) -> str:
 
 def col_widths(rows: list[list[str]], ncols: int) -> list[float]:
     """Spaltenbreiten: proportional zum längsten Zelleninhalt, aber nie
-    schmaler als das längste unteilbare Wort der Spalte — sonst bricht
+    schmaler als das längste unteilbare Wort der Spalte – sonst bricht
     reportlab mitten im Wort um („schrei b-modus")."""
     charw = 0.18 * cm  # großzügig für 8.5pt inkl. Courier-Code-Spans
     weights, minw = [], []

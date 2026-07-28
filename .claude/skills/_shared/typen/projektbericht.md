@@ -1,4 +1,4 @@
-# Projektbericht — Typ-Datei (Pflichtregeln · Bewertung · Planung · Schreiben · Prüfen)
+# Projektbericht – Typ-Datei (Pflichtregeln · Bewertung · Planung · Schreiben · Prüfen)
 
 Einzige Quelle für alle papiertyp-spezifischen Regeln des Projektberichts. **Nutzungsregel:** Nur „Pflicht"-Punkte zählen im Prüf-Modus als FAIL; „empfohlen"/„optional" sind Hinweise, „entfällt" wird gar nicht geprüft. Plan-Modus fragt aktiv nur Pflicht-Punkte ab, Schreib-Modus prüft im Self-Check nur Pflicht-Punkte.
 
@@ -14,7 +14,7 @@ Einzige Quelle für alle papiertyp-spezifischen Regeln des Projektberichts. **Nu
 
 Qualität 25 % · Prozess 25 % · Transfer 15 % · Kreativität 15 % · Dokumentation 10 % · Ressourcen 10 % (kann laut Aufgabenstellung abweichen)
 
-→ **Planungskonsequenz**: Prozess + Qualität = 50 % — Durchführung und Evaluation/Reflexion dominieren das Seitenbudget.
+→ **Planungskonsequenz**: Prozess + Qualität = 50 % – Durchführung und Evaluation/Reflexion dominieren das Seitenbudget.
 
 ## Kapitelgerüst & Kernfragen
 
@@ -29,21 +29,21 @@ Gesamt: 7–10 S. (B.Sc.) / 12–15 S. (M.Sc.). Einl. 10–15 % / Haupt 70–80 
 
 **Kernfragen pro Kapitel (Schritt 3):**
 
-**Einleitung** — Projektkontext/-umfeld? Problem und Ziel? Warum jetzt (aktueller Anlass des Projekts)? Welche Methodik/welche Tools — auf Basis welcher theoretischen Ansätze/Modelle? Welche Vorarbeiten waren ggf. notwendig (z. B. Datenerhebung, Materialauswertung)? Vorgehen und Aufbau?
+**Einleitung** – Projektkontext/-umfeld? Problem und Ziel? Warum jetzt (aktueller Anlass des Projekts)? Welche Methodik/welche Tools – auf Basis welcher theoretischen Ansätze/Modelle? Welche Vorarbeiten waren ggf. notwendig (z. B. Datenerhebung, Materialauswertung)? Vorgehen und Aufbau?
 
-**Durchführung** — Phasen/Meilensteine? Was ist das Produkt? Phasenplanung (Tabelle)? Abweichungen von der Planung und Umgang damit? Ressourcen/Einsatzmittel-/Kostenplanung? Beteiligte Personen/Rollen? Ggf. Risikoanalyse?
+**Durchführung** – Phasen/Meilensteine? Was ist das Produkt? Phasenplanung (Tabelle)? Abweichungen von der Planung und Umgang damit? Ressourcen/Einsatzmittel-/Kostenplanung? Beteiligte Personen/Rollen? Ggf. Risikoanalyse?
 
-**Evaluation/Reflexion** — Zielerreichung? Methoden-Reflexion? Lessons learned? Wie lassen sich nachhaltige Strukturen zur Verankerung der Erkenntnisse/Ergebnisse schaffen? Was würde die Projektgruppe beim nächsten Mal anders machen?
+**Evaluation/Reflexion** – Zielerreichung? Methoden-Reflexion? Lessons learned? Wie lassen sich nachhaltige Strukturen zur Verankerung der Erkenntnisse/Ergebnisse schaffen? Was würde die Projektgruppe beim nächsten Mal anders machen?
 
-**Fazit** — Kernergebnisse? Entwicklung/Erkenntnisse? Ausblick? Limitationen dreischichtig (warum · Mitigation · zukünftige Projekte)?
+**Fazit** – Kernergebnisse? Entwicklung/Erkenntnisse? Ausblick? Limitationen dreischichtig (warum · Mitigation · zukünftige Projekte)?
 
 ## Voice, Claims, Absätze
 
-**Voice**: 3. Person streng: „Die Projektgruppe …" — keine Ausnahme. Sprachniveau: einfach und verständlich, Fachbegriffe bei erster Nennung erklären (siehe `hard-rules-formal.md` → Verständlichkeit).
+**Voice**: 3. Person streng: „Die Projektgruppe …" – keine Ausnahme. Sprachniveau: einfach und verständlich, Fachbegriffe bei erster Nennung erklären (siehe `hard-rules-formal.md` → Verständlichkeit).
 
 **Synthese pro Kapitel**: Pro Leitfrage: Projekt-Kontext, Theorie-Bezug, Reflexion, Lessons learned. Phasen-Überblick als Tabelle.
 
-**Claim-Regeln**: Viel OWN WORK (eigene Phasen, Ergebnisse, Reflexionen — „Quelle: Eigene Darstellung." auf jeder eigenen Abb./Tab.). Methodik-Bezüge brauchen `\parencite{}`. „Die Projektgruppe machte …" = FACTUAL ohne Citation, aber dritte Person.
+**Claim-Regeln**: Viel OWN WORK (eigene Phasen, Ergebnisse, Reflexionen – „Quelle: Eigene Darstellung." auf jeder eigenen Abb./Tab.). Methodik-Bezüge brauchen `\parencite{}`. „Die Projektgruppe machte …" = FACTUAL ohne Citation, aber dritte Person.
 
 **Absätze pro Subsection (Richtwert)**: 4–8 (viele Eigenwerke)
 

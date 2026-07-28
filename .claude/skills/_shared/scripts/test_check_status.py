@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Tests für check_status.py — python -m unittest test_check_status"""
+"""Tests für check_status.py – python -m unittest test_check_status"""
 
 import sys
 import tempfile

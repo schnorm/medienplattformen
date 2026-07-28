@@ -1,0 +1,946 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+check_quellentreue.py – gleicht jede Zitation gegen den Volltext der Quelle ab.
+
+Prüft drei Dinge, die sonst niemand mechanisch prüft:
+  1. **Wortlaut**: Wurde inhaltlich paraphrasiert oder Wort für Wort übernommen?
+     Ab `--min-words` (Default 7) zusammenhängend gleichen Wörtern gilt eine
+     Stelle als übernommen – außer sie ist als wörtliches Zitat gekennzeichnet.
+  2. **Wörtliche Zitate**: Steht der Text in `\\enquote{}`/`blockzitat`, muss er
+     **exakt** so in der Quelle stehen. Als wörtliches Zitat gilt, was dicht am
+     Beleg steht – davor wie danach, denn die narrative Form (`\\textcite{k} nennt
+     es \\enquote{…}`) ist genauso ein Zitat. Weiter entfernte `\\enquote{}` zählen
+     nicht: An der IU ist das auch das Anführungszeichen für Begriffe, und eine
+     Begriffsanführung ist kein Zitat. Für `blockzitat` gilt ein weites Fenster –
+     die Umgebung ist per Definition ein Zitat, und der einleitende Satz steht
+     regelmäßig einen Absatz davor. Die vom Zitierleitfaden erlaubten Eingriffe
+     ([sic], eckige Ergänzungen, Hervorhebungs-Hinweise, Auslassungen mit drei
+     Punkten) werden vor dem Vergleich herausgerechnet.
+  3. **Seitenangabe**: Kommen die Kernbegriffe des Trägersatzes auf der
+     zitierten Seite überhaupt vor? Wenn nicht, wird die wahrscheinlich
+     gemeinte Seite vorgeschlagen. Lässt sich der Versatz zwischen gedruckter
+     und PDF-Seite nicht bestimmen (häufig bei Artikel-PDFs), wird gegen das
+     ganze Dokument geprüft und die Seitenangabe als maschinell unbestätigt
+     ausgewiesen – geprüft wird trotzdem, nur eben nicht seitengenau.
+
+Was das Skript **nicht** entscheidet: ob die Aussage inhaltlich von der Quelle
+gedeckt ist. Das ist der zweite Schritt und Aufgabe des Modells; das Skript
+liefert dafür die Prüfpaare (Trägersatz + Seitentext) und nimmt das Urteil per
+`--verdikt` entgegen.
+
+Nutzung (vom Projekt-Root):
+    python .claude/skills/_shared/scripts/check_quellentreue.py
+    python .claude/skills/_shared/scripts/check_quellentreue.py --datei chapters/02_theorie
+    python .claude/skills/_shared/scripts/check_quellentreue.py --alle
+    python .claude/skills/_shared/scripts/check_quellentreue.py --paare 5
+    python .claude/skills/_shared/scripts/check_quellentreue.py --verdikt <hash>=OK --notiz "S. 47 deckt die Aussage"
+    python .claude/skills/_shared/scripts/check_quellentreue.py --seite <bibkey> 453
+        (nur den Text der zitierten Seite ausgeben – fuer den Schreibschritt,
+         der den Satz aus der Quelle heraus formuliert; kein Prueflauf)
+    python .claude/skills/_shared/scripts/check_quellentreue.py --offset <bibkey>=-906
+        (Versatz = PDF-Seite wie im Reader minus gedruckte Seite; ein Artikel,
+         der auf S. 907 beginnt und dessen PDF bei 1 anfaengt: 1 - 907 = -906)
+
+Ergebnis: `quellencheck.md` (Bericht, wird pro Lauf überschrieben) und
+`quellencheck-state.json` (Urteile je Zitation, überdauert Läufe – nicht von
+Hand editieren).
+
+Exit-Code 0 = keine offenen Punkte · 1 = Befunde oder ungeprüfte Zitationen
+offen · 2 = Ausführungsfehler (fehlende Datei, fehlende Abhängigkeit).
+
+Buchungen (`--verdikt`, `--offset`, `--ausnahme`) geben 0 zurück, sobald sie
+geschrieben sind – auch wenn danach noch etwas offen ist. Sonst sähe jede
+einzelne Buchung nach einem Fehlschlag aus. Der Torwert 1 bleibt dem reinen
+Prüflauf vorbehalten, der ihn in Ketten wie `check && latexmk` braucht.
+"""
+
+import argparse
+import hashlib
+import json
+import re
+import sys
+from dataclasses import dataclass, field
+from datetime import date
+from pathlib import Path
+
+for _stream in (sys.stdout, sys.stderr):
+    try:
+        _stream.reconfigure(encoding="utf-8")
+    except (AttributeError, ValueError):
+        pass
+
+CITE_CMD_RE = re.compile(
+    r"\\(?:[Pp]arencites?|[Cc]ites?|[Tt]extcites?|[Ff]ootcites?|[Aa]utocites?)\b"
+    r"((?:\[[^\]]*\]|\{[^}]*\})*)"
+)
+ARG_TOKEN_RE = re.compile(r"\[([^\]]*)\]|\{([^}]*)\}")
+KEY_RE = re.compile(r"\{([^}]*)\}")
+# Seitenangabe im Locator. Der Zitierleitfaden (2.2.1) kennt zwei Formen, und
+# beide müssen erkannt werden: zusammenhängender Bereich mit Gedankenstrich
+# („S. 24--25") und nicht aufeinanderfolgende Seiten mit Komma („S. 12, 34").
+# Wer nur die erste Zahl liest, prüft bei der Komma-Form gegen die falsche Seite
+# und meldet eine korrekte Zitation als SEITE VERDÄCHTIG.
+SEITE_RE = re.compile(
+    r"S\.?\s*~?\s*(\d+(?:\s*(?:--|–|-)\s*\d+)?(?:\s*,\s*\d+(?:\s*(?:--|–|-)\s*\d+)?)*)")
+SEITE_TEIL_RE = re.compile(r"(\d+)(?:\s*(?:--|–|-)\s*(\d+))?")
+BIB_ENTRY_RE = re.compile(r"@(\w+)\s*\{\s*([^,\s]+)\s*,", re.MULTILINE)
+ENQUOTE_RE = re.compile(r"\\enquote\{((?:[^{}]|\{[^{}]*\})*)\}")
+BLOCKZITAT_RE = re.compile(r"\\begin\{blockzitat\}(.*?)\\end\{blockzitat\}", re.S)
+
+# Zuordnung Anführung → Beleg. `\enquote{}` ist an der IU nicht nur das wörtliche
+# Zitat, sondern das Anführungszeichen überhaupt (hard-rules-formal.md: gerade
+# Anführungszeichen sind ein FEHLER). Eine großzügige Umgebungssuche erklärt
+# deshalb jede Begriffsanführung im Satz zum wörtlichen Zitat – das müsste dann
+# exakt in der Quelle stehen und erzeugt bei fremdsprachiger Literatur einen
+# ZITAT-WEICHT-AB-Befund, der im Abgabe-Audit blockiert.
+MAX_ZITAT_ABSTAND = 40   # Zeichen zwischen Anführungsende und Zitierbefehl
+MIN_ZITAT_WOERTER = 5    # darunter: Kurzzitat oder Begriffsanführung – nicht entscheidbar
+
+# Für `blockzitat` gilt ein weit größeres Fenster, und Satzenden dazwischen sind
+# unschädlich. Grund: Die vom Zitierleitfaden vorgeführte Normalform lautet
+# „\textcite[S. 40]{key} fasst die Entwicklung wie folgt zusammen:" + Leerzeile +
+# \begin{blockzitat} – das sind weit mehr als 40 Zeichen. Mit dem engen Fenster
+# wurde ausgerechnet für die langen wörtlichen Zitate KEIN Wortlautabgleich
+# gefahren, also dort, wo eine Abweichung am teuersten ist. Die Sorge, die das
+# enge Fenster begründet (eine Begriffsanführung als Zitat zu lesen), entfällt
+# hier: Eine blockzitat-Umgebung ist per Definition ein wörtliches Zitat.
+MAX_BLOCKZITAT_ABSTAND = 400
+
+# Eingriffe, die der Zitierleitfaden im wörtlichen Zitat ausdrücklich erlaubt:
+# eckige Klammern ([sic], eigene Ergänzungen, [Hervorhebung d. Verf.], der bei
+# Satzbau-Anpassung weggelassene Buchstabe) und Auslassungen mit drei Punkten.
+# Sie stehen naturgemäß NICHT in der Quelle. Ohne diese Bereinigung meldet der
+# Vergleich jedes regelkonform bearbeitete Zitat als ZITAT WEICHT AB – ein
+# Befund, der im Abgabe-Audit blockiert.
+ZITAT_KLAMMER_RE = re.compile(r"\[[^\]]*\]")
+ZITAT_AUSLASSUNG_RE = re.compile(r"\s*(?:\.\s*\.\s*\.|…|\\dots\b|\\ldots\b)\s*")
+MIN_SEGMENT_WOERTER = 3  # kürzere Teilstücke tragen keinen Vergleich
+
+STOPP = {
+    "aber", "auch", "beim", "dabei", "damit", "dann", "dass", "dem", "den", "der",
+    "des", "die", "dies", "diese", "diesem", "diesen", "dieser", "durch", "eine",
+    "einem", "einen", "einer", "eines", "für", "haben", "hier", "ihre", "immer",
+    "insbesondere", "ist", "jedoch", "kann", "können", "lassen", "man", "mehr",
+    "mit", "muss", "nach", "nicht", "noch", "nur", "oder", "sein", "sich", "sind",
+    "sowie", "über", "und", "unter", "vgl", "vom", "von", "vor", "während",
+    "werden", "wird", "wobei", "zum", "zur", "zwischen",
+}
+
+STATUS_BEFUND = {"WORTLAUT", "ZITAT WEICHT AB", "SEITE VERDÄCHTIG", "CLAIM SCHÄRFER",
+                 "NICHT GEFUNDEN"}
+STATUS_OFFEN = {"PRÜFEN", "NICHT PRÜFBAR", "LIVE PRÜFEN"}
+
+
+@dataclass
+class Zitation:
+    datei: str
+    zeile: int
+    key: str
+    seite: str          # "43", "43-45" oder "" (werkbezogen)
+    satz: str
+    woertlich: str      # Text in \enquote{}/blockzitat, sonst ""
+    status: str = "PRÜFEN"
+    befund: str = ""
+    seitentext: str = ""
+    notiz: str = ""
+    _hash: str = field(default="", repr=False)
+
+    @property
+    def hash(self) -> str:
+        if not self._hash:
+            roh = f"{self.key}|{self.seite}|{normalisiere(self.satz)}"
+            self._hash = hashlib.sha1(roh.encode("utf-8")).hexdigest()[:10]
+        return self._hash
+
+
+def normalisiere(text: str) -> str:
+    """LaTeX-Rauschen entfernen, Kleinschreibung, Wortfolge vereinheitlichen."""
+    text = re.sub(r"%.*", " ", text)
+    text = re.sub(r"\\(?:[Pp]arencites?|[Cc]ites?|[Tt]extcites?|[Ff]ootcites?"
+                  r"|[Aa]utocites?)\b(?:\[[^\]]*\]|\{[^}]*\})*", " ", text)
+    text = re.sub(r"\\(?:label|autoref|ref|footnote|quelle|acs?|acl?)\{[^}]*\}", " ", text)
+    text = re.sub(r"\\[a-zA-Z@]+\*?", " ", text)
+    text = re.sub(r"[{}~$\\]", " ", text)
+    text = text.replace("\u00ad", "").replace("\u2010", "-")
+    text = re.sub(r"[^\wäöüÄÖÜß\s-]", " ", text)
+    return re.sub(r"\s+", " ", text).strip().lower()
+
+
+def woerter(text: str) -> list[str]:
+    return [w for w in normalisiere(text).split() if w]
+
+
+# ---------------------------------------------------------------- .tex-Parsing
+
+SATZENDE_RE = re.compile(r"(?<![A-ZÄÖÜ])(?<!\bS)(?<!\bvgl)(?<!\bz)(?<!\bB)(?<!\bu)"
+                         r"(?<!\ba)(?<!\bca)(?<!\bbzw)[.!?](\s|$)")
+
+
+def satz_um(text: str, pos: int) -> str:
+    """Den Satz zurückgeben, in dem die Position liegt.
+
+    Zitierbefehle werden vorher ausmaskiert: In `\\textcite[S. 59]{key}` steckt
+    ein „. " mitten im Satz, und wer darauf trifft, schneidet den Trägersatz
+    genau vor der Aussage ab, die belegt werden soll – der Vergleich mit der
+    Quelle liefe dann gegen den falschen Text.
+    """
+    maske = list(text)
+    for m in CITE_CMD_RE.finditer(text):
+        for i in range(m.start(), m.end()):
+            maske[i] = " "
+    maskiert = "".join(maske)
+    start = 0
+    for m in SATZENDE_RE.finditer(maskiert[:pos]):
+        start = m.end()
+    rest = SATZENDE_RE.search(maskiert[pos:])
+    ende = pos + rest.end() if rest else len(text)
+    return text[start:ende].strip()
+
+
+def spanne(text: str, muster: re.Pattern, block: bool = False) -> list[tuple[int, int, str, bool]]:
+    return [(m.start(), m.end(), m.group(1), block) for m in muster.finditer(text)]
+
+
+def zitat_segmente(woertlich: str) -> list[list[str]]:
+    """Wörtliches Zitat in vergleichbare Teilstücke zerlegen.
+
+    Entfernt die vom Zitierleitfaden erlaubten Klammer-Eingriffe und schneidet
+    an Auslassungspunkten: Was zwischen zwei Auslassungen steht, muss in der
+    Quelle zusammenhängend vorkommen – über die Auslassung hinweg naturgemäß
+    nicht. Teilstücke unter MIN_SEGMENT_WOERTER Wörtern werden verworfen; sie
+    bestehen aus Artikeln und Präpositionen und würden überall „gefunden".
+    """
+    ohne_klammern = ZITAT_KLAMMER_RE.sub(" ", woertlich)
+    segmente = []
+    for teil in ZITAT_AUSLASSUNG_RE.split(ohne_klammern):
+        w = woerter(teil)
+        if len(w) >= MIN_SEGMENT_WOERTER:
+            segmente.append(w)
+    return segmente
+
+
+def enthaelt_folge(kurz: list[str], lang: list[str]) -> bool:
+    """Kommt `kurz` als zusammenhängende Wortfolge in `lang` vor?"""
+    n = len(kurz)
+    if not n or n > len(lang):
+        return False
+    for i in range(len(lang) - n + 1):
+        if lang[i:i + n] == kurz:
+            return True
+    return False
+
+
+def seiten_liste(seite: str) -> list[tuple[int, int]]:
+    """„12-13,34" → [(12, 13), (34, 34)]. Leerer String → []."""
+    out: list[tuple[int, int]] = []
+    for m in SEITE_TEIL_RE.finditer(seite or ""):
+        von = int(m.group(1))
+        bis = int(m.group(2)) if m.group(2) else von
+        out.append((von, bis) if bis >= von else (von, von))
+    return out
+
+
+def ohne_zitattext(satz: str) -> str:
+    """Als Zitat gekennzeichneten Text aus dem Trägersatz entfernen.
+
+    Der Wortlaut-Vergleich sucht **unmarkierte** Übernahmen. Was in `\\enquote{}`
+    steht, ist markiert und darf wortgleich sein – bliebe es im Vergleich, meldete
+    das Skript ausgerechnet die korrekte Zitierweise als Übernahme. Der Fall trifft
+    jedes Direktzitat, das nicht unmittelbar vor seinem Beleg steht.
+    """
+    return ENQUOTE_RE.sub(" ", satz)
+
+
+def naechstes_zitat(text: str, zitate: list[tuple[int, int, str, bool]],
+                    start: int, ende: int) -> str:
+    """Das wörtliche Zitat, auf das sich der Zitierbefehl an [start, ende) bezieht.
+
+    Zwei enge Bedingungen statt eines weiten Fensters (siehe MAX_ZITAT_ABSTAND):
+    Die Anführung muss dicht am Beleg liegen, und dazwischen darf kein Satz enden.
+    Damit bleibt `\\enquote{Zitat} \\parencite[S. 5]{k}` ein wörtliches Zitat,
+    während `Der Begriff \\enquote{Resilienz} bezeichnet … \\parencite{k}` als das
+    gelesen wird, was er ist: eine Begriffsanführung mit eigener Aussage.
+
+    **Beide Richtungen zählen.** Die narrative Form – erst der Beleg, dann das
+    Zitat (`\\textcite[S. 67]{k} nennt es \\enquote{…}`) – ist keine Randform,
+    sondern die, zu der `hard-rules-formal.md` fürs Theorie-Kapitel ausdrücklich
+    rät. Wurde sie nicht erkannt, lief für sie **kein** Wortlautabgleich: Ein
+    Fehlzitat erzeugte dort keinen Befund, obwohl ZITAT WEICHT AB genau die
+    Klasse ist, die im Abgabe-Audit blockiert. Nichts am deutschen Satzbau macht
+    die eine Reihenfolge zum Zitat und die andere nicht.
+
+    Der Preis der Symmetrie: Begriffsanführungen **nach** einem narrativen Beleg
+    („Nach \\textcite{k} ist der Begriff \\enquote{Resilienz} zentral") werden
+    miterfasst. Sie bleiben durch MIN_ZITAT_WOERTER auf ein PRÜFEN gedeckelt und
+    können den blockierenden Befund nicht auslösen.
+
+    Bei mehreren Kandidaten gewinnt der nächstgelegene, nicht der erste Fund.
+    """
+    beste: tuple[int, str] | None = None
+    for a, b, inhalt, block in zitate:
+        if a <= start <= b:                       # Beleg steht im Zitat selbst
+            return inhalt
+        if b <= start:                            # Anführung endet vor dem Beleg
+            abstand, zwischen = start - b, text[b:start]
+        elif a >= ende:                           # Anführung beginnt nach dem Beleg
+            abstand, zwischen = a - ende, text[ende:a]
+        else:
+            continue
+        if block:
+            # blockzitat: großes Fenster, Satzenden dazwischen sind erlaubt
+            # (der einleitende Satz endet regelmäßig vor dem Zitat).
+            if abstand > MAX_BLOCKZITAT_ABSTAND:
+                continue
+        elif abstand > MAX_ZITAT_ABSTAND or SATZENDE_RE.search(zwischen):
+            continue
+        if beste is None or abstand < beste[0]:
+            beste = (abstand, inhalt)
+    return beste[1] if beste else ""
+
+
+def lies_tex(pfade: list[Path]) -> list[Zitation]:
+    out: list[Zitation] = []
+    for pfad in pfade:
+        text = pfad.read_text(encoding="utf-8", errors="replace")
+        zitate = spanne(text, ENQUOTE_RE) + spanne(text, BLOCKZITAT_RE, block=True)
+        for m in CITE_CMD_RE.finditer(text):
+            satz = satz_um(text, m.start())
+            woertlich = naechstes_zitat(text, zitate, m.start(), m.end())
+            # Argumentliste blockweise lesen: `\parencites[S. 911]{a}[S. 5]{b}`
+            # gibt jedem Werk eine EIGENE Seitenangabe. Wer hier alle Optionen
+            # zusammenwirft, hängt die Seite des einen Werks an das andere und
+            # erzeugt lauter falsche Seitenbefunde.
+            seite = ""
+            for tok in ARG_TOKEN_RE.finditer(m.group(1)):
+                opt, gruppe = tok.group(1), tok.group(2)
+                if opt is not None:
+                    s = SEITE_RE.search(opt)
+                    if s:
+                        # Auf die kanonische Form „12-13,34" normalisieren –
+                        # Bereiche mit Bindestrich, Einzelseiten mit Komma.
+                        seite = ",".join(
+                            f"{v}-{b}" if b != v else f"{v}"
+                            for v, b in seiten_liste(s.group(1)))
+                    continue
+                for key in (k.strip() for k in gruppe.split(",") if k.strip()):
+                    out.append(Zitation(
+                        datei=str(pfad).replace("\\", "/"),
+                        zeile=text[:m.start()].count("\n") + 1,
+                        key=key, seite=seite, satz=satz, woertlich=woertlich))
+                seite = ""  # nächster Block beginnt ohne Seitenangabe
+    return out
+
+
+# ---------------------------------------------------------------- .bib-Parsing
+
+def lies_bib(pfad: Path) -> dict[str, dict[str, str]]:
+    text = pfad.read_text(encoding="utf-8", errors="replace")
+    eintraege: dict[str, dict[str, str]] = {}
+    starts = [(m.start(), m.group(2)) for m in BIB_ENTRY_RE.finditer(text)]
+    for i, (pos, key) in enumerate(starts):
+        ende = starts[i + 1][0] if i + 1 < len(starts) else len(text)
+        block = text[pos:ende]
+        felder = {}
+        for feld in ("file", "url", "title", "author", "year", "date", "pages"):
+            # Feldname am Zeilenanfang verankern: sonst trifft „pages" auch
+            # `numpages`, „title" auch `booktitle`/`shorttitle` und „date" auch
+            # `urldate` – und der falsche Wert kippt die ganze Seitenrechnung.
+            m = re.search(r"(?mi)^\s*" + feld + r"\s*=\s*[{\"](.*?)[}\"]\s*,?\s*$",
+                          block, re.S)
+            if m:
+                felder[feld] = m.group(1).strip()
+        eintraege[key] = felder
+    return eintraege
+
+
+def pdf_pfad(feld: str, root: Path) -> Path | None:
+    """Zotero schreibt mehrere Dateien mit ';' getrennt, teils mit Typ-Suffix."""
+    for teil in feld.split(";"):
+        teil = teil.strip().replace("\\:", ":").replace("\\\\", "\\")
+        teil = re.sub(r":(?:application/pdf|PDF)$", "", teil, flags=re.I)
+        teil = re.sub(r"^[^:]*:(?=[A-Za-z]:[\\/]|/)", "", teil)
+        if teil.lower().endswith(".pdf"):
+            p = Path(teil)
+            if not p.is_absolute():
+                p = root / p
+            if p.exists():
+                return p
+    return None
+
+
+# ------------------------------------------------------------------ PDF-Zugriff
+
+def seiten_texte(pdf: Path) -> list[str]:
+    import pdfplumber
+    with pdfplumber.open(str(pdf)) as doc:
+        return [(s.extract_text() or "") for s in doc.pages]
+
+
+def seitenbereich(pages: str) -> tuple[int, int] | None:
+    """`pages = {907--912}` → (907, 912). Artikelnummern/Einzelseiten → None."""
+    m = re.match(r"\s*(\d+)\s*(?:--|–|-)\s*(\d+)\s*$", pages or "")
+    if not m:
+        return None
+    von, bis = int(m.group(1)), int(m.group(2))
+    return (von, bis) if bis >= von else None
+
+
+def versatz_aus_pages(pages: str, anzahl: int) -> int | None:
+    """Versatz aus dem Seitenbereich des Bib-Eintrags ableiten.
+
+    Der zuverlässigste Weg bei Zeitschriftenartikeln: Steht im Eintrag
+    `pages = {907--912}` und hat das PDF (bis auf zwei Seiten Toleranz für
+    Deckblätter) genau diesen Umfang, dann ist die gedruckte Seite 907 die
+    erste PDF-Seite. Das schlägt jede Fußzeilen-Heuristik, weil es aus einer
+    gepflegten Metadatenquelle kommt statt aus Texterkennung.
+    """
+    bereich = seitenbereich(pages)
+    if not bereich:
+        return None
+    von, bis = bereich
+    if abs((bis - von + 1) - anzahl) <= 2:
+        return 1 - von
+    return None
+
+
+def kalibriere(texte: list[str]) -> int | None:
+    """Versatz zwischen gedruckter Seitenzahl und PDF-Index bestimmen.
+
+    Sucht in den Rand-Zeilen jeder Seite eine Seitenzahl und nimmt den Versatz,
+    der am häufigsten auftritt. Bei Zeitschriftenartikeln steht die Zahl selten
+    allein – typisch ist „907 R. Setola et al. / Journal …" –, deshalb wird
+    nicht auf eine reine Zahlenzeile bestanden, sondern die erste beziehungsweise
+    letzte Zahl der Randzeile genommen. Jahreszahlen (1900–2100) fallen raus,
+    sonst kalibriert jede Fußzeile mit Copyright-Jahr falsch. Weniger als drei
+    übereinstimmende Fundstellen gelten als nicht kalibrierbar – dann wird nicht
+    geraten, sondern auf die Dokument-Suche ausgewichen (siehe `pruefe`).
+    """
+    stimmen: dict[int, int] = {}
+    for i, t in enumerate(texte):
+        zeilen = [z.strip() for z in t.split("\n") if z.strip()]
+        for kandidat in zeilen[:2] + zeilen[-2:]:
+            for zahl in re.findall(r"\b(\d{1,4})\b", kandidat[:40] + " " + kandidat[-40:]):
+                gedruckt = int(zahl)
+                if 1900 <= gedruckt <= 2100 or not 0 < gedruckt < len(texte) + 2000:
+                    continue
+                stimmen[(i + 1) - gedruckt] = stimmen.get((i + 1) - gedruckt, 0) + 1
+    if not stimmen:
+        return None
+    versatz, treffer = max(stimmen.items(), key=lambda kv: kv[1])
+    return versatz if treffer >= 3 else None
+
+
+# ------------------------------------------------------------------- Vergleiche
+
+def laengste_gemeinsame_folge(a: list[str], b: list[str], mindest: int) -> list[str]:
+    """Längste zusammenhängende gemeinsame Wortfolge (leer, wenn < mindest)."""
+    if len(a) < mindest or len(b) < mindest:
+        return []
+    index: dict[tuple[str, ...], list[int]] = {}
+    for i in range(len(b) - mindest + 1):
+        index.setdefault(tuple(b[i:i + mindest]), []).append(i)
+    beste: list[str] = []
+    for i in range(len(a) - mindest + 1):
+        for j in index.get(tuple(a[i:i + mindest]), []):
+            k = mindest
+            while i + k < len(a) and j + k < len(b) and a[i + k] == b[j + k]:
+                k += 1
+            if k > len(beste):
+                beste = a[i:i + k]
+    return beste
+
+
+def kernbegriffe(satz: str, n: int = 8) -> list[str]:
+    kandidaten = [w for w in woerter(satz) if len(w) >= 5 and w not in STOPP]
+    gesehen, out = set(), []
+    for w in sorted(kandidaten, key=len, reverse=True):
+        stamm = w[:6]
+        if stamm not in gesehen:
+            gesehen.add(stamm)
+            out.append(w)
+    return out[:n]
+
+
+DE_MARKER = {"der", "die", "das", "und", "nicht", "eine", "werden", "sich", "ist",
+             "auch", "für", "mit", "wird", "sind", "durch"}
+EN_MARKER = {"the", "and", "of", "to", "in", "is", "are", "that", "for", "with",
+             "this", "which", "be", "on", "by"}
+
+
+def sprache(text: str) -> str:
+    """Grobe Sprachkennung über Funktionswörter – reicht für die Frage, ob
+    Trägersatz und Quelle überhaupt dieselbe Sprache sprechen."""
+    w = woerter(text)
+    if len(w) < 12:
+        return "?"
+    de = sum(1 for x in w if x in DE_MARKER)
+    en = sum(1 for x in w if x in EN_MARKER)
+    if de > en * 1.5:
+        return "de"
+    if en > de * 1.5:
+        return "en"
+    return "?"
+
+
+def sprachwechsel(satz: str, seitentext: str) -> bool:
+    """Deutscher Satz, englische Quelle (oder umgekehrt)? Dann kann der
+    Begriffsabgleich nichts finden – und ein Seitenbefund daraus wäre ein
+    Fehlalarm. Der Fall ist bei deutschsprachigen Arbeiten mit englischer
+    Fachliteratur der Normalfall, nicht die Ausnahme."""
+    a, b = sprache(satz), sprache(seitentext)
+    return a != "?" and b != "?" and a != b
+
+
+def treffer_auf_seite(begriffe: list[str], seitentext: str) -> int:
+    norm = normalisiere(seitentext)
+    return sum(1 for b in begriffe if b[:6] in norm)
+
+
+def beste_seite(begriffe: list[str], texte: list[str]) -> tuple[int, int]:
+    werte = [(treffer_auf_seite(begriffe, t), i) for i, t in enumerate(texte)]
+    treffer, idx = max(werte) if werte else (0, 0)
+    return idx, treffer
+
+
+# ----------------------------------------------------------------- Zustand/IO
+
+def lies_state(pfad: Path) -> dict:
+    if pfad.exists():
+        try:
+            return json.loads(pfad.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            print(f"WARNUNG: {pfad} unlesbar – beginne mit leerem Stand.",
+                  file=sys.stderr)
+    return {"urteile": {}, "versatz": {}, "ausnahmen": []}
+
+
+def schreib_state(pfad: Path, state: dict) -> None:
+    pfad.write_text(json.dumps(state, ensure_ascii=False, indent=1),
+                    encoding="utf-8")
+
+
+def bericht(zitate: list[Zitation], root: Path) -> str:
+    offen = [z for z in zitate if z.status in STATUS_BEFUND | STATUS_OFFEN]
+    ok = [z for z in zitate if z.status == "OK"]
+    zeilen = [
+        "# Quellencheck – Volltextabgleich aller Zitationen",
+        "",
+        f"Stand: {date.today():%d.%m.%Y} · {len(zitate)} Zitationen · "
+        f"OK {len(ok)} · offen {len(offen)}",
+        "",
+        "> Erzeugt von `check_quellentreue.py`. Der Bericht wird pro Lauf "
+        "überschrieben; die Urteile liegen in `quellencheck-state.json`. "
+        "Statuswerte nie von Hand ändern – Urteil per "
+        "`--verdikt <hash>=OK --notiz \"…\"` eintragen.",
+        "",
+    ]
+    if offen:
+        zeilen += ["## Offen", "",
+                   "| Hash | Stelle | Quelle | S. | Status | Befund |",
+                   "|---|---|---|---|---|---|"]
+        for z in offen:
+            stelle = f"{Path(z.datei).name}:{z.zeile}"
+            zeilen.append(f"| `{z.hash}` | {stelle} | `{z.key}` | {z.seite or '–'} "
+                          f"| **{z.status}** | {z.befund or ''} |")
+        zeilen.append("")
+    if ok:
+        zeilen += ["## Geprüft und in Ordnung", "",
+                   "| Hash | Stelle | Quelle | S. | Notiz |", "|---|---|---|---|---|"]
+        for z in ok:
+            stelle = f"{Path(z.datei).name}:{z.zeile}"
+            zeilen.append(f"| `{z.hash}` | {stelle} | `{z.key}` | {z.seite or '–'} "
+                          f"| {z.notiz or ''} |")
+        zeilen.append("")
+    return "\n".join(zeilen) + "\n"
+
+
+# ------------------------------------------------------------------ Hauptlauf
+
+def pruefe(zitate: list[Zitation], bib: dict, state: dict, root: Path,
+           mindest: int, alle: bool) -> None:
+    cache: dict[str, list[str]] = {}
+    ausnahmen = [normalisiere(a) for a in state.get("ausnahmen", [])]
+    for z in zitate:
+        alt = state["urteile"].get(z.hash)
+        if alt and not alle and alt.get("status") in ("OK", "AUSNAHME"):
+            z.status, z.notiz = alt["status"], alt.get("notiz", "")
+            continue
+        eintrag = bib.get(z.key)
+        if eintrag is None:
+            z.status, z.befund = "NICHT GEFUNDEN", "Key fehlt in references.bib"
+            continue
+        pdf = pdf_pfad(eintrag.get("file", ""), root)
+        if pdf is None:
+            if eintrag.get("url"):
+                z.status = "LIVE PRÜFEN"
+                z.befund = ("kein PDF-Snapshot im file-Feld – Webquelle live "
+                            f"prüfen: {eintrag['url']}")
+            else:
+                z.status = "NICHT PRÜFBAR"
+                z.befund = "weder PDF (file) noch URL im Bib-Eintrag"
+            continue
+        try:
+            texte = cache.get(str(pdf)) or seiten_texte(pdf)
+        except ImportError:
+            print("FEHLER: pdfplumber fehlt – 'pip install pdfplumber'.",
+                  file=sys.stderr)
+            raise SystemExit(2)
+        except Exception as e:  # defektes/verschlüsseltes PDF
+            z.status, z.befund = "NICHT PRÜFBAR", f"PDF nicht lesbar ({e})"
+            continue
+        cache[str(pdf)] = texte
+        if not any(t.strip() for t in texte):
+            z.status = "NICHT PRÜFBAR"
+            z.befund = "PDF ohne Textebene (Scan) – OCR nötig oder manuell prüfen"
+            continue
+
+        ohne_versatz = False
+        if not z.seite:
+            seitentext = "\n".join(texte)
+            gedruckt = "werkbezogen"
+        else:
+            versatz = state["versatz"].get(z.key)
+            if versatz is None:
+                # Kein `or`: Versatz 0 ist ein gültiges Ergebnis (Artikel, dessen
+                # gedruckte Seite 1 die erste PDF-Seite ist) und darf nicht als
+                # „nichts gefunden" durchfallen.
+                versatz = versatz_aus_pages(eintrag.get("pages", ""), len(texte))
+                if versatz is None:
+                    versatz = kalibriere(texte)
+                if versatz is not None:
+                    state["versatz"][z.key] = versatz
+            if versatz is None:
+                # Seitenversatz unbekannt (typisch bei Artikel-PDFs ohne
+                # erkennbare Paginierung). Kein Abbruch: Wortlaut und Begriffe
+                # werden gegen das **ganze** Dokument geprüft – eine wörtliche
+                # Übernahme bleibt eine, egal auf welcher Seite sie steht. Nur
+                # die Seitenangabe selbst bleibt maschinell unbestätigt.
+                ohne_versatz = True
+                seitentext = "\n".join(texte)
+                gedruckt = f"S. {z.seite} (Versatz unbekannt)"
+            else:
+                # Jede genannte Seite einzeln auflösen – auch die Komma-Form
+                # „S. 12, 34" (Zitierleitfaden 2.2.1) trägt mehrere Fundstellen.
+                bloecke: list[str] = []
+                ausserhalb: int | None = None
+                for von_g, bis_g in seiten_liste(z.seite):
+                    von = von_g + versatz - 1
+                    bis = bis_g + versatz - 1
+                    if not (0 <= von < len(texte)):
+                        ausserhalb = von_g
+                        break
+                    bloecke.append("\n".join(texte[von:min(bis + 1, len(texte))]))
+                if ausserhalb is not None:
+                    bereich = seitenbereich(eintrag.get("pages", ""))
+                    zusatz = ""
+                    if bereich and ausserhalb <= len(texte):
+                        # Klassischer Fehler: die PDF-interne Seite zitiert statt
+                        # der gedruckten. Dann ist die richtige Angabe ausrechenbar.
+                        zusatz = ("; sieht nach PDF-interner Zählung aus – gedruckt "
+                                  f"wäre das S. {bereich[0] + ausserhalb - 1} "
+                                  f"(Artikel: S. {bereich[0]}–{bereich[1]})")
+                    z.status = "SEITE VERDÄCHTIG"
+                    z.befund = (f"S. {ausserhalb} liegt außerhalb des PDFs "
+                                f"({len(texte)} Seiten, Versatz {versatz}){zusatz}")
+                    continue
+                seitentext = "\n".join(bloecke)
+                gedruckt = f"S. {z.seite}"
+        z.seitentext = seitentext
+
+        # 1) Wörtliches Zitat muss exakt stehen – abzüglich der Eingriffe, die
+        #    der Zitierleitfaden erlaubt (Klammern, Auslassungen).
+        if z.woertlich:
+            zitat = woerter(z.woertlich)
+            quelle_w = woerter(seitentext)
+            segmente = zitat_segmente(z.woertlich)
+            if segmente:
+                fehlend = [s for s in segmente if not enthaelt_folge(s, quelle_w)]
+                gefunden_n = sum(len(s) for s in segmente if s not in fehlend)
+                vollstaendig = not fehlend
+            else:
+                # Zu kurz oder nur Klammerinhalt – auf den alten Weg zurückfallen.
+                gefunden = laengste_gemeinsame_folge(zitat, quelle_w,
+                                                     min(mindest, len(zitat)))
+                gefunden_n, vollstaendig = len(gefunden), len(gefunden) >= len(zitat)
+            if not vollstaendig:
+                if len(zitat) < MIN_ZITAT_WOERTER:
+                    # Kurze Anführung dicht vor dem Beleg: Kurzzitat oder doch
+                    # Begriffsanführung? Mechanisch nicht entscheidbar – und ein
+                    # blockierender Befund wäre für diesen Zweifelsfall zu scharf.
+                    z.status = "PRÜFEN"
+                    z.befund = (f"kurze Anführung ({len(zitat)} Wörter) steht so nicht "
+                                f"in {gedruckt} – Kurzzitat (dann Wortlaut oder Seite "
+                                f"korrigieren) oder Begriffsanführung (dann in Ordnung)? "
+                                f"Im semantischen Schritt entscheiden")
+                    continue
+                z.status = "ZITAT WEICHT AB"
+                z.befund = (f"wörtliches Zitat ({len(zitat)} Wörter) steht so nicht "
+                            f"in {gedruckt}; {gefunden_n} von {len(zitat)} Wörtern "
+                            f"gefunden. Klammer-Eingriffe ([sic], Ergänzungen, "
+                            f"Hervorhebungs-Hinweise) und Auslassungen sind beim "
+                            f"Vergleich bereits herausgerechnet – die Abweichung "
+                            f"liegt im Zitattext selbst")
+                continue
+            z.status = "PRÜFEN"
+            z.befund = ("wörtliches Zitat exakt gefunden – Seitenangabe bestätigen"
+                        + (" (Seite maschinell nicht prüfbar, Versatz unbekannt)"
+                           if ohne_versatz else ""))
+            continue
+
+        # 2) Wortlautübernahme in Paraphrasen – gekennzeichnete Zitate zählen nicht mit
+        folge = laengste_gemeinsame_folge(woerter(ohne_zitattext(z.satz)),
+                                          woerter(seitentext), mindest)
+        if folge and not any(" ".join(folge) in a for a in ausnahmen):
+            z.status = "WORTLAUT"
+            z.befund = (f"{len(folge)} Wörter wörtlich übernommen: "
+                        f"„{' '.join(folge)}" + "“ – umformulieren oder als Zitat "
+                        "kennzeichnen")
+            continue
+
+        # 3) Passt die Seitenangabe?
+        begriffe = kernbegriffe(z.satz)
+        if z.seite and begriffe and sprachwechsel(z.satz, seitentext):
+            # Deutscher Satz, englische Quelle: Der Begriffsabgleich kann hier
+            # nichts leisten. Kein Befund erfinden – der semantische Schritt
+            # entscheidet, der Sprachen vergleichen kann.
+            z.status = "PRÜFEN"
+            z.befund = (f"Sprachwechsel Text/Quelle – Seitenangabe {gedruckt} "
+                        "maschinell nicht prüfbar, im semantischen Schritt "
+                        "mitprüfen")
+            continue
+        if z.seite and begriffe and treffer_auf_seite(begriffe, seitentext) == 0:
+            if ohne_versatz:
+                # Gegen das ganze Dokument geprüft: Kommt kein Kernbegriff vor,
+                # ist die Aussage in dieser Quelle überhaupt nicht zu finden –
+                # ein stärkerer Befund als eine bloß falsche Seitenzahl.
+                z.status = "NICHT GEFUNDEN"
+                z.befund = ("kein Kernbegriff des Satzes im gesamten Dokument – "
+                            "Quelle oder Aussage prüfen")
+                continue
+            idx, treffer = beste_seite(begriffe, texte)
+            versatz = state["versatz"].get(z.key, 0)
+            hinweis = (f"; Begriffe stehen am ehesten auf S. {idx + 1 - versatz} "
+                       f"({treffer} Treffer)") if treffer else ""
+            z.status = "SEITE VERDÄCHTIG"
+            z.befund = f"kein Kernbegriff des Satzes auf {gedruckt}{hinweis}"
+            continue
+
+        z.status = "PRÜFEN"
+        if ohne_versatz:
+            idx, treffer = beste_seite(begriffe, texte) if begriffe else (0, 0)
+            z.befund = (f"inhaltlich plausibel, aber S. {z.seite} maschinell nicht "
+                        f"bestätigt (Seitenversatz unbekannt; Begriffe am ehesten "
+                        f"auf PDF-Seite {idx + 1}). Seitenangabe im semantischen "
+                        f"Schritt mitprüfen oder Versatz setzen: "
+                        f"--offset {z.key}=<n>")
+        else:
+            z.befund = f"mechanisch unauffällig – Inhaltsdeckung auf {gedruckt} prüfen"
+
+
+def zeige_seite(key: str, seite: str, bib: dict, state: dict, root: Path) -> int:
+    """Den Text einer zitierten Seite ausgeben – für den Schreibschritt, der
+    den Satz aus der Quelle heraus formulieren soll, statt ihn hinterher zu
+    prüfen. Kein Prüflauf, kein Bericht, kein Zustand wird geschrieben."""
+    eintrag = bib.get(key)
+    if eintrag is None:
+        print(f"FEHLER: Key '{key}' fehlt in references.bib.", file=sys.stderr)
+        return 2
+    pdf = pdf_pfad(eintrag.get("file", ""), root)
+    if pdf is None:
+        ziel = eintrag.get("url") or "kein Volltext im Bib-Eintrag"
+        print(f"Kein PDF im file-Feld. Webquelle: {ziel}", file=sys.stderr)
+        return 2
+    try:
+        texte = seiten_texte(pdf)
+    except Exception as e:
+        print(f"FEHLER: PDF nicht lesbar ({e}).", file=sys.stderr)
+        return 2
+    versatz = state["versatz"].get(key)
+    if versatz is None:
+        versatz = versatz_aus_pages(eintrag.get("pages", ""), len(texte))
+    if versatz is None:
+        versatz = kalibriere(texte)
+    if versatz is None:
+        print(f"Seitenversatz unbekannt – gebe das ganze Dokument aus "
+              f"({len(texte)} Seiten). Für seitengenaues Lesen: "
+              f"--offset {key}=<n>", file=sys.stderr)
+        print("\n".join(" ".join(s.split()) for s in texte)[:12000])
+        return 0
+    bereiche = seiten_liste(str(seite)) or [(int(str(seite).split("-")[0]),) * 2]
+    ausgegeben = 0
+    for von_g, bis_g in bereiche:
+        for gedruckt in range(von_g, bis_g + 1):
+            i = gedruckt + versatz - 1
+            if not (0 <= i < len(texte)):
+                print(f"FEHLER: S. {gedruckt} liegt außerhalb des PDFs "
+                      f"({len(texte)} Seiten, Versatz {versatz}).", file=sys.stderr)
+                if not ausgegeben:
+                    return 2
+                continue
+            print(f"=== {key} · gedruckte S. {gedruckt} · "
+                  f"PDF-Seite {i + 1}/{len(texte)} ===")
+            print(" ".join(texte[i].split()))
+            ausgegeben += 1
+    return 0 if ausgegeben else 2
+
+
+PAAR_MIN_ZEICHEN = 1200   # Untergrenze: darunter wird nie gekürzt
+PAAR_MAX_ZEICHEN = 3000   # Obergrenze auch im ungekürzten Fall
+PAAR_RAND = 400           # Kontext links und rechts um den äußersten Treffer
+
+
+def ausschnitt(seitentext: str, begriffe: list[str]) -> tuple[str, bool]:
+    """Den Teil der Quellseite herausschneiden, der die Kernbegriffe enthält.
+
+    Bei 40+ Zitationen ist der Seitentext der größte Einzelposten des Audits.
+    Gekürzt wird aber nur, wo es sicher ist: Der Ausschnitt umspannt **alle**
+    Treffer (nicht nur den besten), behält PAAR_RAND Zeichen Kontext auf beiden
+    Seiten und unterschreitet PAAR_MIN_ZEICHEN nie. Ohne Treffer wird nicht
+    geraten, sondern der Anfang der Seite ausgegeben.
+
+    Rückgabe: (Text, gekuerzt?) – der Aufrufer weist die Kürzung sichtbar aus,
+    damit ein Urteil nie unbemerkt auf zu wenig Kontext beruht.
+    """
+    text = seitentext.strip()
+    if len(text) <= PAAR_MIN_ZEICHEN:
+        return text, False
+    tief = text.lower()
+    positionen = [p for b in begriffe if (p := tief.find(b[:6])) >= 0]
+    if not positionen:
+        return text[:PAAR_MAX_ZEICHEN], len(text) > PAAR_MAX_ZEICHEN
+    start, ende = min(positionen) - PAAR_RAND, max(positionen) + PAAR_RAND
+    start, ende = max(0, start), min(len(text), ende)
+    if ende - start < PAAR_MIN_ZEICHEN:            # auf die Untergrenze dehnen
+        # Erst nach links, dann nach rechts – und was auf einer Seite am Rand
+        # verloren geht, wird auf der anderen nachgeholt. Ohne diesen zweiten
+        # Schritt blieb ein Treffer am Seitenanfang oder -ende unter der
+        # Untergrenze, weil die halbe Erweiterung ins Leere lief.
+        fehlt = PAAR_MIN_ZEICHEN - (ende - start)
+        links = min(start, fehlt // 2)
+        start -= links
+        ende = min(len(text), ende + (fehlt - links))
+        if ende - start < PAAR_MIN_ZEICHEN:
+            start = max(0, ende - PAAR_MIN_ZEICHEN)
+    ende = min(ende, start + PAAR_MAX_ZEICHEN)
+    return text[start:ende], (start > 0 or ende < len(text))
+
+
+def paare_ausgeben(zitate: list[Zitation], anzahl: int, voll: bool = False) -> None:
+    """Prüfpaare für den semantischen Schritt (Trägersatz + Quellenausschnitt)."""
+    offen = [z for z in zitate if z.status == "PRÜFEN"][:anzahl]
+    for z in offen:
+        print("\n" + "=" * 70)
+        print(f"HASH {z.hash} · {z.datei}:{z.zeile} · {z.key} · S. {z.seite or '–'}")
+        print("--- Trägersatz ---")
+        print(z.satz.strip()[:1200])
+        if voll:
+            quelle, gekuerzt = z.seitentext.strip()[:12000], False
+        else:
+            quelle, gekuerzt = ausschnitt(z.seitentext, kernbegriffe(z.satz))
+        print("--- Quelle (zitierte Seite) ---")
+        print(quelle or "(kein Text)")
+        if gekuerzt:
+            print(f"[gekürzt auf den Bereich um die Kernbegriffe. Reicht der "
+                  f"Ausschnitt für das Urteil nicht: --paare N --voll, oder "
+                  f"gezielt die ganze Seite mit "
+                  f"--seite {z.key} {z.seite.split(',')[0] if z.seite else '<n>'}]")
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser(description=__doc__,
+                                 formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--datei", default="chapters",
+                    help="Datei oder Verzeichnis (Default: chapters/)")
+    ap.add_argument("--bib", default="references.bib")
+    ap.add_argument("--bericht", default="quellencheck.md")
+    ap.add_argument("--state", default="quellencheck-state.json")
+    ap.add_argument("--min-words", type=int, default=7,
+                    help="Wortlaut-Schwelle (Default 7)")
+    ap.add_argument("--alle", action="store_true",
+                    help="auch bereits mit OK quittierte Zitationen neu prüfen")
+    ap.add_argument("--paare", type=int, default=0,
+                    help="N Prüfpaare (Trägersatz + Quellenausschnitt) ausgeben")
+    ap.add_argument("--voll", action="store_true",
+                    help="Prüfpaare mit vollem Seitentext statt Ausschnitt "
+                         "(wenn der Ausschnitt für das Urteil nicht reicht)")
+    ap.add_argument("--verdikt", action="append", default=[],
+                    metavar="HASH=STATUS", help="Urteil setzen: OK oder AUSNAHME")
+    ap.add_argument("--notiz", default="", help="Notiz zum Urteil")
+    ap.add_argument("--offset", action="append", default=[], metavar="KEY=N",
+                    help="Seitenversatz einer Quelle manuell setzen")
+    ap.add_argument("--ausnahme", action="append", default=[],
+                    help="Wortfolge dauerhaft vom Wortlaut-Test ausnehmen")
+    ap.add_argument("--seite", nargs=2, metavar=("KEY", "SEITE"),
+                    help="nur den Text der zitierten Seite ausgeben (zum Lesen "
+                         "beim Schreiben) – kein Prüflauf, kein Bericht")
+    a = ap.parse_args()
+
+    root = Path(".").resolve()
+    buchung = bool(a.verdikt or a.offset or a.ausnahme)
+    state_pfad = Path(a.state)
+    state = lies_state(state_pfad)
+
+    for eintrag in a.offset:
+        key, _, wert = eintrag.partition("=")
+        state["versatz"][key.strip()] = int(wert)
+        print(f"OK: Seitenversatz {key.strip()} = {int(wert)}")
+    for wortfolge in a.ausnahme:
+        state.setdefault("ausnahmen", []).append(wortfolge)
+        print(f"OK: Ausnahme ergänzt – „{wortfolge}“")
+    for eintrag in a.verdikt:
+        h, _, status = eintrag.partition("=")
+        status = status.strip().upper() or "OK"
+        if status not in ("OK", "AUSNAHME"):
+            print(f"FEHLER: Status '{status}' unzulässig (OK oder AUSNAHME).",
+                  file=sys.stderr)
+            return 2
+        state["urteile"][h.strip()] = {"status": status, "notiz": a.notiz,
+                                       "datum": f"{date.today():%Y-%m-%d}"}
+        print(f"OK: Urteil {h.strip()} = {status}")
+
+    bib_pfad = Path(a.bib)
+    if not bib_pfad.exists():
+        print(f"FEHLER: {bib_pfad} nicht gefunden.", file=sys.stderr)
+        return 2
+
+    if a.seite:
+        return zeige_seite(a.seite[0], a.seite[1], lies_bib(bib_pfad), state, root)
+    ziel = Path(a.datei)
+    pfade = sorted(ziel.rglob("*.tex")) if ziel.is_dir() else [ziel]
+    if not pfade:
+        print(f"FEHLER: keine .tex-Dateien unter {ziel}.", file=sys.stderr)
+        return 2
+
+    zitate = lies_tex(pfade)
+    if not zitate:
+        print("Keine Zitationen gefunden – nichts zu prüfen.")
+        schreib_state(state_pfad, state)
+        return 0
+    pruefe(zitate, lies_bib(bib_pfad), state, root, a.min_words, a.alle)
+    schreib_state(state_pfad, state)
+    Path(a.bericht).write_text(bericht(zitate, root), encoding="utf-8")
+
+    zaehler: dict[str, int] = {}
+    for z in zitate:
+        zaehler[z.status] = zaehler.get(z.status, 0) + 1
+    print(f"\n{len(zitate)} Zitationen in {len(pfade)} Datei(en) · Bericht: {a.bericht}")
+    for status in sorted(zaehler):
+        print(f"  {status:<20} {zaehler[status]}")
+    if a.paare:
+        paare_ausgeben(zitate, a.paare, a.voll)
+    offen = sum(v for k, v in zaehler.items() if k in STATUS_BEFUND | STATUS_OFFEN)
+    if offen:
+        print(f"\n{offen} Zitation(en) offen – Befunde abarbeiten, "
+              "Prüfpaare mit --paare abrufen, Urteile mit --verdikt eintragen.")
+    if buchung:
+        # Eintragen von Urteil, Versatz oder Ausnahme ist eine Buchung, kein
+        # Prüflauf: Sie ist gelungen, sobald sie geschrieben wurde. Würde hier
+        # der Torwert zurückgegeben, sähe jede einzelne Buchung in der
+        # Oberfläche nach einem Fehlschlag aus, solange irgendetwas offen ist.
+        return 0
+    return 1 if offen else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

@@ -1,4 +1,4 @@
-# Hausarbeit — Typ-Datei (Pflichtregeln · Bewertung · Planung · Schreiben · Prüfen)
+# Hausarbeit – Typ-Datei (Pflichtregeln · Bewertung · Planung · Schreiben · Prüfen)
 
 Einzige Quelle für alle papiertyp-spezifischen Regeln der Hausarbeit. **Nutzungsregel:** Nur „Pflicht"-Punkte zählen im Prüf-Modus als FAIL; „empfohlen"/„optional" sind Hinweise, „entfällt" wird gar nicht geprüft. Plan-Modus fragt aktiv nur Pflicht-Punkte ab, Schreib-Modus prüft im Self-Check nur Pflicht-Punkte.
 
@@ -14,7 +14,7 @@ Einzige Quelle für alle papiertyp-spezifischen Regeln der Hausarbeit. **Nutzung
 
 Argumentation 40 % · Struktur 15 % · Einführung 10 % · Abschluss 15 % · Sprache 10 % · Formalia 10 %
 
-→ **Planungskonsequenz**: Argumentation dominiert — die Diskussion ist das größte Kapitel, Seitenbudget entsprechend verteilen (siehe Plan-Modus → Gewichte-Budgetierung).
+→ **Planungskonsequenz**: Argumentation dominiert – die Diskussion ist das größte Kapitel, Seitenbudget entsprechend verteilen (siehe Plan-Modus → Gewichte-Budgetierung).
 
 ## Kapitelgerüst & Kernfragen
 
@@ -29,17 +29,17 @@ Gesamt: 7–10 S. (B.Sc.) / 12–15 S. (M.Sc.). Einl. 10 % / Haupt 80 % / Schlus
 
 **Kernfragen pro Kapitel (Schritt 3):**
 
-**Einleitung** — Welches Problem führt zur Leitfrage (Dringlichkeit)? Welche Forschungslücke schließt die Arbeit (warum bestehendes Wissen nicht reicht)? Warum jetzt (Aktualität/Zeitbezug)? Leitfrage (ein Satz)? Wie ist die Arbeit aufgebaut?
+**Einleitung** – Welches Problem führt zur Leitfrage (Dringlichkeit)? Welche Forschungslücke schließt die Arbeit (warum bestehendes Wissen nicht reicht)? Warum jetzt (Aktualität/Zeitbezug)? Leitfrage (ein Satz)? Wie ist die Arbeit aufgebaut?
 
-**Theorie** (2–3 Konzepte) — Welche Konzepte werden behandelt? Wie hängen sie zusammen (roter Faden)? Was ist die größte Lücke? Turning Point: welches anerkannte Paper wird kritisiert, welche Lücke eröffnet das für diese Arbeit?
+**Theorie** (2–3 Konzepte) – Welche Konzepte werden behandelt? Wie hängen sie zusammen (roter Faden)? Was ist die größte Lücke? Turning Point: welches anerkannte Paper wird kritisiert, welche Lücke eröffnet das für diese Arbeit?
 
-**Diskussion** — Hauptargumente (Pro/Contra)? Übereinstimmungen/Widersprüche? Eigene Syntheseleistung? Stärkstes Gegenargument reflektiert und entkräftet?
+**Diskussion** – Hauptargumente (Pro/Contra)? Übereinstimmungen/Widersprüche? Eigene Syntheseleistung? Stärkstes Gegenargument reflektiert und entkräftet?
 
-**Schluss** — Wie wird die Leitfrage beantwortet? Kernsynthese? Ausblick? Limitationen dreischichtig (warum · Mitigation · wie zukünftige Forschung)?
+**Schluss** – Wie wird die Leitfrage beantwortet? Kernsynthese? Ausblick? Limitationen dreischichtig (warum · Mitigation · wie zukünftige Forschung)?
 
 ## Voice, Claims, Absätze
 
-**Voice**: „Diese Arbeit zeigt …" — Argumentationsfokus. Sprachniveau: einfach und verständlich, Fachbegriffe bei erster Nennung erklären (siehe `hard-rules-formal.md` → Verständlichkeit).
+**Voice**: „Diese Arbeit zeigt …" – Argumentationsfokus. Sprachniveau: einfach und verständlich, Fachbegriffe bei erster Nennung erklären (siehe `hard-rules-formal.md` → Verständlichkeit).
 
 **Synthese pro Kapitel**: Pro Leitfrage: Hauptargumente, Übereinstimmungen, Widersprüche, Lücken, methodische Bewertung. Abschließende Syntheseleistung.
 
@@ -54,7 +54,7 @@ Gesamt: 7–10 S. (B.Sc.) / 12–15 S. (M.Sc.). Einl. 10 % / Haupt 80 % / Schlus
 - [ ] Syntheseleistung pro Hauptkapitel?
 - [ ] Strukturelle Übergänge zwischen Kapiteln?
 - [ ] 7–10 Seiten (B.Sc.) / 12–15 (M.Sc.)?
-- [ ] Quellen: 5–15? (Richtwert aus der Praxis, keine IU-Vorgabe — bei abweichender Aufgabenstellung gilt die Aufgabenstellung)
+- [ ] Quellen: 5–15? (Richtwert aus der Praxis, keine IU-Vorgabe – bei abweichender Aufgabenstellung gilt die Aufgabenstellung)
 
 **Outline-Check (Soll-Struktur, identisch mit Plan-Modus Schritt 2.5):**
 Einleitung (Begründung, Abgrenzung, Ziel, Aufbau) → Theorie (2–3 Kapitel) → Diskussion → Schluss (Synthese, keine neuen Argumente)

@@ -1,10 +1,10 @@
-# Stilprofil — Kalibrierung an gut bewerteten Arbeiten
+# Stilprofil – Kalibrierung an gut bewerteten Arbeiten
 
-Destillat aus den von Prüfenden gut bewerteten Beispielarbeiten (`beispieldokumente/` im übergeordneten Vorlagen-Ordner; dieses Profil ersetzt die PDF-Lektüre und funktioniert auch, wenn der Projektordner einzeln kopiert wurde). Wird von `schreib-modus` und `pruef-modus` zusammen mit `hard-rules-formal.md` → Verständlichkeit genutzt. Alle Positiv-Beispiele stammen wörtlich aus real gut bewerteten Arbeiten, alle Negativ-Beispiele aus einer real schlechter bewerteten.
+Destillat aus real bewerteten Beispielarbeiten – **diese Datei ist die vollständige Quelle**, es gibt keine Original-PDFs nachzuschlagen. Wird von `schreib-modus` und `pruef-modus` zusammen mit `hard-rules-formal.md` → Verständlichkeit genutzt. Alle Positiv-Beispiele stammen wörtlich aus real gut bewerteten Arbeiten, alle Negativ-Beispiele aus einer real schlechter bewerteten.
 
 ## Der Zielklang in einem Satz
 
-Schreibe wie ein kompetenter Studierender, der einem interessierten Laien etwas erklärt — nicht wie ein Fachjournal, das Dichte demonstrieren will.
+Schreibe wie ein kompetenter Studierender, der einem interessierten Laien etwas erklärt – nicht wie ein Fachjournal, das Dichte demonstrieren will.
 
 ## So klingen die gut bewerteten Arbeiten (Positiv-Muster)
 
@@ -25,7 +25,7 @@ Muster: `<Fachbegriff> beschreibt/bezeichnet/liegt vor, wenn <Alltagssprache>`. 
 **Konkrete Beispiele statt Abstraktion:**
 > „Dennoch passt sich McDonald's auch lokalen Gewohnheiten und Geschmäckern an, zum Beispiel Eiscreme mit Mungobohnengeschmack in China."
 
-## So klingt der abgestrafte KI-Akademikerstil (Negativ-Muster — vermeiden)
+## So klingt der abgestrafte KI-Akademikerstil (Negativ-Muster – vermeiden)
 
 **Gestelzte Meta-Verben für Kapitel und Vorgehen:**
 > ✗ „Kapitel 3 entfaltet daraus das Plattformkonzept …" · ✗ „Kapitel 5 bündelt die Ergebnisse …" · ✗ „Ihr Modell verortet die Unwägbarkeiten kreativer Arbeit …"
@@ -49,7 +49,7 @@ Muster: `<Fachbegriff> beschreibt/bezeichnet/liegt vor, wenn <Alltagssprache>`. 
 
 **Pointen-Schlusssatz am Absatzende:**
 > ✗ „Der bewusste Verzicht auf Breite ist damit die Voraussetzung des Konzepts." (nach einem Absatz, der genau das schon gesagt hat)
-> ✓ Schlusssatz streichen — der Absatz trägt die Aussage bereits.
+> ✓ Schlusssatz streichen – der Absatz trägt die Aussage bereits.
 
 **Staccato-Kette kurzer Sätze mit Pronomen-Anapher:**
 > ✗ „Diese Beobachtung bezieht sich auf die untersuchte Stichprobe. Sie erlaubt keine Verallgemeinerung. Sie liefert aber einen Ansatzpunkt."
@@ -57,29 +57,29 @@ Muster: `<Fachbegriff> beschreibt/bezeichnet/liegt vor, wenn <Alltagssprache>`. 
 
 ## Menschliche Textur (Positiv-Muster)
 
-Die Verbotsregeln in `hard-rules-formal.md` entfernen KI-Marker — menschlich klingt ein Text aber erst durch das, was er *tut*, nicht nur durch das, was er unterlässt:
+Die Verbotsregeln in `hard-rules-formal.md` entfernen KI-Marker – menschlich klingt ein Text aber erst durch das, was er *tut*, nicht nur durch das, was er unterlässt:
 
 **Narrative Zitate mischen (nicht jede Quelle in Klammern ans Satzende):**
 > ✗ „Es werden drei Komponenten des Commitments unterschieden (Meyer & Allen, 1991, S. 67). Die emotionale Komponente hat den stärksten Effekt (Meyer et al., 2002, S. 33). Das Modell wurde vielfach kritisiert (Solinger et al., 2008, S. 71)."
 > ✓ „Meyer und Allen (1991, S. 67) unterscheiden drei Komponenten des Commitments. Eine Metaanalyse bestätigte später, dass die emotionale Komponente den stärksten Effekt hat (Meyer et al., 2002, S. 33). Solinger et al. (2008, S. 71) halten das Modell dagegen für empirisch nicht haltbar."
 
-LaTeX: narrative Form mit `\textcite[S. 67]{key}`, Klammer-Form mit `\parencite`. Kein festes Verhältnis — narrativ immer dann, wenn die Autorenposition selbst Thema des Satzes ist.
+LaTeX: narrative Form mit `\textcite[S. 67]{key}`, Klammer-Form mit `\parencite`. Kein festes Verhältnis – narrativ immer dann, wenn die Autorenposition selbst Thema des Satzes ist.
 
 **Abwägung endet mit Urteil, nicht mit Symmetrie:**
 > ✗ „Einerseits bietet das Modell eine klare Struktur. Andererseits ist seine empirische Basis umstritten. Beide Perspektiven haben ihre Berechtigung."
-> ✓ „Das Modell bietet eine klare Struktur, seine empirische Basis ist jedoch umstritten. Für diese Arbeit überwiegt der strukturelle Nutzen: Die Kritik von Solinger et al. (2008) betrifft die Trennschärfe der Komponenten, nicht ihre Existenz — und nur Letztere wird hier vorausgesetzt."
+> ✓ „Das Modell bietet eine klare Struktur, seine empirische Basis ist jedoch umstritten. Für diese Arbeit überwiegt der strukturelle Nutzen: Die Kritik von Solinger et al. (2008) betrifft die Trennschärfe der Komponenten, nicht ihre Existenz – und nur Letztere wird hier vorausgesetzt."
 
-**Dosierte Natürlichkeit** (sparsam — ein Element alle paar Absätze): ein Klammer-Einschub mit Beispiel oder Kurzerklärung, Konnektoren-Vielfalt („allerdings", „dabei", „immerhin" statt durchgehend „jedoch"/„zudem"), gelegentlich eine nachgeschobene Präzisierung („genauer gesagt: nur für Befragte unter zwei Jahren Betriebszugehörigkeit").
+**Dosierte Natürlichkeit** (sparsam – ein Element alle paar Absätze): ein Klammer-Einschub mit Beispiel oder Kurzerklärung, Konnektoren-Vielfalt („allerdings", „dabei", „immerhin" statt durchgehend „jedoch"/„zudem"), gelegentlich eine nachgeschobene Präzisierung („genauer gesagt: nur für Befragte unter zwei Jahren Betriebszugehörigkeit").
 
-**Keine rhetorischen Fragen** als Einstieg oder Übergang („Doch was folgt daraus?") — die wörtlich formulierte Leitfrage ist die einzige legitime Frage im Text.
+**Keine rhetorischen Fragen** als Einstieg oder Übergang („Doch was folgt daraus?") – die wörtlich formulierte Leitfrage ist die einzige legitime Frage im Text.
 
-## Absatzbau — wie ein guter wissenschaftlicher Absatz aussieht
+## Absatzbau – wie ein guter wissenschaftlicher Absatz aussieht
 
-**Richtwert: 4–7 Sätze pro Absatz — als Rahmen, nicht als Raster.** Unter 3 Sätzen ist es meist kein eigenständiger Gedanke (mit dem Vorgänger-Absatz zusammenlegen), über 8 Sätzen verliert der Leser den roten Faden (aufteilen). Ausnahme: kurze Übergangs- oder Einleitungsabsätze (2–3 Sätze sind dort in Ordnung). **Wichtig: Die Längen innerhalb des Rahmens streuen** — ein Text, in dem jeder Absatz exakt fünf Sätze hat, wirkt maschinell gleichförmig, selbst wenn jeder einzelne Absatz gut gebaut ist. Ein kurzer Absatz nach zwei langen ist ein Rhythmuswechsel, kein Fehler.
+**Richtwert: 4–7 Sätze pro Absatz – als Rahmen, nicht als Raster.** Unter 3 Sätzen ist es meist kein eigenständiger Gedanke (mit dem Vorgänger-Absatz zusammenlegen), über 8 Sätzen verliert der Leser den roten Faden (aufteilen). Ausnahme: kurze Übergangs- oder Einleitungsabsätze (2–3 Sätze sind dort in Ordnung). **Wichtig: Die Längen innerhalb des Rahmens streuen** – ein Text, in dem jeder Absatz exakt fünf Sätze hat, wirkt maschinell gleichförmig, selbst wenn jeder einzelne Absatz gut gebaut ist. Ein kurzer Absatz nach zwei langen ist ein Rhythmuswechsel, kein Fehler.
 
 ### Grundmuster: Claim → Beleg → Erklärung → Einordnung
 
-> Organizational Commitment beschreibt die emotionale, kalkulierte oder normative Bindung von Mitarbeitenden an ihr Unternehmen (Meyer & Allen, 1991, S. 67). In einer Metaanalyse über 155 Studien zeigte sich, dass vor allem die emotionale Komponente mit geringerer Fluktuationsabsicht zusammenhängt (Meyer et al., 2002, S. 33). Das bedeutet: Mitarbeitende, die sich ihrem Unternehmen emotional verbunden fühlen, denken seltener über einen Wechsel nach — selbst wenn bessere Angebote vorliegen. Für TRESOLITE ist dieser Befund relevant, weil die aktuelle Fluktuation vor allem Mitarbeitende betrifft, die weniger als zwei Jahre im Unternehmen sind und möglicherweise noch keine emotionale Bindung aufbauen konnten.
+> Organizational Commitment beschreibt die emotionale, kalkulierte oder normative Bindung von Mitarbeitenden an ihr Unternehmen (Meyer & Allen, 1991, S. 67). In einer Metaanalyse über 155 Studien zeigte sich, dass vor allem die emotionale Komponente mit geringerer Fluktuationsabsicht zusammenhängt (Meyer et al., 2002, S. 33). Das bedeutet: Mitarbeitende, die sich ihrem Unternehmen emotional verbunden fühlen, denken seltener über einen Wechsel nach – selbst wenn bessere Angebote vorliegen. Für TRESOLITE ist dieser Befund relevant, weil die aktuelle Fluktuation vor allem Mitarbeitende betrifft, die weniger als zwei Jahre im Unternehmen sind und möglicherweise noch keine emotionale Bindung aufbauen konnten.
 
 **Was diesen Absatz gut macht:**
 - Erster Satz = Hauptaussage (Claim) mit Begriffserklärung
@@ -101,11 +101,11 @@ LaTeX: narrative Form mit `\textcite[S. 67]{key}`, Klammer-Form mit `\parencite`
 
 > ✗ „Organizational Commitment ist ein vielschichtiges Konstrukt, das in der wissenschaftlichen Literatur intensiv diskutiert wird. Es umfasst verschiedene Dimensionen und hat weitreichende Implikationen für das Personalmanagement. Darüber hinaus zeigt die Forschung, dass Commitment einen signifikanten Einfluss auf die Mitarbeiterbindung hat. Zusammenfassend lässt sich festhalten, dass Organizational Commitment ein zentraler Faktor für den Unternehmenserfolg ist."
 
-**Was daran schlecht ist:** Vier Sätze, null Information. Kein konkreter Beleg, keine Erklärung, kein Bezug zum eigenen Fall. Jeder Satz könnte über jedes beliebige Konzept geschrieben worden sein — das ist der typische KI-Füllabsatz.
+**Was daran schlecht ist:** Vier Sätze, null Information. Kein konkreter Beleg, keine Erklärung, kein Bezug zum eigenen Fall. Jeder Satz könnte über jedes beliebige Konzept geschrieben worden sein – das ist der typische KI-Füllabsatz.
 
 ## Übergänge zwischen Absätzen
 
-Klischee-Übergänge („Darüber hinaus", „Zudem", „Des Weiteren") sind verboten — sie zeigen keinen logischen Bezug. Stattdessen den tatsächlichen Zusammenhang benennen:
+Klischee-Übergänge („Darüber hinaus", „Zudem", „Des Weiteren") sind verboten – sie zeigen keinen logischen Bezug. Stattdessen den tatsächlichen Zusammenhang benennen:
 
 | Logischer Bezug | Muster | Beispiel |
 |---|---|---|
@@ -115,7 +115,7 @@ Klischee-Übergänge („Darüber hinaus", „Zudem", „Des Weiteren") sind ver
 | **Spezifizierend** (B vertieft A) | „Konkret bedeutet das …" / „Ein Beispiel dafür …" | „Konkret bedeutet das für TRESOLITE, dass die Einarbeitung in den ersten 90 Tagen entscheidend ist." |
 | **Temporal/methodisch** (B folgt zeitlich/im Vorgehen) | „Im nächsten Schritt …" / „Nachdem X geklärt ist, …" | „Nachdem die theoretischen Grundlagen dargelegt sind, beschreibt der folgende Abschnitt das methodische Vorgehen." |
 
-**Faustregel:** Der erste Satz eines neuen Absatzes sollte in 2–3 Wörtern zeigen, wie er sich zum vorherigen verhält — ohne dass der Leser zurückblättern muss.
+**Faustregel:** Der erste Satz eines neuen Absatzes sollte in 2–3 Wörtern zeigen, wie er sich zum vorherigen verhält – ohne dass der Leser zurückblättern muss.
 
 ## Schnellprüfung vor dem Speichern
 

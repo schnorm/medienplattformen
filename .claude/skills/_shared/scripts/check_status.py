@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-check_status.py — Abgleich Statustabelle (CLAUDE.md) gegen das Dateisystem.
+check_status.py – Abgleich Statustabelle (CLAUDE.md) gegen das Dateisystem.
 
 Macht die wichtigste Invariante des Workflows deterministisch prüfbar:
-„Dateien sind Wahrheit" — ein Statuswert in CLAUDE.md, zu dem keine Datei
+„Dateien sind Wahrheit" – ein Statuswert in CLAUDE.md, zu dem keine Datei
 existiert, ist ein Widerspruch, den der jeweilige Skill melden und beheben
 muss (Status korrigieren, nicht die Datei erfinden).
 
@@ -12,19 +12,28 @@ Nutzung (vom Projekt-Root):
     python .claude/skills/_shared/scripts/check_status.py <projekt-root>
 
 Prüft:
-  1. FEHLER:STATUS-DATEI   — Komponente mit Status FERTIG / IN ARBEIT /
+  1. FEHLER:STATUS-DATEI   – Komponente mit Status FERTIG / IN ARBEIT /
      ÜBERARBEITUNG NÖTIG, deren Pfad nicht existiert.
-  2. HINWEIS:DATEI-OHNE-ZEILE — .tex-Datei unter chapters/, die von keiner
+  2. HINWEIS:DATEI-OHNE-ZEILE – .tex-Datei unter chapters/, die von keiner
      Tabellenzeile abgedeckt ist (weder über den Pfad noch über sec:<slug>).
-  3. HINWEIS:STATUS-WERT   — unbekannter Statuswert (Tippfehler-Schutz).
+  3. HINWEIS:STATUS-WERT   – unbekannter Statuswert (Tippfehler-Schutz).
 
-Platzhalter-Zeilen (Pfad mit „…" oder „<…>") werden übersprungen — sie sind
+Platzhalter-Zeilen (Pfad mit „…" oder „<…>") werden übersprungen – sie sind
 bis Plan-Schritt 2.5 vorgesehen. Exit-Code 1 bei mindestens einem FEHLER.
 """
 
 import re
 import sys
 from pathlib import Path
+
+# Windows-Konsole (cp1252) kann Sonderzeichen wie „→“ in den Meldungen nicht
+# kodieren und bräche beim Ausdruck ab – Ausgabe deshalb auf UTF-8 umstellen.
+for _stream in (sys.stdout, sys.stderr):
+    try:
+        _stream.reconfigure(encoding="utf-8")
+    except (AttributeError, ValueError):
+        pass
+
 
 KNOWN_STATUS = ("FERTIG", "IN ARBEIT", "ÜBERARBEITUNG NÖTIG", "NICHT BEGONNEN")
 MUST_EXIST = ("FERTIG", "IN ARBEIT", "ÜBERARBEITUNG NÖTIG")
@@ -69,10 +78,10 @@ def check(root: Path) -> tuple[list[str], int]:
 
     claude = root / "CLAUDE.md"
     if not claude.exists():
-        return [f"{claude}: FEHLER — CLAUDE.md nicht gefunden."], 1
+        return [f"{claude}: FEHLER – CLAUDE.md nicht gefunden."], 1
     rows = parse_table(claude.read_text(encoding="utf-8", errors="replace"))
     if not rows:
-        return [f"{claude}: HINWEIS — keine Statustabelle gefunden (Kopfzeile: | Komponente …)."], 0
+        return [f"{claude}: HINWEIS – keine Statustabelle gefunden (Kopfzeile: | Komponente …)."], 0
 
     active_rows = [r for r in rows if not is_placeholder(r)]
 
@@ -80,7 +89,7 @@ def check(root: Path) -> tuple[list[str], int]:
         status_base = next((k for k in KNOWN_STATUS if r["status"].startswith(k)), None)
         if status_base is None:
             findings.append(
-                f"CLAUDE.md: [HINWEIS:STATUS-WERT] „{r['komponente']}“ hat unbekannten Status „{r['status']}“ — erlaubt: {', '.join(KNOWN_STATUS)}.")
+                f"CLAUDE.md: [HINWEIS:STATUS-WERT] „{r['komponente']}“ hat unbekannten Status „{r['status']}“ – erlaubt: {', '.join(KNOWN_STATUS)}.")
             continue
         if status_base in MUST_EXIST and r["pfad"]:
             p = root / r["pfad"]
@@ -88,7 +97,7 @@ def check(root: Path) -> tuple[list[str], int]:
             exists = p.is_file() or (p.is_dir() and any(p.glob("*.tex")))
             if not exists:
                 findings.append(
-                    f"CLAUDE.md: [FEHLER:STATUS-DATEI] „{r['komponente']}“ ist {status_base}, aber `{r['pfad']}` existiert nicht (bzw. enthält keine .tex) — Dateisystem gilt: Status korrigieren und Widerspruch melden.")
+                    f"CLAUDE.md: [FEHLER:STATUS-DATEI] „{r['komponente']}“ ist {status_base}, aber `{r['pfad']}` existiert nicht (bzw. enthält keine .tex) – Dateisystem gilt: Status korrigieren und Widerspruch melden.")
                 errors += 1
 
     # Umgekehrte Richtung: Kapiteldateien ohne Statuszeile
@@ -107,7 +116,7 @@ def check(root: Path) -> tuple[list[str], int]:
             )
             if not covered:
                 findings.append(
-                    f"{rel}: [HINWEIS:DATEI-OHNE-ZEILE] Kapiteldatei ohne Zeile in der Statustabelle — Zeile ergänzen (Identifikator sec:{slug}) oder Datei ist verwaist.")
+                    f"{rel}: [HINWEIS:DATEI-OHNE-ZEILE] Kapiteldatei ohne Zeile in der Statustabelle – Zeile ergänzen (Identifikator sec:{slug}) oder Datei ist verwaist.")
 
     return findings, errors
 
