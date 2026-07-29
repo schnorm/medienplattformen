@@ -8,11 +8,11 @@ Stand: 29.07.2026 · 19 Zitationen · OK 14 · offen 5
 
 | Hash | Stelle | Quelle | S./Kap. | Status | Befund |
 |---|---|---|---|---|---|
-| `d0224da39b` | 01_ausgangslage_und_problem.tex:5 | `unTransformingOutWorld2030Agenda` | – | **LIVE PRÜFEN** | kein PDF-Snapshot im file-Feld – Webquelle live prüfen: https://digitallibrary.un.org/record/3923923 |
-| `0c277668f2` | 03_konzept.tex:9 | `nivedhithaHowGreenSocial2024` | – | **ZUGANG PRÜFEN** | Volltext hinter Bezahlschranke (onlinelibrary.wiley.com), kein Snapshot hinterlegt. In dieser Reihenfolge: (1) freie Fassung suchen – `curl -s "https://api.openalex.org/works/doi:10.1111/ijcs.13038"` → open_access.oa_url, (2) IU-Bibliothek über myCampus, (3) Quelle ersetzen. Ergebnis in Zotero als `tex.zugang: …` festhalten. |
-| `9ecb5d4f77` | 03_konzept.tex:22 | `nivedhithaHowGreenSocial2024` | – | **ZUGANG PRÜFEN** | Volltext hinter Bezahlschranke (onlinelibrary.wiley.com), kein Snapshot hinterlegt. In dieser Reihenfolge: (1) freie Fassung suchen – `curl -s "https://api.openalex.org/works/doi:10.1111/ijcs.13038"` → open_access.oa_url, (2) IU-Bibliothek über myCampus, (3) Quelle ersetzen. Ergebnis in Zotero als `tex.zugang: …` festhalten. |
-| `7e4ae535b0` | 04_community_und_feedback.tex:5 | `shenInfluenceOsmosisSocial2023` | – | **ZUGANG PRÜFEN** | Volltext hinter Bezahlschranke (linkinghub.elsevier.com), kein Snapshot hinterlegt. In dieser Reihenfolge: (1) freie Fassung suchen – `curl -s "https://api.openalex.org/works/doi:10.1016/j.chb.2023.107706"` → open_access.oa_url, (2) IU-Bibliothek über myCampus, (3) Quelle ersetzen. Ergebnis in Zotero als `tex.zugang: …` festhalten. |
-| `821fbfd925` | 01_kernergebnisse_und_ausblick.tex:5 | `nivedhithaHowGreenSocial2024` | – | **ZUGANG PRÜFEN** | Volltext hinter Bezahlschranke (onlinelibrary.wiley.com), kein Snapshot hinterlegt. In dieser Reihenfolge: (1) freie Fassung suchen – `curl -s "https://api.openalex.org/works/doi:10.1111/ijcs.13038"` → open_access.oa_url, (2) IU-Bibliothek über myCampus, (3) Quelle ersetzen. Ergebnis in Zotero als `tex.zugang: …` festhalten. |
+| `d0224da39b` | 01_ausgangslage_und_problem.tex:5 | `unTransformingOutWorld2030Agenda` | – | **PRÜFEN** | mechanisch unauffällig – Inhaltsdeckung auf werkbezogen prüfen |
+| `0c277668f2` | 03_konzept.tex:9 | `nivedhithaHowGreenSocial2024` | – | **PRÜFEN** | mechanisch unauffällig – Inhaltsdeckung auf werkbezogen prüfen |
+| `9ecb5d4f77` | 03_konzept.tex:22 | `nivedhithaHowGreenSocial2024` | – | **PRÜFEN** | mechanisch unauffällig – Inhaltsdeckung auf werkbezogen prüfen |
+| `7e4ae535b0` | 04_community_und_feedback.tex:5 | `shenInfluenceOsmosisSocial2023` | – | **PRÜFEN** | wörtliches Zitat exakt gefunden – Seitenangabe bestätigen |
+| `821fbfd925` | 01_kernergebnisse_und_ausblick.tex:5 | `nivedhithaHowGreenSocial2024` | – | **PRÜFEN** | mechanisch unauffällig – Inhaltsdeckung auf werkbezogen prüfen |
 
 ## Geprüft und in Ordnung
 
