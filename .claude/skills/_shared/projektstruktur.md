@@ -19,6 +19,8 @@ Kommentierter Baum des Projektordners. Ausgelagert aus `CLAUDE.md`, weil er nur 
 ├── pruefbericht.md              # letzter Audit-Bericht (Prüf-Modus überschreibt pro Lauf)
 ├── main.tex                     # Wurzeldokument – nicht umbauen; nur die markierten Aktivierungsblöcke schalten
 │                                #   (Gender-Disclaimer, Abbildungs-/Tabellenverzeichnis, Anhang)
+├── verworfen.md                 # bewusst verworfene Anforderungen: Datum, Begründung, Wiederaufnahme-Bedingung
+│                                #   (Gegenlesung liest sie ERST in Schritt 6 – sonst bricht die Inversion)
 ├── references.bib               # BBT-Export aus Zotero – NIE manuell editieren
 ├── pages/
 │   ├── meta.tex                 # Projektangaben – EINZIGE projektspezifische Stelle
@@ -34,7 +36,7 @@ Kommentierter Baum des Projektordners. Ausgelagert aus `CLAUDE.md`, weil er nur 
 ├── images/<kapitel>/            # Abbildungen, gespiegelt zur Kapitelstruktur (Konvention: hard-rules-formal.md → LaTeX)
 ├── logos/ · tables/             # Logos bzw. Tabellen-Fragmente
 ├── sources/                     # IU-Leitfäden pro Papiertyp (Zweifelsfall) + optionales Anmerkungen vom Prüfer.md (Pflichtquelle, siehe plan-modus Schritt 0) Zweifelsfall lesen
-│   └── literatur/              # EIGENE Quellen (Ebooks, Paper, PDF-Snapshots von Webquellen) – jederzeit befüllbar, auch vor dem Setup. Dateiname `<citekey>.pdf`/`.epub` (BBT-Citekey, sobald er feststeht) – NICHT `<Autor><Jahr>_<Kurztitel>`, siehe hard-rules-formal.md und SKILL-ANPASSUNGEN.md P4-1. Wird in plan-modus Schritt 1 VOR der Consensus-Suche gesichtet und ist der Volltext-Nachweis für pruef-modus Teil-Check G; check_quellentreue.py sucht die Citekey-Datei zuerst und unabhängig vom `file`-Feld, damit die Prüfung auch auf einem anderen Rechner ohne diese Zotero-Ablage auflöst. Die `.gitignore` schließt den Ordner nicht aus. Schreibweise deutsch – NICHT `literature/`
+│   └── literature/              # EIGENE Quellen (Ebooks, Paper) – jederzeit befüllbar, auch vor dem Setup; Anleitung in literature/README.md. Wird in plan-modus Schritt 1 VOR der Consensus-Suche gesichtet. Nicht versioniert (.gitignore)
 └── .claude/skills/
     ├── _shared/                 # hard-rules-formal.md, typen/<typ>.md, aenderungen-format.md, scripts/
     ├── setup-check/             # einmaliger Umgebungscheck

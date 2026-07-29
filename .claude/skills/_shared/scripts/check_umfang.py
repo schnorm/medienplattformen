@@ -96,11 +96,16 @@ def parse_plan(plan_path: Path):
         lo = _zahl(g.group(1))
         gesamt = (lo, _zahl(g.group(2)) if g.group(2) else lo)
         if gesamt[1] < MIN_PLAUSIBLE_GESAMT:
+            # FEHLER, nicht HINWEIS: Ein still übersprungener Zielabgleich sieht
+            # in der Zusammenfassung aus wie ein bestandener Check. In einem
+            # Schwesterprojekt lief die Umfangsprüfung so über eine Woche ohne
+            # Zielwert, ohne dass es je auffiel.
             warnungen.append(
-                f"HINWEIS: „Gesamtwortzahl (Richtwert)\" steht auf {g.group(0).split(':')[-1].strip()} "
+                f"FEHLER: „Gesamtwortzahl (Richtwert)\" steht auf {g.group(0).split(':')[-1].strip()} "
                 f"– das sieht nach einer SEITEN-, nicht nach einer Wortzahl aus. Die Zeile erwartet "
-                f"Wörter (Seitenvorgabe × ~{WORDS_PER_PAGE}). Zielabgleich übersprungen, bis das "
-                f"korrigiert ist.")
+                f"Wörter (Seitenvorgabe × ~{WORDS_PER_PAGE}). **Der Zielabgleich läuft bis zur "
+                f"Korrektur überhaupt nicht** – dieser Lauf sagt nichts darüber aus, ob der Umfang "
+                f"stimmt. Seitenvorgabe daneben als eigenes Feld führen.")
             gesamt = None
     for block in re.split(r"(?m)^## ", text):
         head = KAPITEL_RE.match(block)
@@ -165,6 +170,10 @@ def main() -> int:
           "eine belastbare Aussage.")
     for w in plan_warnungen:
         print(w)
+        # Ein FEHLER in der Plan-Auswertung schlägt auf den Exit-Code durch,
+        # damit check_all.py ihn nicht als bestandenen Check durchwinkt.
+        if w.startswith("FEHLER"):
+            warn = True
     if gesamt and total_words > gesamt[1]:
         print(f"WARNUNG: {total_words} Wörter über der Zielgröße von {gesamt[1]} – "
               f"Kürzungsbedarf. Erste Reserve sind mehrfach ausformulierte Kernbefunde "

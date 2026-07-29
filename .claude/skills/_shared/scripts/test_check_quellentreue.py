@@ -22,13 +22,14 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 from check_quellentreue import (  # noqa: E402
     BLOCKZITAT_RE, ENQUOTE_RE, KAPITEL_RE, MIN_ZITAT_WOERTER, PAAR_MIN_ZEICHEN,
-    SEITE_RE, ausschnitt, enthaelt_folge, epub_kapitel, epub_pfad,
+    SEITE_RE, anspruchsverlauf, anzeige, ausschnitt, enthaelt_folge,
+    epub_kapitel, epub_pfad,
     gesetzte_dateipfade, kalibriere, kernbegriffe, laengste_gemeinsame_folge,
     lies_bib, lies_tex, naechstes_zitat, ohne_zitattext, ortsangabe, pdf_pfad,
-    resolve_kapitel, seite_ausserhalb_pages, seiten_liste, seitenbereich, spanne,
-    sprache, sprachwechsel, unreferenzierte_volltexte, versatz_aus_pages,
-    normalisiere, satz_um, treffer_auf_seite, woerter, zitat_segmente,
-    CITE_CMD_RE)
+    notiz_warnungen, resolve_kapitel, seite_ausserhalb_pages, seiten_liste,
+    seitenbereich, spanne, sprache, sprachwechsel, unreferenzierte_volltexte,
+    versatz_aus_pages, normalisiere, satz_um, treffer_auf_seite, woerter,
+    zitat_segmente, zugangsklasse, CITE_CMD_RE, Zitation)
 
 
 def schreib(text: str, suffix: str = ".tex") -> Path:
@@ -742,61 +743,190 @@ class TestPfadFallback(unittest.TestCase):
                              ["sources/literature/Verwaist.pdf"])
 
 
-class TestCitekeyFallback(unittest.TestCase):
-    """P4-1: `sources/literatur/<citekey>.<ext>` löst rechnerunabhängig auf –
-    unabhängig davon, was das `file`-Feld gerade exportiert. Portabilität darf
-    nicht daran hängen, ob Zoteros absoluter Speicherpfad oder der von Zotero/
-    Anna's Archive vergebene Dateiname auf diesem Rechner existiert."""
+class TestCitekeyAnker(unittest.TestCase):
+    """`sources/literature/<citekey>.pdf` – der einzige Bezug, den ein
+    BBT-Export nicht überschreiben kann."""
 
-    def test_citekey_datei_loest_auf_ohne_file_feld(self):
-        with tempfile.TemporaryDirectory() as d:
-            root = Path(d)
-            (root / "sources" / "literatur").mkdir(parents=True)
-            (root / "sources" / "literatur" / "meierBeispiel2020.pdf").write_bytes(b"x")
-            # Leeres `file`-Feld simuliert einen Rechner ohne Zotero-Zugriff.
-            self.assertEqual(
-                pdf_pfad("", root, key="meierBeispiel2020"),
-                root / "sources" / "literatur" / "meierBeispiel2020.pdf")
+    def projekt(self, dateien: dict[str, bytes]):
+        d = tempfile.mkdtemp()
+        root = Path(d)
+        (root / "sources" / "literature").mkdir(parents=True)
+        for name, inhalt in dateien.items():
+            (root / "sources" / "literature" / name).write_bytes(inhalt)
+        return root
 
-    def test_citekey_geht_vor_zotero_pfad(self):
-        # Existieren beide, gewinnt die portable Citekey-Datei – der
-        # Zotero-Pfad ist maschinenspezifisch und keine verlässliche Wahl.
-        with tempfile.TemporaryDirectory() as d:
-            root = Path(d)
-            (root / "sources" / "literatur").mkdir(parents=True)
-            (root / "sources" / "literatur" / "meierBeispiel2020.pdf").write_bytes(b"key")
-            (root / "sources" / "literatur" / "Anderer Dateiname.pdf").write_bytes(b"zotero")
-            feld = str(root / "sources" / "literatur" / "Anderer Dateiname.pdf")
-            self.assertEqual(
-                pdf_pfad(feld, root, key="meierBeispiel2020"),
-                root / "sources" / "literatur" / "meierBeispiel2020.pdf")
+    def test_citekey_loest_ohne_file_feld_auf(self):
+        # Der Realfall: zweiter Rechner, BBT-Pfad zeigt ins Nichts.
+        root = self.projekt({"barkerWhatNudgeTechniques2021.pdf": b"x"})
+        self.assertEqual(
+            pdf_pfad("", root, "barkerWhatNudgeTechniques2021"),
+            root / "sources" / "literature" / "barkerWhatNudgeTechniques2021.pdf")
 
-    def test_citekey_epub_analog(self):
-        with tempfile.TemporaryDirectory() as d:
-            root = Path(d)
-            (root / "sources" / "literatur").mkdir(parents=True)
-            (root / "sources" / "literatur" / "meierBeispiel2020.epub").write_bytes(b"x")
-            self.assertEqual(
-                epub_pfad("", root, key="meierBeispiel2020"),
-                root / "sources" / "literatur" / "meierBeispiel2020.epub")
+    def test_citekey_schlaegt_abweichenden_zotero_namen(self):
+        # Vor dieser Aenderung scheiterte genau das: Zotero nennt die Datei
+        # anders als das Projekt, der Basename-Rueckfall traf nie.
+        root = self.projekt({"barkerWhatNudgeTechniques2021.pdf": b"x"})
+        feld = ("/home/normi/Zotero/storage/ABC/"
+                "Barker et al. - 2021 - What Nudge Techniques Work.pdf")
+        self.assertIsNotNone(pdf_pfad(feld, root, "barkerWhatNudgeTechniques2021"))
 
-    def test_ohne_key_kein_fallback(self):
-        with tempfile.TemporaryDirectory() as d:
-            root = Path(d)
-            (root / "sources" / "literatur").mkdir(parents=True)
-            self.assertIsNone(pdf_pfad("", root))
-            self.assertIsNone(pdf_pfad("", root, key=None))
+    def test_epub_analog(self):
+        root = self.projekt({"erlhoferWebsiteKonzeption2017.epub": b"x"})
+        self.assertIsNotNone(epub_pfad("", root, "erlhoferWebsiteKonzeption2017"))
 
-    def test_citekey_datei_zaehlt_nicht_als_unreferenziert(self):
-        with tempfile.TemporaryDirectory() as d:
-            root = Path(d)
-            (root / "sources" / "literatur").mkdir(parents=True)
-            (root / "sources" / "literatur" / "meierBeispiel2020.pdf").write_bytes(b"x")
-            # `file`-Feld nennt gar keinen Pfad (wie nach einem BBT-Export, der
-            # nur den Zotero-Speicherpfad kennt) – die Citekey-Datei ist trotzdem
-            # referenziert, kein falscher Aufräumhinweis.
-            bib = {"meierBeispiel2020": {"file": ""}}
-            self.assertEqual(unreferenzierte_volltexte(bib, root), [])
+    def test_ohne_key_kein_anker(self):
+        root = self.projekt({"irgendwas.pdf": b"x"})
+        self.assertIsNone(pdf_pfad("", root, ""))
+
+    def test_citekey_datei_gilt_nicht_als_verwaist(self):
+        root = self.projekt({"barker2021.pdf": b"x", "Fremd.pdf": b"x"})
+        bib = {"barker2021": {"file": "/home/x/ganz-anders.pdf"}}
+        self.assertEqual(unreferenzierte_volltexte(bib, root),
+                         ["sources/literature/Fremd.pdf"])
+
+
+class TestNotizWaechter(unittest.TestCase):
+    """Ein OK-Urteil wird nie wieder angesehen – seine Notiz ist die einzige Spur."""
+
+    def zit(self, key, notiz, satz="Eine Aussage im Text.", hash_teil="a"):
+        z = Zitation(datei="k.tex", zeile=1, key=key, seite="1", satz=satz,
+                     woertlich="", notiz=notiz, status="OK")
+        return z
+
+    def test_gleiche_notiz_bei_verschiedenen_werken(self):
+        bib = {"soma2020": {"author": "Soma, Tammara"},
+               "vittuari2023": {"author": "Vittuari, Matteo"}}
+        zitate = [self.zit("soma2020", "S. 12 nennt 41 Prozent Haushaltsabfall."),
+                  self.zit("vittuari2023", "S. 12 nennt 41 Prozent Haushaltsabfall.")]
+        w = notiz_warnungen(zitate, bib)
+        self.assertTrue(any("NOTIZ-DUBLETTE" in x for x in w), w)
+
+    def test_gleiche_notiz_bei_derselben_quelle_still(self):
+        # Zwei Zitationen desselben Werks duerfen dieselbe Begruendung teilen.
+        bib = {"soma2020": {"author": "Soma, Tammara"}}
+        zitate = [self.zit("soma2020", "Kap. 1 traegt beide Aussagen."),
+                  self.zit("soma2020", "Kap. 1 traegt beide Aussagen.")]
+        self.assertEqual(
+            [x for x in notiz_warnungen(zitate, bib) if "DUBLETTE" in x], [])
+
+    def test_fremder_autorname_in_der_notiz(self):
+        bib = {"soma2020": {"author": "Soma, Tammara"},
+               "vittuari2023": {"author": "Vittuari, Matteo"}}
+        zitate = [self.zit("vittuari2023", "Soma zeigt das auf S. 12.")]
+        w = notiz_warnungen(zitate, bib)
+        self.assertTrue(any("NOTIZ-FREMDER-AUTOR" in x for x in w), w)
+        self.assertIn("Soma", w[0])
+
+    def test_eigener_autorname_still(self):
+        bib = {"vittuari2023": {"author": "Vittuari, Matteo"}}
+        zitate = [self.zit("vittuari2023", "Vittuari nennt das in Kap. 1.")]
+        self.assertEqual(notiz_warnungen(zitate, bib), [])
+
+    def test_name_aus_dem_traegersatz_still(self):
+        # „Wie Soma zeigt, …" im Text – dann ist der Name in der Notiz korrekt.
+        bib = {"soma2020": {"author": "Soma, Tammara"},
+               "vittuari2023": {"author": "Vittuari, Matteo"}}
+        zitate = [self.zit("vittuari2023", "Bestaetigt den Befund von Soma.",
+                           satz="Anders als Soma kommt Vittuari zu dem Schluss.")]
+        self.assertEqual(
+            [x for x in notiz_warnungen(zitate, bib) if "FREMDER" in x], [])
+
+    def test_ohne_notiz_keine_warnung(self):
+        bib = {"a2020": {"author": "Alpha, Anna"}}
+        self.assertEqual(notiz_warnungen([self.zit("a2020", "")], bib), [])
+
+
+class TestZugangsklasse(unittest.TestCase):
+    """Drei Faelle mit sehr verschiedenem Aufwand statt eines Sammelstatus."""
+
+    def test_buch_ist_beschaffbar(self):
+        self.assertEqual(zugangsklasse({"_typ": "book"}), "VOLLTEXT BESCHAFFBAR")
+        self.assertEqual(zugangsklasse({"_typ": "incollection"}),
+                         "VOLLTEXT BESCHAFFBAR")
+
+    def test_bezahlschranke_wird_erkannt(self):
+        self.assertEqual(
+            zugangsklasse({"_typ": "article", "doi": "10.1111/ijcs.13038",
+                           "url": "https://onlinelibrary.wiley.com/doi/10.1111/x"}),
+            "ZUGANG PRÜFEN")
+
+    def test_freier_anbieter_bleibt_still(self):
+        # MDPI, Frontiers, PLOS, UN – die behalten den bisherigen Status.
+        for url in ("https://www.mdpi.com/2071-1050/13/1/1",
+                    "https://digitallibrary.un.org/record/3923923",
+                    "https://journals.plos.org/plosone/article?id=10.1371/x"):
+            with self.subTest(url=url):
+                self.assertEqual(zugangsklasse({"_typ": "article", "url": url}), "")
+
+    def test_explizites_feld_schlaegt_heuristik(self):
+        # `zugang` aus dem Bib-Eintrag (via Zotero Extra: tex.zugang).
+        eintrag = {"_typ": "article",
+                   "url": "https://sciencedirect.com/x", "zugang": "bibliothek"}
+        self.assertEqual(zugangsklasse(eintrag), "VOLLTEXT BESCHAFFBAR")
+        self.assertEqual(zugangsklasse({"_typ": "book", "zugang": "kein-zugang"}),
+                         "ZUGANG PRÜFEN")
+
+    def test_gewoehnlicher_artikel_ohne_hinweis(self):
+        self.assertEqual(zugangsklasse({"_typ": "article"}), "")
+
+    def test_eintragstyp_wird_gelesen(self):
+        p = schreib("@book{mueller2020,\n  title = {Handbuch},\n"
+                    "  author = {Mueller, Anna},\n  date = {2020}\n}\n", ".bib")
+        try:
+            self.assertEqual(lies_bib(p)["mueller2020"]["_typ"], "book")
+        finally:
+            p.unlink()
+
+
+class TestAnspruchsverlauf(unittest.TestCase):
+    """Drift zwischen zwei Fundstellen derselben Quelle – die Lücke, die keine
+    Einzelprüfung sehen kann, weil beide Stellen für sich bestehen."""
+
+    def z(self, key, satz, zeile=1):
+        return Zitation(datei="k.tex", zeile=zeile, key=key, seite="10",
+                        satz=satz, woertlich="")
+
+    def test_staerkewort_und_hedge_faellt_auf(self):
+        zitate = [
+            self.z("soma2020", "Die Studie stützt die Entscheidung, belegt aber "
+                               "nicht die Wirkung der konkreten Mechanik."),
+            self.z("soma2020", "Damit steht die belegte Wirksamkeit fest.", 40)]
+        funde = anspruchsverlauf(zitate)
+        self.assertEqual(len(funde), 1, funde)
+        self.assertIn("ANSPRUCHSVERLAUF", funde[0])
+        self.assertIn("Erstnutzung setzt die Obergrenze", funde[0])
+
+    def test_einheitlich_vorsichtig_bleibt_still(self):
+        zitate = [self.z("soma2020", "Die Studie stützt diese Annahme."),
+                  self.z("soma2020", "Auch hier deutet darauf einiges hin.", 40)]
+        self.assertEqual(anspruchsverlauf(zitate), [])
+
+    def test_einmal_zitiert_bleibt_still(self):
+        self.assertEqual(
+            anspruchsverlauf([self.z("soma2020", "Das belegt die Wirkung.")]), [])
+
+    def test_verlauf_zeigt_auf_wunsch_alles(self):
+        zitate = [self.z("soma2020", "Erste Nennung."),
+                  self.z("soma2020", "Zweite Nennung.", 40)]
+        funde = anspruchsverlauf(zitate, nur_auffaellig=False)
+        self.assertEqual(len(funde), 1, funde)
+        self.assertIn("Erste Nennung", funde[0])
+        self.assertIn("Zweite Nennung", funde[0])
+        # Ohne Auffaelligkeit keine Deutung dazuschreiben.
+        self.assertNotIn("Obergrenze", funde[0])
+
+
+class TestStatusAnzeige(unittest.TestCase):
+    """„OK" sagt nur, dass der Wortlaut an der Stelle steht – gelesen wird es
+    als „die Quelle trägt die Behauptung"."""
+
+    def test_ok_heisst_nach_aussen_fundstelle_ok(self):
+        self.assertEqual(anzeige("OK"), "FUNDSTELLE OK")
+
+    def test_andere_status_unveraendert(self):
+        for s in ("PRÜFEN", "WORTLAUT", "SEITE AUSSERHALB", "AUSNAHME"):
+            with self.subTest(status=s):
+                self.assertEqual(anzeige(s), s)
 
 
 class TestSeiteAusserhalbPages(unittest.TestCase):

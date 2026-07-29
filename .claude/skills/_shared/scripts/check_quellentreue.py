@@ -147,39 +147,25 @@ STOPP = {
 
 STATUS_BEFUND = {"WORTLAUT", "ZITAT WEICHT AB", "SEITE VERDÄCHTIG", "CLAIM SCHÄRFER",
                  "NICHT GEFUNDEN", "SEITE AUSSERHALB"}
+
+# „OK" heisst hier: Ein zur Textstelle passender Wortlaut wurde an der
+# angegebenen Stelle gefunden. Es heisst NICHT: Die Quelle traegt die Behauptung
+# in der Staerke, in der der Satz sie aufstellt. Genau dieser Unterschied ist der
+# Bewertungsunterschied - in einem Schwesterprojekt fand eine Reichweitenpruefung
+# an bereits mit OK quittierten Zitationen zehn Befunde. Der interne Wert bleibt
+# „OK" (Kompatibilitaet mit bestehenden quellencheck-state.json und --verdikt),
+# nach aussen heisst er, was er ist.
+ANZEIGE_STATUS = {"OK": "FUNDSTELLE OK"}
+
+
+def anzeige(status: str) -> str:
+    return ANZEIGE_STATUS.get(status, status)
 # „DATEI NICHT GEFUNDEN" steht bewusst hier und nicht bei den Befunden: Es ist
 # kein Mangel der Arbeit, sondern eine ungeprüfte Zitation aus technischem
 # Grund. Wer es als Befund führte, produzierte genau den Fehler, der zu dieser
 # Klasse geführt hat – ein Punktabzug für ein Pfadproblem.
 STATUS_OFFEN = {"PRÜFEN", "NICHT PRÜFBAR", "LIVE PRÜFEN", "DATEI NICHT GEFUNDEN",
                 "VOLLTEXT BESCHAFFBAR", "ZUGANG PRÜFEN"}
-
-# ------------------------------------------------------------- Zugangsklassen
-#
-# „Kein Volltext" war früher ein Sammelstatus: Ein Buch, das der Nutzer in einer
-# halben Stunde besorgt, bekam denselben Befund und denselben Punktabzug wie ein
-# Journal-Artikel hinter einer Bezahlschranke, der nur durch Quellenersatz zu
-# lösen ist. Der Bericht nennt jetzt die Klasse – die Maßnahme unterscheidet
-# sich um zwei Größenordnungen.
-BUCH_TYPEN = {"book", "inbook", "incollection", "collection", "mvbook", "booklet"}
-
-# Hosts, hinter denen ein Volltext regelmäßig kostenpflichtig ist. Bewusst eine
-# Heuristik und keine vollständige Liste: Sie erzeugt eine Prüfaufgabe, keinen
-# Befund gegen die Arbeit. Frei zugängliche Verlage (MDPI, Frontiers, PLOS,
-# digitallibrary.un.org) dürfen hier nie hineinrutschen.
-PAYWALL_HOSTS = (
-    "onlinelibrary.wiley.com", "linkinghub.elsevier.com", "sciencedirect.com",
-    "link.springer.com", "tandfonline.com", "jstor.org", "dl.acm.org",
-    "ieeexplore.ieee.org", "journals.sagepub.com", "academic.oup.com",
-    "emerald.com", "degruyter.com", "cambridge.org/core",
-)
-
-# Werte für `tex.zugang` im Zotero-Feld *Extra* (BBT exportiert `tex.`-Felder
-# als reguläre Bib-Felder, wie `tex.shortauthor`/`tex.eid`). Das Feld überstimmt
-# die Heuristik und ist zugleich der haltbare Ort für das Urteil aus dem
-# Beschaffbarkeits-Gate (plan-modus Schritt 1) – anders als von Hand ergänzte
-# `file`-Pfade überlebt es den nächsten BBT-Export.
-ZUGANG_WERTE = ("volltext", "bibliothek", "oa", "beschaffbar", "kein-zugang")
 
 
 @dataclass
@@ -395,14 +381,16 @@ def lies_tex(pfade: list[Path]) -> list[Zitation]:
 def lies_bib(pfad: Path) -> dict[str, dict[str, str]]:
     text = pfad.read_text(encoding="utf-8", errors="replace")
     eintraege: dict[str, dict[str, str]] = {}
-    starts = [(m.start(), m.group(2), m.group(1).lower())
-              for m in BIB_ENTRY_RE.finditer(text)]
+    starts = [(m.start(), m.group(2), m.group(1)) for m in BIB_ENTRY_RE.finditer(text)]
     for i, (pos, key, typ) in enumerate(starts):
         ende = starts[i + 1][0] if i + 1 < len(starts) else len(text)
         block = text[pos:ende]
-        felder = {"entrytype": typ}
-        for feld in ("file", "url", "doi", "zugang", "title", "author", "year",
-                     "date", "pages"):
+        # `_typ` mit Unterstrich: kein Bib-Feld, sondern der Eintragstyp aus
+        # `@book{…}` – er entscheidet, ob ein fehlender Volltext eine Besorgung
+        # (Buch) oder ein Zugangsproblem (Artikel) ist.
+        felder = {"_typ": typ.lower()}
+        for feld in ("file", "url", "doi", "title", "author", "year", "date",
+                     "pages", "zugang"):
             # Feldname am Zeilenanfang verankern: sonst trifft „pages" auch
             # `numpages`, „title" auch `booktitle`/`shorttitle` und „date" auch
             # `urldate` – und der falsche Wert kippt die ganze Seitenrechnung.
@@ -412,69 +400,6 @@ def lies_bib(pfad: Path) -> dict[str, dict[str, str]]:
                 felder[feld] = m.group(1).strip()
         eintraege[key] = felder
     return eintraege
-
-
-def zugangsklasse(eintrag: dict) -> tuple[str, str]:
-    """Status und Befund für eine Zitation ohne auflösbaren Volltext.
-
-    Unterscheidet drei Fälle, die vorher alle „nicht prüfbar" hießen:
-    ein Buch, das der Nutzer selbst besorgen kann (Aufgabe, kein Mangel);
-    einen Artikel hinter einer Bezahlschranke (nur über Open-Access-Fassung,
-    Bibliothekslizenz oder Quellenersatz lösbar); eine frei zugängliche
-    Webquelle, der nur der Snapshot fehlt.
-    """
-    zugang = eintrag.get("zugang", "").strip().lower()
-    url = eintrag.get("url", "")
-    doi = eintrag.get("doi", "").strip()
-    doi_hinweis = f" DOI {doi}." if doi else ""
-
-    # 1. Ausdrückliche Angabe des Nutzers schlägt jede Heuristik.
-    if zugang.startswith("oa"):
-        _, _, oa_url = zugang.partition(":")
-        return ("VOLLTEXT BESCHAFFBAR",
-                "frei zugängliche Fassung laut `zugang`-Feld"
-                + (f": {oa_url.strip()}" if oa_url.strip() else "")
-                + " – herunterladen und nach sources/literatur/ legen. Achtung: "
-                  "Preprint-/Repositoriumsfassungen zählen ab Seite 1, dann "
-                  "[Abs. X]/[Kap. X] statt einer Seitenzahl zitieren.")
-    if zugang == "bibliothek":
-        return ("VOLLTEXT BESCHAFFBAR",
-                "laut `zugang`-Feld über die IU-Bibliothek abrufbar – Volltext "
-                "ziehen und nach sources/literatur/ legen." + doi_hinweis)
-    if zugang == "beschaffbar":
-        return ("VOLLTEXT BESCHAFFBAR",
-                "laut `zugang`-Feld beschaffbar – Volltext nach "
-                "sources/literatur/ legen.")
-    if zugang == "kein-zugang":
-        return ("ZUGANG PRÜFEN",
-                "laut `zugang`-Feld kein Zugangsweg gefunden – Quelle ersetzen "
-                "oder die Aussage auf einen anderen Beleg stellen." + doi_hinweis)
-
-    # 2. Bücher: fehlender Volltext ist eine Beschaffungsaufgabe, kein Mangel
-    #    der Arbeit. Genau die Unterscheidung, die vorher fehlte.
-    if eintrag.get("entrytype", "") in BUCH_TYPEN:
-        return ("VOLLTEXT BESCHAFFBAR",
-                "Buch ohne hinterlegten Volltext – PDF oder EPUB besorgen und "
-                "nach sources/literatur/ legen, dann Pfad ins `file`-Feld.")
-
-    # 3. Artikel hinter bekannter Bezahlschranke: erst Open Access prüfen,
-    #    dann Bibliothek, dann ersetzen. Reihenfolge steht im Befundtext,
-    #    damit sie nicht in der Erinnerung gesucht werden muss.
-    if any(h in url.lower() for h in PAYWALL_HOSTS):
-        host = next(h for h in PAYWALL_HOSTS if h in url.lower())
-        return ("ZUGANG PRÜFEN",
-                f"Volltext hinter Bezahlschranke ({host}), kein Snapshot "
-                f"hinterlegt. In dieser Reihenfolge: (1) freie Fassung suchen – "
-                f"`curl -s \"https://api.openalex.org/works/doi:{doi or '<DOI>'}\"` "
-                f"→ open_access.oa_url, (2) IU-Bibliothek über myCampus, "
-                f"(3) Quelle ersetzen. Ergebnis in Zotero als `tex.zugang: …` "
-                f"festhalten.")
-
-    # 4. Rest wie bisher: Webquelle mit URL live prüfen, sonst gar nichts da.
-    if url:
-        return ("LIVE PRÜFEN",
-                f"kein PDF-Snapshot im file-Feld – Webquelle live prüfen: {url}")
-    return ("NICHT PRÜFBAR", "weder PDF (file) noch URL im Bib-Eintrag")
 
 
 def _datei_kandidaten(feld: str) -> list[str]:
@@ -500,25 +425,48 @@ def _datei_kandidaten(feld: str) -> list[str]:
 # Nutzer auf einem zweiten Rechner) prüft: der Normalfall, nicht die Ausnahme.
 LITERATUR_ORDNER = ("sources/literature", "sources/literatur")
 
+# Hosts, hinter denen ein Volltext in aller Regel kostenpflichtig liegt. Die
+# Liste ist eine Heuristik, keine Aufzaehlung: Sie soll den teuren Fall vom
+# billigen trennen, nicht die Verlagslandschaft abbilden. Frei zugaengliche
+# Anbieter (MDPI, Frontiers, PLOS, digitallibrary.un.org) stehen bewusst NICHT
+# darin und behalten den bisherigen Status.
+BEZAHLSCHRANKE_HOSTS = (
+    "onlinelibrary.wiley.com", "linkinghub.elsevier.com", "sciencedirect.com",
+    "link.springer.com", "tandfonline.com", "jstor.org", "dl.acm.org",
+    "ieeexplore.ieee.org", "journals.sagepub.com", "emerald.com",
+)
+# Eintragstypen, bei denen ein fehlender Volltext eine Besorgung ist und kein
+# Zugangsproblem: Buecher gibt es zu kaufen oder auszuleihen.
+BUCH_TYPEN = {"book", "inbook", "incollection", "collection", "booklet"}
 
-def _projekt_pfad(key: str | None, endung: str, root: Path) -> Path | None:
-    """Datei unter dem BBT-Citekey in der Projektablage (`<key><endung>`).
 
-    Portabel per Konstruktion: Der Citekey ist git-versioniert und ändert
-    sich nicht zwischen Rechnern, anders als Zoteros absoluter Speicherpfad
-    oder der von Zotero/Anna's Archive vergebene Dateiname (beide sind
-    Export-Artefakte des jeweils exportierenden Rechners, siehe
-    SKILL-ANPASSUNGEN.md P4-1). Wird deshalb vor dem `file`-Feld probiert –
-    trifft er, ist die Frage entschieden, unabhängig davon, was Zotero gerade
-    als Pfad exportiert hat.
+def zugangsklasse(eintrag: dict) -> str:
+    """Warum fehlt der Volltext – und wie teuer ist die Behebung?
+
+    Bisher landete alles ohne auflösbaren Volltext auf zwei Sammelstatus, die
+    der Score gleich behandelt hat. Darunter liegen aber Fälle, die um
+    Größenordnungen auseinanderliegen: ein Buch herunterladen (halbe Stunde),
+    einen Snapshot ziehen (zwei Minuten) oder eine Quelle ersetzen, weil kein
+    Zugang besteht. Ein Status, der das zusammenfasst, erzeugt falsche
+    Prioritäten – die billigste und die teuerste Maßnahme stehen
+    ununterscheidbar nebeneinander.
+
+    `zugang = {…}` im Bib-Eintrag schlägt die Heuristik (über Zoteros
+    Extra-Feld als `tex.zugang` pflegbar). Ob Better BibTeX frei gewählte
+    Feldnamen durchreicht, ist nicht verifiziert – deshalb wird das Feld nur
+    gelesen, nie vorausgesetzt.
     """
-    if not key:
-        return None
-    for ordner in LITERATUR_ORDNER:
-        kandidat = root / ordner / f"{key}{endung}"
-        if kandidat.exists():
-            return kandidat
-    return None
+    explizit = (eintrag.get("zugang") or "").strip().lower()
+    if explizit.startswith("kein"):
+        return "ZUGANG PRÜFEN"
+    if explizit in ("beschaffbar", "bibliothek") or explizit.startswith("oa:"):
+        return "VOLLTEXT BESCHAFFBAR"
+    if eintrag.get("_typ", "").lower() in BUCH_TYPEN:
+        return "VOLLTEXT BESCHAFFBAR"
+    ziel = f"{eintrag.get('url', '')} {eintrag.get('doi', '')}".lower()
+    if any(h in ziel for h in BEZAHLSCHRANKE_HOSTS):
+        return "ZUGANG PRÜFEN"
+    return ""
 
 
 def _pfad_kandidat(teil: str, endung: str, root: Path) -> Path | None:
@@ -552,7 +500,29 @@ def _bereinige(teil: str, typ_muster: str) -> str:
     return re.sub(r"^[^:]*:(?=[A-Za-z]:[\\/]|/)", "", teil)
 
 
-def pdf_pfad(feld: str, root: Path, key: str | None = None) -> Path | None:
+def _projekt_pfad(key: str, endung: str, root: Path) -> Path | None:
+    """`sources/literature/<citekey>.pdf` – der einzige rechnerunabhängige Anker.
+
+    Der Rückfall über den Dateinamen aus dem `file`-Feld greift nur, wenn
+    Zotero und Projekt zufällig denselben Namen gewählt haben: Zotero vergibt
+    „Barker et al. - 2021 - What Nudge Techniques Work.pdf", das Projekt nennt
+    dieselbe Datei `barkerWhatNudgeTechniques2021.pdf`. Empirisch geprüft –
+    ohne diesen Weg löst auf einem zweiten Rechner keine einzige Quelle auf,
+    egal was in `sources/literature/` liegt.
+
+    Deshalb steht der Citekey VOR dem `file`-Feld: Er ist das einzige
+    Bindeglied, das ein BBT-Export nicht überschreiben kann.
+    """
+    if not key:
+        return None
+    for ordner in LITERATUR_ORDNER:
+        p = root / ordner / f"{key}{endung}"
+        if p.exists():
+            return p
+    return None
+
+
+def pdf_pfad(feld: str, root: Path, key: str = "") -> Path | None:
     treffer = _projekt_pfad(key, ".pdf", root)
     if treffer:
         return treffer
@@ -564,7 +534,7 @@ def pdf_pfad(feld: str, root: Path, key: str | None = None) -> Path | None:
     return None
 
 
-def epub_pfad(feld: str, root: Path, key: str | None = None) -> Path | None:
+def epub_pfad(feld: str, root: Path, key: str = "") -> Path | None:
     """Wie `pdf_pfad`, nur für `.epub`."""
     treffer = _projekt_pfad(key, ".epub", root)
     if treffer:
@@ -880,9 +850,10 @@ def unreferenzierte_volltexte(bib: dict, root: Path) -> list[str]:
     """
     genannt = {Path(p).name.lower()
                for e in bib.values() for p in gesetzte_dateipfade(e.get("file", ""))}
-    # Dateien nach der Citekey-Konvention (P4-1) sind referenziert, auch wenn
-    # das `file`-Feld – z. B. nach einem BBT-Export – etwas anderes nennt.
-    genannt |= {f"{key.lower()}{ext}" for key in bib for ext in (".pdf", ".epub")}
+    # Nach Citekey benannte Dateien gehören zu ihrem Eintrag, auch wenn das
+    # `file`-Feld woanders hinzeigt – sonst meldete jede korrekt abgelegte
+    # Datei sich selbst als verwaist.
+    genannt |= {f"{k.lower()}{e}" for k in bib for e in (".pdf", ".epub")}
     uebrig: list[str] = []
     for ordner in LITERATUR_ORDNER:
         d = root / ordner
@@ -893,6 +864,113 @@ def unreferenzierte_volltexte(bib: dict, root: Path) -> list[str]:
                     and f.name.lower() not in genannt):
                 uebrig.append(f"{ordner}/{f.name}")
     return uebrig
+
+
+# Anspruchsverlauf: Wird dieselbe Quelle an einer Stelle vorsichtig und an einer
+# anderen absolut gebraucht? Bewusst grobe Wortlisten - das Skript entscheidet
+# nichts, es legt die Saetze nebeneinander. Ob „belegt" an einer Stelle zu stark
+# ist, haengt am Studiendesign der Quelle; das kann kein Regex.
+STAERKEWOERTER = re.compile(
+    r"(?<![\wäöüß])(belegt|belegen|beweist|beweisen|nachgewiesen|zeigt eindeutig|"
+    r"bestätigt eindeutig|erwiesen)(?![\wäöüß])", re.I)
+HEDGE_WOERTER = re.compile(
+    r"(?<![\wäöüß])(stützt|deutet darauf|legt nahe|spricht dafür|könnte|dürfte|"
+    r"tendenziell|Hinweise darauf|nicht belegt|belegt aber nicht)(?![\wäöüß])", re.I)
+
+
+def anspruchsverlauf(zitate: list[Zitation], nur_auffaellig: bool = True) -> list[str]:
+    """Alle Trägersätze einer mehrfach zitierten Quelle nebeneinander.
+
+    Findet eine Fehlerklasse, die keine der übrigen Prüfungen finden *kann*:
+    Die Arbeit begrenzt eine Quelle bei der Erstnutzung sauber („stützt die
+    Entscheidung, belegt aber nicht die Wirkung") und lässt die Begrenzung im
+    Fazit fallen („die belegte Wirksamkeit"). Jede Zitation für sich besteht
+    den Volltextabgleich – die Drift entsteht zwischen ihnen. Sie entsteht
+    systematisch, weil Fazitkapitel zuletzt und aus der Erinnerung entstehen.
+
+    Standardmäßig still: gemeldet wird nur, wo an einer Fundstelle ein
+    Stärkewort und an einer anderen desselben Keys ein Hedge steht. Die
+    vollständige Liste liefert `--verlauf`.
+    """
+    nach_key: dict[str, list[Zitation]] = {}
+    for z in zitate:
+        nach_key.setdefault(z.key, []).append(z)
+
+    ausgabe: list[str] = []
+    for key in sorted(nach_key):
+        gruppe = nach_key[key]
+        if len(gruppe) < 2:
+            continue
+        stark = [z for z in gruppe if STAERKEWOERTER.search(z.satz)]
+        hedge = [z for z in gruppe if HEDGE_WOERTER.search(z.satz)]
+        auffaellig = bool(stark and hedge)
+        if nur_auffaellig and not auffaellig:
+            continue
+        kopf = (f"[ANSPRUCHSVERLAUF] `{key}` – {len(gruppe)}× zitiert"
+                + (", davon mit Stärkewort und mit Hedge: Wird die Quelle an "
+                   "einer Stelle absoluter gebraucht als an der anderen? Die "
+                   "Erstnutzung setzt die Obergrenze." if auffaellig else ""))
+        zeilen = [kopf]
+        for z in gruppe:
+            marke = ("  ! " if z in stark else "  ~ " if z in hedge else "    ")
+            zeilen.append(f"{marke}{Path(z.datei).name}:{z.zeile} "
+                          f"[{ortsangabe(z)}] {z.satz.strip()[:220]}")
+        ausgabe.append("\n".join(zeilen))
+    return ausgabe
+
+
+def notiz_warnungen(zitate: list[Zitation], bib: dict) -> list[str]:
+    """Verrutschte Urteile sichtbar machen, solange sie noch billig sind.
+
+    Ein einmal vergebenes OK wird nie wieder angesehen: `pruefe()` überspringt
+    es vollständig, der Volltext wird nicht mehr geöffnet, und nur `--alle`
+    bricht das auf. Die gespeicherte Notiz ist damit die einzige Spur, die
+    überlebt – und genau die verrutscht, wenn Urteile blockweise über
+    `--paare N` mit copy-and-paste eingetragen werden.
+
+    Beides sind Hinweise, keine Befunde: Sie kosten keinen Score, machen den
+    Eintragungsfehler aber sichtbar, bevor er endgültig wird.
+    """
+    warnungen: list[str] = []
+
+    # (1) Dieselbe Begründung bei verschiedenen Werken. Bei zwei Zitationen
+    #     DESSELBEN Werks ist eine gemeinsame Notiz legitim und bleibt still.
+    nach_notiz: dict[str, list[Zitation]] = {}
+    for z in zitate:
+        if z.notiz.strip():
+            nach_notiz.setdefault(normalisiere(z.notiz), []).append(z)
+    for gruppe in nach_notiz.values():
+        keys = {z.key for z in gruppe}
+        if len(keys) > 1:
+            erste = gruppe[0]
+            for z in gruppe[1:]:
+                if z.key != erste.key:
+                    warnungen.append(
+                        f"[NOTIZ-DUBLETTE] `{z.hash}` ({z.key}) trägt dieselbe "
+                        f"Begründung wie `{erste.hash}` ({erste.key}) – beim "
+                        f"Eintragen verrutscht? Urteil am Volltext gegenprüfen: "
+                        f"--verdikt {z.hash}=PRÜFEN")
+
+    # (2) Ein Autorname in der Notiz, den weder der Eintrag noch der Trägersatz
+    #     kennt. Reine Zeichenkettenprüfung – hätte „Soma" in einer
+    #     Vittuari-Notiz sofort gezeigt.
+    namen = {k: re.findall(r"[A-ZÄÖÜ][a-zäöüß]{3,}",
+                           bib.get(k, {}).get("author", "")) for k in bib}
+    alle_namen = {n.lower() for liste in namen.values() for n in liste}
+    for z in zitate:
+        if not z.notiz.strip():
+            continue
+        eigene = {n.lower() for n in namen.get(z.key, [])}
+        satz = normalisiere(z.satz)
+        for wort in re.findall(r"[A-ZÄÖÜ][a-zäöüß]{3,}", z.notiz):
+            w = wort.lower()
+            if w in alle_namen and w not in eigene and w not in satz:
+                warnungen.append(
+                    f"[NOTIZ-FREMDER-AUTOR] `{z.hash}` ({z.key}): Die Notiz nennt "
+                    f"„{wort}“ – weder im Autorenfeld dieses Eintrags noch im "
+                    f"Trägersatz. Vermutlich die Begründung einer anderen Quelle.")
+                break
+    return warnungen
 
 
 def bericht(zitate: list[Zitation], root: Path) -> str:
@@ -920,7 +998,12 @@ def bericht(zitate: list[Zitation], root: Path) -> str:
                           f"| **{z.status}** | {z.befund or ''} |")
         zeilen.append("")
     if ok:
-        zeilen += ["## Geprüft und in Ordnung", "",
+        zeilen += ["## Fundstelle geprüft", "",
+                   "> **Geprüft ist hier Fundstelle und Wortlaut, nicht die "
+                   "Reichweite.** Diese Zitationen stehen so in der Quelle – ob "
+                   "die Quelle die Behauptung auch in der *Stärke* trägt, in der "
+                   "der Satz sie aufstellt, beantwortet die Gegenlesung "
+                   "(Prüferfrage 3), nicht dieser Lauf.", "",
                    "| Hash | Stelle | Quelle | S./Kap. | Notiz |", "|---|---|---|---|---|"]
         for z in ok:
             stelle = f"{Path(z.datei).name}:{z.zeile}"
@@ -984,8 +1067,9 @@ def pruefe(zitate: list[Zitation], bib: dict, state: dict, root: Path,
                         f"Verfügung, [Abs. X] oder [Kap. X] statt der Seite.")
             continue
 
-        pdf = pdf_pfad(eintrag.get("file", ""), root, key=z.key)
-        epub = None if pdf is not None else epub_pfad(eintrag.get("file", ""), root, key=z.key)
+        pdf = pdf_pfad(eintrag.get("file", ""), root, z.key)
+        epub = (None if pdf is not None
+                else epub_pfad(eintrag.get("file", ""), root, z.key))
         if pdf is None and epub is None:
             gesetzt = gesetzte_dateipfade(eintrag.get("file", ""))
             if gesetzt:
@@ -998,13 +1082,33 @@ def pruefe(zitate: list[Zitation], bib: dict, state: dict, root: Path,
                 z.befund = (
                     f"`file`-Feld gesetzt, Datei nicht gefunden: {gesetzt[0]} – "
                     f"auch nicht als {Path(gesetzt[0]).name} in "
-                    f"{' oder '.join(o + '/' for o in LITERATUR_ORDNER)}. Portabler "
-                    f"Fix: Datei als {z.key}.pdf (bzw. .epub) in "
-                    f"{LITERATUR_ORDNER[-1]}/ ablegen (siehe SKILL-ANPASSUNGEN.md "
-                    f"P4-1) statt nur den `file`-Pfad zu korrigieren – der zeigt "
-                    f"sonst wieder nur auf diesen Rechner.")
+                    f"{' oder '.join(o + '/' for o in LITERATUR_ORDNER)}. Volltext "
+                    f"dorthin kopieren oder den Pfad korrigieren; nicht als "
+                    f"fehlende Quelle werten.")
+            elif (klasse := zugangsklasse(eintrag)) == "VOLLTEXT BESCHAFFBAR":
+                z.status = klasse
+                z.befund = (
+                    f"Buch/Sammelband ohne hinterlegten Volltext – besorgen und "
+                    f"als {LITERATUR_ORDNER[0]}/{z.key}.pdf (oder .epub) ablegen. "
+                    f"Der Dateiname nach Citekey ist der einzige Bezug, den ein "
+                    f"BBT-Export nicht überschreibt. Vor der Abgabe erledigen.")
+            elif klasse == "ZUGANG PRÜFEN":
+                z.status = klasse
+                ziel = eintrag.get("doi") or eintrag.get("url", "")
+                z.befund = (
+                    f"Volltext hinter einer Bezahlschranke, kein Snapshot – hier "
+                    f"hilft kein Download-Klick. Reihenfolge: (1) freie Fassung "
+                    f"über OpenAlex suchen (api.openalex.org/works/doi:{ziel}), "
+                    f"(2) IU-Bibliothek über myCampus, (3) Quelle ersetzen. Bei "
+                    f"einer Preprint-Fassung die gelesene Fassung vermerken – "
+                    f"deren Seitenzählung weicht von der Verlagsfassung ab.")
+            elif eintrag.get("url"):
+                z.status = "LIVE PRÜFEN"
+                z.befund = ("kein PDF-Snapshot im file-Feld – Webquelle live "
+                            f"prüfen: {eintrag['url']}")
             else:
-                z.status, z.befund = zugangsklasse(eintrag)
+                z.status = "NICHT PRÜFBAR"
+                z.befund = "weder PDF (file) noch URL im Bib-Eintrag"
             continue
 
         quelle_ist_epub = pdf is None
@@ -1237,9 +1341,9 @@ def zeige_seite(key: str, seite: str, bib: dict, state: dict, root: Path) -> int
     if eintrag is None:
         print(f"FEHLER: Key '{key}' fehlt in references.bib.", file=sys.stderr)
         return 2
-    pdf = pdf_pfad(eintrag.get("file", ""), root, key=key)
+    pdf = pdf_pfad(eintrag.get("file", ""), root, key)
     if pdf is None:
-        epub = epub_pfad(eintrag.get("file", ""), root, key=key)
+        epub = epub_pfad(eintrag.get("file", ""), root, key)
         if epub is None:
             ziel = eintrag.get("url") or "kein Volltext im Bib-Eintrag"
             print(f"Kein PDF/E-Book im file-Feld. Webquelle: {ziel}", file=sys.stderr)
@@ -1381,6 +1485,9 @@ def main() -> int:
                     help="Seitenversatz einer Quelle manuell setzen")
     ap.add_argument("--ausnahme", action="append", default=[],
                     help="Wortfolge dauerhaft vom Wortlaut-Test ausnehmen")
+    ap.add_argument("--verlauf", action="store_true",
+                    help="Anspruchsverlauf für ALLE mehrfach zitierten Quellen "
+                         "ausgeben, nicht nur für die auffälligen")
     ap.add_argument("--seite", nargs=2, metavar=("KEY", "SEITE"),
                     help="nur den Text der zitierten Seite ausgeben (zum Lesen "
                          "beim Schreiben) – kein Prüflauf, kein Bericht. Bei "
@@ -1435,10 +1542,14 @@ def main() -> int:
 
     zaehler: dict[str, int] = {}
     for z in zitate:
-        zaehler[z.status] = zaehler.get(z.status, 0) + 1
+        zaehler[anzeige(z.status)] = zaehler.get(anzeige(z.status), 0) + 1
     print(f"\n{len(zitate)} Zitationen in {len(pfade)} Datei(en) · Bericht: {a.bericht}")
     for status in sorted(zaehler):
         print(f"  {status:<20} {zaehler[status]}")
+    for block in anspruchsverlauf(zitate, nur_auffaellig=not a.verlauf):
+        print(f"\n{block}")
+    for w in notiz_warnungen(zitate, bib):
+        print(f"\n{w}")
     uebrig = unreferenzierte_volltexte(bib, root)
     if uebrig:
         print(f"\nVolltexte ohne Bib-Verweis ({len(uebrig)}): "
