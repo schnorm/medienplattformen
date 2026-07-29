@@ -4,7 +4,7 @@ Arbeitsdokument, kein Bestandteil der Abgabe. Sammelt Änderungsvorschläge an `
 
 Jeder Punkt nennt: Beobachtung → warum es kein Einzelfall ist → Zieldatei → konkreter Vorschlag → Aufwand.
 
-> **Status: P1-1 bis P3-1 sind am 2026-07-29 umgesetzt** (`plan-modus`, `schreib-modus`, `pruef-modus`, `setup-check`, `hard-rules-formal.md`, `projektstruktur.md`, `vorlagen.md`, `check_quellentreue.py`; 98 Skript-Tests grün, `check_all.py` ohne harte Funde). Die Texte bleiben als Begründung stehen – sie erklären, warum die Regeln so lauten. **Offen ist allein die Liste „Bitte manuell prüfen" am Dateiende.**
+> **Status: P1-1, P1-2, P2-1, P2-2 und P3-1 sind am 2026-07-29 umgesetzt** – **P2-3 ist neu und noch offen.** (`plan-modus`, `schreib-modus`, `pruef-modus`, `setup-check`, `hard-rules-formal.md`, `projektstruktur.md`, `vorlagen.md`, `check_quellentreue.py`; 98 Skript-Tests grün, `check_all.py` ohne harte Funde). Die Texte bleiben als Begründung stehen – sie erklären, warum die Regeln so lauten. **Offen ist allein die Liste „Bitte manuell prüfen" am Dateiende.**
 
 **Thema dieser Runde: Quellenbeschaffung.** Der gemeinsame Nenner aller fünf Punkte ist eine Reihenfolge, die im Workflow falsch herum steht. Über die **Zitierfähigkeit** einer Quelle entscheidet heute Teil-Check G – ganz am Ende, unmittelbar vor der Abgabe. **Ausgewählt** wird die Quelle in Plan-Modus Schritt 1, ganz am Anfang. Dazwischen liegt der gesamte Schreibprozess. Ein Journal-Artikel hinter einer Bezahlschranke fällt deshalb genau dann als unprüfbar auf, wenn das Argument bereits auf ihm steht – der teuerste denkbare Zeitpunkt. Die Vorschläge ziehen die Entscheidung nach vorn und machen sie **quellentypabhängig**: Beim Buch ist ein fehlendes PDF eine Aufgabe, beim Journal-Artikel ohne Zugangsweg ein Ausschlussgrund.
 
@@ -117,6 +117,24 @@ Der Bericht zeigt eine Zahl; welcher der drei Fälle dahintersteht, muss der Nut
 **Zieldatei.** Eine Schreibweise festlegen – Vorschlag `sources/literatur`, weil die Dateien und die `file`-Felder schon dorthin zeigen –, `plan-modus`, `setup-check`, `pruef-modus` und `projektstruktur.md` nachziehen, `LITERATUR_ORDNER` als Rückfall stehen lassen. Das `README.md` entweder anlegen oder die Verweise darauf streichen.
 
 **Aufwand.** Minimal (Suchen/Ersetzen) – aber vor der nächsten Nutzeranweisung erledigen, sonst entsteht der zweite Ordner.
+
+---
+
+## P2-3 · Ein OK-Urteil wird nie wieder angesehen – auch dann nicht, wenn seine Begründung offensichtlich nicht passt
+
+**Beobachtung (2026-07-29).** Zwei Vittuari-Zitationen (`bdf041cb6b`, `b7402f55c9`) trugen in `quellencheck-state.json` als Begründung wortwörtlich den **Soma**-Prüftext aus derselben Sitzung vom 28.07. – inklusive Seitenangaben und Prozentwerten, die mit Vittuari nichts zu tun haben. Beim Eintragen mehrerer `--verdikt`-Aufrufe hintereinander war dieselbe `--notiz` mehrfach mitgegeben worden. Die Urteile selbst waren korrekt (am Volltext nachgeprüft: Kap. 1, Abs. 3 trägt sowohl den Haushalts-Claim als auch die Drivers/Levers-Definition), aber das war der Datei nicht anzusehen.
+
+**Warum kein Einzelfall.** `pruefe()` überspringt jede Zitation mit Status OK oder AUSNAHME vollständig – der Volltext wird nicht geöffnet, die gespeicherte Notiz unbesehen durchgereicht (`if alt and not alle and alt.get("status") in ("OK","AUSNAHME"): … continue`). Nur `--alle` bricht das auf, und kein Audit-Umfang ruft das automatisch. Teil-Check G weist zudem nur an, offene `PRÜFEN`-Paare zu entscheiden; die OK-Tabelle liest niemand gegen. Ein einmal vergebenes OK ist damit **endgültig**, und seine Begründung ist die einzige Spur, die überlebt. Genau darauf ist die Inkrementalität ausgelegt – sie macht die Vollprüfung bezahlbar –, aber sie hat als Preis, dass ein Eintragungsfehler nie mehr auffällt. Das Muster „mehrere Urteile in einem Rutsch mit derselben Notiz" entsteht dabei nicht aus Nachlässigkeit, sondern weil die Urteile blockweise über `--paare N` abgearbeitet werden.
+
+**Zieldatei.** `.claude/skills/_shared/scripts/check_quellentreue.py` (Verdikt-Eintragung und Bericht).
+
+**Vorschlag, zwei kleine Wächter – beide deterministisch, kein Modellurteil:**
+1. **Notiz-Dublette melden.** Taucht derselbe Notiztext bei Zitationen mit **verschiedenen** Bib-Keys auf, im Bericht als Hinweis ausgeben („Notiz identisch mit `<hash>` (`<anderer key>`) – beim Eintragen verrutscht?"). Fängt genau diesen Fehler, ohne je einen echten Fall zu blockieren: Dieselbe Begründung für zwei Zitationen **derselben** Quelle ist legitim und bleibt still.
+2. **Key-Nennung in der Notiz gegenprüfen.** Nennt eine Notiz einen Autornamen, der weder im `author`-Feld des zitierten Eintrags noch im Trägersatz vorkommt, ebenfalls als Hinweis melden. Reine Zeichenkettenprüfung; hätte den Fall hier sofort gezeigt („Soma" in einer Vittuari-Notiz).
+
+Beides sind Hinweise, keine Befunde – sie kosten keinen Score, machen den Eintragungsfehler aber sichtbar, solange er noch billig zu beheben ist.
+
+**Aufwand.** Klein, zwei Schleifen über die bereits geladenen Urteile.
 
 ---
 

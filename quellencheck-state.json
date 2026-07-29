@@ -52,13 +52,13 @@
   },
   "bdf041cb6b": {
    "status": "OK",
-   "notiz": "Soma 2020, S. 10-12 (Abschnitt 3.2) am Volltext geprueft: Information-Gruppe S.10 (84% nutzten Material), Community-Gruppe S.11 (nur 16% besuchten ein Event, 3 von 8 Workshops mit einem Haushalt), Game-Gruppe S.12 (61% spielten alle 12 Level). Teilnahme Community deutlich niedriger als Information/Game. Deckt den Trägersatz vollständig; vorherige Seitenangabe S.9 verwies auf Tabelle 3 (Abfallmengen), nicht auf die Teilnahmequoten.",
-   "datum": "2026-07-28"
+   "notiz": "Vittuari 2023 (Preprint), Kap. 1 Abs. 3 am Volltext geprueft: 'a large part of the literature allocates the responsibility to consumers, particularly at the household level'; Abs. 1 nennt zusaetzlich Eurostat-Zahl 65% fuer Haushalte und Food Service zusammen. Deckt den Traegersatz. KORREKTUR 29.07.: Die vorherige Notiz war versehentlich der Soma-Text aus derselben Sitzung.",
+   "datum": "2026-07-29"
   },
   "b7402f55c9": {
    "status": "OK",
-   "notiz": "Soma 2020, S. 10-12 (Abschnitt 3.2) am Volltext geprueft: Information-Gruppe S.10 (84% nutzten Material), Community-Gruppe S.11 (nur 16% besuchten ein Event, 3 von 8 Workshops mit einem Haushalt), Game-Gruppe S.12 (61% spielten alle 12 Level). Teilnahme Community deutlich niedriger als Information/Game. Deckt den Trägersatz vollständig; vorherige Seitenangabe S.9 verwies auf Tabelle 3 (Abfallmengen), nicht auf die Teilnahmequoten.",
-   "datum": "2026-07-28"
+   "notiz": "Vittuari 2023 (Preprint), Kap. 1 Abs. 3 am Volltext geprueft: 'Under drivers, we understand the factors that impact behaviour, such as awareness, attitudes, cognitions, emotions, and external, context-related factors' und 'As levers, we consider those aspects of drivers that can be leveraged to influence food waste behaviour by implementing specific interventions systematically.' Deckt die Drivers/Levers-Trennung im Traegersatz genau. KORREKTUR 29.07.: Die vorherige Notiz war versehentlich der Soma-Text aus derselben Sitzung.",
+   "datum": "2026-07-29"
   },
   "cdb06f5355": {
    "status": "OK",
@@ -69,12 +69,63 @@
    "status": "OK",
    "notiz": "Soma 2020, S. 10-12 (Abschnitt 3.2) am Volltext geprueft: Information-Gruppe S.10 (84% nutzten Material), Community-Gruppe S.11 (nur 16% besuchten ein Event, 3 von 8 Workshops mit einem Haushalt), Game-Gruppe S.12 (61% spielten alle 12 Level). Teilnahme Community deutlich niedriger als Information/Game. Deckt den Trägersatz vollständig; vorherige Seitenangabe S.9 verwies auf Tabelle 3 (Abfallmengen), nicht auf die Teilnahmequoten.",
    "datum": "2026-07-28"
+  },
+  "d0224da39b": {
+   "status": "OK",
+   "notiz": "SDG 12.3 wörtlich belegt (UN-Snapshot S. 22): 'By 2030, halve per capita global food waste at the retail and consumer levels' – Trägersatz deckungsgleich, keine Zuspitzung.",
+   "datum": "2026-07-29"
+  },
+  "7e4ae535b0": {
+   "status": "OK",
+   "notiz": "Gedeckt (Shen S. 4 u. 6): Browsing wirkt 'as if by osmosis' indirekt auf PEB; der Pfad ueber environmental concern ist ohne eigene Teilnahme signifikant (beta 0.10, p<.001), H3a bestaetigt. Der Trägersatz bleibt mit 'kann erhoehen' hinter der Quelle - keine Zuspitzung.",
+   "datum": "2026-07-29"
+  },
+  "f839913863": {
+   "status": "OK",
+   "notiz": "Nivedhitha 2024, S. 14 am Volltext geprueft: 'the direct effect of green self-identification on PEB is insignificant, as the 95% CI includes 0, thus rejecting H1' - der Effekt laeuft vollstaendig ueber collective intention. Traegersatz gibt jetzt genau das wieder (kein direkter Zusammenhang, Wirkung ueber Gemeinschaftsgefuehl); vorherige Fassung behauptete den verworfenen Direkteffekt.",
+   "datum": "2026-07-29"
+  },
+  "e77ee08f62": {
+   "status": "OK",
+   "notiz": "Wie f839913863: Tabellenzelle nennt die Selbstwahrnehmung jetzt ausdruecklich 'ueber Gemeinschaft', S. 14 belegt die volle Mediation ueber collective intention.",
+   "datum": "2026-07-29"
+  },
+  "ed8a81e164": {
+   "status": "OK",
+   "notiz": "Wie f839913863: Fazit spricht jetzt von der 'ueber das Gemeinschaftsgefuehl vermittelten Selbstwahrnehmung', S. 14 belegt die volle Mediation.",
+   "datum": "2026-07-29"
+  },
+  "dc728890d8": {
+   "status": "OK",
+   "notiz": "Unveraendert gegenueber dem frueheren OK-Urteil - nur die Nivedhitha-Klausel derselben Tabellenzeile wurde geaendert, der Barker-Beleg (S. 10, Reminders als wirksamer Nudge-Typ) ist wortgleich geblieben.",
+   "datum": "2026-07-29"
+  },
+  "06a02be132": {
+   "status": "OK",
+   "notiz": "Unveraendert gegenueber dem frueheren OK-Urteil - nur die Nivedhitha-Klausel derselben Tabellenzeile wurde geaendert; Soma S. 9 (Gamification-Effekt) wortgleich.",
+   "datum": "2026-07-29"
+  },
+  "84c640000f": {
+   "status": "OK",
+   "notiz": "Unveraendert gegenueber dem frueheren OK-Urteil - im Fazitsatz wurde allein die Nivedhitha-Klausel ersetzt; Vittuari (Kap. 1, Abs. 3, Drivers/Levers) wortgleich.",
+   "datum": "2026-07-29"
+  },
+  "f988d4026c": {
+   "status": "OK",
+   "notiz": "Unveraendert gegenueber dem frueheren OK-Urteil - im Fazitsatz wurde allein die Nivedhitha-Klausel ersetzt; Barker S. 10 wortgleich.",
+   "datum": "2026-07-29"
+  },
+  "fd55e58172": {
+   "status": "OK",
+   "notiz": "Unveraendert gegenueber dem frueheren OK-Urteil - im Fazitsatz wurde allein die Nivedhitha-Klausel ersetzt; Soma S. 9 wortgleich.",
+   "datum": "2026-07-29"
   }
  },
  "versatz": {
   "vittuariHowReduceConsumer2023": 1,
   "barkerWhatNudgeTechniques2021": -8,
-  "somaFoodWasteReduction2020": 0
+  "somaFoodWasteReduction2020": 0,
+  "nivedhithaHowGreenSocial2024": 9
  },
  "ausnahmen": []
 }
