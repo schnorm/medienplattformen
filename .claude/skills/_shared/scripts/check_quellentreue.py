@@ -146,8 +146,12 @@ STOPP = {
 }
 
 STATUS_BEFUND = {"WORTLAUT", "ZITAT WEICHT AB", "SEITE VERDÄCHTIG", "CLAIM SCHÄRFER",
-                 "NICHT GEFUNDEN"}
-STATUS_OFFEN = {"PRÜFEN", "NICHT PRÜFBAR", "LIVE PRÜFEN"}
+                 "NICHT GEFUNDEN", "SEITE AUSSERHALB"}
+# „DATEI NICHT GEFUNDEN" steht bewusst hier und nicht bei den Befunden: Es ist
+# kein Mangel der Arbeit, sondern eine ungeprüfte Zitation aus technischem
+# Grund. Wer es als Befund führte, produzierte genau den Fehler, der zu dieser
+# Klasse geführt hat – ein Punktabzug für ein Pfadproblem.
+STATUS_OFFEN = {"PRÜFEN", "NICHT PRÜFBAR", "LIVE PRÜFEN", "DATEI NICHT GEFUNDEN"}
 
 
 @dataclass
@@ -395,33 +399,78 @@ def _datei_kandidaten(feld: str) -> list[str]:
     return out
 
 
+# Wohin ausgewichen wird, wenn der Pfad aus dem `file`-Feld nicht auflöst.
+# Zotero schreibt IMMER absolute Pfade seiner lokalen Ablage
+# (/home/…/Zotero/storage/X6D69NPM/…). Auf dem Rechner, der exportiert hat,
+# lösen sie auf – in jeder anderen Umgebung nie. Das trifft damit jeden
+# Bib-Eintrag mit angehängtem Volltext, sobald jemand anders (oder derselbe
+# Nutzer auf einem zweiten Rechner) prüft: der Normalfall, nicht die Ausnahme.
+LITERATUR_ORDNER = ("sources/literature", "sources/literatur")
+
+
+def _pfad_kandidat(teil: str, endung: str, root: Path) -> Path | None:
+    """Einen Eintrag aus dem `file`-Feld zu einem existierenden Pfad machen.
+
+    Bewusst nur exakte Dateinamen, kein unscharfer Abgleich über Autor und
+    Jahr: Ein Fuzzy-Treffer prüft die Zitation gegen das falsche Werk und
+    meldet dafür OK. Ein stiller Falschbefund ist teurer als der laute
+    Fehlalarm, den diese Funktion beseitigt.
+    """
+    if not teil.lower().endswith(endung):
+        return None
+    p = Path(teil)
+    if not p.is_absolute():
+        kandidat = root / p
+        if kandidat.exists():
+            return kandidat
+    elif p.exists():
+        return p
+    # Pfad zeigt ins Leere: denselben Dateinamen in der Projektablage suchen.
+    for ordner in LITERATUR_ORDNER:
+        kandidat = root / ordner / p.name
+        if kandidat.exists():
+            return kandidat
+    return None
+
+
+def _bereinige(teil: str, typ_muster: str) -> str:
+    teil = teil.replace("\\:", ":").replace("\\\\", "\\")
+    teil = re.sub(rf":(?:{typ_muster})$", "", teil, flags=re.I)
+    return re.sub(r"^[^:]*:(?=[A-Za-z]:[\\/]|/)", "", teil)
+
+
 def pdf_pfad(feld: str, root: Path) -> Path | None:
     for teil in _datei_kandidaten(feld):
-        teil = teil.replace("\\:", ":").replace("\\\\", "\\")
-        teil = re.sub(r":(?:application/pdf|PDF)$", "", teil, flags=re.I)
-        teil = re.sub(r"^[^:]*:(?=[A-Za-z]:[\\/]|/)", "", teil)
-        if teil.lower().endswith(".pdf"):
-            p = Path(teil)
-            if not p.is_absolute():
-                p = root / p
-            if p.exists():
-                return p
+        treffer = _pfad_kandidat(_bereinige(teil, r"application/pdf|PDF"),
+                                 ".pdf", root)
+        if treffer:
+            return treffer
     return None
 
 
 def epub_pfad(feld: str, root: Path) -> Path | None:
     """Wie `pdf_pfad`, nur für `.epub`."""
     for teil in _datei_kandidaten(feld):
-        teil = teil.replace("\\:", ":").replace("\\\\", "\\")
-        teil = re.sub(r":(?:application/epub\+zip|EPUB)$", "", teil, flags=re.I)
-        teil = re.sub(r"^[^:]*:(?=[A-Za-z]:[\\/]|/)", "", teil)
-        if teil.lower().endswith(".epub"):
-            p = Path(teil)
-            if not p.is_absolute():
-                p = root / p
-            if p.exists():
-                return p
+        treffer = _pfad_kandidat(
+            _bereinige(teil, r"application/epub\+zip|EPUB"), ".epub", root)
+        if treffer:
+            return treffer
     return None
+
+
+def gesetzte_dateipfade(feld: str) -> list[str]:
+    """Die im `file`-Feld genannten Volltext-Pfade – unabhängig davon, ob sie
+    auflösen. Grundlage für die Unterscheidung „kein Volltext hinterlegt" vs.
+    „Pfad zeigt ins Leere"; die zweite ist ein Konfigurationsproblem von
+    dreißig Sekunden, die erste ein Rechercheproblem."""
+    out = []
+    for teil in _datei_kandidaten(feld):
+        for endung, muster in ((".pdf", r"application/pdf|PDF"),
+                               (".epub", r"application/epub\+zip|EPUB")):
+            sauber = _bereinige(teil, muster)
+            if sauber.lower().endswith(endung) and sauber not in out:
+                out.append(sauber)
+    return out
 
 
 # ------------------------------------------------------------------ PDF-Zugriff
@@ -703,6 +752,27 @@ def ortsangabe(z: Zitation) -> str:
     return "–"
 
 
+def unreferenzierte_volltexte(bib: dict, root: Path) -> list[str]:
+    """Volltexte in der Projektablage, die kein `file`-Feld nennt.
+
+    Der billigste Hinweis auf den Fall aus P1-1: Die Datei liegt da, der
+    Bib-Eintrag zeigt woanders hin. Nur melden, wenn tatsächlich etwas
+    übrigbleibt – eine Liste, die bei jedem Lauf erscheint, wird überblättert.
+    """
+    genannt = {Path(p).name.lower()
+               for e in bib.values() for p in gesetzte_dateipfade(e.get("file", ""))}
+    uebrig: list[str] = []
+    for ordner in LITERATUR_ORDNER:
+        d = root / ordner
+        if not d.is_dir():
+            continue
+        for f in sorted(d.iterdir()):
+            if (f.suffix.lower() in (".pdf", ".epub")
+                    and f.name.lower() not in genannt):
+                uebrig.append(f"{ordner}/{f.name}")
+    return uebrig
+
+
 def bericht(zitate: list[Zitation], root: Path) -> str:
     offen = [z for z in zitate if z.status in STATUS_BEFUND | STATUS_OFFEN]
     ok = [z for z in zitate if z.status == "OK"]
@@ -738,6 +808,30 @@ def bericht(zitate: list[Zitation], root: Path) -> str:
     return "\n".join(zeilen) + "\n"
 
 
+def seite_ausserhalb_pages(seite: str, pages: str) -> tuple[int, int, int] | None:
+    """Liegt eine zitierte Seite außerhalb der Spanne im `pages`-Feld?
+
+    Reine Feldprüfung, kein Volltext nötig – greift deshalb auch bei Quellen
+    ohne hinterlegtes PDF. Zielt auf einen Fehler, der sich systematisch
+    einschleicht: Repositorien (White Rose, arXiv, PMC, ResearchGate) liefern
+    Preprint-Fassungen, deren Zählung bei 1 beginnt, während der Bib-Eintrag
+    die Verlagsseiten trägt. Wer die Seite aus dem gelesenen Preprint abschreibt,
+    zitiert eine Seite, die es in der genannten Publikation nicht gibt.
+
+    Liefert (zitierte Seite, von, bis) oder None. `pages` ohne echten Bereich
+    (Artikelnummern, Einzelseiten, Bücher) ergibt nie einen Befund.
+    """
+    bereich = seitenbereich(pages)
+    if not bereich or not seite:
+        return None
+    von, bis = bereich
+    for v, b in seiten_liste(seite):
+        for wert in {v, b}:
+            if wert < von or wert > bis:
+                return (wert, von, bis)
+    return None
+
+
 # ------------------------------------------------------------------ Hauptlauf
 
 def pruefe(zitate: list[Zitation], bib: dict, state: dict, root: Path,
@@ -753,10 +847,39 @@ def pruefe(zitate: list[Zitation], bib: dict, state: dict, root: Path,
         if eintrag is None:
             z.status, z.befund = "NICHT GEFUNDEN", "Key fehlt in references.bib"
             continue
+
+        # Vor allem anderen, weil ohne Volltext entscheidbar: Passt die
+        # Seitenangabe überhaupt zu der Spanne, die der Eintrag ausweist?
+        drauss = seite_ausserhalb_pages(z.seite, eintrag.get("pages", ""))
+        if drauss:
+            wert, von, bis = drauss
+            z.status = "SEITE AUSSERHALB"
+            z.befund = (f"S. {wert} liegt außerhalb der laut `pages` zitierten "
+                        f"Spanne {von}–{bis} – in der genannten Publikation gibt "
+                        f"es diese Seite nicht. Typisch beim Lesen einer "
+                        f"Preprint-/Repositoriumsfassung mit eigener Zählung: "
+                        f"maßgeblich ist die Verlagsfassung. Steht sie nicht zur "
+                        f"Verfügung, [Abs. X] oder [Kap. X] statt der Seite.")
+            continue
+
         pdf = pdf_pfad(eintrag.get("file", ""), root)
         epub = None if pdf is not None else epub_pfad(eintrag.get("file", ""), root)
         if pdf is None and epub is None:
-            if eintrag.get("url"):
+            gesetzt = gesetzte_dateipfade(eintrag.get("file", ""))
+            if gesetzt:
+                # Eigene Klasse: Der Volltext ist hinterlegt, nur der Pfad
+                # stimmt nicht. Vorher bekam dieser Fall dieselbe Meldung wie
+                # ein fehlendes file-Feld – ein Audit hat daraus einmal einen
+                # −15-Befund „Quellen ohne Volltext" gebaut und damit die
+                # Prüfung genau dort abgeschaltet, wo sie gegriffen hätte.
+                z.status = "DATEI NICHT GEFUNDEN"
+                z.befund = (
+                    f"`file`-Feld gesetzt, Datei nicht gefunden: {gesetzt[0]} – "
+                    f"auch nicht als {Path(gesetzt[0]).name} in "
+                    f"{' oder '.join(o + '/' for o in LITERATUR_ORDNER)}. Volltext "
+                    f"dorthin kopieren oder den Pfad korrigieren; nicht als "
+                    f"fehlende Quelle werten.")
+            elif eintrag.get("url"):
                 z.status = "LIVE PRÜFEN"
                 z.befund = ("kein PDF-Snapshot im file-Feld – Webquelle live "
                             f"prüfen: {eintrag['url']}")
@@ -1186,7 +1309,8 @@ def main() -> int:
         print("Keine Zitationen gefunden – nichts zu prüfen.")
         schreib_state(state_pfad, state)
         return 0
-    pruefe(zitate, lies_bib(bib_pfad), state, root, a.min_words, a.alle)
+    bib = lies_bib(bib_pfad)
+    pruefe(zitate, bib, state, root, a.min_words, a.alle)
     schreib_state(state_pfad, state)
     Path(a.bericht).write_text(bericht(zitate, root), encoding="utf-8")
 
@@ -1196,6 +1320,12 @@ def main() -> int:
     print(f"\n{len(zitate)} Zitationen in {len(pfade)} Datei(en) · Bericht: {a.bericht}")
     for status in sorted(zaehler):
         print(f"  {status:<20} {zaehler[status]}")
+    uebrig = unreferenzierte_volltexte(bib, root)
+    if uebrig:
+        print(f"\nVolltexte ohne Bib-Verweis ({len(uebrig)}): "
+              f"{', '.join(uebrig[:6])}{' …' if len(uebrig) > 6 else ''}\n"
+              f"  Liegt hier der Volltext zu einer als DATEI NICHT GEFUNDEN "
+              f"gemeldeten Quelle, ist es ein Pfad- und kein Quellenproblem.")
     if a.paare:
         paare_ausgeben(zitate, a.paare, a.voll)
     offen = sum(v for k, v in zaehler.items() if k in STATUS_BEFUND | STATUS_OFFEN)

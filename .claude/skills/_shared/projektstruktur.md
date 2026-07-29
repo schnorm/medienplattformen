@@ -18,12 +18,13 @@ Kommentierter Baum des Projektordners. Ausgelagert aus `CLAUDE.md`, weil er nur 
 ├── quellencheck-state.json      # Urteile je Zitation – überdauert Läufe, nie von Hand editieren
 ├── pruefbericht.md              # letzter Audit-Bericht (Prüf-Modus überschreibt pro Lauf)
 ├── main.tex                     # Wurzeldokument – nicht umbauen; nur die markierten Aktivierungsblöcke schalten
-│                                #   (Gender-Disclaimer, Abbildungs-/Tabellenverzeichnis, Anhangsverzeichnis, Anhang)
+│                                #   (Gender-Disclaimer, Abbildungs-/Tabellenverzeichnis, Anhang)
 ├── references.bib               # BBT-Export aus Zotero – NIE manuell editieren
 ├── pages/
 │   ├── meta.tex                 # Projektangaben – EINZIGE projektspezifische Stelle
 │   ├── acronyms.tex             # Abkürzungsverzeichnis (\acro{}-Einträge)
-│   ├── appendix.tex             # Anhang
+│   ├── appendix.tex             # Anhänge – je einer als \newappendix{Titel}; Verzeichnis entsteht daraus
+│   ├── appendix-setup.tex       # Anhang-Maschinerie (aus der Präambel geladen) – NIE ändern
 │   ├── cover.tex                # Titelblatt (nutzt meta.tex) – NIE ändern
 │   └── chapters.tex             # bindet alle Hauptkapitel-Master per \input{} ein
 ├── chapters/                    # Kapitel gemäß kapitelplan.md

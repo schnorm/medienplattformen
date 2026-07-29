@@ -21,12 +21,14 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 from check_quellentreue import (  # noqa: E402
-    BLOCKZITAT_RE, ENQUOTE_RE, MIN_ZITAT_WOERTER, PAAR_MIN_ZEICHEN, SEITE_RE,
-    ausschnitt, enthaelt_folge, kalibriere, kernbegriffe,
-    laengste_gemeinsame_folge, lies_bib, lies_tex, naechstes_zitat,
-    ohne_zitattext, seiten_liste, seitenbereich, spanne, sprache, sprachwechsel,
-    versatz_aus_pages, normalisiere, satz_um, treffer_auf_seite, woerter,
-    zitat_segmente, CITE_CMD_RE)
+    BLOCKZITAT_RE, ENQUOTE_RE, KAPITEL_RE, MIN_ZITAT_WOERTER, PAAR_MIN_ZEICHEN,
+    SEITE_RE, ausschnitt, enthaelt_folge, epub_kapitel, epub_pfad,
+    gesetzte_dateipfade, kalibriere, kernbegriffe, laengste_gemeinsame_folge,
+    lies_bib, lies_tex, naechstes_zitat, ohne_zitattext, ortsangabe, pdf_pfad,
+    resolve_kapitel, seite_ausserhalb_pages, seiten_liste, seitenbereich, spanne,
+    sprache, sprachwechsel, unreferenzierte_volltexte, versatz_aus_pages,
+    normalisiere, satz_um, treffer_auf_seite, woerter, zitat_segmente,
+    CITE_CMD_RE)
 
 
 def schreib(text: str, suffix: str = ".tex") -> Path:
@@ -540,6 +542,229 @@ class TestAusschnitt(unittest.TestCase):
         aus, gekuerzt = ausschnitt(text, ["commitment"])
         self.assertTrue(gekuerzt)
         self.assertTrue(text.startswith(aus))   # Anfang der Seite, nicht irgendwo
+
+
+def baue_epub(ziel: Path, *, mit_ncx: bool = True) -> Path:
+    """Minimales, aber echtes EPUB2 – container.xml → OPF → NCX → XHTML.
+
+    Bewusst mit dem Fall, an dem eine naive Implementierung scheitert: 17.2.1
+    und 17.2.2 liegen in DERSELBEN HTML-Datei und sind nur durch Anker
+    getrennt. Wer je Datei einmal schneidet, bekommt beide Unterkapitel in
+    einen Topf und vergleicht danach den falschen Text mit der Zitation.
+    """
+    import zipfile
+    container = ('<?xml version="1.0"?><container><rootfiles><rootfile '
+                 'full-path="OEBPS/content.opf"/></rootfiles></container>')
+    opf = ('<?xml version="1.0"?><package><manifest>'
+           '<item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml"/>'
+           '<item id="k17" href="17_001.html" media-type="application/xhtml+xml"/>'
+           '</manifest><spine toc="ncx"></spine></package>')
+    ncx = ('<?xml version="1.0"?><ncx><navMap>'
+           '<navPoint><navLabel><text>Vorwort</text></navLabel>'
+           '<content src="17_001.html"/></navPoint>'
+           '<navPoint><navLabel><text>17.2.1 Ladezeiten senken</text></navLabel>'
+           '<content src="17_001.html#u17.2.1"/></navPoint>'
+           '<navPoint><navLabel><text>17.2.2 Websites optimieren</text></navLabel>'
+           '<content src="17_001.html#u17.2.2"/></navPoint>'
+           '</navMap></ncx>')
+    html_doc = ('<html><body>'
+                '<h2 id="u17.2.1" class="t3">Ladezeiten senken</h2>'
+                '<p>Der erste Abschnitt handelt von Antwortzeiten.</p>'
+                '<h2 id="u17.2.2" class="t3">Websites optimieren</h2>'
+                '<p>Der zweite Abschnitt handelt von Benutzerf&#252;hrung.</p>'
+                '</body></html>')
+    with zipfile.ZipFile(str(ziel), "w") as z:
+        z.writestr("META-INF/container.xml", container)
+        z.writestr("OEBPS/content.opf", opf if mit_ncx else opf.replace(
+            '<item id="ncx" href="toc.ncx" '
+            'media-type="application/x-dtbncx+xml"/>', ""))
+        if mit_ncx:
+            z.writestr("OEBPS/toc.ncx", ncx)
+        z.writestr("OEBPS/17_001.html", html_doc)
+    return ziel
+
+
+class TestKapitelLocator(unittest.TestCase):
+    """[Kap. X] statt [S. X] – der Locator für Quellen ohne Seitenzahlen."""
+
+    def test_hierarchische_nummer_vollstaendig(self):
+        self.assertEqual(KAPITEL_RE.search("Kap. 17.2.2").group(1), "17.2.2")
+        self.assertEqual(KAPITEL_RE.search("Kap.~3").group(1), "3")
+
+    def test_kapitel_landet_in_der_zitation(self):
+        p = schreib("Eine Aussage \\parencite[Kap. 17.2.2]{mueller2020}.\n")
+        try:
+            z = lies_tex([p])[0]
+            self.assertEqual(z.kapitel, "17.2.2")
+            self.assertEqual(z.seite, "")
+            self.assertEqual(ortsangabe(z), "Kap. 17.2.2")
+        finally:
+            p.unlink()
+
+    def test_kapitel_geht_in_den_hash(self):
+        # Sonst teilen sich zwei Zitationen desselben Satzes aus verschiedenen
+        # Kapiteln ein Urteil – ein OK für Kap. 3 gälte still auch für Kap. 9.
+        a = schreib("Gleiche Aussage \\parencite[Kap. 3]{k}.\n")
+        b = schreib("Gleiche Aussage \\parencite[Kap. 9]{k}.\n")
+        try:
+            self.assertNotEqual(lies_tex([a])[0].hash, lies_tex([b])[0].hash)
+        finally:
+            a.unlink()
+            b.unlink()
+
+
+class TestEpub(unittest.TestCase):
+    """E-Books ohne Seitenzahlen: Kapiteltext aus dem eigenen NCX auflösen."""
+
+    def test_anker_trennen_kapitel_in_einer_datei(self):
+        with tempfile.TemporaryDirectory() as d:
+            epub = baue_epub(Path(d) / "buch.epub")
+            texte, index = epub_kapitel(epub)
+            self.assertIn("17.2.1", index)
+            self.assertIn("17.2.2", index)
+            eins = texte[index["17.2.1"]]
+            zwei = texte[index["17.2.2"]]
+            self.assertIn("Antwortzeiten", eins)
+            self.assertNotIn("Benutzerführung", eins)
+            self.assertIn("Benutzerführung", zwei)
+
+    def test_kein_tag_rumpf_im_text(self):
+        # Der Schnitt setzt am öffnenden Tag an, nicht mitten im Attribut –
+        # sonst bliebe ein Rest wie 'class="t3">' vor dem Kapiteltext stehen.
+        with tempfile.TemporaryDirectory() as d:
+            texte, index = epub_kapitel(baue_epub(Path(d) / "buch.epub"))
+            self.assertNotIn("t3", texte[index["17.2.2"]])
+            self.assertTrue(texte[index["17.2.2"]].startswith("Websites"))
+
+    def test_unnummerierte_eintraege_zaehlen_nicht(self):
+        # „Vorwort" trägt keine [Kap. X]-Angabe und ist damit nicht zitierbar.
+        with tempfile.TemporaryDirectory() as d:
+            _texte, index = epub_kapitel(baue_epub(Path(d) / "buch.epub"))
+            self.assertEqual(set(index), {"17.2.1", "17.2.2"})
+
+    def test_ohne_ncx_wird_geworfen(self):
+        # Der Aufrufer behandelt das wie ein defektes PDF (NICHT PRÜFBAR) –
+        # entscheidend ist, dass es nicht still ein leeres Ergebnis liefert.
+        with tempfile.TemporaryDirectory() as d:
+            epub = baue_epub(Path(d) / "buch.epub", mit_ncx=False)
+            with self.assertRaises(Exception):
+                epub_kapitel(epub)
+
+    def test_resolve_faellt_auf_oberebene_zurueck(self):
+        index = {"17": 0, "17.2": 1}
+        self.assertEqual(resolve_kapitel("17.2.2", index), (1, "17.2"))
+        self.assertEqual(resolve_kapitel("17.9.9", index), (0, "17"))
+        self.assertEqual(resolve_kapitel("4.1", index), (None, ""))
+
+    def test_resolve_bevorzugt_die_genaue_ebene(self):
+        index = {"17": 0, "17.2": 1, "17.2.2": 2}
+        self.assertEqual(resolve_kapitel("17.2.2", index), (2, "17.2.2"))
+
+
+class TestDateifeld(unittest.TestCase):
+    """`file`-Feld: Zotero trennt mit ';', Dateinamen enthalten aber selbst welche."""
+
+    def test_semikolon_im_dateinamen(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            name = "Meier; Schulz - Handbuch.epub"
+            (root / name).write_bytes(b"x")
+            self.assertEqual(epub_pfad(name, root), root / name)
+
+    def test_zotero_mehrfachfeld_wird_aufgeteilt(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            (root / "b.epub").write_bytes(b"x")
+            feld = "a.pdf:application/pdf;b.epub:application/epub+zip"
+            self.assertEqual(epub_pfad(feld, root), root / "b.epub")
+
+    def test_epub_pfad_nimmt_kein_pdf(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            (root / "a.pdf").write_bytes(b"x")
+            self.assertIsNone(epub_pfad("a.pdf", root))
+            self.assertEqual(pdf_pfad("a.pdf", root), root / "a.pdf")
+
+
+class TestPfadFallback(unittest.TestCase):
+    """Zotero schreibt absolute Pfade seiner lokalen Ablage – die lösen nur
+    auf dem exportierenden Rechner auf. Der Volltext liegt trotzdem im Projekt."""
+
+    def test_zotero_pfad_faellt_auf_projektablage_zurueck(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            (root / "sources" / "literature").mkdir(parents=True)
+            (root / "sources" / "literature" / "Barker2021.pdf").write_bytes(b"x")
+            feld = "/home/normi/Zotero/storage/X6D69NPM/Barker2021.pdf"
+            self.assertEqual(pdf_pfad(feld, root),
+                             root / "sources" / "literature" / "Barker2021.pdf")
+
+    def test_auch_deutsche_ordnerschreibweise(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            (root / "sources" / "literatur").mkdir(parents=True)
+            (root / "sources" / "literatur" / "Soma2020.pdf").write_bytes(b"x")
+            self.assertIsNotNone(pdf_pfad("/nirgends/Soma2020.pdf", root))
+
+    def test_kein_fuzzy_match_auf_aehnliche_namen(self):
+        # Bewusst KEIN unscharfer Abgleich: Ein Fehltreffer prüfte die Zitation
+        # gegen das falsche Werk und meldete dafür OK – ein stiller
+        # Falschbefund, teurer als der laute Fehlalarm.
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            (root / "sources" / "literature").mkdir(parents=True)
+            (root / "sources" / "literature"
+             / "Barker2021_NudgeTechniques.pdf").write_bytes(b"x")
+            self.assertIsNone(pdf_pfad("/home/x/Barker2021.pdf", root))
+
+    def test_epub_nutzt_denselben_rueckfall(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            (root / "sources" / "literature").mkdir(parents=True)
+            (root / "sources" / "literature" / "Buch.epub").write_bytes(b"x")
+            self.assertIsNotNone(epub_pfad("/home/x/Zotero/Buch.epub", root))
+
+    def test_gesetzte_pfade_unabhaengig_von_der_existenz(self):
+        # Grundlage für die Unterscheidung „kein Volltext" vs. „Pfad ins Leere".
+        self.assertEqual(
+            gesetzte_dateipfade("/home/x/A.pdf:application/pdf"), ["/home/x/A.pdf"])
+        self.assertEqual(gesetzte_dateipfade(""), [])
+        self.assertEqual(gesetzte_dateipfade("https://example.org/seite"), [])
+
+    def test_unreferenzierte_volltexte(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            (root / "sources" / "literature").mkdir(parents=True)
+            for n in ("Genannt.pdf", "Verwaist.pdf", "README.md"):
+                (root / "sources" / "literature" / n).write_bytes(b"x")
+            bib = {"k": {"file": "/home/x/Genannt.pdf"}}
+            self.assertEqual(unreferenzierte_volltexte(bib, root),
+                             ["sources/literature/Verwaist.pdf"])
+
+
+class TestSeiteAusserhalbPages(unittest.TestCase):
+    """Preprint-Zählung gegen Verlagsseiten – reine Feldprüfung, ohne Volltext."""
+
+    def test_preprint_seite_wird_erkannt(self):
+        self.assertEqual(seite_ausserhalb_pages("1", "104--114"), (1, 104, 114))
+
+    def test_seite_innerhalb_still(self):
+        self.assertIsNone(seite_ausserhalb_pages("106", "104--114"))
+        self.assertIsNone(seite_ausserhalb_pages("104", "104--114"))
+        self.assertIsNone(seite_ausserhalb_pages("114", "104--114"))
+
+    def test_spanne_teilweise_ausserhalb(self):
+        self.assertEqual(seite_ausserhalb_pages("113-120", "104--114"),
+                         (120, 104, 114))
+
+    def test_ohne_echten_bereich_kein_befund(self):
+        # Bücher, Artikelnummern, Einzelseiten – dort ist nichts abzuleiten.
+        for pages in ("", "e12345", "250", "S. 7"):
+            with self.subTest(pages=pages):
+                self.assertIsNone(seite_ausserhalb_pages("1", pages))
+
+    def test_ohne_seitenangabe_kein_befund(self):
+        self.assertIsNone(seite_ausserhalb_pages("", "104--114"))
 
 
 if __name__ == "__main__":

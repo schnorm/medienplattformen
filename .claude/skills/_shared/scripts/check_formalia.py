@@ -92,8 +92,12 @@ CITE_ARGS_RE = re.compile(
 ARG_TOKEN_RE = re.compile(r"\[([^\]]*)\]|\{([^}]*)\}")
 # Was als Stellenangabe zählt – Seite, Kapitel, Absatz, Abschnitt, Zeitstempel
 # (Zitierleitfaden 2.2.1, „Alternativen zur Seitenangabe").
+# Das geschuetzte Leerzeichen gilt fuer ALLE Kuerzel gleich: Vorher liess nur
+# „S.~47" es zu, „Kap.~2.1" dagegen nicht - obwohl beide Formen derselben
+# Typografie-Regel folgen. Aufgefallen, als E-Book-Quellen den Kapitel-Locator
+# zum Regelfall machten (check_quellentreue.py wertet [Kap. X] jetzt aus).
 LOCATOR_RE = re.compile(
-    r"S\.\s*~?\s*\d|Kap\.\s*\d|Abs\.\s*\d|Abschnitt|Rn\.\s*\d|\d+:\d{2}|\bf{1,2}\.")
+    r"(?:S|Kap|Abs|Rn)\.\s*~?\s*\d|Abschnitt|\d+:\d{2}|\bf{1,2}\.")
 
 # Float ohne Quellenzeile: `\quelle{}` ist bei EIGENEN wie fremden Abbildungen
 # Pflicht (IU: „Quelle: " unter jeder Abbildung/Tabelle, 10 Pt.).
@@ -113,14 +117,20 @@ SUBSUBSECTION_RE = re.compile(r"\\subsubsection\{")
 LISTOF_RE = {"figures": re.compile(r"(?m)^(\s*%*\s*)\\listoffigures"),
              "tables": re.compile(r"(?m)^(\s*%*\s*)\\listoftables")}
 APPENDIX_RE = re.compile(r"(?m)^(\s*%*\s*)\\include\{pages/appendix\}")
-ANHVERZ_RE = re.compile(r"(?m)^(\s*%*\s*)\\section\*\{Anhangsverzeichnis\}")
-ANHANG_TITEL_RE = re.compile(r"Anhang\s+([A-Z])\b")
+NEWAPPENDIX_RE = re.compile(r"\\newappendix\{")
+# Textverweise („siehe Anhang B") und handgeschriebene Ueberschriften. Das „~"
+# mitzuzaehlen ist keine Kulanz, sondern Pflicht: Wer die Ueberschrift von Hand
+# setzt, schreibt sie wie die alte Vorlage mit geschuetztem Leerzeichen. Mit
+# \s+ allein fand der Regex in einer vorlagenkonformen Arbeit NULL Anhaenge -
+# und damit lief die Textverweis-Pflicht still ins Leere. Aufgefallen erst beim
+# Lauf gegen eine fertige Seminararbeit, nicht in den Tests: Die hatten
+# dieselbe falsche Annahme wie der Regex.
+ANHANG_TITEL_RE = re.compile(r"Anhang[\s~]+([A-Z])\b")
 MIN_VERZEICHNIS = 3   # Abbildungs-/Tabellenverzeichnis erst ab drei Stück
-# „Bei mehreren Anhängen ist ein Anhangsverzeichnis erforderlich" (IU-Richtlinien
-# 3.2) – die Schwelle liegt also bei zwei, nicht bei drei wie bei Abbildungen
-# und Tabellen. Bei einem einzigen Anhang ist es nicht gefordert, aber auch
-# nicht verboten; deshalb dort nur ein Hinweis, kein Fehler.
-MIN_ANHANGSVERZEICHNIS = 2
+# Kein MIN_ANHANGSVERZEICHNIS mehr: Die Schwelle („Bei mehreren Anhängen ist ein
+# Anhangsverzeichnis erforderlich", IU-Richtlinien 3.2) steckt seit der
+# Umstellung in \listofappendices und wird beim Setzen entschieden. Ein Skript,
+# das dieselbe Regel ein zweites Mal prueft, kann nur noch abweichen.
 
 # Stilregeln gelten dem eigenen Text, nicht woertlich zitiertem Fremdtext: In einem
 # Zitat sind „ich“ oder ein Nominalstil-Marker die Formulierung der Quelle, nicht die
@@ -204,8 +214,20 @@ MAX_ACRO_REPORTS = 5
 # gender.tex und sperrvermerk.tex tragen fixe IU-Wortlaute (Richtlinien Anhang A
 # bzw. Handbuch 5.6) und dürfen nicht umformuliert werden – Stilfunde darin wären
 # nicht nur Rauschen, sondern falsche Arbeitsaufträge.
+# appendix-setup.tex enthaelt ueberhaupt keinen Fliesstext, sondern nur
+# Makrodefinitionen; die Satzlaengen-Heuristik hat dort auf einer \newcommand-
+# Kette angeschlagen und einen „Satz mit 37 Woertern" gemeldet.
+#
+# main.tex ebenfalls: Das Wurzeldokument BINDET Dateien ein, es ist keine
+# Kapiteldatei. Die Regel „\input statt \include" gilt Kapiteln; auf main.tex
+# angewandt meldete sie sechs Fehler auf der unveraenderten Vorlage - und
+# einen siebten, sobald jemand den Anhang einschaltet. Wer main.tex gezielt
+# pruefen will, gibt den Pfad an; die dateiuebergreifenden Checks
+# (AKTIVIERUNG, ANHANG-VERWEIS, META-PLATZHALTER) lesen main.tex ohnehin
+# direkt von der Platte und sind davon nicht betroffen.
 GERUEST_DATEIEN = {"cover.tex", "meta.tex", "chapters.tex", "erklaerung.tex",
-                   "nutzungsrechte.tex", "gender.tex", "sperrvermerk.tex"}
+                   "nutzungsrechte.tex", "gender.tex", "sperrvermerk.tex",
+                   "appendix-setup.tex", "main.tex"}
 
 
 def _shared_phrase(a: str, b: str, min_words: int = 3) -> str | None:
@@ -316,6 +338,29 @@ def float_platzierung_ok(lines: list[str], idx: int, rest: str) -> bool:
     return False
 
 
+def caption_text(line: str) -> str:
+    """Argument von \\caption{…} klammerbalanciert lesen, sonst "".
+
+    Nicht per Regex bis zur ersten „}": Caption und Label stehen oft in
+    derselben Zeile (`\\caption{Titel}\\label{fig:x}`), und ein simples rstrip
+    haengt den Label-Rest an den Titel. Verschachtelte Befehle im Titel
+    (`\\ac{KI}`) sind derselbe Fall.
+    """
+    m = re.search(r"\\caption(?:\[[^\]]*\])?\{", line)
+    if not m:
+        return ""
+    tiefe, out = 1, []
+    for ch in line[m.end():]:
+        if ch == "{":
+            tiefe += 1
+        elif ch == "}":
+            tiefe -= 1
+            if tiefe == 0:
+                break
+        out.append(ch)
+    return "".join(out).strip()
+
+
 def strip_comment(line: str) -> str:
     """Entfernt LaTeX-Kommentare (unmaskiertes %) aus einer Zeile."""
     out = []
@@ -342,7 +387,10 @@ def check_file(path: Path) -> tuple[list[str], int, dict]:
     dash_count = 0
     meta = {"section_titles": [], "subsection_titles": [], "word_count": 0,
             "figures": 0, "tables": 0, "subsections_nummeriert": 0,
-            "subsubsections": 0, "anhang_refs": set()}
+            "subsubsections": 0, "anhang_refs": set(), "zahlwoerter": [],
+            "captions": [], "bestimmte_nomen": set()}
+    float_caption = ""
+    float_label = ""
     float_typ = ""
     float_zeile = 0
     float_hat_inhalt = False
@@ -406,7 +454,14 @@ def check_file(path: Path) -> tuple[list[str], int, dict]:
             float_zeile = no
             float_hat_inhalt = False
             float_hat_quelle = False
+            float_caption = ""
+            float_label = ""
         if caption_seen_in_float is not None:
+            if not float_caption:
+                float_caption = caption_text(line)
+            mlab = re.search(r"\\label\{([^}]+)\}", line)
+            if mlab:
+                float_label = mlab.group(1)
             if FLOAT_INHALT_RE.search(line):
                 float_hat_inhalt = True
                 if caption_seen_in_float is False:
@@ -431,6 +486,8 @@ def check_file(path: Path) -> tuple[list[str], int, dict]:
                         f"unter jeder Abbildung/Tabelle steht eine Quellenzeile in 10 Pt., auch bei "
                         f"eigenen: \\quelle{{Eigene Darstellung.}} (IU-Zitierleitfaden 2.2.5).")
                     errors += 1
+                if float_caption and float_label:
+                    meta["captions"].append((float_label, float_caption))
                 caption_seen_in_float = None
 
         # verbatim-/listing-/tikz-Blöcke überspringen (dort gelten Textregeln nicht)
@@ -544,6 +601,9 @@ def check_file(path: Path) -> tuple[list[str], int, dict]:
     meta["caps_tokens"] = list(caps_tokens)
 
     # Dreier-Aufzählungs-Häufung („X, Y und Z" als Standardmuster)
+    meta["zahlwoerter"] = ZAHLWORT_RE.findall(detexed_read)
+    meta["bestimmte_nomen"] = {n.lower() for n in BESTIMMTES_NOMEN_RE.findall(detexed_read)}
+
     trias_matches = TRIAS_RE.findall(detexed_read)
     if len(trias_matches) > MAX_TRIAS_PER_FILE:
         findings.append(
@@ -723,42 +783,140 @@ def check_aktivierung(metas: dict[Path, dict], root: Path) -> list[str]:
             findings.append(
                 "main.tex: [FEHLER:AKTIVIERUNG] pages/appendix.tex enthält Inhalt, aber der "
                 "Block „Anhang“ ist auskommentiert – der Anhang erscheint dann NICHT im PDF. "
-                "\\appendix und \\include{pages/appendix} einkommentieren.")
-        # Anhangsverzeichnis: eigene Schwelle (zwei statt drei) und eigene
-        # Schärfe – bei einem Anhang ist es nicht gefordert, aber unschädlich.
-        n_anhaenge = len(anhang_buchstaben(root))
-        mv = ANHVERZ_RE.search(text)
-        if mv:
-            verz_aktiv = "%" not in mv.group(1)
-            if n_anhaenge >= MIN_ANHANGSVERZEICHNIS and not verz_aktiv:
-                findings.append(
-                    f"main.tex: [FEHLER:AKTIVIERUNG] {n_anhaenge} Anhänge, aber der Block "
-                    f"„Anhangsverzeichnis“ ist auskommentiert – „Bei mehreren Anhängen ist ein "
-                    f"Anhangsverzeichnis erforderlich“ (IU-Richtlinien 3.2). Block einkommentieren "
-                    f"und die Beispielzeilen durch die echten Anhänge ersetzen; Seitenzahlen sind "
-                    f"darin nicht nötig.")
-            elif n_anhaenge < MIN_ANHANGSVERZEICHNIS and verz_aktiv:
-                findings.append(
-                    f"main.tex: [HINWEIS:AKTIVIERUNG] Anhangsverzeichnis aktiv bei "
-                    f"{n_anhaenge} Anhang – gefordert ist es erst ab zwei. Schadet nicht, "
-                    f"kann aber auskommentiert werden.")
+                "\\include{pages/appendix} einkommentieren.")
     return findings
 
 
 def anhang_buchstaben(root: Path) -> set[str]:
-    """Welche Anhänge (A, B, C …) sind in pages/appendix.tex tatsächlich angelegt?"""
+    """Welche Anhänge (A, B, C …) sind in pages/appendix.tex tatsächlich angelegt?
+
+    Regelfall ist die Vorlagenform `\\newappendix{Titel}`: Der Buchstabe steht
+    dort nirgends, er ergibt sich aus der Reihenfolge – der dritte Aufruf ist
+    Anhang C. Genau das ist der Zweck des Makros, denn ein von Hand gesetzter
+    Buchstabe kann veralten, eine Position nicht.
+
+    Handgeschriebene Überschriften („\\section*{Anhang~C: …}") werden weiter
+    erkannt: Arbeiten, die vor der Umstellung begonnen wurden, sollen nicht
+    stillschweigend als anhanglos gelten.
+    """
     anhang = root / "pages" / "appendix.tex"
     if not anhang.is_file():
         return set()
-    gefunden: set[str] = set()
-    for zeile in anhang.read_text(encoding="utf-8", errors="replace").splitlines():
-        z = strip_comment(zeile)
+    zeilen = [strip_comment(z)
+              for z in anhang.read_text(encoding="utf-8", errors="replace").splitlines()]
+    n_makro = sum(len(NEWAPPENDIX_RE.findall(z)) for z in zeilen)
+    gefunden = {chr(ord("A") + i) for i in range(n_makro)}
+    for z in zeilen:
         if re.search(r"\\(sub)*section\*?\{", z) or r"\item" in z:
             gefunden.update(ANHANG_TITEL_RE.findall(z))
     return gefunden
 
 
 PLATZHALTER_RE = re.compile(r"\\newcommand\{\\(\w+)\}\{([^}]*)\}")
+
+# Zaehlaussagen. Bewusst OHNE den unbestimmten Artikel „ein/eine": Der ist im
+# Deutschen allgegenwaertig, die Liste waere unbrauchbar lang und wuerde deshalb
+# ueberblaettert. Zahlwoerter dagegen sind selten, und jedes einzelne ist eine
+# ueberpruefbare Behauptung ueber eine Anzahl - genau die Stellen, die beim
+# Umbauen veralten („zwei Einwaende", es sind vier).
+ZAHLWORT_RE = re.compile(
+    r"(?<![\wäöüß])(zwei|drei|vier|fünf|sechs|sieben|acht|neun|zehn|beide|mehrere|"
+    r"erste[nrs]?|zweite[nrs]?|dritte[nrs]?)\s+([A-ZÄÖÜ][\wäöüß-]{3,})")
+# Bruchteile, Zeitspannen und Maßangaben sind zwar Zahlen, aber keine Aussagen
+# ueber die eigene Gliederung: „zwei Drittel der Befragten" und „drei Jahre
+# Laufzeit" bleiben richtig, egal wie oft das Kapitel umgebaut wird. Aus dem
+# Realtest an einer fertigen Seminararbeit - dort waren sie die einzigen
+# Fehltreffer.
+ZAHLWORT_STOPWORTE = {
+    "viertel", "drittel", "fünftel", "sechstel", "achtel", "zehntel", "hälfte",
+    "prozent", "prozentpunkte", "jahre", "jahren", "jahrzehnte", "jahrzehnten",
+    "monate", "monaten", "wochen", "tage", "tagen", "stunden", "minuten",
+    "sekunden", "mal", "male", "euro", "seiten",
+}
+MAX_ZAHLWORT_REPORTS = 12
+
+# Verkuerzter Rueckverweis im Fliesstext: „die Skizze", „das Mockup". Genau
+# diese Form macht eine Doppelbelegung schaedlich - mit Beiwort („die
+# Persona-Skizze") bleibt eindeutig, welches Artefakt gemeint ist.
+BESTIMMTES_NOMEN_RE = re.compile(
+    r"(?<![\wäöüß-])[Dd](?:ie|er|as|en|em)\s+([A-ZÄÖÜ][\wäöüß]{3,})(?![\wäöüß-])")
+# Beschreibende Caption-Koepfe. Dass zwei Abbildungen eine „Übersicht" zeigen,
+# ist kein Namenskonflikt, sondern normal - solche Woerter benennen die Form der
+# Darstellung, nicht das Artefakt.
+CAPTION_STOPWORTE = {
+    "übersicht", "überblick", "darstellung", "abbildung", "tabelle", "grafik",
+    "diagramm", "vergleich", "ergebnis", "ergebnisse", "aufbau", "struktur",
+    "verlauf", "ablauf", "beispiel", "auszug", "ausschnitt", "zusammenfassung",
+    "verteilung", "entwicklung", "anteil", "eigene", "quelle", "phase", "schritt",
+}
+
+
+def check_caption_doppelbelegung(metas: dict[Path, dict]) -> list[str]:
+    """Ein Wort, zwei Artefakte – und im Text steht nur noch „die Skizze".
+
+    Realfall: „Skizze" bezeichnete zugleich die Persona-Skizze im Anhang und –
+    über „Mockup-Skizze" verkürzt – die Mockups. Beide Captions für sich waren
+    korrekt; erst der verkürzte Rückverweis im Fließtext machte unentscheidbar,
+    welches Artefakt gemeint ist. Deshalb schlägt der Check nur an, wenn beides
+    zusammenkommt: dasselbe Substantiv in Captions zu **zwei verschiedenen**
+    Labels *und* mindestens ein Rückverweis ohne unterscheidendes Beiwort.
+    """
+    nomen_zu_labels: dict[str, set[str]] = {}
+    anzeige: dict[str, str] = {}
+    for meta in metas.values():
+        for label, caption in meta.get("captions", []):
+            for wort in re.findall(r"[A-ZÄÖÜ][\wäöüß]{3,}", caption):
+                # Kompositum mitzählen: „Mockup-Skizze" belegt auch „Skizze".
+                for teil in {wort, wort.split("-")[-1]}:
+                    key = teil.lower()
+                    if key in CAPTION_STOPWORTE:
+                        continue
+                    nomen_zu_labels.setdefault(key, set()).add(label)
+                    anzeige.setdefault(key, teil)
+    verkuerzt: set[str] = set()
+    for meta in metas.values():
+        verkuerzt |= meta.get("bestimmte_nomen", set())
+
+    findings = []
+    for key, labels in sorted(nomen_zu_labels.items()):
+        if len(labels) < 2 or key not in verkuerzt:
+            continue
+        findings.append(
+            f"[HINWEIS:DOPPELBELEGUNG] „{anzeige[key]}“ beschriftet zwei verschiedene "
+            f"Objekte ({', '.join(sorted(labels))}) und wird im Text zugleich verkürzt "
+            f"als „die/der/das {anzeige[key]}“ aufgegriffen – dort ist nicht "
+            f"entscheidbar, welches gemeint ist. Entweder je Objekt ein eigener Name "
+            f"oder im Rückverweis das unterscheidende Beiwort mitführen.")
+    return findings
+
+
+def check_zahlwoerter(metas: dict[Path, dict]) -> list[str]:
+    """Zählaussagen als Hinweisliste – die Prüfung der Zahl bleibt menschlich.
+
+    Kein FEHLER: Ob „drei Kriterien" stimmt, weiß nur, wer nachzählt. Der Check
+    nimmt lediglich das Erinnern ab, welche Stellen beim nächsten Umbau
+    nachzuziehen sind.
+
+    Ausgabe bewusst als **ein** Block statt als Befund je Datei: An einer
+    fertigen Seminararbeit waren es zehn Dateien, und die Begründung zehnmal zu
+    wiederholen kostet mehr Kontext als die Fundstellen selbst.
+    """
+    zeilen = []
+    for path in sorted(metas):
+        treffer = [(a, b) for a, b in metas[path].get("zahlwoerter", [])
+                   if b.lower() not in ZAHLWORT_STOPWORTE]
+        if not treffer:
+            continue
+        gezeigt = ", ".join(f"„{a} {b}“" for a, b in treffer[:MAX_ZAHLWORT_REPORTS])
+        rest = (f" … +{len(treffer) - MAX_ZAHLWORT_REPORTS}"
+                if len(treffer) > MAX_ZAHLWORT_REPORTS else "")
+        zeilen.append(f"    {path}: {gezeigt}{rest}")
+    if not zeilen:
+        return []
+    return ["[HINWEIS:ZAHLWORT] Zählaussagen zum Gegenprüfen – nach jedem Umbau "
+            "nachzählen, veraltete Anzahlen überleben Streichungen und Ergänzungen "
+            "am häufigsten:\n" + "\n".join(zeilen)]
+
 
 # Selbstbezeichnung als Gruppe, obwohl die Arbeit allein geschrieben wurde.
 # Bewusst eng: nur die beiden eindeutigen Komposita. „die Gruppe" oder „das
@@ -884,7 +1042,8 @@ def main() -> int:
     # deshalb nur bei einem Verzeichnis-Lauf und nicht bei einer Einzeldatei.
     if any(t.is_dir() for t in args.targets):
         root = _projekt_root(args.targets[0])
-        struktur = check_unterpunkte(metas) + check_gruppenbezug(metas, root)
+        struktur = (check_unterpunkte(metas) + check_gruppenbezug(metas, root)
+                    + check_caption_doppelbelegung(metas) + check_zahlwoerter(metas))
         # Abbildungs-/Tabellenzahl und Anhang-Verweise nur bewerten, wenn der
         # GESAMTE Kapitelbestand im Lauf war. Bei `check_formalia.py
         # chapters/02_theorie/` zählte man sonst die Abbildungen eines einzelnen

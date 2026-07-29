@@ -36,6 +36,47 @@ Pro Kapitel aus `kapitelplan.md` gibt es eine Subsection-Datei `chapters/<kap>/<
 
 **Sichtbarkeitspflicht**: Nach jeder gespeicherten `.tex`-Datei im Chat kurz quittieren, z. B. „✅ Gespeichert: chapters/theorie/konzept-a.tex" – nicht nur den Kapiteltext im Chat zeigen und stillschweigend annehmen, dass die Datei geschrieben wurde. **Zusätzlich** die entsprechende Zeile in `CLAUDE.md` → „Aktueller Projektstatus" auf FERTIG setzen (bestehende Zeile überschreiben, nicht anhängen) und kurz mitquittieren.
 
+## Was beim Kürzen geschützt ist
+
+Das Audit schlägt Kürzungen vor, sobald `check_umfang.py` über der Zielgröße meldet. Diese Liste sagt, was dabei **nicht** angetastet wird – ohne sie greift Kürzen bevorzugt die dichtesten und damit tragenden Sätze an, weil die am meisten Wörter pro Aussage binden. Belegt: Eine Kürzungsrunde riss die Mitigationsschicht aus einer Limitation und kostete im folgenden Audit −15 Punkte.
+
+**Vor jeder Streichung oder Straffung zwei Fragen beantworten und im Abarbeitungsvermerk festhalten:**
+
+1. **Ist dieser Satz die einzige Fundstelle?** Betroffen sind Schlüsselbegriffe aus `aufgabe.md`, Pflichtschichten (Limitation: warum · Mitigation · Ausblick), Definitionen, Lieferobjekte und beanspruchte Innovationen. Ist er es, wird ein anderer Posten gesucht – auch wenn dieser weniger Wörter bringt. Prüfen per `grep -c "<Begriff>" chapters/`.
+2. **Enthält er ein Hedge, das beim Straffen wegfällt?** `oft`, `häufig`, `in der Regel`, `kann`, `deutet darauf hin`, `tendenziell`. Ein gestraffter Satz ohne das Hedge ist keine kürzere Aussage, sondern eine **stärkere** – aus einer vorsichtigen Feststellung wird eine absolute. Hedge im gekürzten Satz erhalten.
+
+**Erste Kürzungsreserve sind stattdessen:** mehrfach ausformulierte Kernbefunde (dritte Nennung und weitere), wiederholte Vorbehalte, Ankündigungs- und Wegweisersätze, Dubletten zwischen Reflexion und Fazit.
+
+## Text-Bild-Lücken: zwei Lösungen, nicht drei
+
+Meldet die Gegenlesung oder das Audit „Der Text behauptet X, die Abbildung zeigt X nicht", gibt es genau **zwei** zulässige Reaktionen: die **Abbildung ergänzen** oder die **Behauptung streichen**.
+
+Die dritte, naheliegendste Option – die Behauptung präziser formulieren und die Abbildung so lassen – ist **unzulässig**. Sie schließt die Lücke nicht, sondern verwandelt eine Auslassung in eine überprüfbare Falschaussage: Vorher fehlte etwas, nachher steht etwas Widerlegbares da, und der Prüfer sieht die Abbildung zwei Seiten später. Belegt aus einem realen Projektbericht, wo der Zusatz „Erreichbar ist der Bereich über die Startseite" vier Tage lang auf einen Zugang verwies, den kein Screen zeigte.
+
+Wird die Abbildung erst später geliefert, bleibt der Textzusatz bis dahin **draußen** – nicht als Vorgriff hinein und später prüfen.
+
+**Wird eine Abbildung geändert, ist die Änderung erst mit dem Text fertig.** Eine Abbildung wird an einer Stelle bearbeitet, aber an mehreren beschrieben – typischerweise in der Caption, im einleitenden Satz davor und in einem Rückverweis im Fazit. Deshalb nach jeder Bildänderung über das Label suchen und **jede** Fundstelle einzeln gegen das neue Bild lesen:
+
+```bash
+grep -rn "fig:mein-label" chapters/ pages/
+```
+
+Der Grep findet die `\ref`-Verweise; die Caption steht in derselben `figure`-Umgebung wie das Label und wird mitgeprüft. Beschreibende Sätze ohne `\ref` findet er nicht – dafür zusätzlich nach ein bis zwei charakteristischen Wörtern aus der Caption suchen. Das ist der übliche Weg, auf dem eine Abbildung stillschweigend aus dem Text herausläuft: Sie wird verbessert, und der Rückverweis zwei Kapitel später beschreibt weiter die alte Fassung.
+
+## Begriffsersetzungen sind erst mit der Einführung fertig
+
+Ersetzt ein Punkt aus `AENDERUNGEN.md` oder `pruefbericht.md` einen Begriff durch einen anderen („Nutzer" → „Anwendende", „Effizienz" → „Bearbeitungsdauer"), wird der neue Begriff an genau der Stelle eingesetzt, die der Befund nennt – und steht danach ohne Einführung im Text. Ein Fachbegriff, der genau einmal vorkommt, wirkt wie ein Zitat aus einer anderen Arbeit.
+
+**Nach jeder Ersetzung:**
+
+```bash
+grep -rn "<neuer Begriff>" chapters/ pages/
+```
+
+Weniger als zwei Fundstellen heißt: Der Begriff ist nicht eingeführt. Dann eine von zwei Entscheidungen treffen und im Abarbeitungsvermerk festhalten – den Begriff **bei der ersten Nennung definieren** und danach konsistent weiterverwenden, oder die **Ersetzung zurücknehmen**, wenn das Kapitel dafür keinen Platz hat. Was nicht geht, ist ihn stehen zu lassen: Das Audit liest ihn als unerklärten Fachbegriff (`hard-rules-formal.md` → „Fachwörter: benutzen UND erklären"), und für die prüfende Person ist er ein Bruch mitten im Kapitel.
+
+Umgekehrt gilt dasselbe für den ersetzten Begriff: Steht er noch an anderen Stellen, führt die Arbeit ab sofort zwei Wörter für dieselbe Sache – auch das per Grep prüfen, bevor der Punkt als erledigt vermerkt wird.
+
 ## Ablauf pro Kapitel
 
 1. Kapitelplan lesen – Kernargument, Belege, Wortzahl, **Slug** (`sec:<slug>`), geplante Subsections **mit Inhaltspunkten und Argumentationsfluss** aus dem Plan. Die Inhaltspunkte sind der Schreibleitfaden pro Subsection: Jeder Punkt muss im fertigen Text erkennbar vorkommen – als eigener Absatz, als Teilaussage oder als Beispiel. Reihenfolge der Punkte darf angepasst werden, keiner darf stillschweigend wegfallen. **Bereits geschriebene Kapitel nicht „zur Konsistenz" komplett laden** – die Argumentationslinie steht im Kapitelplan; für den Übergang genügt der Schlussabsatz der letzten Subsection-Datei des Vorkapitels (Read mit offset ans Dateiende).

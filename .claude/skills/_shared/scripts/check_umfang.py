@@ -78,16 +78,30 @@ def _zahl(s: str) -> int:
     return int(s.replace(".", ""))
 
 
+# Untergrenze für eine plausible Gesamt-WORTzahl. Wer in die Zeile versehentlich
+# die Seitenvorgabe schreibt („Gesamtwortzahl: 10"), bekam sonst kommentarlos
+# „Gesamtumfang über der Zielgröße (3501 > 10)" – eine Warnung, die Wörter mit
+# Seiten vergleicht und wie ein Fehlalarm aussieht.
+MIN_PLAUSIBLE_GESAMT = 100
+
+
 def parse_plan(plan_path: Path):
-    """(Budgets je Kapitelordner, Gesamt-Zielspanne) aus kapitelplan.md."""
-    budgets, gesamt = {}, None
+    """(Budgets je Kapitelordner, Gesamt-Zielspanne, Warnungen) aus kapitelplan.md."""
+    budgets, gesamt, warnungen = {}, None, []
     if not plan_path.is_file():
-        return budgets, gesamt
+        return budgets, gesamt, warnungen
     text = plan_path.read_text(encoding="utf-8", errors="replace")
     g = GESAMT_RE.search(text)
     if g:
         lo = _zahl(g.group(1))
         gesamt = (lo, _zahl(g.group(2)) if g.group(2) else lo)
+        if gesamt[1] < MIN_PLAUSIBLE_GESAMT:
+            warnungen.append(
+                f"HINWEIS: „Gesamtwortzahl (Richtwert)\" steht auf {g.group(0).split(':')[-1].strip()} "
+                f"– das sieht nach einer SEITEN-, nicht nach einer Wortzahl aus. Die Zeile erwartet "
+                f"Wörter (Seitenvorgabe × ~{WORDS_PER_PAGE}). Zielabgleich übersprungen, bis das "
+                f"korrigiert ist.")
+            gesamt = None
     for block in re.split(r"(?m)^## ", text):
         head = KAPITEL_RE.match(block)
         if not head:
@@ -95,7 +109,7 @@ def parse_plan(plan_path: Path):
         mdir = DIR_RE.search(block)
         if mdir:
             budgets[mdir.group(1)] = (head.group(1), int(head.group(2)), int(head.group(3)))
-    return budgets, gesamt
+    return budgets, gesamt, warnungen
 
 
 def main() -> int:
@@ -110,7 +124,7 @@ def main() -> int:
         print(f"FEHLER: Ordner nicht gefunden: {chapters}")
         return 1
 
-    budgets, gesamt = parse_plan(plan_path)
+    budgets, gesamt, plan_warnungen = parse_plan(plan_path)
     rows, total_words, warn = [], 0, False
     for chap_dir in sorted(p for p in chapters.iterdir() if p.is_dir()):
         words = sum(count_words(f) for f in sorted(chap_dir.glob("*.tex")))
@@ -141,17 +155,25 @@ def main() -> int:
         print(f"{name:<{width}}  {words:>7}  {pages:>7.1f}  {note}")
 
     total_pages = total_words / WORDS_PER_PAGE
-    ziel = f" · Ziel {gesamt[0]}–{gesamt[1]} W." if gesamt else ""
-    print(f"\nGesamt Textteil: {total_words} Wörter ≈ {total_pages:.1f} Seiten{ziel} "
-          f"(Schätzung bei ~{WORDS_PER_PAGE} W./Seite; Abbildungen und Tabellen kommen hinzu)")
+    ziel = f" · Ziel {gesamt[0]}–{gesamt[1]} Wörter" if gesamt else ""
+    print(f"\nGemessen: {total_words} Wörter{ziel}")
+    print(f"Geschätzt: ≈ {total_pages:.1f} Seiten bei ~{WORDS_PER_PAGE} Wörtern/Seite.")
+    print("Das ist eine SCHÄTZUNG, keine Messung: Abbildungen, Tabellen und "
+          "Seitenumbrüche kennt die Wortzahl nicht, beobachtet wurden bis zu +1,5 Seiten "
+          "Abweichung nach oben. Maßgeblich ist der Build, sobald lualatex verfügbar ist – "
+          "innerhalb von ±1 Seite um eine Grenze der Vorgabe ist „im Soll\" nur nach Build "
+          "eine belastbare Aussage.")
+    for w in plan_warnungen:
+        print(w)
     if gesamt and total_words > gesamt[1]:
-        print(f"WARNUNG: Gesamtumfang über der Zielgröße ({total_words} > {gesamt[1]}) – "
+        print(f"WARNUNG: {total_words} Wörter über der Zielgröße von {gesamt[1]} – "
               f"Kürzungsbedarf. Erste Reserve sind mehrfach ausformulierte Kernbefunde "
-              f"(pruef-modus Teil-Check B → Redundanz).")
+              f"(pruef-modus Teil-Check B → Redundanz), nicht Belege oder Pflichtschichten "
+              f"(schreib-modus → Was beim Kürzen geschützt ist).")
         warn = True
     elif gesamt and total_words < gesamt[0]:
         print("HINWEIS: noch unter der Zielgröße (normal, solange Kapitel fehlen).")
-    if not gesamt and not budgets:
+    if not gesamt and not budgets and not plan_warnungen:
         print("HINWEIS: keine Budgets in kapitelplan.md gefunden – nur Ist-Wert ausgegeben. "
               "Format: „## Kapitel N: <Name> (X–Y Wörter)" + "\" bzw. "
               "„**Gesamtwortzahl (Richtwert)**: X–Y\".")

@@ -8,9 +8,10 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 from check_formalia import (  # noqa: E402
-    anhang_buchstaben, autorenschaft, check_aktivierung, check_anhang_verweise,
-    check_file, check_gruppenbezug, check_meta_platzhalter,
-    check_title_duplication, check_unterpunkte, strip_comment)
+    anhang_buchstaben, autorenschaft, caption_text, check_aktivierung,
+    check_anhang_verweise, check_caption_doppelbelegung, check_file,
+    check_gruppenbezug, check_meta_platzhalter, check_title_duplication,
+    check_unterpunkte, check_zahlwoerter, strip_comment)
 
 
 def run_on(content: str):
@@ -438,6 +439,15 @@ class TestStellenangabe(unittest.TestCase):
         self.assertEqual(self.cats("Aussage \\parencite[Kap. 2.1]{keyA}.\n"), [])
         self.assertEqual(self.cats("Aussage \\parencite[Abs. 4]{keyA}.\n"), [])
 
+    def test_geschuetztes_leerzeichen_in_jedem_locator(self):
+        # Regression: „S.~47" galt, „Kap.~2.1" nicht – dieselbe Typografie-Regel,
+        # zwei verschiedene Urteile. Mit E-Book-Quellen wird der Kapitel-Locator
+        # zum Regelfall, damit wäre daraus ein täglicher Fehlalarm geworden.
+        for locator in ("S.~47", "Kap.~2.1", "Kap.~17.2.2", "Abs.~4", "Rn.~12"):
+            with self.subTest(locator=locator):
+                self.assertEqual(
+                    self.cats(f"Aussage \\parencite[{locator}]{{keyA}}.\n"), [])
+
     def test_prenote_ohne_stelle_reicht_nicht(self):
         # `[vgl.]` ist ein Präfix, keine Fundstelle.
         self.assertEqual(len(self.cats("Aussage \\parencite[vgl.]{keyA}.\n")), 1)
@@ -490,7 +500,7 @@ class TestQuelleUndCite(unittest.TestCase):
 class TestStrukturUndAktivierung(unittest.TestCase):
     """Dateiübergreifende Checks: Unterpunkte, Aktivierungsblöcke, Anhang-Verweise."""
 
-    def projekt(self, root: Path, *, listoffigures_aktiv=False, anhverz_aktiv=False,
+    def projekt(self, root: Path, *, listoffigures_aktiv=False,
                 appendix_aktiv=False, anhaenge=("A",), figuren=0):
         (root / "pages").mkdir(parents=True, exist_ok=True)
         (root / "chapters" / "02_theorie").mkdir(parents=True, exist_ok=True)
@@ -501,11 +511,12 @@ class TestStrukturUndAktivierung(unittest.TestCase):
             block(listoffigures_aktiv, "\\listoffigures"),
             "%\\listoftables",
             "\\begin{document}",
-            block(anhverz_aktiv, "\\section*{Anhangsverzeichnis}"),
             block(appendix_aktiv, "\\include{pages/appendix}"),
             "\\end{document}", ""]), encoding="utf-8")
+        # Vorlagenform: \newappendix{} je Anhang, Buchstabe aus der Reihenfolge.
         (root / "pages" / "appendix.tex").write_text(
-            "".join(f"\\subsection*{{Anhang {b}: Titel {b}}}\n" for b in anhaenge)
+            "\\listofappendices\n"
+            + "".join(f"\\newappendix{{Titel {b}}}\n" for b in anhaenge)
             + "Fuellinhalt, damit der Anhang als nicht leer gilt und der Block zaehlt.\n",
             encoding="utf-8")
         floats = "".join(
@@ -543,7 +554,7 @@ class TestStrukturUndAktivierung(unittest.TestCase):
     def test_drei_abbildungen_ohne_verzeichnis(self):
         with tempfile.TemporaryDirectory() as d:
             root = Path(d)
-            self.projekt(root, figuren=3, appendix_aktiv=True, anhverz_aktiv=False)
+            self.projekt(root, figuren=3, appendix_aktiv=True)
             funde = check_aktivierung(self.metas(root), root)
             self.assertTrue(any("Abbildungsverzeichnis" in f for f in funde), funde)
 
@@ -554,23 +565,16 @@ class TestStrukturUndAktivierung(unittest.TestCase):
             funde = check_aktivierung(self.metas(root), root)
             self.assertFalse(any("Abbildungsverzeichnis" in f for f in funde), funde)
 
-    def test_anhangsverzeichnis_ab_zwei_pflicht(self):
+    def test_anhangsverzeichnis_ist_keine_skriptsache_mehr(self):
+        # Die Schwelle „ab zwei Anhängen" steckt seit der Umstellung in
+        # \listofappendices. Zwei Anhänge, kein Verzeichnis-Block in main.tex –
+        # das Skript darf dazu nichts mehr sagen, sonst prüfte es eine Regel,
+        # die an anderer Stelle bereits entschieden wird.
         with tempfile.TemporaryDirectory() as d:
             root = Path(d)
-            self.projekt(root, anhaenge=("A", "B"), appendix_aktiv=True, anhverz_aktiv=False)
+            self.projekt(root, anhaenge=("A", "B"), appendix_aktiv=True)
             funde = check_aktivierung(self.metas(root), root)
-            self.assertTrue(any("FEHLER" in f and "Anhangsverzeichnis" in f for f in funde), funde)
-
-    def test_anhangsverzeichnis_bei_einem_anhang_nur_hinweis(self):
-        # Der reale Fall aus einer abgegebenen Seminararbeit: ein Anhang, Verzeichnis
-        # trotzdem gesetzt. Nicht gefordert, aber auch kein Fehler.
-        with tempfile.TemporaryDirectory() as d:
-            root = Path(d)
-            self.projekt(root, anhaenge=("A",), appendix_aktiv=True, anhverz_aktiv=True)
-            funde = [f for f in check_aktivierung(self.metas(root), root)
-                     if "Anhangsverzeichnis" in f]
-            self.assertEqual(len(funde), 1, funde)
-            self.assertIn("HINWEIS", funde[0])
+            self.assertFalse(any("Anhangsverzeichnis" in f for f in funde), funde)
 
     def test_anhang_inhalt_ohne_aktivierung(self):
         with tempfile.TemporaryDirectory() as d:
@@ -605,6 +609,181 @@ class TestStrukturUndAktivierung(unittest.TestCase):
                 "\\subsection{Modelle}\\label{sec:modelle}\nText.\n", encoding="utf-8")
             funde = check_unterpunkte(self.metas(root))
             self.assertEqual(funde, [], funde)
+
+    def test_main_tex_wird_beim_ordnerlauf_uebersprungen(self):
+        # Regression: main.tex ist das Wurzeldokument, keine Kapiteldatei. Die
+        # \include-Regel gilt Kapiteln; auf main.tex angewandt meldete sie sechs
+        # Fehler auf der unveränderten Vorlage – und einen siebten, sobald
+        # jemand den Anhang einschaltet.
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            self.projekt(root, appendix_aktiv=True)
+            ausgabe = self.lauf_ueber(root)
+            self.assertNotIn("INCLUDE", ausgabe, ausgabe)
+            # Gezielt genannt wird main.tex weiterhin geprüft.
+            self.assertIn("INCLUDE", self.lauf_ueber(root / "main.tex"))
+
+    def lauf_ueber(self, ziel: Path) -> str:
+        import io
+        import contextlib
+        import check_formalia
+        puffer = io.StringIO()
+        alt = sys.argv
+        sys.argv = ["check_formalia.py", str(ziel)]
+        try:
+            with contextlib.redirect_stdout(puffer):
+                check_formalia.main()
+        finally:
+            sys.argv = alt
+        return puffer.getvalue()
+
+    # --- Anhänge zählen: \newappendix{} plus handgeschriebene Altform ---
+
+    def appendix_datei(self, root: Path, inhalt: str):
+        (root / "pages").mkdir(parents=True, exist_ok=True)
+        (root / "pages" / "appendix.tex").write_text(inhalt, encoding="utf-8")
+
+    def test_newappendix_bestimmt_buchstaben_ueber_die_reihenfolge(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            self.appendix_datei(root,
+                                "\\listofappendices\n"
+                                "\\newappendix{Interviewleitfaden}\nInhalt.\n"
+                                "\\newappendix{Kategoriensystem}\nInhalt.\n"
+                                "\\newappendix{Transkripte}\nInhalt.\n")
+            self.assertEqual(anhang_buchstaben(root), {"A", "B", "C"})
+
+    def test_auskommentiertes_newappendix_zaehlt_nicht(self):
+        # Die Vorlage liefert die Beispielstruktur auskommentiert mit – sonst
+        # hätte jedes frische Projekt zwei Anhänge, die es nicht gibt.
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            self.appendix_datei(root,
+                                "\\listofappendices\n"
+                                "% \\newappendix{Interviewleitfaden}\n"
+                                "% \\newappendix{Kategoriensystem}\n")
+            self.assertEqual(anhang_buchstaben(root), set())
+
+    def test_handgeschriebene_altform_wird_weiter_erkannt(self):
+        # Regression zugleich: „Anhang~A" mit geschütztem Leerzeichen. Vor dem
+        # Fix fand der Regex in einer vorlagenkonformen Arbeit null Anhänge.
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            self.appendix_datei(root,
+                                "\\section*{Anhang~A: Suchprotokoll}\nInhalt.\n"
+                                "\\section*{Anhang B: Zweite Form}\nInhalt.\n")
+            self.assertEqual(anhang_buchstaben(root), {"A", "B"})
+
+    def test_gemischte_formen_ergeben_keine_luecke(self):
+        # Ein Projekt mitten in der Umstellung: ein Makro, eine Handüberschrift.
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            self.appendix_datei(root,
+                                "\\newappendix{Interviewleitfaden}\nInhalt.\n"
+                                "\\section*{Anhang~B: Altbestand}\nInhalt.\n")
+            self.assertEqual(anhang_buchstaben(root), {"A", "B"})
+
+    # --- DOPPELBELEGUNG: ein Wort, zwei Artefakte ---
+
+    def float_datei(self, *captions_labels):
+        text = "".join(
+            f"\\begin{{figure}}[H]\n\\caption{{{cap}}}\n\\label{{{lab}}}\n"
+            f"\\includegraphics{{x.png}}\n\\quelle{{Eigene Darstellung.}}\n\\end{{figure}}\n"
+            for cap, lab in captions_labels)
+        return text
+
+    def test_caption_text_endet_an_der_eigenen_klammer(self):
+        # Regression: Die erste Fassung las bis zur letzten „}" der Zeile und
+        # schleppte „\label{fig:x}" in den Caption-Text. Direkt an der Funktion
+        # geprüft – über check_caption_doppelbelegung wäre der Fehler unsichtbar
+        # geblieben, weil das Extrahieren der Substantive ihn zufällig überdeckt.
+        self.assertEqual(
+            caption_text("\\caption{Persona-Skizze}\\label{fig:persona}"),
+            "Persona-Skizze")
+        self.assertEqual(
+            caption_text("\\caption{Einsatz von \\ac{KI} im Prozess}"),
+            "Einsatz von \\ac{KI} im Prozess")
+        self.assertEqual(
+            caption_text("\\caption[Kurzform]{Langform der Beschriftung}"),
+            "Langform der Beschriftung")
+        self.assertEqual(caption_text("\\includegraphics{bild.png}"), "")
+
+    def doppel(self, floats: str, fliesstext: str):
+        _f, _e, meta = run_full(floats + fliesstext)
+        return check_caption_doppelbelegung({Path("a.tex"): meta})
+
+    def test_doppelbelegung_mit_verkuerztem_rueckverweis(self):
+        # Der Realfall: „Persona-Skizze" und „Mockup-Skizze", im Text „die Skizze".
+        funde = self.doppel(
+            self.float_datei(("Persona-Skizze der Zielgruppe", "fig:persona"),
+                             ("Mockup-Skizze des Formulars", "fig:mockup")),
+            "Wie die Skizze zeigt, bleibt der Ablauf zweistufig.\n")
+        self.assertEqual(len(funde), 1, funde)
+        self.assertIn("DOPPELBELEGUNG", funde[0])
+        self.assertIn("Skizze", funde[0])
+
+    def test_doppelbelegung_ohne_verkuerzung_still(self):
+        # Beide Captions teilen das Wort, der Text bleibt aber eindeutig.
+        funde = self.doppel(
+            self.float_datei(("Persona-Skizze der Zielgruppe", "fig:persona"),
+                             ("Mockup-Skizze des Formulars", "fig:mockup")),
+            "Wie die Persona-Skizze zeigt, bleibt der Ablauf zweistufig.\n")
+        self.assertEqual(funde, [], funde)
+
+    def test_ein_label_ist_keine_doppelbelegung(self):
+        funde = self.doppel(
+            self.float_datei(("Persona-Skizze der Zielgruppe", "fig:persona")),
+            "Wie die Skizze zeigt, bleibt der Ablauf zweistufig.\n")
+        self.assertEqual(funde, [], funde)
+
+    def test_beschreibende_caption_koepfe_still(self):
+        # „Übersicht" in zwei Captions ist normal, kein Namenskonflikt.
+        funde = self.doppel(
+            self.float_datei(("Übersicht der Phasen", "fig:phasen"),
+                             ("Übersicht der Rollen", "fig:rollen")),
+            "Die Übersicht fasst den Stand zusammen.\n")
+        self.assertEqual(funde, [], funde)
+
+    # --- ZAHLWORT: Zählaussagen als Erinnerungsliste ---
+
+    def test_zahlwort_wird_gelistet(self):
+        _f, _e, meta = run_full("Daraus folgen drei Konsequenzen fuer die Praxis.\n")
+        funde = check_zahlwoerter({Path("a.tex"): meta})
+        self.assertEqual(len(funde), 1, funde)
+        self.assertIn("ZAHLWORT", funde[0])
+        self.assertIn("drei Konsequenzen", funde[0])
+
+    def test_unbestimmter_artikel_loest_nicht_aus(self):
+        # Bewusste Auslassung: „ein/eine" waere in jedem deutschen Satz Treffer.
+        _f, _e, meta = run_full("Das ist eine Konsequenz, die ein Modell abbildet.\n")
+        self.assertEqual(check_zahlwoerter({Path("a.tex"): meta}), [])
+
+    def test_zahlwort_ohne_nomen_loest_nicht_aus(self):
+        _f, _e, meta = run_full("Die Werte lagen bei drei komma fuenf im Mittel.\n")
+        self.assertEqual(check_zahlwoerter({Path("a.tex"): meta}), [])
+
+    def test_zahlwort_liste_wird_gedeckelt(self):
+        text = "".join(f"Es gibt drei Faktor{i} in dieser Sache.\n" for i in range(20))
+        _f, _e, meta = run_full(text)
+        funde = check_zahlwoerter({Path("a.tex"): meta})
+        self.assertIn("+8", funde[0])
+        self.assertLess(funde[0].count("„"), 20)
+
+    def test_bruchteile_und_zeitspannen_still(self):
+        # Realtest an einer fertigen Seminararbeit: die einzigen Fehltreffer.
+        _f, _e, meta = run_full(
+            "Etwa drei Viertel der Befragten nannten dies; zwei Drittel der Faelle "
+            "traten binnen drei Jahren auf, gemessen ueber zehn Jahren.\n")
+        self.assertEqual(check_zahlwoerter({Path("a.tex"): meta}), [])
+
+    def test_zahlwoerter_aus_mehreren_dateien_in_einem_block(self):
+        _f, _e, m1 = run_full("Daraus folgen drei Konsequenzen fuer die Praxis.\n")
+        _f, _e, m2 = run_full("Es bleiben zwei Einwaende gegen dieses Vorgehen.\n")
+        funde = check_zahlwoerter({Path("a.tex"): m1, Path("b.tex"): m2})
+        self.assertEqual(len(funde), 1, funde)          # ein Block, nicht zwei Befunde
+        self.assertEqual(funde[0].count("ZAHLWORT"), 1)
+        self.assertIn("drei Konsequenzen", funde[0])
+        self.assertIn("zwei Einwaende", funde[0])
 
     def gruppen_projekt(self, root: Path, autorenschaft_zeile: str | None, text: str):
         (root / "chapters" / "02_umsetzung").mkdir(parents=True, exist_ok=True)
