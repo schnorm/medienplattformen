@@ -122,7 +122,7 @@
   },
   "d7fd6058a1": {
    "status": "OK",
-   "notiz": "S. 105 (Verlagsfassung): dieselbe Drivers/Levers-Definition; 'systematically implementing specific interventions' deckt 'konkrete Funktionen statt bloßer Absichtserklärungen'.",
+   "notiz": "S. 105 (Verlagsfassung), Abs. 1-2: Eurostat-Zahl 65 % fuer Haushalte UND Food Service zusammen; dazu 'a large part of the literature highlights the prominent role of the responsibility to consumers, particularly at the household level'. Deckt den Haushalts-Schwerpunkt; die Zuschreibung allein an Haushalte ist eine Nuance schaerfer als die Quelle.",
    "datum": "2026-07-29"
   },
   "86e0f4af84": {
@@ -133,6 +133,11 @@
   "2797d09b2b": {
    "status": "OK",
    "notiz": "S. 105 (Verlagsfassung): dieselbe Drivers/Levers-Definition; 'systematically implementing specific interventions' deckt 'konkrete Funktionen statt bloßer Absichtserklärungen'.",
+   "datum": "2026-07-29"
+  },
+  "3ead511986": {
+   "status": "OK",
+   "notiz": "S. 105 (Verlagsfassung), Abs. 'Looking at the contributors of food waste': 'a large part of the literature highlights the prominent role of the responsibility to consumers, particularly at the household level'. Die neue Formulierung 'auf der Verbraucherebene und dort vor allem in privaten Haushalten' bildet Ebene und Schwerpunkt exakt ab; Eurostat-Zahl 65 % auf derselben Seite umfasst Haushalte und Food Service, was die Verbraucherebene korrekt mit abdeckt.",
    "datum": "2026-07-29"
   }
  },
