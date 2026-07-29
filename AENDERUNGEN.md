@@ -1205,15 +1205,9 @@ Vier Punkte konnte die Gegenlesung nicht selbst verifizieren. Sie sind **Vorauss
    - *Woran erkennbar, dass es stimmt*: Die zitierte Passage beschreibt das, was in `resteria_startseite.png` tatsächlich zu sehen ist — ein schmales Banner **ganz oben** mit „Wochenplan · Heute: Brokkoli-Suppe" und Pfeil. Die aktuelle Fassung zitiert eine „kompakte Karte **unterhalb der Rezeptvorschläge**" mit „nächsten Wochentagen" und einer „Zeile zu zuletzt verwerteten Zutaten" — davon ist im Bild nichts vorhanden.
    - *Warum nicht selbst geprüft*: Der Chatverlauf des Bildwerkzeugs liegt nicht im Repository; nur die Autorenschaft weiß, was eingegeben wurde. **Ohne diese Angabe Option B wählen** (Passage streichen, −22 Wörter) — eine erfundene Prompt-Formulierung wäre ein Beleg-Fehler, kein Formfehler.
 
-2. **Ob Barker Feedback als wirksamen Nudge-Typ führt** (Voraussetzung für 8.8 Option A).
-   - *Wo*: `sources/literatur/barkerWhatNudgeTechniques2021.pdf`, Umfeld von S. 10 (dort steht bereits der belegte Reminders-Befund).
-   - *Woran erkennbar*: Feedback müsste dort neben „Reminders" als eigener, als reliabel eingestufter Nudge-Typ genannt sein — dann `\parencite[S. …]` an der ersten Satzhälfte in `03_konzept.tex:9` ergänzen.
-   - *Warum nicht selbst geprüft*: Der Auftrag der Gegenlesung war auf Aufgabenstellung und Text beschränkt, Volltexte gehören in Teil-Check G des Audits. **Trägt die Quelle den Befund nicht, gilt Option B** („zwei Befunde" → „einen Befund", Punktezähler als eigene Konzeptentscheidung kennzeichnen).
+2. **ERLEDIGT durch Runde 9 (2026-07-29).** Frage war, ob Barker Feedback als wirksamen Nudge-Typ führt (Voraussetzung für 8.8 Option A). **Antwort: nein.** Am Volltext geprüft — Barker S. 10 belegt ausschließlich social norms und reminders; Feedback erscheint nur als Beispiel unter Nudge-Typ J (Tabelle 1, S. 3), und Typ J gehört nicht zu den drei Typen mit nachgewiesener Wirksamkeit. Die einzige feedbackfreundliche Stelle (S. 3) ist Barkers Referat fremder Literatur, kein Review-Ergebnis. **Damit gilt Option B**, und der Befund ist in Runde 9 als 9.1 mit ausformulierten Ersatzformulierungen für beide betroffenen Stellen (Fließtext und Tabellenzelle) neu aufgelegt. 8.8 bei der Umsetzung nicht doppelt bearbeiten — 9.1 ist die vollständigere Fassung.
 
-3. **Die Seitenzahl von SDG 12.3** (Voraussetzung für 8.18).
-   - *Wo*: `sources/literatur/unTransformingOutWorld2030Agenda.pdf`; Zielort `01_ausgangslage_und_problem.tex:5`.
-   - *Woran erkennbar*: Ziel 12.3 („halve per capita global food waste at the retail and consumer levels") steht im Wortlaut auf der angegebenen Seite.
-   - *Warum nicht selbst geprüft*: Die Angabe **S. 22** stammt aus einer früheren Volltextprüfung dieses Projekts und wurde in der Gegenlesungs-Session nicht neu nachgeschlagen. Vor Übernahme einmal am PDF bestätigen.
+3. **ERLEDIGT durch Runde 9 (2026-07-29).** Die Seitenzahl für SDG 12.3 ist am Volltext bestätigt: **S. 22** (Fußzeile „22/35"), Wortlaut „12.3 By 2030, halve per capita global food waste at the retail and consumer levels and reduce food losses along production and supply chains, including post-harvest losses". Der Text der Arbeit gibt nur die Halbierungs-Hälfte wieder, ist also enger als die Quelle — inhaltlich einwandfrei. 8.18 ist in Runde 9 als Teil von 9.6 aufgegangen (zusammen mit zwei weiteren fehlenden Locatoren, deren Fundstellen dort ebenfalls verifiziert sind).
 
 4. **Die gedruckte Seitenzahl nach Umsetzung der Runde** (gilt für die ganze Runde).
    - *Wo*: `latexmk -lualatex main.tex`, danach Position von „1 Einleitung" und des Literaturverzeichnisses im gebauten PDF.
@@ -1223,3 +1217,149 @@ Vier Punkte konnte die Gegenlesung nicht selbst verifizieren. Sie sind **Vorauss
 ### Nächster Schritt
 
 Umsetzung in frischer Session: „Schreib-Modus: AENDERUNGEN.md abarbeiten". Die beiden `[FREIGABE]`-Punkte (8.1, 8.9) dort per `AskUserQuestion` klären, die vier Punkte aus „Bitte manuell prüfen" **vor** der jeweils abhängigen Option abarbeiten. Nach der Runde lokal bauen und die gedruckte Seitenzahl gegenprüfen, danach Abgabe-Audit.
+
+---
+
+### Runde 9 — Gegenlesung (Zitatkontext) (2026-07-29)
+
+**Umfang:** zugeschnitten auf eine Frage — **tragen die Quellen, was der Text ihnen zuschreibt, im Kontext des Satzes, in dem sie stehen?** Keine Vollgegenlesung; Struktur, Aufbau und Vollständigkeit deckt Runde 8 ab.
+
+Ausgeführt von einem Subagenten unter demselben Leseverbot wie Runde 8, **erweitert um eine Lesefreigabe**: `references.bib` vollständig und inhaltlich sowie die zehn Volltexte in `sources/literatur/`. Zusätzlich gesperrt waren `quellencheck.md` und `quellencheck-state.json` samt der Ausführung von `check_quellentreue.py` — sie enthalten die Urteile früherer Prüfläufe; wer sie liest, prüft nicht mehr, sondern bestätigt.
+
+Geprüft: **alle 19 Zitationsstellen**, jede gegen den Volltext an der angegebenen Stelle, gelesen im Kontext des Absatzes. Prüfachsen: Deckung · Richtung · Reichweite · Locator · Ankündigung ↔ Einlösung · Attribution · Doppelnutzung.
+
+**Gesamtbild:** Kein Fall von „nicht auffindbar", **kein Fall von falscher Richtung**, kein unbelegter Autorenname. Die Zitationen sind handwerklich in Ordnung; die zehn Befunde betreffen durchweg die **Reichweite** — der Text sagt an einzelnen Stellen etwas mehr, als seine Quelle hergibt. Kein Befund berührt These oder Kernargumente, daher keine `[FREIGABE]`-Markierung.
+
+#### Prüftabelle (alle 19 Zitationen)
+
+| # | Datei:Zeile | Key | Locator | Urteil |
+|---|---|---|---|---|
+| 1 | `01_ausgangslage_und_problem.tex:5` | `unTransformingOutWorld2030Agenda` | – | trägt, aber Stellenangabe fehlt (steht wörtlich auf S. 22) → 9.6 |
+| 2 | `01_ausgangslage_und_problem.tex:5` | `vittuariHowReduceConsumer2023` | S. 105 | trägt, aber Quelle formuliert eine Zuschreibung der Literatur, keinen Messwert; „vermeidbar" steht dort nicht → 9.10 |
+| 3 | `03_konzept.tex:5` | `vittuariHowReduceConsumer2023` | S. 105 | trägt |
+| 4 | `03_konzept.tex:9` | `barkerWhatNudgeTechniques2021` | S. 10 | trägt; die Ankündigung „zwei Befunde" im selben Absatz trägt nicht → 9.1 |
+| 5 | `03_konzept.tex:9` | `nivedhithaHowGreenSocial2024` | S. 14 | trägt, aber Begriff verschoben → 9.5 |
+| 6 | `03_konzept.tex:11` | `somaFoodWasteReduction2020` | S. 9 | trägt, aber Signifikanzbezug verschoben → 9.4 |
+| 7 | `03_konzept.tex:22` (Tabelle) | `barkerWhatNudgeTechniques2021` | S. 10 | **Reichweite zu weit** — Feedback ist auf S. 10 nicht belegt → 9.1 |
+| 8 | `03_konzept.tex:22` (Tabelle) | `nivedhithaHowGreenSocial2024` | S. 14 | trägt, gleiche Begriffsverschiebung → 9.5 |
+| 9 | `03_konzept.tex:22` (Tabelle) | `somaFoodWasteReduction2020` | S. 9 | trägt |
+| 10 | `04_community_und_feedback.tex:5` | `shenInfluenceOsmosisSocial2023` | – | trägt, aber Stellenangabe fehlt (S. 4 und S. 6) → 9.6 |
+| 11 | `04_community_und_feedback.tex:7` | `somaFoodWasteReduction2020` | S. 10–12 | **Reichweite zu weit** — Vergleichsarm waren Präsenz-Workshops → 9.2 |
+| 12 | `07_iteratives_design.tex:5` | `erlhoferWebsiteKonzeptionUndRelaunch2017` | Kap. 17.2.2 | trägt, aber die Zahl 10–15 steht nicht in der Quelle (dort: fünf); Numerusfehler → 9.7 |
+| 13 | `07_iteratives_design.tex:5` | `sauroLewisQuantifying2016` | Kap. 8 | trägt; die Schwelle 5 ist nicht gedeckt und nicht als eigene Setzung markiert → 9.8 |
+| 14 | `07_iteratives_design.tex:5` | `nielsenUsabilityEngineering1993` | Kap. 6.8 | trägt |
+| 15 | `01_kernergebnisse_und_ausblick.tex:5` | `vittuariHowReduceConsumer2023` | S. 105 | trägt, aber normative Zuspitzung ist eigene Ableitung → 9.9 |
+| 16 | `01_kernergebnisse_und_ausblick.tex:5` | `barkerWhatNudgeTechniques2021` | S. 10 | trägt |
+| 17 | `01_kernergebnisse_und_ausblick.tex:5` | `somaFoodWasteReduction2020` | S. 9 | **Reichweite zu weit** → 9.3 |
+| 18 | `01_kernergebnisse_und_ausblick.tex:5` | `nivedhithaHowGreenSocial2024` | S. 14 | trägt, gleiche Begriffsverschiebung → 9.5 |
+| 19 | `02_limitationen.tex:3` | `barkerWhatNudgeTechniques2021` | – | trägt, aber Stellenangabe fehlt → 9.6 |
+
+#### 9.1 „zwei Befunde aus der Nudge-Forschung" — belegt ist einer
+- **Befund**: `03_konzept.tex:9` kündigt zwei Befunde an. Belegt ist ausschließlich der zweite: Barker S. 10 trägt „The use of social norms and reminders were both shown to have positive influence on change in food waste behaviours". Für **Feedback** steht dort nichts. Schärfer noch: Barkers Typologie (Tabelle 1, S. 3) führt Feedback nur als *Beispiel* unter Nudge-Typ J, und Typ J gehört **nicht** zu den drei Typen, für die die vier als reliabel eingestuften Studien Wirksamkeit zeigten (social norms, reminders, disclosure). Die einzige feedbackfreundliche Stelle ist Barkers Referat fremder Literatur auf S. 3 — Hintergrund, kein Review-Ergebnis. Die dritte Quelle des Absatzes (Nivedhitha, „zudem") gehört nicht zur Nudge-Forschung und kann die Zählung nicht auffüllen. Dieselbe Überdehnung steht in der Tabellenzelle `03_konzept.tex:22`, wo eine Stellenangabe zwei Mechanismen abdeckt.
+- **Warum**: Der stärkste Ankündigungs-/Einlösungs-Bruch der Arbeit — und in `tab:funktionsuebersicht`, dem meistgelesenen Element des Konzeptkapitels, wird eine Designentscheidung als literaturgestützt ausgewiesen, die es nicht ist. Qualität (25 %), Dokumentation (10 %).
+- **Anweisung**: Eine der beiden Optionen.
+  - **Option A** (empfohlen): `03_konzept.tex:9` „Diese Mechanik greift zwei Befunde aus der Nudge-Forschung auf." → „Diese Mechanik greift einen belegten Nudge-Typ auf und ergänzt ihn um eigene Fortschrittsanzeigen." Zelle `:22`: „Feedback/Fortschritt sowie geplante Erinnerungsbenachrichtigung `\parencite[S. 10]{barker…}`" → „geplante Erinnerungsbenachrichtigung `\parencite[S. 10]{barker…}`, Feedback/Fortschritt als eigene Gestaltung". **+7 Wörter**, davon 2 in einer Tabellenzelle. **Sparvariante** ohne die Zusätze: **−3 Wörter**.
+  - **Option B**: „zwei Befunde" behalten und den Punktezähler-Satz mit `\parencite[S. 3]{barker…}` schließen — schwächerer Beleg, weil Barker dort nur fremde Literatur referiert. Option A vermeidet das.
+
+#### 9.2 Somas Vergleichsgruppe waren Präsenz-Workshops, nicht Online-Diskussion
+- **Befund**: `04_community_und_feedback.tex:7` begründet den Verzicht auf Forum und Nutzergruppen damit, dass bei Soma „eine Gruppe, die auf klassische Community-Diskussion setzte", deutlich schlechter abschnitt. Die Teilnahmezahlen stimmen und stehen im angegebenen Bereich. Der Vergleichsarm war aber kein Diskussionsformat: „an invitation to attend a series of four community workshops" (S. 4) — Präsenztermine mit Vorträgen, Videos und Quiz. Die erhobenen Nichtteilnahmegründe sind ausschließlich Präsenzhürden (Terminkonflikt 47 %, Kinderbetreuung 21 %, Tabelle 5, S. 11) und übertragen sich auf ein asynchrones Online-Forum gerade nicht. Im selben Absatz zusätzlich: „den **ebenfalls belegten Dosis-Effekt**" — Soma rahmt diese Teilanalyse selbst als Teilnehmende vs. Nichtteilnehmende (S. 9), selbstselektiert, n = 14 vs. 12.
+- **Warum**: Es ist die einzige Stelle, an der eine **Weglassungs**entscheidung mit einer Studie begründet wird — der Punkt, an dem die Quelle die meiste Last trägt. Wer den Volltext aufschlägt, findet einen anderen Interventionstyp. Qualität (25 %).
+- **Anweisung**: In `04_community_und_feedback.tex:7` drei Änderungen. (1) „eine Gruppe, die auf klassische Community-Diskussion setzte" → „eine Gruppe, die auf gemeinsame Präsenzveranstaltungen setzte" (**±0**). (2) „Beide Formate ähneln sich in ihrer Diskussionsstruktur und liefen damit Gefahr, dieselbe geringe Teilnahme zu zeigen." → „Beide setzen wie dort auf moderierte Gruppendiskussion; ob sich der Teilnahmebefund von Präsenz- auf Online-Formate überträgt, bleibt eine Annahme dieser Arbeit." (**+6**). (3) „den ebenfalls belegten Dosis-Effekt" → „den dort beobachteten Unterschied zwischen Teilnehmenden und Nichtteilnehmenden" (**+4**). Punkt 2 ist der inhaltlich wertvollste Zusatz der Runde — der Übertragungsvorbehalt ist genau das, was ein Prüfer an dieser Stelle sucht.
+
+#### 9.3 „die belegte Wirksamkeit von Gamification"
+- **Befund**: `01_kernergebnisse_und_ausblick.tex:5` schreibt „die **belegte** Wirksamkeit von Gamification gegen Lebensmittelverschwendung `\parencite[S. 9]{somaFoodWasteReduction2020}`". Auf derselben S. 9 steht: „there was no statistically significant difference in food waste changes across the groups (Kruskal–Wallis H = 3.69, p = 0.30)"; die Spielgruppe zeigte nur „a marginally significant decrease (z = −1.47, p = 0.07)". Somas eigenes Fazit: die Evidenz sei „promising and we recommend further study".
+- **Warum**: Die Arbeit schränkt dieselbe Quelle an ihrer Erstverwendung (`03_konzept.tex:11`) mustergültig ein — im Fazit fällt die Einschränkung weg und wird durch „belegt" ersetzt. Die Aussage wird auf dem Weg durch die Arbeit **stärker statt schwächer**. Das ist der schwerste Befund der Runde, weil derselbe Satz mit dem Bekenntnis endet, was *nicht* wissenschaftlich belegt ist; eine Überzeichnung unmittelbar davor entwertet dieses Bekenntnis. Qualität (25 %), Dokumentation (10 %).
+- **Anweisung**: „die belegte Wirksamkeit von Gamification" → „**erste Hinweise auf die** Wirksamkeit von Gamification" (**+2 Wörter**). Sparvariante: „die **dort beobachtete** Wirksamkeit …" (**±0**).
+
+#### 9.4 Signifikanzaussage bezieht sich auf ein anderes Maß
+- **Befund**: `03_konzept.tex:11`: „…reduzierten ihren Lebensmittelabfall um 51 Prozent, Wenigspieler:innen nur um 39 Prozent; **der Unterschied war statistisch signifikant**." Die Zahlen sind aus Tabelle 3 (S. 9) korrekt errechnet. Der signifikante Test (Mann-Whitney U, p = 0,030) vergleicht jedoch die **Abfallmengen nach der Kampagne**, nicht die Differenz der Reduktionsraten: „there was no statistically significant difference between the two groups in the amount of food wasted before the campaign, but there was after the campaign ended" (S. 9). Im Satzbau bezieht sich „der Unterschied" auf die unmittelbar davor genannten 51 % vs. 39 %.
+- **Warum**: Es ist die einzige inferenzstatistische Aussage der Arbeit; wer sie prüft, prüft sie genau. Qualität (25 %).
+- **Anweisung**: „; der Unterschied war statistisch signifikant." → „; **nach der Kampagne war der Abstand zwischen beiden Gruppen** signifikant." **+2 Wörter.**
+
+#### 9.5 „collective intention" ist keine Zugehörigkeit, sondern eine geteilte Absicht
+- **Befund**: Drei Stellen (`03_konzept.tex:9`, Zelle `:22`, `01_kernergebnisse_und_ausblick.tex:5`) geben Nivedhithas Mediator als „das Gefühl, Teil einer Gemeinschaft zu sein" bzw. „Gemeinschaftsgefühl" wieder. Die Quelle definiert „collective intention" als „an individual's perception of the extent to which he/she, along with the group …, intends to participate in actions related to environmental conservation" (S. 6) — eine geteilte **Handlungsabsicht**. Die Studie grenzt beides ausdrücklich voneinander ab, indem sie „the need for social belongingness" als Quelle einer problematischen Variante benennt (S. 15).
+- **Warum**: Keine Fehlzitation, sondern eine Begriffsungenauigkeit an genau der Stelle, an der der Rettungs-Feed konzeptionell an die Rettungspunkte gekoppelt wird. Mit der korrekten Lesart wird die Ableitung **stärker**: Nicht bloßes Dabeisein trägt den Effekt, sondern die gemeinsame Absicht — und genau die stellen Challenges her. Qualität (25 %).
+- **Anweisung**: `03_konzept.tex:9` „sondern erst über das Gefühl, Teil einer Gemeinschaft zu sein" → „sondern erst über die gemeinsame Handlungsabsicht in der Gruppe" (**−1**). Zelle `:22` „Selbstwahrnehmung über Gemeinschaft" → „Selbstwahrnehmung über gemeinsame Absicht" (**+1**). Fazit „die über das Gemeinschaftsgefühl vermittelte Selbstwahrnehmung" → „die über die gemeinsame Handlungsabsicht vermittelte Selbstwahrnehmung" (**+1**).
+
+#### 9.6 Drei Zitationen ohne Stellenangabe — alle drei Fundstellen jetzt verifiziert
+- **Befund**: Drei indirekte Zitate tragen keinen Locator, obwohl sie je eine konkrete, nachschlagbare Aussage stützen. Die Fundstellen wurden in dieser Runde am Volltext ermittelt: **(1)** SDG 12.3 steht wörtlich auf **S. 22** („12.3 By 2030, halve per capita global food waste at the retail and consumer levels …"); der Text gibt nur die Halbierungs-Hälfte wieder, ist also enger als die Quelle. **(2)** Shen: der Mechanismus auf **S. 4** („browsing green communities indirectly influences pro-environmental behavior, as if by osmosis"), der aktivitätsunabhängige Pfad auf **S. 6** (H3a, β = 0,10, p < 0,001). **(3)** Barker in `02_limitationen.tex:3`: dieselbe **S. 10** wie in Kapitel 2.
+- **Warum**: Die IU verlangt die Stellenangabe **auch bei indirekten Zitaten** (`hard-rules-formal.md`, Zitierleitfaden Anhang C — abweichend von APA). Bei einer 35-seitigen Resolution ist sie zugleich praktisch nötig. Dokumentation (10 %).
+- **Anweisung**: `01_ausgangslage_und_problem.tex:5` → `\parencite[S. 22]{unTransformingOutWorld2030Agenda}`. `04_community_und_feedback.tex:5` → `\textcite[S. 4, 6]{shenInfluenceOsmosisSocial2023}` (nicht zusammenhängend, deshalb Komma-Form). `02_limitationen.tex:3` → `\textcite[S. 10]{barkerWhatNudgeTechniques2021}`. **±0 Wörter** — Locatoren zählen nicht als Fließtext. *Erledigt damit zugleich Befund 8.18 und dessen manuelle Prüfaufgabe.*
+
+#### 9.7 Die Gruppengröße 10–15 steht nicht bei Erlhofer, dazu ein Numerusfehler
+- **Befund**: `07_iteratives_design.tex:5`: „Für die Gruppengröße **gibt** `\textcite[Kap.~17.2.2]{erlhofer…}` den Maßstab: Bereits wenige Testpersonen legen die schwerwiegenden … Bedienhürden offen, **weshalb zehn bis fünfzehn Personen ausreichend dimensioniert sind**." Die erste Hälfte trägt wörtlich („Schon bei fünf Personen werden Sie feststellen, dass sich die meisten Usability-Probleme wiederholen…"). Die Quelle nennt aber **fünf**, nicht zehn bis fünfzehn; das „weshalb" stellt die eigene Zahl als Schluss aus der Quelle dar. Nebenbei: Der Eintrag hat zwei Autor:innen (Erlhofer und Brenner), `\textcite` rendert entsprechend — das Prädikat muss **„geben"** lauten.
+- **Warum**: Der Beta-Test ist das methodische Herzstück von Teilaufgabe 3; eine Zahl, die als quellenabgeleitet erscheint, es aber nicht ist, fällt hier besonders auf. Qualität (25 %), Dokumentation (10 %).
+- **Anweisung**: → „Für die Gruppengröße **geben** `\textcite[Kap.~17.2.2]{erlhofer…}` den Maßstab: **Schon fünf** Testpersonen legen die schwerwiegenden, mehrfach auftretenden Bedienhürden einer Oberfläche offen; **diese Arbeit plant mit zehn bis fünfzehn Personen, um Ausfälle abzufangen**." **+1 Wort.**
+
+#### 9.8 SEQ-Erfolgsschwelle nicht als eigene Setzung erkennbar
+- **Befund**: `07_iteratives_design.tex:5` nennt die SEQ mit `\parencite[Kap.~8]{sauroLewisQuantifying2016}` und schließt die Aufzählung mit „mit einer Erfolgsschwelle von mindestens fünf im Mittel". Kapitel 8 nennt keine solche Schwelle — alle SEQ-Fundstellen des Buches wurden durchgesehen (S. 95, 186, 188, 211, 218–225, 238), die einzige „5" im SEQ-Kontext betrifft die 5- gegen 7-Punkte-Skalenvariante. Der Wert steht syntaktisch nach der Zitation, wird beim Lesen aber mit abgedeckt.
+- **Warum**: Ein Erfolgskriterium ist ein Messversprechen; wer prüfen will, ob es aus der Methodenliteratur stammt oder gesetzt wurde, muss es am Satz erkennen können. Qualität (25 %).
+- **Anweisung**: → „mit einer **hier festgelegten** Erfolgsschwelle von mindestens fünf im Mittel". **+2 Wörter.** (Der Trägersatz wurde am 28.07. schon einmal in diese Richtung entschärft; die Schwelle steht seither in einem eigenen Satzteil, der die Zuschreibung wieder aufmacht.)
+
+#### 9.9 Normative Zuspitzung des Drivers/Levers-Rahmens
+- **Befund**: `01_kernergebnisse_und_ausblick.tex:5`: „den Rahmen aus Drivers und Levers, **der konkrete Funktionen statt bloßer Absichtserklärungen verlangt**". Vittuari S. 105 definiert nur („Under drivers, we define the factors that impact behaviour … As levers, we consider those aspects of drivers that can be exploited…"). Der Rahmen *ermöglicht* konkrete Interventionen; er *verlangt* nichts, und den Kontrast zu „bloßen Absichtserklärungen" zieht die Arbeit selbst. Die Kurzdefinition in `03_konzept.tex:5` ist demgegenüber sauber.
+- **Warum**: Der Relativsatz steht unmittelbar vor der Klammer und liest sich deshalb als Quelleninhalt. Dokumentation (10 %).
+- **Anweisung**: → „den Rahmen aus Drivers und Levers, der Hebel für konkrete Interventionen benennt". **−3 Wörter** (finanziert 9.3 und 9.4 gegen).
+
+#### 9.10 „vermeidbar" und die Zuschreibungsform im Einstiegs-Claim
+- **Befund**: `01_ausgangslage_und_problem.tex:5`: „Ein Großteil der **vermeidbaren** Verschwendung **entsteht** dabei nicht im Handel oder in der Industrie, sondern auf der Verbraucherebene und dort vor allem in privaten Haushalten." Vittuari S. 105 sagt: „a large part of the literature highlights the prominent role of the responsibility to consumers, particularly at the household level" — eine Aussage darüber, **wem die Literatur die Verantwortung zuschreibt**, kein Messwert darüber, wo Verschwendung entsteht. Die einzige Zahl derselben Seite fasst zwei Stufen zusammen (Haushalte und Food Service ≈ 65 %). Die Zweiteilung des Satzes bildet das sauber ab; „vermeidbar" hat in der Quelle keine Entsprechung.
+- **Warum**: Einstiegs-Claim der Arbeit und Begründung ihrer gesellschaftlichen Relevanz. Geringe Schwere — die Formulierung ist bereits erkennbar vorsichtig gebaut (Ergebnis der Überarbeitung vom 29.07.). Qualität (25 %).
+- **Anweisung**: → „Ein Großteil der Verschwendung **wird** dabei nicht dem Handel oder der Industrie **zugerechnet**, sondern der Verbraucherebene und dort vor allem den privaten Haushalten". **−2 Wörter.**
+
+#### Umfangshinweis (Gesamtstand)
+
+Ausgangsstand unverändert **3.567 Wörter** bei zuletzt gemessenen **10 gedruckten Seiten** (Obergrenze der Vorgabe 7–10). Diese Runde ändert nur Formulierungen, keine Absätze.
+
+- Alle Befunde in der empfohlenen Variante: **rund +10 bis +12 Wörter**.
+- Empfohlene Kombination: **9.2 voll umsetzen** (der Übertragungsvorbehalt ist der inhaltliche Gewinn der Runde), **9.1 in der Sparvariante** → netto **rund ±0**.
+- 9.9 und 9.10 sparen zusammen −5 und finanzieren 9.3, 9.4 und 9.8 gegen.
+
+Runde 8 und Runde 9 zusammen liegen damit bei netto rund −55 Wörtern. Nach der Umsetzung beider Runden bauen und die gedruckte Seitenzahl prüfen.
+
+#### Was sauber ist — bitte nicht anfassen
+
+**Vorbildliche Reichweitenbegrenzungen.** Diese vier Sätze sind das stärkste Argument gegen einen Overclaim-Vorwurf und dürfen einer Kürzungsrunde nicht zum Opfer fallen:
+
+- `03_konzept.tex:11`: „Die Studie stützt damit die Entscheidung für Gamification, **belegt aber nicht** die Wirkung der konkreten Punkte- und Level-Mechanik von Resteria, weil sie eine andere Intervention getestet hat." — trifft Somas eigene Zurückhaltung exakt und nimmt 9.3 die Schärfe, sobald das Fazit nachzieht.
+- `01_kernergebnisse_und_ausblick.tex:5`, Schlusssatz: die Trennung von eigener Marktbeobachtung und wissenschaftlichem Beleg.
+- `07_iteratives_design.tex:5`, erster Satz: „…ausschließlich als geplantes Vorgehen beschrieben, nicht real durchgeführt."
+- `02_zielsetzung_und_verengung.tex:7`: „…argumentativ begründet, nicht empirisch mit eigenen Nutzerdaten geprüft."
+
+**Sechs Zitationen tragen im Kontext vollständig** und brauchen keinen Eingriff: Vittuari in `03_konzept.tex:5` (die Einengung auf psychologische und soziale Faktoren ist **enger** als die Quelle — die unbedenkliche Richtung) · Barker in `03_konzept.tex:9`, soweit es die Reminders betrifft (bildet das Critical-Appraisal-Ergebnis samt der Seltenheit präzise ab) · Nielsen (Kap. 6.8, S. 195) · Sauro & Lewis (Kap. 8, S. 218, SEQ-Beschreibung) · Soma in `04_community_und_feedback.tex:7`, soweit es die **Teilnahmezahlen** betrifft (84 % / 16 % / 53 %) · UN inhaltlich (enger als die Quelle).
+
+**Besonders hervorzuheben:** Die Nivedhitha-Stellen geben eine **verworfene Hypothese korrekt als Verwerfung** wieder statt als Beleg. Das ist der Fehler, der in solchen Arbeiten am häufigsten passiert, und er ist hier vermieden. 9.5 betrifft nur die Benennung des Mediators, nicht die Richtung.
+
+**Formal unauffällig:** Alle vier MDPI-/Wiley-Quellen tragen im Bib-Eintrag eine Artikelnummer statt eines Seitenbereichs, die Zitationen verweisen auf die artikelinterne Zählung — bei diesen Verlagen die richtige Praxis. Die einzige Quelle mit echtem Seitenbereich (Vittuari, 104–114) wird konsistent mit `[S. 105]` zitiert, also innerhalb des Bereichs.
+
+#### Bitte manuell prüfen
+
+1. **Vittuari — welche Datei liefert Zotero aus?**
+   - *Was*: In `sources/literatur/` liegen zwei Fassungen derselben Arbeit — `vittuariHowReduceConsumer2023.pdf` (11 S., gedruckt 104–114, Elsevier-Kolumnentitel) und `Vittuari2023_DriversLeversFoodWaste.pdf` (Preprint, abweichende Zählung). Alle drei `[S. 105]`-Zitationen wurden gegen die **Verlagsfassung** geprüft und dort bestätigt.
+   - *Wo*: `references.bib`, Feld `file` von `vittuariHowReduceConsumer2023` — es zeigt auf `…/Vittuari2023_DriversLeversFoodWaste_Verlagsfassung.pdf`, einen **dritten Dateinamen, den es in `sources/literatur/` nicht gibt**.
+   - *Woran erkennbar*: Die zitierte Fassung trägt auf ihrer zweiten Seite unten „105" und enthält „Under drivers, we define the factors that impact behaviour".
+   - *Warum nicht selbst geprüft*: Welche Datei die Zotero-Anlage ausliefert, ist von außen nicht entscheidbar; ein Re-Export kann den Pfad ändern, und beim Preprint liefe „S. 105" ins Leere.
+   - *Wenn die Prüfung unterbleibt*: Die Zitationen bleiben inhaltlich korrekt, aber `check_quellentreue.py` kann bei einem Zotero-Re-Export auf den Preprint zeigen und „SEITE VERDÄCHTIG" melden. Kein Textfehler, aber ein wiederkehrender Fehlalarm.
+
+2. **Wortlaut der zitierten Claude-Design-Prompts** — identisch mit Punkt 1 der Runde 8. Nicht doppelt bearbeiten.
+
+3. **Shen: Randbedingung „nur bei hoher Like-Zahl"?**
+   - *Was*: Ob `04_community_und_feedback.tex:5` ergänzen soll, dass Shens Pfad vom Browsen zur Umweltbesorgnis bei **niedriger** Like-Zahl nicht signifikant war („insignificant for the lower volume of likes", S. 6).
+   - *Woran erkennbar, dass es ohne Ergänzung hält*: Der Text hedged bereits mit „erhöhen **kann**" — ein Zusatz wäre eine Präzisierung, kein Fehlerfix.
+   - *Warum nicht entschieden*: Rein additiv (mindestens +12 Wörter) bei einem Textteil auf der Obergrenze. Das ist eine Umfangs-, keine Zitattreue-Entscheidung.
+   - *Wenn die Prüfung unterbleibt*: nichts ändern — es entsteht kein Fehlzitat.
+
+4. **Kontextgrenzen der vier empirischen Quellen als vierte Limitation?**
+   - *Was*: Soma erhob in Toronto (Haushalte an Sammelrouten, Online-Quizspiel), Nivedhitha in Indien (314 Mitglieder grüner Online-Communities), Shen in einem einzigen Land mit überwiegend Studierenden („the data originated from a single country", S. 8), Barker ausschließlich europäische Studien, drei von vier aus dem Vereinigten Königreich.
+   - *Wo*: `02_limitationen.tex` — die drei Limitationen nennen fehlenden Nutzertest, KI-Mockups und Marktabdeckung, aber keine Kontextgrenze der Literatur.
+   - *Warum nicht als Befund geführt*: Eine vierte Limitation wäre additiv (mindestens +25 Wörter), und die Arbeit erhebt nirgends einen Generalisierungsanspruch, den sie zurücknehmen müsste. Ermessensfrage, keine Fehlzuschreibung.
+   - *Wenn die Prüfung unterbleibt*: nichts ändern.
+
+5. **Barker: Reminder-Evidenz stammt aus Recycling-Verhalten.**
+   - *Was*: Die als reliabel eingestufte Reminder-Studie (Shearer et al.) klebte einen visuellen Hinweis auf die Bioabfalltonne und maß eine signifikante Änderung im **Recycling**, nicht in der Vermeidung (Barker S. 10). Barker überbrückt das nur hypothetisch (S. 11).
+   - *Woran erkennbar, dass die jetzige Fassung hält*: Barkers eigene Zusammenfassung spricht von „change in food waste behaviours" (S. 10) — die Arbeit übernimmt genau diese Ebene und behauptet keine Vermeidungswirkung. Die Stelle ist deshalb als „trägt" eingestuft.
+   - *Warum trotzdem hier*: Ein besonders strenger Prüfer könnte die Ebene einfordern. Ermessensentscheidung, deshalb mit Fundstelle offengelegt statt stillschweigend getroffen.
+   - *Wenn die Prüfung unterbleibt*: nichts ändern.
+
+### Nächster Schritt
+
+Runde 8 und Runde 9 in **einer** Schreib-Session abarbeiten — sie berühren teils dieselben Dateien (`03_konzept.tex`, `01_kernergebnisse_und_ausblick.tex`, `07_iteratives_design.tex`), und getrennte Durchgänge würden dieselben Absätze zweimal umbauen. Reihenfolge: erst die Zitat-Befunde der Runde 9 (sie sind kleinteilig und ändern Formulierungen, nicht Struktur), dann Runde 8. Danach bauen, Seitenzahl prüfen, Abgabe-Audit.
