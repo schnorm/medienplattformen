@@ -501,6 +501,26 @@ def _datei_kandidaten(feld: str) -> list[str]:
 LITERATUR_ORDNER = ("sources/literature", "sources/literatur")
 
 
+def _projekt_pfad(key: str | None, endung: str, root: Path) -> Path | None:
+    """Datei unter dem BBT-Citekey in der Projektablage (`<key><endung>`).
+
+    Portabel per Konstruktion: Der Citekey ist git-versioniert und ändert
+    sich nicht zwischen Rechnern, anders als Zoteros absoluter Speicherpfad
+    oder der von Zotero/Anna's Archive vergebene Dateiname (beide sind
+    Export-Artefakte des jeweils exportierenden Rechners, siehe
+    SKILL-ANPASSUNGEN.md P4-1). Wird deshalb vor dem `file`-Feld probiert –
+    trifft er, ist die Frage entschieden, unabhängig davon, was Zotero gerade
+    als Pfad exportiert hat.
+    """
+    if not key:
+        return None
+    for ordner in LITERATUR_ORDNER:
+        kandidat = root / ordner / f"{key}{endung}"
+        if kandidat.exists():
+            return kandidat
+    return None
+
+
 def _pfad_kandidat(teil: str, endung: str, root: Path) -> Path | None:
     """Einen Eintrag aus dem `file`-Feld zu einem existierenden Pfad machen.
 
@@ -532,7 +552,10 @@ def _bereinige(teil: str, typ_muster: str) -> str:
     return re.sub(r"^[^:]*:(?=[A-Za-z]:[\\/]|/)", "", teil)
 
 
-def pdf_pfad(feld: str, root: Path) -> Path | None:
+def pdf_pfad(feld: str, root: Path, key: str | None = None) -> Path | None:
+    treffer = _projekt_pfad(key, ".pdf", root)
+    if treffer:
+        return treffer
     for teil in _datei_kandidaten(feld):
         treffer = _pfad_kandidat(_bereinige(teil, r"application/pdf|PDF"),
                                  ".pdf", root)
@@ -541,8 +564,11 @@ def pdf_pfad(feld: str, root: Path) -> Path | None:
     return None
 
 
-def epub_pfad(feld: str, root: Path) -> Path | None:
+def epub_pfad(feld: str, root: Path, key: str | None = None) -> Path | None:
     """Wie `pdf_pfad`, nur für `.epub`."""
+    treffer = _projekt_pfad(key, ".epub", root)
+    if treffer:
+        return treffer
     for teil in _datei_kandidaten(feld):
         treffer = _pfad_kandidat(
             _bereinige(teil, r"application/epub\+zip|EPUB"), ".epub", root)
@@ -854,6 +880,9 @@ def unreferenzierte_volltexte(bib: dict, root: Path) -> list[str]:
     """
     genannt = {Path(p).name.lower()
                for e in bib.values() for p in gesetzte_dateipfade(e.get("file", ""))}
+    # Dateien nach der Citekey-Konvention (P4-1) sind referenziert, auch wenn
+    # das `file`-Feld – z. B. nach einem BBT-Export – etwas anderes nennt.
+    genannt |= {f"{key.lower()}{ext}" for key in bib for ext in (".pdf", ".epub")}
     uebrig: list[str] = []
     for ordner in LITERATUR_ORDNER:
         d = root / ordner
@@ -955,8 +984,8 @@ def pruefe(zitate: list[Zitation], bib: dict, state: dict, root: Path,
                         f"Verfügung, [Abs. X] oder [Kap. X] statt der Seite.")
             continue
 
-        pdf = pdf_pfad(eintrag.get("file", ""), root)
-        epub = None if pdf is not None else epub_pfad(eintrag.get("file", ""), root)
+        pdf = pdf_pfad(eintrag.get("file", ""), root, key=z.key)
+        epub = None if pdf is not None else epub_pfad(eintrag.get("file", ""), root, key=z.key)
         if pdf is None and epub is None:
             gesetzt = gesetzte_dateipfade(eintrag.get("file", ""))
             if gesetzt:
@@ -969,9 +998,11 @@ def pruefe(zitate: list[Zitation], bib: dict, state: dict, root: Path,
                 z.befund = (
                     f"`file`-Feld gesetzt, Datei nicht gefunden: {gesetzt[0]} – "
                     f"auch nicht als {Path(gesetzt[0]).name} in "
-                    f"{' oder '.join(o + '/' for o in LITERATUR_ORDNER)}. Volltext "
-                    f"dorthin kopieren oder den Pfad korrigieren; nicht als "
-                    f"fehlende Quelle werten.")
+                    f"{' oder '.join(o + '/' for o in LITERATUR_ORDNER)}. Portabler "
+                    f"Fix: Datei als {z.key}.pdf (bzw. .epub) in "
+                    f"{LITERATUR_ORDNER[-1]}/ ablegen (siehe SKILL-ANPASSUNGEN.md "
+                    f"P4-1) statt nur den `file`-Pfad zu korrigieren – der zeigt "
+                    f"sonst wieder nur auf diesen Rechner.")
             else:
                 z.status, z.befund = zugangsklasse(eintrag)
             continue
@@ -1206,9 +1237,9 @@ def zeige_seite(key: str, seite: str, bib: dict, state: dict, root: Path) -> int
     if eintrag is None:
         print(f"FEHLER: Key '{key}' fehlt in references.bib.", file=sys.stderr)
         return 2
-    pdf = pdf_pfad(eintrag.get("file", ""), root)
+    pdf = pdf_pfad(eintrag.get("file", ""), root, key=key)
     if pdf is None:
-        epub = epub_pfad(eintrag.get("file", ""), root)
+        epub = epub_pfad(eintrag.get("file", ""), root, key=key)
         if epub is None:
             ziel = eintrag.get("url") or "kein Volltext im Bib-Eintrag"
             print(f"Kein PDF/E-Book im file-Feld. Webquelle: {ziel}", file=sys.stderr)

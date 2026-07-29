@@ -119,10 +119,25 @@
    "status": "OK",
    "notiz": "Unveraendert gegenueber dem frueheren OK-Urteil - im Fazitsatz wurde allein die Nivedhitha-Klausel ersetzt; Soma S. 9 wortgleich.",
    "datum": "2026-07-29"
+  },
+  "d7fd6058a1": {
+   "status": "OK",
+   "notiz": "S. 105 (Verlagsfassung): dieselbe Drivers/Levers-Definition; 'systematically implementing specific interventions' deckt 'konkrete Funktionen statt bloßer Absichtserklärungen'.",
+   "datum": "2026-07-29"
+  },
+  "86e0f4af84": {
+   "status": "OK",
+   "notiz": "S. 105 (Verlagsfassung): dieselbe Drivers/Levers-Definition; 'systematically implementing specific interventions' deckt 'konkrete Funktionen statt bloßer Absichtserklärungen'.",
+   "datum": "2026-07-29"
+  },
+  "2797d09b2b": {
+   "status": "OK",
+   "notiz": "S. 105 (Verlagsfassung): dieselbe Drivers/Levers-Definition; 'systematically implementing specific interventions' deckt 'konkrete Funktionen statt bloßer Absichtserklärungen'.",
+   "datum": "2026-07-29"
   }
  },
  "versatz": {
-  "vittuariHowReduceConsumer2023": 1,
+  "vittuariHowReduceConsumer2023": -103,
   "barkerWhatNudgeTechniques2021": -8,
   "somaFoodWasteReduction2020": 0,
   "nivedhithaHowGreenSocial2024": 9

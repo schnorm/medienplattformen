@@ -742,6 +742,63 @@ class TestPfadFallback(unittest.TestCase):
                              ["sources/literature/Verwaist.pdf"])
 
 
+class TestCitekeyFallback(unittest.TestCase):
+    """P4-1: `sources/literatur/<citekey>.<ext>` löst rechnerunabhängig auf –
+    unabhängig davon, was das `file`-Feld gerade exportiert. Portabilität darf
+    nicht daran hängen, ob Zoteros absoluter Speicherpfad oder der von Zotero/
+    Anna's Archive vergebene Dateiname auf diesem Rechner existiert."""
+
+    def test_citekey_datei_loest_auf_ohne_file_feld(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            (root / "sources" / "literatur").mkdir(parents=True)
+            (root / "sources" / "literatur" / "meierBeispiel2020.pdf").write_bytes(b"x")
+            # Leeres `file`-Feld simuliert einen Rechner ohne Zotero-Zugriff.
+            self.assertEqual(
+                pdf_pfad("", root, key="meierBeispiel2020"),
+                root / "sources" / "literatur" / "meierBeispiel2020.pdf")
+
+    def test_citekey_geht_vor_zotero_pfad(self):
+        # Existieren beide, gewinnt die portable Citekey-Datei – der
+        # Zotero-Pfad ist maschinenspezifisch und keine verlässliche Wahl.
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            (root / "sources" / "literatur").mkdir(parents=True)
+            (root / "sources" / "literatur" / "meierBeispiel2020.pdf").write_bytes(b"key")
+            (root / "sources" / "literatur" / "Anderer Dateiname.pdf").write_bytes(b"zotero")
+            feld = str(root / "sources" / "literatur" / "Anderer Dateiname.pdf")
+            self.assertEqual(
+                pdf_pfad(feld, root, key="meierBeispiel2020"),
+                root / "sources" / "literatur" / "meierBeispiel2020.pdf")
+
+    def test_citekey_epub_analog(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            (root / "sources" / "literatur").mkdir(parents=True)
+            (root / "sources" / "literatur" / "meierBeispiel2020.epub").write_bytes(b"x")
+            self.assertEqual(
+                epub_pfad("", root, key="meierBeispiel2020"),
+                root / "sources" / "literatur" / "meierBeispiel2020.epub")
+
+    def test_ohne_key_kein_fallback(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            (root / "sources" / "literatur").mkdir(parents=True)
+            self.assertIsNone(pdf_pfad("", root))
+            self.assertIsNone(pdf_pfad("", root, key=None))
+
+    def test_citekey_datei_zaehlt_nicht_als_unreferenziert(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            (root / "sources" / "literatur").mkdir(parents=True)
+            (root / "sources" / "literatur" / "meierBeispiel2020.pdf").write_bytes(b"x")
+            # `file`-Feld nennt gar keinen Pfad (wie nach einem BBT-Export, der
+            # nur den Zotero-Speicherpfad kennt) – die Citekey-Datei ist trotzdem
+            # referenziert, kein falscher Aufräumhinweis.
+            bib = {"meierBeispiel2020": {"file": ""}}
+            self.assertEqual(unreferenzierte_volltexte(bib, root), [])
+
+
 class TestSeiteAusserhalbPages(unittest.TestCase):
     """Preprint-Zählung gegen Verlagsseiten – reine Feldprüfung, ohne Volltext."""
 
