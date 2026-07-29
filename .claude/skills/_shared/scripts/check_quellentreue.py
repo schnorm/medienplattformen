@@ -151,7 +151,35 @@ STATUS_BEFUND = {"WORTLAUT", "ZITAT WEICHT AB", "SEITE VERDÄCHTIG", "CLAIM SCH�
 # kein Mangel der Arbeit, sondern eine ungeprüfte Zitation aus technischem
 # Grund. Wer es als Befund führte, produzierte genau den Fehler, der zu dieser
 # Klasse geführt hat – ein Punktabzug für ein Pfadproblem.
-STATUS_OFFEN = {"PRÜFEN", "NICHT PRÜFBAR", "LIVE PRÜFEN", "DATEI NICHT GEFUNDEN"}
+STATUS_OFFEN = {"PRÜFEN", "NICHT PRÜFBAR", "LIVE PRÜFEN", "DATEI NICHT GEFUNDEN",
+                "VOLLTEXT BESCHAFFBAR", "ZUGANG PRÜFEN"}
+
+# ------------------------------------------------------------- Zugangsklassen
+#
+# „Kein Volltext" war früher ein Sammelstatus: Ein Buch, das der Nutzer in einer
+# halben Stunde besorgt, bekam denselben Befund und denselben Punktabzug wie ein
+# Journal-Artikel hinter einer Bezahlschranke, der nur durch Quellenersatz zu
+# lösen ist. Der Bericht nennt jetzt die Klasse – die Maßnahme unterscheidet
+# sich um zwei Größenordnungen.
+BUCH_TYPEN = {"book", "inbook", "incollection", "collection", "mvbook", "booklet"}
+
+# Hosts, hinter denen ein Volltext regelmäßig kostenpflichtig ist. Bewusst eine
+# Heuristik und keine vollständige Liste: Sie erzeugt eine Prüfaufgabe, keinen
+# Befund gegen die Arbeit. Frei zugängliche Verlage (MDPI, Frontiers, PLOS,
+# digitallibrary.un.org) dürfen hier nie hineinrutschen.
+PAYWALL_HOSTS = (
+    "onlinelibrary.wiley.com", "linkinghub.elsevier.com", "sciencedirect.com",
+    "link.springer.com", "tandfonline.com", "jstor.org", "dl.acm.org",
+    "ieeexplore.ieee.org", "journals.sagepub.com", "academic.oup.com",
+    "emerald.com", "degruyter.com", "cambridge.org/core",
+)
+
+# Werte für `tex.zugang` im Zotero-Feld *Extra* (BBT exportiert `tex.`-Felder
+# als reguläre Bib-Felder, wie `tex.shortauthor`/`tex.eid`). Das Feld überstimmt
+# die Heuristik und ist zugleich der haltbare Ort für das Urteil aus dem
+# Beschaffbarkeits-Gate (plan-modus Schritt 1) – anders als von Hand ergänzte
+# `file`-Pfade überlebt es den nächsten BBT-Export.
+ZUGANG_WERTE = ("volltext", "bibliothek", "oa", "beschaffbar", "kein-zugang")
 
 
 @dataclass
@@ -367,12 +395,14 @@ def lies_tex(pfade: list[Path]) -> list[Zitation]:
 def lies_bib(pfad: Path) -> dict[str, dict[str, str]]:
     text = pfad.read_text(encoding="utf-8", errors="replace")
     eintraege: dict[str, dict[str, str]] = {}
-    starts = [(m.start(), m.group(2)) for m in BIB_ENTRY_RE.finditer(text)]
-    for i, (pos, key) in enumerate(starts):
+    starts = [(m.start(), m.group(2), m.group(1).lower())
+              for m in BIB_ENTRY_RE.finditer(text)]
+    for i, (pos, key, typ) in enumerate(starts):
         ende = starts[i + 1][0] if i + 1 < len(starts) else len(text)
         block = text[pos:ende]
-        felder = {}
-        for feld in ("file", "url", "title", "author", "year", "date", "pages"):
+        felder = {"entrytype": typ}
+        for feld in ("file", "url", "doi", "zugang", "title", "author", "year",
+                     "date", "pages"):
             # Feldname am Zeilenanfang verankern: sonst trifft „pages" auch
             # `numpages`, „title" auch `booktitle`/`shorttitle` und „date" auch
             # `urldate` – und der falsche Wert kippt die ganze Seitenrechnung.
@@ -382,6 +412,69 @@ def lies_bib(pfad: Path) -> dict[str, dict[str, str]]:
                 felder[feld] = m.group(1).strip()
         eintraege[key] = felder
     return eintraege
+
+
+def zugangsklasse(eintrag: dict) -> tuple[str, str]:
+    """Status und Befund für eine Zitation ohne auflösbaren Volltext.
+
+    Unterscheidet drei Fälle, die vorher alle „nicht prüfbar" hießen:
+    ein Buch, das der Nutzer selbst besorgen kann (Aufgabe, kein Mangel);
+    einen Artikel hinter einer Bezahlschranke (nur über Open-Access-Fassung,
+    Bibliothekslizenz oder Quellenersatz lösbar); eine frei zugängliche
+    Webquelle, der nur der Snapshot fehlt.
+    """
+    zugang = eintrag.get("zugang", "").strip().lower()
+    url = eintrag.get("url", "")
+    doi = eintrag.get("doi", "").strip()
+    doi_hinweis = f" DOI {doi}." if doi else ""
+
+    # 1. Ausdrückliche Angabe des Nutzers schlägt jede Heuristik.
+    if zugang.startswith("oa"):
+        _, _, oa_url = zugang.partition(":")
+        return ("VOLLTEXT BESCHAFFBAR",
+                "frei zugängliche Fassung laut `zugang`-Feld"
+                + (f": {oa_url.strip()}" if oa_url.strip() else "")
+                + " – herunterladen und nach sources/literatur/ legen. Achtung: "
+                  "Preprint-/Repositoriumsfassungen zählen ab Seite 1, dann "
+                  "[Abs. X]/[Kap. X] statt einer Seitenzahl zitieren.")
+    if zugang == "bibliothek":
+        return ("VOLLTEXT BESCHAFFBAR",
+                "laut `zugang`-Feld über die IU-Bibliothek abrufbar – Volltext "
+                "ziehen und nach sources/literatur/ legen." + doi_hinweis)
+    if zugang == "beschaffbar":
+        return ("VOLLTEXT BESCHAFFBAR",
+                "laut `zugang`-Feld beschaffbar – Volltext nach "
+                "sources/literatur/ legen.")
+    if zugang == "kein-zugang":
+        return ("ZUGANG PRÜFEN",
+                "laut `zugang`-Feld kein Zugangsweg gefunden – Quelle ersetzen "
+                "oder die Aussage auf einen anderen Beleg stellen." + doi_hinweis)
+
+    # 2. Bücher: fehlender Volltext ist eine Beschaffungsaufgabe, kein Mangel
+    #    der Arbeit. Genau die Unterscheidung, die vorher fehlte.
+    if eintrag.get("entrytype", "") in BUCH_TYPEN:
+        return ("VOLLTEXT BESCHAFFBAR",
+                "Buch ohne hinterlegten Volltext – PDF oder EPUB besorgen und "
+                "nach sources/literatur/ legen, dann Pfad ins `file`-Feld.")
+
+    # 3. Artikel hinter bekannter Bezahlschranke: erst Open Access prüfen,
+    #    dann Bibliothek, dann ersetzen. Reihenfolge steht im Befundtext,
+    #    damit sie nicht in der Erinnerung gesucht werden muss.
+    if any(h in url.lower() for h in PAYWALL_HOSTS):
+        host = next(h for h in PAYWALL_HOSTS if h in url.lower())
+        return ("ZUGANG PRÜFEN",
+                f"Volltext hinter Bezahlschranke ({host}), kein Snapshot "
+                f"hinterlegt. In dieser Reihenfolge: (1) freie Fassung suchen – "
+                f"`curl -s \"https://api.openalex.org/works/doi:{doi or '<DOI>'}\"` "
+                f"→ open_access.oa_url, (2) IU-Bibliothek über myCampus, "
+                f"(3) Quelle ersetzen. Ergebnis in Zotero als `tex.zugang: …` "
+                f"festhalten.")
+
+    # 4. Rest wie bisher: Webquelle mit URL live prüfen, sonst gar nichts da.
+    if url:
+        return ("LIVE PRÜFEN",
+                f"kein PDF-Snapshot im file-Feld – Webquelle live prüfen: {url}")
+    return ("NICHT PRÜFBAR", "weder PDF (file) noch URL im Bib-Eintrag")
 
 
 def _datei_kandidaten(feld: str) -> list[str]:
@@ -879,13 +972,8 @@ def pruefe(zitate: list[Zitation], bib: dict, state: dict, root: Path,
                     f"{' oder '.join(o + '/' for o in LITERATUR_ORDNER)}. Volltext "
                     f"dorthin kopieren oder den Pfad korrigieren; nicht als "
                     f"fehlende Quelle werten.")
-            elif eintrag.get("url"):
-                z.status = "LIVE PRÜFEN"
-                z.befund = ("kein PDF-Snapshot im file-Feld – Webquelle live "
-                            f"prüfen: {eintrag['url']}")
             else:
-                z.status = "NICHT PRÜFBAR"
-                z.befund = "weder PDF (file) noch URL im Bib-Eintrag"
+                z.status, z.befund = zugangsklasse(eintrag)
             continue
 
         quelle_ist_epub = pdf is None

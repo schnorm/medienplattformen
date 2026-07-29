@@ -116,14 +116,14 @@ Sobald Papiertyp feststeht: `.claude/skills/_shared/typen/<typ>.md` laden.
 
 Nur wenn Schritt 0 ergibt, dass Literatur fehlt/ergänzt werden muss – im Kompakt-Modus zusätzlich nur auf Wunsch. Sonst direkt zu Schritt 2.
 
-**Zuerst die vorhandene eigene Literatur sichten, erst danach suchen.** `sources/literature/` ist die Ablage, in die der Nutzer eigene Quellen legt (Ebooks, Paper, Buchkapitel) – auch schon vor dem Setup. Verzeichnis listen (ohne `README.md`) und die vorhandenen Werke erfassen: Titel, Autor, Jahr, und aus Inhaltsverzeichnis beziehungsweise Abstract in einem Satz, wofür das Werk im Plan taugt. **Nicht die Volltexte einlesen** – das sprengt den Kontext; gezielt Inhaltsverzeichnis, Abstract und Einleitung.
+**Zuerst die vorhandene eigene Literatur sichten, erst danach suchen.** `sources/literatur/` ist die Ablage, in die der Nutzer eigene Quellen legt (Ebooks, Paper, Buchkapitel) – auch schon vor dem Setup. Verzeichnis listen und die vorhandenen Werke erfassen: Titel, Autor, Jahr, und aus Inhaltsverzeichnis beziehungsweise Abstract in einem Satz, wofür das Werk im Plan taugt. **Nicht die Volltexte einlesen** – das sprengt den Kontext; gezielt Inhaltsverzeichnis, Abstract und Einleitung.
 
 Konsequenzen für den Rest des Schritts:
 - **Suchbudget reduzieren**, wo die eigene Literatur ein Sub-Thema bereits abdeckt. Die Tabelle unten nennt Obergrenzen für den Fall „nichts vorhanden".
 - Deckt die vorhandene Literatur das Thema erkennbar ab, kann der Consensus-Teil ganz entfallen – dem Nutzer als Entscheidung vorlegen, nicht selbst festlegen.
 - **Zitierbarkeit prüfen:** Je Werk gegen `references.bib` abgleichen (Grep auf Autor-Nachname). Fehlt der BBT-Key, hier melden und Zotero-Import anstoßen – ohne Key ist das Werk lesbar, aber in `schreib-modus` nicht zitierbar, und dort darf kein Key erfunden werden.
-- Die Sperrliste gilt auch hier: Liegt in `sources/literature/` ein Vorlesungsskript oder Foliensatz, ist es **keine zitierfähige Quelle** (siehe `hard-rules-formal.md` → Zitationen) – auf die Primärquelle ausweichen und das dem Nutzer sagen.
-- Ergebnis in den `[INSIGHT: literaturrecherche]`-Block unter „Eigene Literatur (sources/literature/)" aufnehmen, getrennt von den Consensus-Treffern.
+- Die Sperrliste gilt auch hier: Liegt in `sources/literatur/` ein Vorlesungsskript oder Foliensatz, ist es **keine zitierfähige Quelle** (siehe `hard-rules-formal.md` → Zitationen) – auf die Primärquelle ausweichen und das dem Nutzer sagen.
+- Ergebnis in den `[INSIGHT: literaturrecherche]`-Block unter „Eigene Literatur (sources/literatur/)" aufnehmen, getrennt von den Consensus-Treffern.
 
 | Papiertyp | Nötig? | Suchbudget |
 |---|---|---|
@@ -141,11 +141,37 @@ Konsequenzen für den Rest des Schritts:
 
 **Parameter**: `query` (Pflicht, 4–8 Wörter) · `year_min`/`year_max` · `study_types` (Seminararbeit-Pflicht: `rct`, `meta-analysis`, `systematic review`, `literature review`, `case report`, `non-rct experimental`, `non-rct observational study`) · `sjr_max` (1=Q1, 2=Q2) · `human` (bool) · `sample_size_min` · `exclude_preprints` · `medical_mode`.
 
+### Beschaffbarkeits-Gate (Pflicht, vor der Priority Reading Order)
+
+Eine Quelle, deren Volltext niemand lesen kann, ist nicht zitierfähig – so steht es in `hard-rules-formal.md`, und `pruef-modus` → Teil-Check G setzt es durch. Geprüft wurde das bisher erst im Audit, ausgewählt wird die Quelle aber **hier**. Dazwischen liegt der gesamte Schreibprozess: Fällt die Bezahlschranke erst am Ende auf, steht das Argument bereits auf der Quelle und die Passage muss umgeschrieben werden. Consensus sucht über Metadaten und kennt keinen Beschaffbarkeitsfilter; der empfohlene Qualitätsfilter `sjr_max` arbeitet sogar dagegen, weil hoch gerankte Journals häufiger kostenpflichtig sind. Deshalb bekommt **jeder Kandidat ein Zugangsurteil, bevor er in die Leseliste kommt.**
+
+**Routen, in dieser Reihenfolge – es gewinnt die erste, die trägt:**
+
+1. **Liegt der Volltext schon in `sources/literatur/`?** Das Listing steht aus der Sichtung oben bereits zur Verfügung.
+2. **Freie Fassung über die DOI ermitteln – maschinell, nicht geschätzt.** OpenAlex, ohne Schlüssel und ohne Anmeldung:
+
+   ```bash
+   curl -s "https://api.openalex.org/works/doi:<DOI>" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d['open_access']); [print(l['is_oa'], l['version'], l.get('pdf_url') or l.get('landing_page_url')) for l in d['locations']]"
+   ```
+
+   `open_access.is_oa` und `oa_url` beantworten die Frage; `locations[].version` sagt, **welche** Fassung frei liegt. Bei `submittedVersion`/`acceptedVersion` gilt die Regel „Gelesene Fassung ≠ zitierte Fassung" (`hard-rules-formal.md`): eigene Seitenzählung ab 1, deshalb Fassung im Plan vermerken und `[Abs. X]`/`[Kap. X]` zitieren, solange die Verlagsseitenzahl nicht verifiziert ist. Sonst tauscht die Open-Access-Route nur einen Befund gegen einen anderen (`SEITE AUSSERHALB`).
+3. **IU-Bibliothek – die leicht übersehene Normalroute.** Über myCampus stehen lizenzierte Datenbanken bereit; eine Bezahlschranke im offenen Web sagt nichts darüber, ob der Zugang über die Hochschullizenz besteht. Das ist von hier aus nicht prüfbar (persönliches Login), also wird es **per `AskUserQuestion` gefragt** – mit der DOI in der Frage – und nicht angenommen.
+4. **Bücher und E-Books: Beschaffung durch den Nutzer.** Fragen, ob er den Volltext besorgen kann.
+
+**Urteil je Quelle** (gehört in den INSIGHT-Block und als Spalte in die Priority Reading Order):
+
+- **VOLLTEXT LIEGT VOR** – uneingeschränkt zitierbar.
+- **BESCHAFFBAR (`<Route>`)** – Weg benannt und zugewiesen (Bibliothek · OA-URL · Nutzer-Beschaffung). Kommt in den Plan, **mit Frist**: Der Volltext liegt vor, bevor das Kapitel geschrieben wird, das ihn trägt. **Bücher landen hier per Default – das ist ausdrücklich kein Blocker.** Ein Buch ohne PDF ist zum Recherchezeitpunkt eine Aufgabe, kein Ausschlussgrund.
+- **KEIN ZUGANG** – keine Route gefunden. **Blocker für die Auswahlentscheidung**: Die Quelle kommt nicht in die Priority Reading Order und bekommt kein `[zitiert]` im Plan. Ersatz wird **in derselben Session** gesucht, solange der Suchkontext noch steht – das ist der billigste Moment, den es dafür gibt.
+
+**Urteil dauerhaft sichern:** Je Quelle `tex.zugang: <volltext|bibliothek|oa:<url>|beschaffbar|kein-zugang>` im Zotero-Feld *Extra* eintragen lassen. Better BibTeX exportiert `tex.`-Felder als reguläre Bib-Felder (wie `tex.shortauthor`), `check_quellentreue.py` liest sie und überspringt dann seine Heuristik. Anders als von Hand ergänzte `file`-Pfade überlebt das den nächsten BBT-Export.
+
 Nach allen Suchen synthetisieren:
 
 ```
 [INSIGHT: literaturrecherche]
-Eigene Literatur (sources/literature/): <Werk – Eignung – BBT-Key vorhanden ja/nein>, oder „– keine –"
+Eigene Literatur (sources/literatur/): <Werk – Eignung – BBT-Key vorhanden ja/nein>, oder „– keine –"
+Zugangsurteile: <key/Titel – VOLLTEXT LIEGT VOR | BESCHAFFBAR (Route) | KEIN ZUGANG → Ersatz: …>
 Frameworks: ...
 Sub-Bereiche: 1. ... 2. ... 3. ...
 Gefundene Papers: <Anzahl>
@@ -155,9 +181,11 @@ Forschungslücken: ...
 Empirische Papers (Seminararbeit): <Liste mit study_type>
 ```
 
-Output an Nutzer: Priority Reading Order (3–5 Papers, geordnet), pro Paper Titel/Autoren/Journal/Jahr/Citation-Count/1-Satz-Relevanz, Forschungslücken.
+Output an Nutzer: Priority Reading Order (3–5 Papers, geordnet), pro Paper Titel/Autoren/Journal/Jahr/Citation-Count/1-Satz-Relevanz, **Zugangsurteil aus dem Gate**, Forschungslücken. Das Urteil gehört als eigene Spalte in die Liste, nicht in eine Fußnote – es entscheidet, ob das Paper überhaupt gelesen werden kann.
 
-**Zotero-Erinnerung (nicht überspringen, eigene Zeile im Chat, nicht nur Nebensatz)**: Gefundene Paper jetzt in Zotero importieren – auch ohne PDF, Metadaten reichen für den BBT-Key – und Better BibTeX exportieren lassen, damit `references.bib` rechtzeitig vor Schreib-Modus bereitsteht. Ohne diesen Schritt fehlen dort die BBT-Keys für `\parencite{}`, und Schreib-Modus darf laut eigener Regel keine Keys erfinden.
+**Zotero-Erinnerung (nicht überspringen, eigene Zeile im Chat, nicht nur Nebensatz)**: Gefundene Paper jetzt in Zotero importieren und Better BibTeX exportieren lassen, damit `references.bib` rechtzeitig vor Schreib-Modus bereitsteht. Ohne diesen Schritt fehlen dort die BBT-Keys für `\parencite{}`, und Schreib-Modus darf laut eigener Regel keine Keys erfinden.
+
+**Und im selben Zug den Volltext ablegen – Zugriff ist nicht Nachweisbarkeit.** Für den BBT-Key genügen die Metadaten, für die Prüfbarkeit nicht: Eine Bibliothekslizenz hängt am Campus-Login, Open-Access-Seiten ziehen um, das Audit läuft Monate später. Deshalb gilt: **Wer eine Quelle einmal offen hat, legt sie sofort ab** – PDF nach `sources/literatur/` mit dem Namensmuster `<Autor><Jahr>_<Kurztitel>.pdf`, bei Webquellen der PDF-Ausdruck der Seite. Zoteros eigenes `file`-Feld genügt dafür **nicht**: Es zeigt auf die lokale Zotero-Ablage und löst außerhalb des exportierenden Rechners nie auf. Der Projektordner ist der haltbare Ort, und er ist es genau in dem Moment am billigsten, in dem die Quelle ohnehin offen ist.
 
 **Checkpoint**: `[INSIGHT: literaturrecherche]` + Priority Reading Order in `kapitelplan.draft.md` eintragen, Zotero-Erinnerung im Chat quittiert, Status auf „Nächster Schritt: 2" setzen.
 
@@ -285,13 +313,15 @@ Bestätigung: Ja / Nein
 - **(b) eigene Analyse/Sichtung** – eigene Beobachtung oder Vergleichsanalyse (z. B. Plattform-Sichtung, Konkurrenzvergleich, SWOT): `\quelle{Eigene Darstellung.}` bzw. eigene Beobachtung im Fließtext, **kein** `\parencite`, **nicht** in `references.bib`.
 - **(c) unzulässig** – Skripte, Vorlesungsfolien, Webinars (siehe `hard-rules-formal.md` → Zitationen, Sperrliste): auf eine zitierfähige Primärquelle ausweichen, nicht in den Plan übernehmen.
 
-Beispiel: `Belege: 1. Meyer & Allen 1991 [zitiert] · 2. eigene Sichtung von 5 Konkurrenzplattformen [eigene Analyse]`. Nur Klasse (a) geht in die BBT-Key-Prüfung von `schreib-modus` ein – sonst droht dort ein erfundener Key für eine Quelle, die gar keinen braucht.
+Beispiel: `Belege: 1. Meyer & Allen 1991 [zitiert, Volltext: liegt vor] · 2. eigene Sichtung von 5 Konkurrenzplattformen [eigene Analyse]`. Nur Klasse (a) geht in die BBT-Key-Prüfung von `schreib-modus` ein – sonst droht dort ein erfundener Key für eine Quelle, die gar keinen braucht.
+
+**Klasse (a) trägt zusätzlich den Volltext-Status** aus dem Beschaffbarkeits-Gate: `[zitiert: <key>, Volltext: liegt vor]` bzw. `[zitiert: <key>, Volltext: beschaffbar – Bibliothek]`. Das Gate wirkt nur, wenn sein Urteil die Session überlebt; alles andere, was hier Sessions überdauert, steht in einer Datei, und für den Zugang gilt nichts anderes. `schreib-modus` liest genau diesen Vermerk, bevor er den tragenden Satz formuliert.
 
 **Nur abgelesene Seitenzahlen zählen – geschätzte werden als solche markiert.** Wird zu einem Beleg der Klasse (a) eine Fundstelle notiert (`[zitiert: <key>, S. 67]`), gilt: Die Zahl gehört nur dann ohne Zusatz dorthin, wenn sie am Volltext abgelesen wurde. Ist sie aus dem Abstract, aus einem Consensus-Treffer oder aus der Erinnerung geschätzt, wird `[zitiert: <key>, S. ?]` notiert – Fragezeichen statt Zahl. `schreib-modus` schlägt genau diese Stellen vor dem Schreiben im Volltext nach. Grund: Falsche Seitenangaben entstehen fast nie beim Schreiben, sondern hier – eine plausibel klingende Zahl aus der Planung wandert ungeprüft in den Text und fällt erst im Quellencheck vor der Abgabe auf.
 
 **Recherche-Gate:** Steht bei „Faktenbasis" *eigene Recherche* (Produktfeatures, Marktdaten, Werkzeugvergleiche, Preise), wird der Faktenstand **vor** dem Schreiben erhoben. Solche Angaben tragen meist eine Vergleichstabelle, auf die spätere Kapitel aufsetzen; eine Korrektur nach dem Schreiben schlägt auf jede daran hängende Stelle durch. Das Ergebnis kommt als **Rechercheprotokoll** in den Kapitelblock: je Behauptung Datum, Quelle, Befund – und, bei Aktivitäts- oder Qualitätsurteilen, **das Beobachtungsmerkmal**, an dem das Urteil hängt. Ein Urteil wie „wenig belebt" ohne benennbares Merkmal ist eine Behauptung, keine Erhebung. Die abschließende Verifikation am Original bleibt Nutzer-Pflicht (IU-KI-Richtlinie); das Protokoll ersetzt sie nicht, macht aber sichtbar, *was* zu verifizieren ist.
 
-**Optional – Literatur-Volltexte bereits während der Planung sichten:** Liegen Volltexte vor – in `sources/literature/` abgelegte eigene Werke oder zu Schritt 1 heruntergeladene Open-Access-Paper –, kann es sich lohnen, sie schon jetzt nach zitierfähigen Stellen zu durchsuchen, statt das komplett dem Schreib-Modus zu überlassen – spart eine zweite Lektüre und sichert früh ab, dass die geplante Argumentation wirklich durch den Volltext gedeckt ist (nicht nur durchs Abstract). Ergebnis kommt mit Seitenzahl in `kapitelplan.draft.md` **und** in den finalen `kapitelplan.md`-Output unter „Zitat-Kandidaten" (siehe Output-Template unten) – Schreib-Modus liest nur `kapitelplan.md`, nicht den Draft.
+**Optional – Literatur-Volltexte bereits während der Planung sichten:** Liegen Volltexte vor – in `sources/literatur/` abgelegte eigene Werke oder zu Schritt 1 heruntergeladene Open-Access-Paper –, kann es sich lohnen, sie schon jetzt nach zitierfähigen Stellen zu durchsuchen, statt das komplett dem Schreib-Modus zu überlassen – spart eine zweite Lektüre und sichert früh ab, dass die geplante Argumentation wirklich durch den Volltext gedeckt ist (nicht nur durchs Abstract). Ergebnis kommt mit Seitenzahl in `kapitelplan.draft.md` **und** in den finalen `kapitelplan.md`-Output unter „Zitat-Kandidaten" (siehe Output-Template unten) – Schreib-Modus liest nur `kapitelplan.md`, nicht den Draft.
 
 **Checkpoint (Schritt 3, präzisiert)**: Pro Kapitel NUR per Edit:
 1. Kapitelzusammenfassung + INSIGHT an die `## INSIGHT-Sammlung` anhängen.

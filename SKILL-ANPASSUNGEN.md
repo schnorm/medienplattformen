@@ -1,90 +1,128 @@
 # SKILL-ANPASSUNGEN
 
-Arbeitsdokument, kein Bestandteil der Abgabe. Sammelt Änderungsvorschläge an `CLAUDE.md`, den Skills unter `.claude/skills/` und den Prüfskripten. Die vorherige Sammlung (Session vom 2026-07-28, P1-1 bis P3-x) ist vom Nutzer abgearbeitet und wurde deshalb ersetzt.
+Arbeitsdokument, kein Bestandteil der Abgabe. Sammelt Änderungsvorschläge an `CLAUDE.md`, den Skills unter `.claude/skills/` und den Prüfskripten. Die vorherige Sammlung (Session vom 2026-07-28, Fehlalarm bei nicht auflösenden Zotero-Pfaden) ist vom Nutzer abgearbeitet und wurde deshalb ersetzt.
 
 Jeder Punkt nennt: Beobachtung → warum es kein Einzelfall ist → Zieldatei → konkreter Vorschlag → Aufwand.
 
+> **Status: P1-1 bis P3-1 sind am 2026-07-29 umgesetzt** (`plan-modus`, `schreib-modus`, `pruef-modus`, `setup-check`, `hard-rules-formal.md`, `projektstruktur.md`, `vorlagen.md`, `check_quellentreue.py`; 98 Skript-Tests grün, `check_all.py` ohne harte Funde). Die Texte bleiben als Begründung stehen – sie erklären, warum die Regeln so lauten. **Offen ist allein die Liste „Bitte manuell prüfen" am Dateiende.**
+
+**Thema dieser Runde: Quellenbeschaffung.** Der gemeinsame Nenner aller fünf Punkte ist eine Reihenfolge, die im Workflow falsch herum steht. Über die **Zitierfähigkeit** einer Quelle entscheidet heute Teil-Check G – ganz am Ende, unmittelbar vor der Abgabe. **Ausgewählt** wird die Quelle in Plan-Modus Schritt 1, ganz am Anfang. Dazwischen liegt der gesamte Schreibprozess. Ein Journal-Artikel hinter einer Bezahlschranke fällt deshalb genau dann als unprüfbar auf, wenn das Argument bereits auf ihm steht – der teuerste denkbare Zeitpunkt. Die Vorschläge ziehen die Entscheidung nach vorn und machen sie **quellentypabhängig**: Beim Buch ist ein fehlendes PDF eine Aufgabe, beim Journal-Artikel ohne Zugangsweg ein Ausschlussgrund.
+
 ---
 
-## P1-1 · `check_quellentreue.py` meldet einen nicht auflösbaren Pfad wie ein fehlendes `file`-Feld
+## P1-1 · Beschaffbarkeits-Gate direkt nach der Consensus-Suche
 
-**Beobachtung (Delta-Re-Audit, 2026-07-28).** Das Skript meldete für `barkerWhatNudgeTechniques2021`, `somaFoodWasteReduction2020` und `vittuariHowReduceConsumer2023`:
+**Beobachtung.** Drei Zitationen dieser Arbeit stehen ohne Volltext da: `nivedhithaHowGreenSocial2024` (Wiley), `shenInfluenceOsmosisSocial2023` (Elsevier) und die UN-Resolution. Der Delta-Re-Audit vom 28.07. hat dafür −15 gezogen und den erreichbaren Score bei 85 gedeckelt; behoben ist der Punkt bis heute nicht, weil er sich mit den Mitteln der Session nicht beheben lässt. Keine der drei Quellen war ein Recherchefehler – alle drei passen thematisch. Der Fehler liegt darin, dass **kein Schritt je gefragt hat, ob der Volltext beschaffbar ist**, bevor die Quelle in den Plan wanderte.
 
-> `kein PDF-Snapshot im file-Feld – Webquelle live prüfen: https://…`
+**Warum kein Einzelfall.** Consensus indexiert über die Metadaten; ob ein Volltext erreichbar ist, ist kein Suchkriterium. Die Regeln in Schritt 1 fragen ausschließlich nach Inhalt und Qualität – Framework, `study_types`, `sjr_max`. Der empfohlene Qualitätsfilter arbeitet dabei sogar **gegen** die Beschaffbarkeit: Je höher das Journal-Ranking, desto wahrscheinlicher die Bezahlschranke. Solange die Regel „Keine Zitation ohne prüfbaren Volltext" (`hard-rules-formal.md`) erst im Audit greift, produziert jedes Projekt mit Journal-Literatur denselben Rückstand.
 
-Diese Aussage war falsch. Alle drei Einträge **hatten** ein `file`-Feld — es zeigte auf die Zotero-Ablage des Nutzers (`/home/normi/Zotero/storage/X6D69NPM/…`), die in der Session-Umgebung nicht existiert. Die Volltexte lagen zugleich als PDF unter `sources/literatur/`, also genau dort, wo das Projekt sie erwartet.
+**Zieldatei.** `.claude/skills/plan-modus/SKILL.md`, Schritt 1 – neuer Unterschritt nach „Nach allen Suchen synthetisieren", **vor** der Priority Reading Order.
 
-**Folgeschaden.** Der Audit übernahm die Skriptaussage und schrieb daraus einen Befund „sechs Quellen ohne Volltext-Snapshot, −15". Erst der Nutzer-Einwand („Ist der Ordner eventuell im gitignore?") führte zur Nachprüfung. Die anschließende Volltextprüfung deckte auf, was der Fehlalarm verdeckt hatte: **drei echte Fundstellen-Befunde**, darunter zwei Zitationen auf eine Seite, die es in der zitierten Publikation nicht gibt. Ein Fehlalarm, der eine ganze Quellenklasse als „ohnehin unprüfbar" abstempelt, ist damit teurer als ein übersehener Einzelfall — er schaltet die Prüfung genau dort ab, wo sie greifen würde.
+**Vorschlag: ein Gate mit drei Urteilen**, angewandt auf jeden Kandidaten, bevor er in die Leseliste kommt. Die Routen werden in dieser Reihenfolge geprüft, es gewinnt die erste, die trägt:
 
-**Warum kein Einzelfall.** `references.bib` wird per Zotero/BBT exportiert, und Zotero schreibt **immer** absolute Pfade seiner lokalen Ablage. Auf der Maschine des Nutzers lösen sie auf, in jeder anderen Umgebung (Container, zweiter Rechner, CI) nie. Das trifft also **jeden** Bib-Eintrag mit angehängtem PDF, bei jedem Lauf außerhalb des Nutzer-Rechners — der Normalfall, nicht die Ausnahme.
+1. **Liegt der Volltext schon in `sources/literatur/`?** Das Listing dazu entsteht ohnehin am Anfang von Schritt 1.
+2. **Freie Fassung über die DOI ermitteln – maschinell, nicht geschätzt.** OpenAlex, ohne Schlüssel und ohne Anmeldung:
 
-**Zieldatei.** `.claude/skills/_shared/scripts/check_quellentreue.py` (`pdf_pfad()` / `epub_pfad()` / `_datei_kandidaten()`, ca. Z. 383–430).
+   ```bash
+   curl -s "https://api.openalex.org/works/doi:10.1016/j.chb.2023.107706" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d['open_access']); [print(l['is_oa'], l['version'], l.get('pdf_url') or l.get('landing_page_url')) for l in d['locations']]"
+   ```
+
+   Am 2026-07-29 an genau den beiden offenen Journal-Quellen dieses Projekts getestet:
+   - `10.1016/j.chb.2023.107706` (Shen, Elsevier) → `is_oa: true`, `oa_status: green`, Figshare-Kopie vorhanden, `version: submittedVersion`.
+   - `10.1111/ijcs.13038` (Nivedhitha, Wiley) → `is_oa: false`, `oa_status: closed`, keine Repositoriumsfassung.
+
+   Eine der beiden vermeintlich aussichtslosen Quellen hat also einen frei zugänglichen Volltext, die andere wirklich keinen. Genau diese Unterscheidung hat bisher kein Schritt getroffen – beide wurden gleich behandelt und beide blieben liegen.
+
+   **Achtung Fassung:** `submittedVersion`/`acceptedVersion` bringen eine eigene Seitenzählung mit. Dann greift die bestehende Regel „Gelesene Fassung ≠ zitierte Fassung" – Fassung im Plan vermerken und `[Abs. X]`/`[Kap. X]` zitieren, solange die Verlagsseitenzahl nicht verifiziert ist. Sonst verwandelt die OA-Route nur einen −5-Befund in einen −8-Befund (`SEITE AUSSERHALB`), so wie bei Vittuari geschehen.
+3. **IU-Bibliothek – die vergessene Normalroute.** Über myCampus stehen lizenzierte Datenbanken zur Verfügung; eine Bezahlschranke im offenen Web sagt nichts darüber aus, ob der Zugang über die Hochschullizenz besteht. Das kann ich nicht selbst prüfen, also wird es **gefragt** und nicht angenommen – per `AskUserQuestion`, mit der DOI in der Frage.
+4. **Bücher und E-Books: Beschaffung durch den Nutzer.** In diesem Projekt der erprobte Regelfall – fünf der acht Volltexte in `sources/literatur/` sind so entstanden.
+
+**Urteil je Quelle**, verbindlich im `[INSIGHT: literaturrecherche]`-Block und als eigene Spalte in der Priority Reading Order:
+
+- **VOLLTEXT LIEGT VOR** – uneingeschränkt zitierbar.
+- **BESCHAFFBAR (`<Route>`)** – Weg benannt und zugewiesen (Bibliothek · OA-URL · Nutzer-Beschaffung). Kommt in den Plan, aber mit Frist: Der Volltext liegt vor, **bevor** das Kapitel geschrieben wird, das ihn trägt. Bücher landen hier per Default, und das ist ausdrücklich **kein Blocker** – ein Buch ohne PDF ist zum Recherchezeitpunkt eine Aufgabe, kein Ausschlussgrund.
+- **KEIN ZUGANG** – keine Route gefunden. **Blocker für die Auswahlentscheidung**: Die Quelle kommt nicht in die Leseliste und bekommt kein `[zitiert]` im Plan. Ersatz wird **in derselben Session** gesucht, solange der Suchkontext noch steht. Das ist der billigste Moment; zwei Monate später kostet dieselbe Entscheidung das Umschreiben einer belegten Passage.
+
+**Aufwand.** Mittel – rund 25 Zeilen Regeltext plus das Kommandobeispiel. Keine neue Abhängigkeit, nur `curl`.
+
+---
+
+## P1-2 · „Kein Volltext" ist heute ein Sammelstatus – er muss die Klasse nennen
+
+**Beobachtung.** `check_quellentreue.py` bildet alles, was keinen auflösbaren Volltext hat, auf zwei Status ab: `LIVE PRÜFEN` (URL vorhanden) und `NICHT PRÜFBAR` (nichts vorhanden). Die Score-Regel behandelt beide gleich: „Nicht prüfbare Quelle ohne Volltext, −5, Deckel −15". Darunter liegen aber drei völlig verschiedene Fälle:
+
+| Fall | Beispiel hier | Aufwand zur Behebung |
+|---|---|---|
+| Buch ohne hinterlegtes PDF/EPUB | (in dieser Arbeit inzwischen alle beschafft) | eine halbe Stunde |
+| Journal-Artikel hinter Bezahlschranke, keine OA-Fassung | Nivedhitha (Wiley) | nur durch Quellenersatz lösbar |
+| frei zugängliche Webquelle, nur der Snapshot fehlt | UN-Resolution | zwei Minuten |
+
+Der Bericht zeigt eine Zahl; welcher der drei Fälle dahintersteht, muss der Nutzer selbst herausfinden.
+
+**Warum kein Einzelfall.** Das ist dasselbe Muster wie beim Fehlalarm der letzten Runde: Ein Status, der Unterschiedliches zusammenfasst, erzeugt entweder Fehlalarme oder falsche Prioritäten. Damals waren es Fehlalarme, hier sind es falsche Prioritäten – die billigste Maßnahme (Snapshot ziehen) und die teuerste (Quelle ersetzen) stehen ununterscheidbar nebeneinander, mit identischem Punktabzug.
+
+**Zieldatei.** `.claude/skills/_shared/scripts/check_quellentreue.py` (Statusvergabe, ca. Z. 866–890) · `.claude/skills/pruef-modus/SKILL.md` (Teil-Check G, Punkt 4 und Score-Regel).
 
 **Vorschlag, drei Teile:**
-1. **Fallback auf `sources/literatur/`.** Löst kein Kandidat aus dem `file`-Feld auf, den **Dateinamen** (ohne Verzeichnis) zusätzlich unter `sources/literatur/` und `sources/literature/` suchen. Zusätzlich, wenn auch das scheitert, per Fuzzy-Match über Autornachname + Jahr gegen die Dateinamen dort — die Projektkonvention (`Barker2021_NudgeTechniquesFoodWasteBehaviour.pdf`) trägt beides im Namen.
-2. **Ehrliche Statusmeldung.** Ein gesetztes, aber nicht auflösbares `file`-Feld darf nicht denselben Status bekommen wie ein fehlendes. Eigene Klasse, etwa `DATEI NICHT GEFUNDEN`, mit dem versuchten Pfad im Klartext: „`file`-Feld gesetzt, Datei nicht gefunden unter `/home/normi/Zotero/storage/…` — Volltext nach `sources/literatur/` kopieren oder Pfad korrigieren." Der Unterschied ist entscheidend: „keine Quelle vorhanden" ist ein Rechercheproblem des Nutzers, „Pfad zeigt ins Leere" ein Konfigurationsproblem von 30 Sekunden.
-3. **Bestandsprüfung beim Start.** Einmal pro Lauf melden, welche Dateien in `sources/literatur/` liegen, ohne von einem `file`-Feld referenziert zu werden. Das hätte den Fall hier sofort sichtbar gemacht.
 
-**Zwischenlösung, bereits umgesetzt.** Die drei `file`-Felder tragen jetzt zusätzlich den repo-relativen Pfad, angehängt nach Zoteros Mehrdatei-Konvention (`<Zotero-Pfad>;sources/literatur/<datei>.pdf`). Der Zotero-Pfad bleibt damit auf dem Nutzer-Rechner gültig, der zweite Kandidat greift überall sonst. **Achtung:** Der nächste BBT-Export überschreibt das wieder — die Skript-Lösung oben ist die dauerhafte.
+1. **Klasse aus dem Bib-Eintrag ableiten, ohne zusätzliche Pflege.** Default-Heuristik:
+   - `@book`/`@inbook`/`@collection` ohne `file` → **`VOLLTEXT BESCHAFFBAR`**: „Buch – PDF/EPUB besorgen und nach `sources/literatur/` legen."
+   - `@article`/`@report` ohne `file`, dessen `url`/`doi` auf einen bekannten Bezahlschranken-Host zeigt (`onlinelibrary.wiley.com`, `linkinghub.elsevier.com`, `sciencedirect.com`, `link.springer.com`, `tandfonline.com`, `jstor.org`, `dl.acm.org`, `ieeexplore.ieee.org`) → **`ZUGANG PRÜFEN`**, mit der konkreten Folgeaufgabe im Befundtext: OpenAlex-Abfrage, dann IU-Bibliothek, dann Ersatz.
+   - `url` auf frei zugänglichem Host ohne `file` → `LIVE PRÜFEN` wie bisher, plus Snapshot-Pflicht.
+2. **Override statt Rätselraten:** `tex.zugang: <volltext|bibliothek|oa:<url>|beschaffbar|kein-zugang>` im Zotero-Feld *Extra*. Better BibTeX exportiert `tex.`-Felder als reguläre Bib-Felder – der Mechanismus ist in diesem Projekt bereits im Einsatz (`tex.shortauthor`, `tex.eid`), es braucht also kein neues Werkzeug. Das Feld schlägt die Heuristik. Dort wird zugleich das Urteil aus P1-1 dauerhaft geparkt: Es überlebt den nächsten BBT-Export, anders als von Hand ergänzte `file`-Pfade.
+3. **Score-Folge:** `VOLLTEXT BESCHAFFBAR` ist außerhalb des Abgabe-Audits **kein Abzug**, sondern ein „Vor der Einreichung"-Punkt; `ZUGANG PRÜFEN` behält die −5. **Im Abgabe-Audit blockieren beide** – dort ist eine Quelle, die niemand gelesen hat, unprüfbar, ganz gleich warum. Das hält den Druck an der richtigen Stelle und verhindert, dass ein noch nicht heruntergeladenes Buch in jedem Zwischenaudit Punkte kostet, obwohl der Mangel ein fehlender Download ist.
 
-**Aufwand.** Klein bis mittel, reine Pfadauflösung, keine neue Abhängigkeit.
-
----
-
-## P1-2 · Auditregel: bei „Quelle nicht auffindbar" erst im Dateisystem nachsehen, dann den Befund schreiben
-
-**Beobachtung.** Derselbe Vorfall, andere Ebene. Der Audit hat die Skriptaussage ungeprüft übernommen und einen −15-Befund daraus gebaut, statt `ls sources/literatur/` auszuführen — ein Aufruf, der die Sache in zwei Sekunden geklärt hätte. Das Grundprinzip „Erst prüfen, dann behaupten" (`CLAUDE.md`) gilt ausdrücklich auch für **interne** Aussagen („die Quelle liegt nicht vor"), und genau dort wurde es verletzt.
-
-**Warum kein Einzelfall.** Skriptausgaben lesen sich wie Messwerte und werden deshalb nicht hinterfragt. `SKILL.md` verstärkt das sogar: „Die Skript-Funde direkt in Teil-Check A übernehmen, diese Punkte **nicht** zusätzlich per Durchlesen prüfen." Diese Regel ist für Formalia-Funde richtig (dort ist das Skript näher an der Wahrheit als das Modell), aber sie darf nicht auf Aussagen über **Existenz** ausgedehnt werden.
-
-**Zieldatei.** `.claude/skills/pruef-modus/SKILL.md`, Teil-Check G, Punkt 4.
-
-**Vorschlag.** Vor Punkt 4 einfügen:
-
-> **Bevor eine Quelle als nicht prüfbar gemeldet wird, das Dateisystem befragen** — `ls sources/literatur/` und der Abgleich der Dateinamen gegen die Bib-Keys sind billiger als jeder Befund. `NICHT PRÜFBAR` und `LIVE PRÜFEN` bedeuten nur, dass das Skript den Volltext über das `file`-Feld nicht **auflösen** konnte, nicht, dass er fehlt. Liegt die Datei da, ist der Befund kein Quellen-, sondern ein Pfadproblem — und die Prüfung wird durchgeführt, nicht aufgeschoben.
-
-**Aufwand.** Minimal, drei Sätze.
+**Aufwand.** Klein bis mittel – Statusvergabe, eine Hostliste, drei Zeilen Score-Regel.
 
 ---
 
-## P2-1 · Vermischte Seitenzählung bei Preprint und Verlagsfassung
+## P2-1 · Volltext-Status durch Plan und Schreib-Modus mitführen
 
-**Beobachtung.** `vittuariHowReduceConsumer2023` wird an drei Stellen zitiert, mit zwei unvereinbaren Zählungen: `[S. 106]` folgt der Verlagsfassung (*Sustainable Production and Consumption* 38, S. 104–114), `[S. 1]` folgt der White-Rose-Preprint-Fassung, deren Fließtext bei 1 beginnt. Der Bib-Eintrag weist ausschließlich die Verlagsseiten aus — wer `[S. 1]` nachschlägt, findet in der zitierten Publikation nichts. Das Skript hat den Widerspruch sichtbar gemacht, aber nur halb: `[S. 106]` meldete es als `SEITE VERDÄCHTIG` („liegt außerhalb des PDFs, 23 Seiten"), weil das hinterlegte PDF der Preprint ist.
+**Beobachtung.** Die Zitier-Klassifikation in Plan-Modus Schritt 3 unterscheidet (a) zitiert, (b) eigene Analyse, (c) unzulässig – über den Volltext zu (a) sagt sie nichts. `schreib-modus` Punkt 3b verlangt anschließend, tragende Belege **vor** dem Formulieren am Volltext zu lesen, kennt aber keinen Fall „es gibt keinen". In der Praxis wird diese Lücke still geschlossen: Der Satz entsteht dann aus dem Abstract.
 
-**Warum kein Einzelfall.** Frei zugängliche Repositorien (White Rose, arXiv, PubMed Central, ResearchGate) liefern durchweg Fassungen mit eigener Zählung, während der Bib-Eintrag aus der Verlagsdatenbank stammt. Wer den Volltext über das Repositorium liest und die Seite von dort abschreibt, erzeugt diesen Fehler systematisch — und keine der bisherigen Prüfungen fand ihn, weil `check_formalia.py` nur die **Existenz** einer Stellenangabe prüft, nicht ihre Plausibilität gegen `pages`.
+**Warum kein Einzelfall.** Das Gate aus P1-1 wirkt nur, wenn sein Urteil die Session überlebt. Alles andere in diesem Workflow, was Sessions überdauert, steht in einer Datei – das Zugangsurteil bisher nicht. Es würde bei jedem Neustart neu hergeleitet oder schlicht vergessen.
 
-**Zieldatei.** `.claude/skills/_shared/scripts/check_quellentreue.py` **und** `.claude/skills/_shared/hard-rules-formal.md`.
+**Zieldatei.** `.claude/skills/plan-modus/SKILL.md` (Zitier-Klassifikation in Schritt 3, Literaturliste im Output) · `.claude/skills/schreib-modus/SKILL.md` (Punkt 3b).
 
 **Vorschlag.**
-1. **Deterministischer Check:** Jede numerische Stellenangabe gegen das `pages`-Feld des Eintrags halten. Liegt `[S. X]` außerhalb des dort genannten Bereichs, als eigene Klasse melden — etwa `SEITE AUSSERHALB` mit dem Text „`[S. 1]` liegt außerhalb der laut `pages` zitierten Spanne 104–114 — vermutlich Preprint-Zählung." Das ist eine reine Feldprüfung ohne Volltext und fängt den Fehler auch dann, wenn gar kein PDF vorliegt.
-2. **Regel:** In `hard-rules-formal.md` unter Zitationen festhalten: Wird ein Volltext aus einem Repositorium gelesen, die Verlagsfassung aber zitiert, sind die Seitenangaben der **Verlagsfassung** maßgeblich. Steht sie nicht zur Verfügung, `[Abs. X]` oder `[Kap. X]` statt einer Seitenzahl verwenden — eine unauffindbare Seitenzahl ist schlechter als keine.
 
-**Aufwand.** Klein (Check), minimal (Regel).
+1. **Klassifikation um den Status erweitern:** `[zitiert: <key>, Volltext: liegt vor]` bzw. `[zitiert: <key>, Volltext: beschaffbar – Bibliothek]`. Passt in die bestehende Zeile, kostet keine neue Struktur.
+2. **`kapitelplan.md` → Literaturliste bekommt zwei Spalten:** **Volltext** (liegt vor · Route · offen) und, bei Repositoriumsfassungen, **gelesene Fassung** (Verlag/Preprint). Die zweite ist der Anschluss an die bestehende `SEITE AUSSERHALB`-Regel – ohne sie wandert eine Preprint-Seitenzahl genauso ungeprüft in den Text wie zuvor bei Vittuari, nur diesmal als Folge der OA-Route, die P1-1 gerade empfiehlt.
+3. **`schreib-modus` Punkt 3b um den Fehlfall ergänzen:** Fehlt der Volltext eines tragenden Belegs, wird der Satz **nicht** aus dem Abstract formuliert. Drei zulässige Wege: Volltext jetzt beschaffen · das Argument auf eine andere Quelle stellen · die Aussage auf das zurücknehmen, was ohne diesen Beleg gedeckt ist. „Aus dem Abstract geschrieben" ist der Entstehungsweg des nicht gedeckten Claims, den Teil-Check G später als `CLAIM SCHÄRFER` findet – dann aber mit fertigem Text ringsum.
 
----
-
-## P2-2 · Teil-Check D braucht einen Weg ohne lokale TeX-Installation
-
-**Beobachtung.** Die Session-Umgebung hatte am Vormittag `lualatex`/`latexmk`/`biber`, am Abend nicht mehr. Teil-Check D wäre damit erneut ÜBERSPRUNGEN gewesen — und mit ihm der Seitenumfang, das einzige Kriterium, dessen Nichterfüllung laut IU-Richtlinien ausdrücklich Punkte kostet. Der Ausweg lief über das eingecheckte `main.pdf`: Seitenzahl, Verzeichnisse und aufgelöste Referenzen ließen sich daraus vollständig ablesen, nachdem vier Textproben aus dem letzten Commit die Aktualität des PDFs belegt hatten.
-
-**Warum kein Einzelfall.** Die Umgebung ist nicht stabil, und `check_umfang.py` schätzt nachweislich zu niedrig (9,8 geschätzte gegen 11 gemessene Seiten — die Heuristik ignoriert Abbildungen, Tabellen und Float-Umbrüche). Ein Score, der bei 89 gedeckelt wird, weil niemand nachsehen konnte, ist die schlechtere Antwort, wenn das gebaute PDF danebenliegt.
-
-**Zieldatei.** `.claude/skills/pruef-modus/SKILL.md`, Teil-Check D, Punkt 4.
-
-**Vorschlag.** Punkt 4 ersetzen:
-
-> **Fehlt `lualatex`/`biber`, zuerst nach einem gebauten PDF sehen** (`main.pdf` im Root, `build/main.pdf`). Ist eines vorhanden, seine **Aktualität belegen**, bevor es ausgewertet wird: drei bis vier kurze Textproben aus dem jüngsten Commit, der `chapters/` berührt hat, im PDF suchen und zusätzlich prüfen, dass die jeweils ersetzten Vorgängerformulierungen **nicht** mehr darin stehen. Erst dann Seitenumfang, Verzeichnisse und aufgelöste Referenzen daraus ablesen und im Bericht als „aus vorhandenem PDF, Aktualität verifiziert" ausweisen. Kein aktuelles PDF und kein TeX: dann ÜBERSPRUNGEN und Score-Deckel 89 wie bisher.
-
-**Aufwand.** Klein, Regeltext plus die bereits erprobte Vorgehensweise.
+**Aufwand.** Klein, drei Regelstellen.
 
 ---
 
-## P3-1 · Zwei bekannte Fehlalarme in `check_formalia.py`
+## P2-2 · Zugriff ist nicht Nachweisbarkeit – Snapshot beim ersten Zugriff, nicht vor der Abgabe
 
-Beide erzeugen jedes Mal Rauschen, das im Bericht einzeln entkräftet werden muss.
+**Beobachtung.** Auch wo Zugang besteht – Bibliothekslizenz, OA-Landingpage –, ist das ein vorübergehender Zustand: Die Lizenz hängt am Campus-Login, OA-Seiten ziehen um, das Audit läuft Monate später. `hard-rules-formal.md` verlangt ein lesbares PDF im `file`-Feld, aber durchgesetzt wird die Forderung erst im Audit. Der Moment, in dem die Beschaffung nichts kostet – man hat die Quelle gerade offen –, trägt keine Regel.
 
-1. **Anhangszählung scheitert am geschützten Leerzeichen.** Meldung „`main.tex`: Anhangsverzeichnis aktiv bei 0 Anhang", während `pages/appendix.tex` drei Anhänge enthält. Die Zählung erkennt `\section*{Anhang~A: …}` nicht, weil zwischen „Anhang" und dem Buchstaben ein `~` steht — das die IU-Formatierung dort gerade verlangt. Fix: `~` und geschütztes Leerzeichen im Suchmuster als Trenner zulassen.
-2. **`LOCATOR_RE` erkennt `[Kap.~8]` nicht.** Bereits am 28.07. gefunden, hier nur zur Vollständigkeit: Stellenangaben mit `~` vor der Ziffer werden als fehlend gemeldet. Gleiche Ursache, gleicher Fix.
+**Warum kein Einzelfall.** Dieselbe Klasse wie P1-1: Geprüft wird am Ende, gehandelt werden müsste am Anfang. Der Effekt ist in diesem Projekt schon sichtbar: Die drei Quellen mit Volltext haben ihn, weil sie irgendwann jemand heruntergeladen hat; die drei ohne wurden nie heruntergeladen, und kein Schritt hat daran erinnert.
 
-**Zieldatei.** `.claude/skills/_shared/scripts/check_formalia.py`.
-**Aufwand.** Je eine Regex-Zeile.
+**Zieldatei.** `.claude/skills/plan-modus/SKILL.md` (Zotero-Erinnerung in Schritt 1) · `.claude/skills/schreib-modus/SKILL.md` (Punkt 3b) · `.claude/skills/_shared/hard-rules-formal.md` (Zitationen).
+
+**Vorschlag.** Die bestehende Zotero-Erinnerung um den Volltext erweitern – bisher sagt sie ausdrücklich „auch ohne PDF, Metadaten reichen für den BBT-Key". Das stimmt für den Key und ist für die Prüfbarkeit falsch. Zusatz: **Wer eine Quelle einmal offen hat, legt sie sofort ab** – PDF nach `sources/literatur/`, Dateiname nach der Projektkonvention `<Autor><Jahr>_<Kurztitel>.pdf`; bei Webquellen der PDF-Ausdruck der Seite. Zoteros eigenes `file`-Feld genügt dafür nicht: Es zeigt auf die lokale Ablage und löst außerhalb des exportierenden Rechners nie auf (Befund der letzten Runde). Der Projektordner ist der haltbare Ort.
+
+**Aufwand.** Minimal.
+
+---
+
+## P3-1 · Zwei Schreibweisen für denselben Ordner: `sources/literatur` und `sources/literature`
+
+**Beobachtung.** Der reale Ordner heißt `sources/literatur`. Die Skills nennen durchgängig `sources/literature`: `plan-modus` (5 Fundstellen), `setup-check` (4), `pruef-modus` (3), dazu `_shared/projektstruktur.md`. Die `file`-Felder in `references.bib` zeigen auf `literatur`, und `check_quellentreue.py` akzeptiert beide Formen (`LITERATUR_ORDNER`). Zusätzlich verweisen `setup-check` und `projektstruktur.md` auf eine Anleitung `sources/literature/README.md`, die es nicht gibt.
+
+**Warum kein Einzelfall.** Solange nur das Skript beide Schreibweisen kennt, fällt nichts auf. Jede Anweisung an den Nutzer („legen Sie die Datei nach `sources/literature/`") erzeugt aber einen zweiten Ordner – und der Volltext liegt danach dort, wo niemand sucht. Der Fehlalarm der letzten Runde hing an genau einer Pfadangabe, die nicht auflöste; das hier ist dieselbe Fehlerquelle, nur mit dem Nutzer als ausführender Instanz. Die Vorschläge P1-1, P1-2 und P2-2 verschärfen das, weil sie den Ordner alle drei aktiv als Ablageziel benennen.
+
+**Zieldatei.** Eine Schreibweise festlegen – Vorschlag `sources/literatur`, weil die Dateien und die `file`-Felder schon dorthin zeigen –, `plan-modus`, `setup-check`, `pruef-modus` und `projektstruktur.md` nachziehen, `LITERATUR_ORDNER` als Rückfall stehen lassen. Das `README.md` entweder anlegen oder die Verweise darauf streichen.
+
+**Aufwand.** Minimal (Suchen/Ersetzen) – aber vor der nächsten Nutzeranweisung erledigen, sonst entsteht der zweite Ordner.
+
+---
+
+## Bitte manuell prüfen
+
+1. **Figshare-Fassung von Shen et al. (2023).** Wo: `https://figshare.com/articles/journal_contribution/Influence_by_osmosis_Social_media_green_communities_and_pro-environmental_behavior/27570216`. Woran erkennbar, dass es passt: Der Eintrag muss den **Volltext** enthalten (PDF mit Fließtext), nicht nur Metadaten oder Zusatzmaterial; laut OpenAlex ist es die `submittedVersion`, die Seitenzählung weicht also von der Verlagsfassung ab. Warum nicht durch mich: Ich habe den OpenAlex-Datensatz abgefragt, nicht die Datei geöffnet – ob dort ein lesbares PDF hängt, ist damit nicht belegt.
+2. **Zugang zu Wiley und Elsevier über die IU-Bibliothek.** Wo: myCampus → Bibliothek/Datenbanken, mit den DOIs `10.1111/ijcs.13038` und `10.1016/j.chb.2023.107706`. Woran erkennbar: Der Volltext öffnet sich nach Campus-Login ohne Kaufaufforderung. Warum nicht durch mich: Der Zugang hängt an einem persönlichen Login; ich kann weder prüfen, welche Lizenzpakete die IU hält, noch mich anmelden. Die Route in P1-1 Schritt 3 ist deshalb bewusst als Nutzer-Schritt formuliert und **nicht** als gesicherte Aussage über den Lizenzbestand.
+3. **`tex.zugang` als BBT-Exportfeld.** Wo: Zotero-Eintrag → Feld *Extra*, danach `references.bib` nach dem Re-Export. Woran erkennbar: Im exportierten Eintrag steht eine Zeile `zugang = {…}`. Warum nicht durch mich: Ich habe den Mechanismus aus den im Projekt bereits genutzten Feldern `tex.shortauthor` und `tex.eid` abgeleitet, aber keinen Export mit einem neuen, frei gewählten Feldnamen laufen lassen. Falls BBT nur bekannte Felder durchreicht, wäre der Rückfall ein Präfix im `note`-Feld.
+4. **Bezahlschranken-Hostliste aus P1-2.** Wo: `check_quellentreue.py` nach der Umsetzung, gegen die eigenen Bib-Einträge. Woran erkennbar: Kein frei zugänglicher Eintrag (MDPI, Frontiers, PLOS, `digitallibrary.un.org`) darf `ZUGANG PRÜFEN` bekommen. Warum nicht durch mich: Die Liste beruht auf den in diesem Projekt vorkommenden Verlagen plus den geläufigen Datenbanken – sie ist eine Heuristik, keine vollständige Aufzählung.

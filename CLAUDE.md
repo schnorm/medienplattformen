@@ -59,7 +59,7 @@ Vollständiger, kommentierter Baum: `.claude/skills/_shared/projektstruktur.md` 
 | `AENDERUNGEN.md` · `pruefbericht.md` | Arbeitsaufträge in Runden · letzter Audit-Bericht |
 | `PERSISTENT.md` · `MEMORY.md` | projektübergreifende Präferenzen · Lernpunkte nur dieser Arbeit |
 | `SKILL-ANPASSUNGEN.md` | offene Änderungsvorschläge an Skills, Skripten und dieser Datei – kein Abgabebestandteil |
-| `sources/` · `sources/literature/` | IU-Leitfäden + optionale Prüfer-Anmerkungen · eigene Literatur |
+| `sources/` · `sources/literatur/` | IU-Leitfäden + optionale Prüfer-Anmerkungen · eigene Literatur |
 
 ## Workflow-Fahrplan
 

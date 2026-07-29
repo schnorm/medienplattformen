@@ -34,7 +34,7 @@ Kommentierter Baum des Projektordners. Ausgelagert aus `CLAUDE.md`, weil er nur 
 ├── images/<kapitel>/            # Abbildungen, gespiegelt zur Kapitelstruktur (Konvention: hard-rules-formal.md → LaTeX)
 ├── logos/ · tables/             # Logos bzw. Tabellen-Fragmente
 ├── sources/                     # IU-Leitfäden pro Papiertyp (Zweifelsfall) + optionales Anmerkungen vom Prüfer.md (Pflichtquelle, siehe plan-modus Schritt 0) Zweifelsfall lesen
-│   └── literature/              # EIGENE Quellen (Ebooks, Paper) – jederzeit befüllbar, auch vor dem Setup; Anleitung in literature/README.md. Wird in plan-modus Schritt 1 VOR der Consensus-Suche gesichtet. Nicht versioniert (.gitignore)
+│   └── literatur/              # EIGENE Quellen (Ebooks, Paper, PDF-Snapshots von Webquellen) – jederzeit befüllbar, auch vor dem Setup. Dateiname `<Autor><Jahr>_<Kurztitel>.pdf`. Wird in plan-modus Schritt 1 VOR der Consensus-Suche gesichtet und ist der Volltext-Nachweis für pruef-modus Teil-Check G; die `.gitignore` schließt den Ordner nicht aus, weil check_quellentreue.py hier nachschlägt, wenn ein Zotero-Pfad nicht auflöst. Schreibweise deutsch – NICHT `literature/`
 └── .claude/skills/
     ├── _shared/                 # hard-rules-formal.md, typen/<typ>.md, aenderungen-format.md, scripts/
     ├── setup-check/             # einmaliger Umgebungscheck

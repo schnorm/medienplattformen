@@ -106,7 +106,11 @@ Alle Inhalte liegen bereits in `kapitelplan.draft.md` (Checkpoints aus Schritt 0
 
 ## Literaturliste (nur wenn Schritt 1 durchgeführt)
 ### Priority Reading Order
-1. <Titel> – <Autoren>, <Journal>, <Jahr> (citations: <N>) – <Consensus-URL>
+| # | Titel – Autoren, Journal, Jahr (citations) | Volltext | Gelesene Fassung | Quelle/URL |
+|---|---|---|---|---|
+| 1 | ... | liegt vor · beschaffbar (Route) · offen | Verlag / Preprint | ... |
+
+**Volltext** trägt das Urteil aus dem Beschaffbarkeits-Gate (Schritt 1) weiter – `schreib-modus` liest es, bevor er einen tragenden Satz formuliert. **Gelesene Fassung** ist nur bei Repositoriums- und Preprint-Kopien auszufüllen und dort Pflicht: Deren Zählung beginnt bei 1, weshalb aus ihnen abgeschriebene Seitenzahlen auf Seiten verweisen, die es in der zitierten Publikation nicht gibt (`SEITE AUSSERHALB`). In dem Fall `[Abs. X]`/`[Kap. X]` zitieren.
 
 ### Forschungslücken (für Theorie & Argumentation)
 - ...
