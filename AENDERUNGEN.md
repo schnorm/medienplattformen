@@ -926,3 +926,300 @@ Nächster Schritt laut Fahrplan: lokaler Build zur Seitenmessung (Nutzer-Schritt
 
 1. **ERLEDIGT (2026-07-28).** Nutzer hat alle drei fehlenden Volltexte in `sources/literatur/` nachgelegt (Erlhofer als epub, Sauro/Lewis und Nielsen als PDF); `references.bib` bekam für alle drei ein `file`-Feld. Dabei zwei Skript-Bugs gefunden und behoben: (a) `check_quellentreue.py` unterstützte `[Kap. X]`-Locators nur für epub, nicht für PDF-Quellen mit Kapitelzitat — jetzt fällt eine PDF mit `[Kap. X]` sauber auf eine Ganzdokument-Suche zurück (analog zum bereits bestehenden Verhalten bei PDFs mit unbekanntem Seitenversatz), statt fälschlich „NICHT PRÜFBAR" zu bleiben. (b) `pdf_pfad`/`epub_pfad` splitteten das `file`-Feld an jedem `;` (Zotero-Mehrdatei-Konvention) — die von Anna's-Archive-heruntergeladenen Dateinamen enthalten aber selbst Semikolons (z. B. „Jeff Sauro; Professor of Religious Studies James R Lewis"), wodurch der Pfad in Fragmente zerschnitten wurde. Fix: Das ganze Feld wird jetzt zuerst unverändert als Pfad versucht, erst danach die Zotero-Aufteilung. **Ergebnis der Volltextprüfung:** Nielsen, Kap. 6.8 („Thinking Aloud", S. 195) deckt die Textaussage vollständig — „a thinking-aloud test involves having a test subject use the system while continuously thinking out loud … enable us to … identify the users' major misconceptions" und „main disadvantage … does not lend itself well to … performance measurement" entsprechen genau „Fehlannahmen über die Bedienführung sichtbar … die eine reine Erfolgsmessung nicht erfasst". **Sauro & Lewis, Kap. 8, vollständig gegengelesen (alle 41 SEQ-Fundstellen im Volltext, nicht nur der Definitionsabschnitt):** Die SEQ selbst ist exakt belegt („the seven-point Single Ease Question (SEQ) … Higher responses indicate an easier task"), aber **die konkrete Schwelle „Mittelwert von mindestens fünf" steht an keiner der 41 Stellen als Regel** — die einzige Erwähnung von „5" im SEQ-Kontext betrifft die 5-Punkte- vs. 7-Punkte-Skalenvariante, nicht einen Erfolgswert; eine Übungsaufgabe an anderer Stelle nutzt „average of 5.6 … greater than 5?" rein als Statistik-Beispiel. **Korrigiert:** `07_iteratives_design.tex:5` — „Als Schwelle für eine gelungene Aufgabe gilt dabei ein Mittelwert von mindestens fünf." → „Als Schwelle für eine gelungene Aufgabe legt diese Arbeit einen Mittelwert von mindestens fünf fest." Der `\parencite[Kap.~8]{sauroLewisQuantifying2016}` bleibt am vorigen Satz (SEQ-Definition, dort korrekt), die Schwelle selbst ist jetzt als eigene methodische Festlegung dieser Arbeit ausgewiesen statt Sauro & Lewis fälschlich zugeschrieben. `check_formalia.py`: weiterhin 0 FEHLER, Umfang +1 Wort (vernachlässigbar).
 2. **ERLEDIGT (2026-07-28).** Deterministischer Abgleich nachgeholt: `laengste_gemeinsame_folge()` (dieselbe Funktion, die `check_quellentreue.py` für den Wortlaut-Test nutzt) zwischen dem Wortstrom von `07_iteratives_design.tex` und `/home/normi/Documents/projekt-ui-design/latex/chapters/02_planung/02g_usability.tex` verglichen — längste gemeinsame Wortfolge: **0 Wörter ab einer Mindestlänge von 5** (liegt damit auch unter der sonst geltenden 7-Wörter-Schwelle). Kein Eigenplagiat-Risiko durch Wortlautübernahme aus der Vorarbeit.
+
+---
+
+### Runde 8 — Gegenlesung (2026-07-29)
+
+Kalte Prüfer-Gegenlesung, ausgeführt von einem Subagenten unter striktem Leseverbot, weil die Hauptsession über den auto-geladenen Projektstatus bereits die vollständige Historie aller bisherigen Prüfrunden trug. Gelesen wurden ausschließlich `aufgabe.md` (zuerst und allein, Erwartungsbildung vor Exposition), alle 15 `chapters/**/*.tex`, `pages/appendix.tex`, `pages/acronyms.tex`, `pages/chapters.tex`, die fünf Bilddateien unter `images/durchfuehrung/` und `references.bib` nur zur Zählung (9 Einträge, alle 9 zitiert). Nicht gelesen: Kapitelplan, Prüfbericht, frühere Runden dieser Datei, Memory-Dateien, Git-Historie, Projektstatus in `CLAUDE.md`. Kein Build.
+
+**Zusatzprämisse des Nutzers:** Die Arbeit wird **innerhalb von Woche 3** abgegeben. Alle Zeit-, Phasen- und Prozessaussagen wurden dagegen geprüft (eigene Tabelle unten).
+
+#### Soll-Ist-Tabelle (Schritt 3)
+
+**Teilaufgaben**
+
+| Geforderter Inhalt (wörtlich aus `aufgabe.md`) | Erfüllung |
+|---|---|
+| TA1 „Untersuchung aktueller Social-Media-Plattformen" | erfüllt, aber nur eine der sechs untersuchten Plattformen ist eine Social-Media-Plattform (TikTok, `01_wettbewerbsanalyse.tex:5`, dort selbst nur „stellvertretend für Instagram"); die Auswahl der sechs ist nirgends begründet → 8.1 |
+| TA1 „Augenmerk auf bereits von Hobbyköch:innen genutzte Funktionen" | erfüllt, aber als Funktionsbeschreibung statt Nutzungsnachweis: Nutzung wird nur für Chefkoch (`:3`) und TikTok (`:5`) beschrieben, für die vier übrigen aus dem Funktionsbestand erschlossen |
+| TA1 „Stärken/Schwächen bzgl. Rezept-Austausch" | erfüllt — Spalte in `tab:wettbewerbsvergleich` (`01_wettbewerbsanalyse.tex:19`) |
+| TA1 „…-Entdeckung" | erfüllt — eigene Spalte, Definition in `:13`; eine Zelle unbegründet → 8.9 |
+| TA1 „…und Kommunikation" | erfüllt — Spalte „Kommunikation \& Community", Definition in `:13`; eine Zelle widerspricht dieser Definition → 8.9 |
+| TA2 „Neue, spezialisierte Plattform" | erfüllt — `03_konzept.tex:1–36`, Name in `:3` |
+| TA2 „mit **innovativen** Funktionen" | erfüllt, aber die Innovationsaussage (`03_konzept.tex:32`) deckt keinen der drei in TA2 genannten Zwecke → 8.5 |
+| TA2 „für Rezept-Teilen" | erfüllt — `03_konzept.tex:13`, `tab:funktionsuebersicht` |
+| TA2 „Kochtipp-Austausch" | erfüllt, aber nur ersatzweise sichtbar: die Vokabel steht ausschließlich in der Tabellenzelle `03_konzept.tex:24`, im Fließtext heißt sie „Zubereitungstipps" (`:13`) |
+| TA2 „gegenseitige Inspiration" | erfüllt — `tab:funktionsuebersicht`, `01_kernergebnisse_und_ausblick.tex:3` |
+| TA3 „Beschreibung geplanter Feedback-Schleifen" | erfüllt — `07_iteratives_design.tex:3–5`; das Kapitel widerspricht sich jedoch selbst → 8.3 |
+
+**Berichtsinhalte**
+
+| Geforderter Inhalt | Erfüllung |
+|---|---|
+| Zielgruppe | erfüllt — `02_zielgruppe.tex`, drei Merkmale in `:5`, Persona in Anhang A |
+| Funktionalitäten | erfüllt — `03_konzept.tex:7–13` plus `tab:funktionsuebersicht` |
+| User Interface (UI) | erfüllt — `03_konzept.tex:34`, vier Mockups Anhang B, Style Tile Anhang C |
+| User Experience (UX) | erfüllt, aber nur als Informationsarchitektur behandelt → 8.15 |
+| Community-Building | erfüllt — `04_community_und_feedback.tex` |
+
+**Schlüsselbegriffe**
+
+| Begriff | Erfüllung |
+|---|---|
+| Rezept-Uploads (Foto/Video) | erfüllt — `03_konzept.tex:13`, `04_community_und_feedback.tex:3` |
+| Kommentar-/Bewertungssysteme | erfüllt — `03_konzept.tex:13`, im Mockup sichtbar (Herz + Sprechblase) |
+| Personalisierte Empfehlungen | erfüllt — `03_konzept.tex:13`, `tab:funktionsuebersicht` |
+| Gruppen/Foren | nur ersatzweise erfüllt, aber ausdrücklich und belegt begründet — `04_community_und_feedback.tex:7` |
+| Event-Kalender | nicht umgesetzt, Auslassung wie verlangt explizit begründet — `03_konzept.tex:36` |
+| Lebensmittel-Journaling/Menüplanung | erfüllt — `03_konzept.tex:13`, im Profil-Mockup sichtbar |
+| **[VERENGT]** Zielgruppe → nachhaltigkeitsorientierte Hobbyköch:innen | erfüllt — `02_zielsetzung_und_verengung.tex:5`, Geltungsvorbehalt in `:7` |
+
+**Lieferobjekte**
+
+| Objekt | Erfüllung |
+|---|---|
+| Wettbewerbsvergleich (Tabelle) | erfüllt, im Text verankert |
+| Zielgruppen-/Persona-Beschreibung | erfüllt — `02_zielgruppe.tex:5`, `tab:persona`, im Text verankert |
+| UI/UX-Mockup (ggf. KI-generiert, gekennzeichnet) | erfüllt — vier Mockups, Herkunft je Abbildung ausgewiesen; eine Prompt-Angabe deckt sich nicht mit dem Bild → 8.10 |
+| Plattformname | erfüllt — `03_konzept.tex:3` inkl. Herleitung |
+| Funktionsübersicht | erfüllt, aber **nirgends im Text referenziert** → 8.2 |
+| Phasenplanung (Tabelle) | erfüllt — im Text verankert |
+
+**Materialien und Formalia**
+
+| Vorgabe | Erfüllung |
+|---|---|
+| Hansch & Rentschler (2012), Kapoor et al. (2018) | nicht erfüllt — weder in `references.bib` noch im Text → 8.17 |
+| 5–10 Quellen + eigene Artefakte | erfüllt — 9 Einträge, alle zitiert, dazu 5 Abbildungen und 4 Tabellen |
+| Anteile 10–15 / 70–80 / 10–15 % | erfüllt — 14,8 / 73,5 / 11,6 % |
+| Anonymisierung personenbezogener Daten | erfüllt — Persona als fiktiv gekennzeichnet, Mockup-Namen fiktiv |
+| 7–10 Seiten | in dieser Runde nicht beurteilt (kein Build) |
+
+#### Zeitlogik gegen die Prämisse „Abgabe in Woche 3"
+
+Vollständige Liste der geprüften Stellen, damit nachvollziehbar ist, was **nicht** stört:
+
+| Stelle | Aussage | Vereinbar? |
+|---|---|---|
+| `05_phasenplanung.tex:3` | „Die Wochenangaben zählen ab Projektstart" | ja — dieser Satz trägt die ganze Konstruktion |
+| `05_phasenplanung.tex:3` | „Phase 1 und die Mockups aus Phase 2 sind mit diesem Bericht bereits erbracht" | ja — Phase 1 = W1–2 abgeschlossen, Phase 2 = W3–4 angelaufen |
+| `tab:phasenplanung` | W1–2 / W3–4 / W5–14 / W15–17 / ab W18 | ja — lückenlos, überschneidungsfrei, Puffer konsistent mit `:23` |
+| `07_iteratives_design.tex:5` ↔ Tabelle | „zwei bis drei Wochen" ↔ W15–17; „zehn bis fünfzehn Personen" ↔ „(10--15 Personen)" | ja |
+| `01_wettbewerbsanalyse.tex:13`, `06_evaluation_reflexion.tex:9` | Sichtung „im Juli 2026" | ja — liegt in Phase 1 |
+| **`07_iteratives_design.tex:3`** | „Die nächste Schleife **folgt** in der Design-Phase (Woche 3--4)" | **nein → 8.4** |
+| **`07_iteratives_design.tex:3` ↔ `:5`** | „bereits durchlaufen" ↔ „nicht real durchgeführt" | **nein → 8.3** |
+| `tab:phasenplanung`, Phase-1-Inhalt | „Wettbewerbsanalyse, Zielgruppendefinition, Funktions- und Gamification-Konzept" | teilweise — Community-Konzept, iteratives Design, Phasenplanung und Reflexion stehen im Bericht, gehören aber zu keiner Phase → 8.4 |
+| `06_evaluation_reflexion.tex` | Reflexion insgesamt | kein Widerspruch, aber keine Aussage zur tatsächlich verbrauchten Zeit → 8.14, Zusatz |
+
+#### 8.1 Auswahl der sechs untersuchten Plattformen nirgends begründet  [FREIGABE]
+- **Befund**: `01_wettbewerbsanalyse.tex:13` begründet die *Kriterien* der Bewertung und den Stichtag, an keiner Stelle aber, warum genau diese sechs Plattformen untersucht werden. `:5` erklärt nur, dass TikTok „stellvertretend für Instagram und ähnliche Plattformen steht". Damit bleibt offen, warum in einer Aufgabe, die wörtlich die „Untersuchung aktueller **Social-Media-Plattformen**" verlangt (`aufgabe.md:14`), fünf von sechs Fällen keine Social-Media-Plattformen sind, und warum Instagram — in `aufgabe.md:11` namentlich genannt — nicht selbst untersucht, sondern vertreten wird. `02_limitationen.tex:7` nennt „sechs Vertreter aus drei Plattform-Kategorien" als bewusste Auswahl; die Kategorien werden in der Analyse aber nie als solche benannt (`:7` spricht von einer „zweiten Plattform-Kategorie", eine erste und dritte werden nie ausgewiesen).
+- **Warum**: Qualität (25 %, „erfüllt das Ergebnis die Aufgabenstellung") und Kreativität (15 %, Dimension „Vergleich zu bestehendem Produkt"). Der Vergleich ist die Beweisgrundlage der Marktlücke und damit der gesamten Konzeptbegründung. Eine Stichprobe ohne Auswahlbegründung ist nicht nachprüfbar — der Leser kann nicht beurteilen, ob die Lücke existiert oder durch die Auswahl erzeugt wurde. Das Fazit beruft sich ausdrücklich auf die „gezielte Auswahl", ohne dass diese je offengelegt wurde.
+- **Anweisung**: In `01_wettbewerbsanalyse.tex:13` vor den Satz „Grundlage der Einstufungen …" einen Auswahlsatz setzen, der (a) die drei Kategorien benennt, (b) sagt, warum je Kategorie diese Vertreter stehen, (c) erklärt, warum eine allgemeine Social-Media-Plattform stellvertretend genügt. Formulierung ist Sache der Autorenschaft (dokumentiert eigene Rechercheentscheidungen). Anschließend `02_limitationen.tex:7` gegenprüfen — die dortige Kategorienzahl muss zum neuen Satz passen. **+35 Wörter**, gegenfinanziert über 8.19.
+
+#### 8.2 Die Funktionsübersicht ist ein Lieferobjekt ohne jeden Textverweis
+- **Befund**: `tab:funktionsuebersicht` (`03_konzept.tex:15–30`) trägt ein Label, aber es existiert kein einziges `\autoref{tab:funktionsuebersicht}` im gesamten Dokument. Über den Abgleich aller `\label{}`- gegen alle `\autoref{}`-Vorkommen geprüft: Es ist der einzige der neun Floats ohne Textverweis.
+- **Warum**: Dokumentation (10 %) und Qualität. Die Funktionsübersicht ist eines der sechs Lieferobjekte (`aufgabe.md:58`). Ein Float ohne Textverweis gilt formal als nicht eingebunden, und beim Lesen wirkt die Tabelle wie eine Beilage statt wie ein Ergebnis. Zugleich der billigste Befund der Liste.
+- **Anweisung**: In `03_konzept.tex:13` den letzten Satz um einen Verweis ergänzen, z. B. „…sichtbar werden.~\autoref{tab:funktionsuebersicht} fasst die Funktionen mit ihrer Herleitung zusammen." **+9 Wörter.**
+
+#### 8.3 Der Abschnitt zu Teilaufgabe 3 widerspricht sich innerhalb von zwei Absätzen
+- **Befund**: `07_iteratives_design.tex:3` beginnt: „Mehrere Rückkopplungsschleifen haben die Mockups von Resteria **bereits durchlaufen**". Der unmittelbar folgende Absatz `:5` beginnt: „Die Feedback-Schleifen im Entwicklungsprozess sind hier **ausschließlich als geplantes Vorgehen beschrieben, nicht real durchgeführt**". Die Einschränkung „im Entwicklungsprozess" soll die beiden Aussagen offenbar trennen, ist aber nicht lesbar: Sie steht im Abschnitt „Iteratives Design und Feedback", und der Satz davor hat gerade eine Schleife *im* Entwicklungsprozess (Design-Phase, Klick-Prototyp) angekündigt. Hinzu kommt: Die in `:3` beschriebenen Schleifen sind Selbstprüfungen („Abgleich gegen die Konzeptbeschreibung", „Sichtung der Screens selbst"), kein Feedback Dritter — das Wort „Feedback" trägt in `:3` und `:5` zwei Bedeutungen.
+- **Warum**: Qualität (25 %) und Prozess (25 %, „Vorgehen dokumentieren"). Absatz `:5` ist die Ehrlichkeitsklausel des ganzen Berichts — sie schützt vor dem Vorwurf, nicht durchgeführte Tests zu behaupten. Wenn ausgerechnet sie dem Vorabsatz widerspricht, weiß der Prüfer nicht, welche Aussage gilt, und muss im Zweifel die schwächere annehmen.
+- **Anweisung**: Eine der beiden Optionen, nicht beide.
+  - **Option A** (empfohlen): `:5` präzisieren auf das, was der Vorabsatz übriglässt — „Schleifen **mit externen Testpersonen** sind hier ausschließlich als geplantes Vorgehen beschrieben…". Dann in `:3` „Rückkopplungsschleifen" durch „Überarbeitungsrunden" ersetzen, damit die Begriffe getrennt bleiben. Vorzuziehen, weil die durchlaufenen Runden echtes Material für Prozess (25 %) sind.
+  - **Option B**: `:3` auf den Planungsmodus zurücknehmen und die gelaufenen Mockup-Runden ausschließlich in `06_evaluation_reflexion.tex:9` belassen.
+
+  **±0 Wörter.**
+
+#### 8.4 Zeitlogik: Der Bericht kündigt eine Phase als bevorstehend an, in der er selbst steht
+- **Befund**: `07_iteratives_design.tex:3`: „Die nächste Schleife **folgt** in der Design-Phase (Woche 3--4, siehe~\autoref{tab:phasenplanung})". Die Tabelle weist der Design-Phase (W3–4) als Inhalt „UI/UX-Struktur, **Mockup**, Klick-Prototyp" zu — und die Mockups liegen fertig vor (`05_phasenplanung.tex:3`: „mit diesem Bericht bereits erbracht"). Bei Abgabe in Woche 3 ist die Design-Phase weder „nächste" noch bevorstehend: Sie läuft, ihr Hauptteil ist erledigt, offen ist nur der Klick-Prototyp. Zweiter Punkt derselben Zeitlogik: Die Phase-1-Inhaltszelle nennt „Wettbewerbsanalyse, Zielgruppendefinition, Funktions- und Gamification-Konzept" — Community-Konzept, iteratives Design, Phasenplanung und Reflexion stehen im Bericht, gehören aber zu keiner Phase.
+- **Warum**: Prozess (25 %, „Vorgehen dokumentieren") und Dokumentation (10 %, „Entstehungsgeschichte lückenlos"). Der Prüfer liest den Bericht als Standortbestimmung im Projekt. Weist der Plan den aktuellen Stand als Zukunft aus, wirkt die Phasenplanung wie ein nachträglich angehefteter Zeitplan statt wie ein gelebtes Vorgehen — genau die Frage, die Prozess bewertet.
+- **Anweisung**: (1) `07_iteratives_design.tex:3`: „Die nächste Schleife folgt in der Design-Phase (Woche 3--4…)" → „Die noch offene Schleife dieser Design-Phase (Woche 3--4…) betrifft den Klick-Prototyp: …" **±0 Wörter.** (2) `tab:phasenplanung`, Inhaltszelle Phase 1: „…Funktions- und Gamification-Konzept" → „…Funktions-, Community- und Gamification-Konzept, Umsetzungsplanung". **+3 Wörter.**
+
+#### 8.5 Die Innovationsaussage trifft keinen der drei Zwecke, für die die Aufgabe Innovation verlangt
+- **Befund**: `aufgabe.md:15` verlangt „innovative Funktionen für **Rezept-Teilen, Kochtipp-Austausch, gegenseitige Inspiration**". Die einzige Innovationsaussage des Berichts steht in `03_konzept.tex:32` und nennt drei andere Dinge: Kopplung von Menüplanung und Reste-Journal an die Rettungspunkte, verpflichtender Reste-Tag, zeitlich begrenzte Challenges statt Forum und Gruppen. Derselbe Satz erklärt anschließend ausdrücklich: „Rezept-Upload, Bewertungs- und Kommentarsystem sowie personalisierte Empfehlungen übernimmt Resteria dagegen **bewusst** aus etablierten Rezept-Communitys". Laut `tab:funktionsuebersicht` sind genau diese drei übernommenen Funktionen die Umsetzung der drei Aufgaben-Zwecke. Die Arbeit sagt damit selbst, dass sie bei allen drei nichts Neues anbietet.
+- **Warum**: Kreativität (15 %, Dimension Innovationskraft). Das Kriterium prüft nicht Innovation irgendwo, sondern Innovation dort, wo die Aufgabe sie verlangt. Sachlich ist das Konzept nicht so schwach, wie der Satz es aussehen lässt — der verpflichtende Reste-Tag *ist* eine Neuerung am Rezept-Teilen, der Rettungs-Feed *ist* eine Neuerung an der Inspiration. Nur zeigt der Text diese Zuordnung nicht. Hier wird Bewertungssubstanz verschenkt, nicht Substanz vermisst.
+- **Anweisung**: `03_konzept.tex:32` so umbauen, dass jede der drei Neuerungen einem der drei Aufgaben-Zwecke zugeordnet wird — z. B. Reste-Tag → Rezept-Teilen, Challenges/Rettungs-Feed → gegenseitige Inspiration, Kopplung Menüplanung/Reste-Journal → Zero-Waste-Kern. Den Satz zur Übernahme aus Rezept-Communitys behalten (er ist ehrlich und wird für 8.9 gebraucht), aber auf die **Formate** beschränken, nicht auf die Zwecke. **+15 Wörter**, gegenfinanziert über 8.19.
+
+#### 8.6 Moderationsaufwand zählt gegen den Event-Kalender, nicht gegen den eigenen Feed
+- **Befund**: `03_konzept.tex:36` begründet den Verzicht auf den Event-Kalender unter anderem damit, er „stellt eigene Anforderungen an **Moderation** und lokale Vernetzung". Das Wort „Moderation" kommt im gesamten Fließtext genau einmal vor — an dieser Stelle. Resteria betreibt aber einen offenen Rettungs-Feed mit nutzergenerierten Fotos, Videos, Kommentaren und Bewertungen (`04_community_und_feedback.tex:3`) sowie Challenges mit Rangliste und Prämierung (`:7`). Zu deren Moderation, zu Missbrauch, Spam oder Bewertungsmanipulation steht nirgends ein Wort.
+- **Warum**: Ein selbst erhobener Einwand, der nirgends beantwortet wird. Bewertungsbezug: Qualität (25 %) und Transfer (15 %, „Ansätze/Modelle begründen"). Ein Argument, das gegen eine verworfene Funktion zählt, gegen die Kernfunktion aber nicht gelten soll, wirkt zugeschnitten.
+- **Anweisung**: Eine der beiden Optionen.
+  - **Option A** (empfohlen, billiger): In `03_konzept.tex:36` „Moderation und lokale Vernetzung" durch das ersetzen, was den Kalender wirklich vom Rest unterscheidet: „lokale Vernetzung und Terminpflege". Dann trägt die Begründung, ohne einen Maßstab aufzumachen, den der Feed reißt. **−1 Wort.**
+  - **Option B**: Moderation als Argument stehen lassen und in `04_community_und_feedback.tex:7` einen Halbsatz ergänzen, wie der Feed moderiert wird (Melde-Funktion, Pflicht-Reste-Tag als Filter). **+12 Wörter**, gegenfinanziert über 8.19.
+
+#### 8.7 Der Kaltstart wird nur für die Rezepte gelöst, nicht für die Community-Beiträge
+- **Befund**: `03_konzept.tex:3` begründet die Freemium-Trennlinie ausdrücklich damit, dass hinter einer Bezahlschranke „zu wenige Beiträge zusammenkämen, um die Community zu tragen" — der Bericht macht die Beitragsmenge damit selbst zur kritischen Größe. Für den *Rezeptbestand* zieht er die Konsequenz sauber (`03_konzept.tex:7`, Ressourcenspalte der Phasenplanung). Für die *Community-Beiträge* — Feed, Kommentare, Challenge-Teilnahme — steht nichts: keine Aussage, woher die ersten Nutzer:innen kommen, keine Akquise in der Phasenplanung, kein Risiko dazu in `05_phasenplanung.tex:23`. Einzige Berührung ist ein Konjunktiv im Ausblick (`01_kernergebnisse_und_ausblick.tex:7`: Kooperationen „könnten … neue Nutzer:innen erschließen") — also nach dem Fazitstrich und als Möglichkeit, nicht als Plan.
+- **Warum**: Transfer (15 %, „Technologie ↔ wirtschaftliche Bedeutung", „Ansätze/Modelle begründen") und Qualität. Eine Social-Plattform, deren Wert vollständig an Nutzerbeiträgen hängt, muss sagen, wie die ersten entstehen. Der Bericht kennt das Problem nachweislich — er argumentiert an anderer Stelle damit —, beantwortet es aber nur für die Rezepte.
+- **Anweisung**: Eine der beiden Optionen.
+  - **Option A** (empfohlen): `05_phasenplanung.tex:23` um ein drittes Risiko ergänzen oder Risiko 1 erweitern: zu wenige Beiträge nach dem Launch, Gegenmaßnahme über die in `03_konzept.tex:3` genannten Kooperationen und die Beta-Gruppe als Erstbestand. **+22 Wörter.**
+  - **Option B** (billiger): `01_kernergebnisse_und_ausblick.tex:7` vom Konjunktiv in eine Festlegung überführen. **+8 Wörter.**
+
+  Beides gegenfinanziert über 8.19.
+
+#### 8.8 „zwei Befunde aus der Nudge-Forschung" — belegt ist einer
+- **Befund**: `03_konzept.tex:9`: „Diese Mechanik greift **zwei Befunde** aus der Nudge-Forschung auf." Der zweite Befund (Reminders) trägt eine Quelle mit Seitenangabe (`\textcite[S. 10]{barkerWhatNudgeTechniques2021}`), der erste (Feedback als wirksamer Nudge-Typ) trägt keine — er wird als Forschungsbefund angekündigt und dann nur behauptet.
+- **Warum**: Qualität (25 %). Der Satz kündigt einen Beleg an und liefert ihn nicht. Das wiegt schwerer als eine unbelegte Aussage ohne Ankündigung, weil die Ankündigung dem Leser suggeriert, beide Hälften seien fundiert.
+- **Anweisung**: Eine der beiden Optionen.
+  - **Option A**: Am Volltext prüfen, ob Barker Feedback ebenfalls als wirksamen Nudge-Typ führt. Wenn ja, Fundstelle ergänzen (`\parencite[S. …]`). **+3 Wörter.** Nur wählen, wenn der Volltext das wirklich hergibt.
+  - **Option B**: „zwei Befunde" → „einen Befund" und den Punktezähler-Satz als eigene Konzeptentscheidung kennzeichnen, wie es `:11` beim Gamification-Effekt vorbildlich tut. **±0 Wörter.**
+
+#### 8.9 Zwei Zellen bei leftovercooking passen nicht zur eigenen Kriteriendefinition  [FREIGABE]
+- **Befund**: `01_wettbewerbsanalyse.tex:13` definiert: „Bei Kommunikation \& Community zählt **nur tatsächlicher Austausch zwischen Nutzer:innen**; ein bloßes Bewertungsfeld reicht dafür nicht aus." Die Beschreibung von leftovercooking in `:9` stellt fest: „Ein Austausch zwischen gewöhnlichen Nutzer:innen … **ist nicht belegt**; die Community-Ebene bleibt auf das Verfolgen von Creator-Inhalten beschränkt." Nach der eigenen Definition müsste die Zelle „schwach" lauten (wie bei Restegourmet); sie lautet „mittel". Zweitens erhält leftovercooking bei Rezept-Entdeckung „mittel", die BMEL-App „stark" — der Fließtext beschreibt für leftovercooking aber „KI-gestützte Rezeptvorschläge" plus Creator-Rezepte und begründet die Abstufung mit keinem Wort.
+- **Warum**: Qualität (25 %) und Prozess (25 %, „Vorgehen dokumentieren"). leftovercooking ist der Fall, gegen den das Alleinstellungsmerkmal formuliert wird (`:34`) — genau hier muss die Bewertung am sorgfältigsten sein. Fairerweise: Die Abweichung geht in die **großzügige** Richtung; die Zelle ist besser, als die eigene Regel erlauben würde. Der Bericht ist an dieser Stelle also nicht ergebnisorientiert, sondern regelinkonsistent. Ein Prüfer, der die Definition liest und dann die Tabelle, stolpert trotzdem.
+- **Anweisung**: Nur eine der beiden Richtungen — berührt eigene Rechercheergebnisse.
+  - **Option A**: Kriteriendefinition in `:13` an die Praxis anpassen: „…zählt tatsächlicher Austausch zwischen Nutzer:innen; einseitiges Verfolgen von Creator-Inhalten zählt abgeschwächt, ein bloßes Bewertungsfeld nicht." Dann ist „mittel" gedeckt und die TikTok-Einstufung „stark" bleibt konsistent. **+8 Wörter.**
+  - **Option B**: Zelle auf „schwach" korrigieren. Dann prüfen, ob `:34` („über das Verfolgen von Creator-Inhalten hinausgeht") und `02_limitationen.tex` noch stimmen.
+
+  Für Rezept-Entdeckung unabhängig davon: in `:9` einen Halbsatz ergänzen, der die Abstufung gegen die BMEL-App trägt, oder die Zelle auf „stark" heben. **+8 Wörter.**
+
+#### 8.10 Der zitierte Prompt beschreibt etwas anderes, als die Abbildung zeigt
+- **Befund**: `pages/appendix.tex:27` und `:34` zitieren als Folge-Prompt beider Startseiten-Screens: „Ergänze am Startseiten-Screen **unterhalb der Rezeptvorschläge** eine kompakte **Karte** „Wochenplan \& Reste-Journal" mit den **nächsten Wochentagen** und einer **Zeile zu zuletzt verwerteten Zutaten**". In `resteria_startseite.png` und `resteria_startseite_bookmarks.png` steht stattdessen ein schmales grünes **Banner ganz oben**, oberhalb der Begrüßung, mit dem Text „Wochenplan · Heute: Brokkoli-Suppe" und einem Pfeil. Keine Wochentage, keine Zeile zu verwerteten Zutaten, keine Nennung des Reste-Journals, andere Position. Alle übrigen Prompt-Angaben decken sich mit den Bildern (geprüft und bestätigt).
+- **Warum**: Dokumentation (10 %) und die ausdrückliche Bedingung aus `aufgabe.md:45`, dass ein KI-Mockup nur zulässig ist, wenn es „transparent gekennzeichnet … und fehlerfrei" ist. Die Quellenzeile steht unmittelbar unter dem Bild; der Prüfer vergleicht beides in einem Blick. Eine Herkunftsangabe, die das gezeigte Ergebnis nicht beschreibt, entwertet die Kennzeichnung insgesamt — auch die korrekten drei anderen.
+- **Anweisung**: Eine der beiden Optionen, in beiden Quellenzeilen identisch.
+  - **Option A**: Die zitierte Folge-Prompt-Passage durch die Formulierung ersetzen, die tatsächlich eingegeben wurde und zu dem sichtbaren Banner geführt hat. **±0 Wörter.**
+  - **Option B**: Die Wochenplan-Passage aus der Prompt-Kette streichen und nur Ausgangs- und Foto-Platzhalter-Prompt zitieren; der Zusatz „und in weiteren Iterationsschritten verfeinert" steht bereits da und deckt den Rest ab. **−22 Wörter.**
+
+#### 8.11 Die Kernaussage „Lücke zwischen Community und Matching" steht dreimal
+- **Befund**: Dieselbe Aussage in drei Fassungen — `01_ausgangslage_und_problem.tex:7`, `01_wettbewerbsanalyse.tex:32` und `01_kernergebnisse_und_ausblick.tex:3`.
+- **Warum**: Ressourcen (10 %, effizienter Einsatz) und Qualität. In einem Bericht mit 7–10 Seiten Obergrenze ist dreifache Wiederholung derselben Aussage der teuerste Platzverbrauch überhaupt. Die zweite Nennung ist die belegte (sie folgt aus der Tabelle) und muss bleiben; die erste eröffnet den Bericht und darf bleiben. Die dritte ist reine Wiederholung — und die Stilregel verlangt für das Fazit ausdrücklich Paraphrase statt Nahwiederholung.
+- **Anweisung**: `01_kernergebnisse_und_ausblick.tex:3`, Satz 2 („Etablierte Rezept-Communitys bieten Austausch und Inspiration … wie~\autoref{sec:wettbewerbsanalyse} gezeigt hat.") streichen und den `\autoref` an den vorangehenden Satz hängen. Der Absatz verliert nichts: Satz 1 nennt die Lücke, Satz 3 nennt Resterias Antwort. **−30 Wörter** — Haupt-Gegenfinanzierungsposten dieser Runde.
+
+#### 8.12 Doppelpunkt-Ankündigungen als durchgehendes Satzmuster
+- **Befund**: Über alle Kapiteldateien gezählt: 30 Vorkommen „Doppelpunkt + Großbuchstabe", davon 3 in Tabellenzellen → 27 im Fließtext, davon etwa vier legitime Aufzählungs-/Definitionsdoppelpunkte. Es bleiben **rund 23 Ankündigungs-Doppelpunkte** auf 3.567 Wörter. Dichteste Stellen: `03_konzept.tex` 6, `07_iteratives_design.tex` 4 in nur zwei Absätzen, `06_evaluation_reflexion.tex` 4 bei fünf kurzen Absätzen. Die Stilregel (`hard-rules-formal.md` → Schreibstil) setzt „höchstens vereinzelt (~1 pro Unterkapitel)" an; bei 12 Unterabschnitten wären das rund 12.
+- **Warum**: Prüferfrage „Hätte das so ein Mensch geschrieben?" Die Eigenständigkeitserklärung versichert eigene Autorenschaft. Ein Satzmuster, das sich alle vier bis fünf Sätze wiederholt, fällt auch ohne Software auf — es liest sich als Schema, nicht als Stimme. Keine Geschmacksfrage: Die Regel ist im Projekt hinterlegt und quantifiziert.
+- **Anweisung**: In den drei dichtesten Dateien je zwei bis drei Vorkommen auflösen (Doppelpunkt durch Punkt und Konjunktion ersetzen oder Nachsatz zum Hauptsatz machen). Konkrete Kandidaten ohne Definitions- oder Aufzählungscharakter: `03_konzept.tex:5`, `03_konzept.tex:36`, `07_iteratives_design.tex:5`, `06_evaluation_reflexion.tex:7`. Doppelpunkte vor echten Aufzählungen und Begriffsdefinitionen bleiben unangetastet. **−4 Wörter.**
+
+#### 8.13 Unbelegte Wachstumsbehauptung plus Pointen-Schlusssatz im ersten Absatz
+- **Befund**: `01_ausgangslage_und_problem.tex:3`: „Digitale Plattformen rund ums Kochen sind in den letzten Jahren **stark gewachsen**." — keine Quelle, keine Zahl, und die eigene Sichtung (Kapitel 2) trägt eine Wachstumsaussage nicht, weil sie ein Stichtag-Snapshot ist. Derselbe Absatz endet mit „Kochen ist damit längst ein soziales Thema." — ein verdichteter Merksatz, der nichts hinzufügt.
+- **Warum**: Qualität (25 %). Es ist der erste inhaltliche Satz des Berichts; eine unbelegte Trendaussage prägt hier die Erwartung, wie sorgfältig der Rest belegt ist — umso ärgerlicher, weil der Bericht ab `:5` durchgehend sauber zitiert. Der Schlusssatz fällt zusätzlich unter das projekteigene Verbot von Pointen-Schlusssätzen.
+- **Anweisung**: „sind in den letzten Jahren stark gewachsen" durch eine Zustandsaussage ersetzen, die die eigene Sichtung deckt („sind fest etabliert" o. ä.), und den Schlusssatz streichen. **−12 Wörter.**
+
+#### 8.14 Die Reflexion endet auf einer Allgemeinplatz-Lehre, eine genannte Kursänderung bleibt unerklärt
+- **Befund**: `06_evaluation_reflexion.tex:11` ist ein Ein-Satz-Absatz: „Daraus lässt sich eine Lehre ziehen: Eine früh eingegrenzte Zielgruppe erleichtert spätere Konzeptentscheidungen…" — das gilt für jedes Konzeptprojekt und ist aus diesem hier nicht spezifisch gewonnen. Zweitens nennt `:7` als eine von zwei Kursänderungen „…und eine Namenskollision zwang zur Korrektur des Arbeitstitels" — welcher Titel, welche Kollision, welche Konsequenz bleibt offen. Drittens macht `:3` einen Abhaklisten-Absatz auf, der nur wiederholt, was das Inhaltsverzeichnis zeigt.
+- **Warum**: Prozess (25 %) hat drei Dimensionen — dokumentieren, reflektieren, Grenzen aufzeigen. Grenzen sind stark abgedeckt, Dokumentation ordentlich. Die Reflexionsdimension trägt aktuell eine Selbstverständlichkeit, während direkt daneben ungenutztes Material liegt: Die Namenskollision ist ein echtes, überprüfbares Projektereignis — genau das, was Reflexion belegt.
+- **Anweisung**: Eine der beiden Optionen.
+  - **Option A** (empfohlen): `:3` (Abhakliste) streichen (**−40 Wörter**) und `:11` durch eine aus der Namenskollision gewonnene Lehre ersetzen, die auch sagt, was die Kollision war und was sie gekostet hat (**+20 Wörter**). Netto **−20 Wörter**, und die Reflexion wird konkret.
+  - **Option B** (bei Zeitnot): nur `:3` streichen. **−40 Wörter**, Reflexion bleibt schwach.
+
+  **Achtung beim Streichen von `:3`:** Der Satz enthält den **einzigen** `\autoref{sec:iteratives_design}` des gesamten Dokuments (gezählt: `sec:wettbewerbsanalyse` 4×, `sec:konzept` 4×, `sec:phasenplanung` 3×, `sec:community_und_feedback` 2×, `sec:zielgruppe` 1×, `sec:iteratives_design` 1×). Wird er ersatzlos entfernt, steht ausgerechnet der Abschnitt zu Teilaufgabe 3 ohne jeden Querverweis da. Den Verweis also mitnehmen — in die neue Lehre oder nach `05_phasenplanung.tex:3`, wo der Klick-Prototyp ohnehin erwähnt wird.
+
+  **Zusatz für Ressourcen (10 %), optional:** In `05_phasenplanung.tex:3` einen Halbsatz ergänzen, dass der Bericht selbst in Phase 1 und der ersten Woche von Phase 2 entstanden ist. **+10 Wörter** — der einzige Ort, an dem der tatsächliche Zeiteinsatz aktenkundig würde.
+
+#### 8.15 User Experience wird benannt, aber nur als Informationsarchitektur behandelt
+- **Befund**: `aufgabe.md:75` verlangt „User Interface (UI) **und** User Experience (UX)" als zwei Berichtsinhalte. `03_konzept.tex:34` behandelt beide in einem Satz und beschreibt danach ausschließlich Screens, Navigation und Style Tile. Erlebensbezogene Entscheidungen existieren durchaus im Text (`:7` Sortierung der Vorschläge nach Zubereitungszeit und fehlenden Zutaten; `:13` Pflichtangabe der Reste-Zutat beim Upload; `07_iteratives_design.tex:5` SEQ als Maß für die empfundene Aufgabenschwierigkeit), werden aber nirgends als UX ausgewiesen.
+- **Warum**: Qualität (25 %). Der Prüfer hakt die vier Berichtsinhalte einzeln ab; bei UX findet er das Wort und eine Bereichsliste. Das Material für eine tragfähige Antwort liegt bereits im Text — es ist nur nicht als solches etikettiert.
+- **Anweisung**: `03_konzept.tex:34`, ersten Satz aufspalten: UI = die drei Bereiche (bleibt), UX = ein Halbsatz, der die vorhandenen Entscheidungen bündelt („…die Nutzungsführung setzt auf kurze Wege vom Rest zum Rezept, weshalb Vorschläge nach Zubereitungszeit und fehlenden Zutaten sortiert sind"). Wird der Sortierungssatz aus `:7` dafür hierher gezogen: **±0 Wörter**, sonst **+18 Wörter**, gegenfinanziert über 8.11 oder 8.14.
+
+#### 8.16 Zwei kleine Zählunstimmigkeiten
+- **Befund**: (a) `03_konzept.tex:34`: „Für alle Bereiche liegt **je ein** Mockup in Anhang B vor" — danach werden vier Mockups zu drei Bereichen aufgezählt (die ausgeklappten gespeicherten Rezepte sind ein Zustand der Startseite, kein Bereich). (b) `02_limitationen.tex:7` beruft sich auf „sechs Vertreter aus **drei Plattform-Kategorien**"; in `01_wettbewerbsanalyse.tex` wird nur eine „zweite Plattform-Kategorie" (`:7`) ausgewiesen, erste und dritte nie. Zusätzlich steht in `:9` „Die dritte Reste-Matching-App" unmittelbar nach „Eine zweite Plattform-Kategorie" — beim Erstlesen kollidieren die beiden Zählungen.
+- **Warum**: Dokumentation (10 %) und Qualität. Zählangaben prüft ein Prüfer beim Querlesen mechanisch nach, weil es schnell geht.
+- **Anweisung**: (a) `03_konzept.tex:34`: „liegt je ein Mockup" → „liegen Mockups". **−1 Wort.** (b) mit 8.1 zusammen erledigen; falls 8.1 nicht umgesetzt wird, in `01_wettbewerbsanalyse.tex:9` „Die dritte Reste-Matching-App" → „Als dritte Matching-App". **±0 Wörter.**
+
+#### 8.17 Keine einzige Quelle zu Medienplattformen oder Social Media
+- **Befund**: `references.bib` enthält 9 Einträge, alle zitiert: eine UN-Resolution, vier zu Lebensmittelverschwendung/Verhalten, eine zu sozialem Einfluss, drei Methodenquellen. Zur Plattform- oder Social-Media-Forschung — dem Gegenstand des Moduls und der Teilaufgabe 1 — gibt es keine. Die beiden in `aufgabe.md:89–93` namentlich genannten Einstiegstitel (Kapoor et al. 2018; Hansch & Rentschler 2012) kommen weder in der Bibliografie noch im Text vor.
+- **Warum**: Qualität (25 %) und Transfer (15 %). Die Titel sind nicht verpflichtend (`aufgabe.md:27`), aber ihre vollständige Abwesenheit ist die erste Stelle, an der ein Prüfer nachsieht, ob die Aufgabenstellung wirklich gelesen wurde. Inhaltlich wiegt schwerer, dass die Plattformseite des Themas komplett unbelegt ist: Der Bericht argumentiert die Verhaltensseite mit vier Studien und die Plattformseite ausschließlich mit eigener Sichtung.
+- **Anweisung**: Eine der beiden Optionen.
+  - **Option A** (empfohlen): Kapoor et al. (2018) aufnehmen und an genau einer Stelle einsetzen, wo der Text ohnehin eine plattformbezogene Aussage trifft — `01_wettbewerbsanalyse.tex:13` (Herleitung der Vergleichsachsen) oder `01_ausgangslage_und_problem.tex:3`. Ein `\parencite` mit Seitenangabe, kein neuer Absatz. **+12 Wörter**, Quellenrichtwert bleibt gewahrt (10 von 5–10). Voraussetzung: Volltext beschaffen und in Zotero aufnehmen (`references.bib` nie von Hand).
+  - **Option B**: bewusst verzichten. Dann nichts ändern und **keine** Begründung in den Text schreiben — das kostet nur Platz und betont die Lücke.
+
+  Hinweis: In Runde 1, 3 und 6 wurde dieser Punkt jeweils übersprungen, weil die Quellen in `references.bib` fehlten. Er kommt in jeder kalten Lesung wieder — entweder einmal umsetzen oder bewusst als Verzicht abschließen.
+
+#### 8.18 Das SDG-Ziel 12.3 wird ohne Stellenangabe zitiert
+- **Befund**: Von 19 Zitationen tragen drei keinen Locator. Zwei sind vertretbar, weil sie auf das Gesamtargument einer Publikation zielen (`shenInfluenceOsmosisSocial2023` in `04_community_und_feedback.tex:5`; `barkerWhatNudgeTechniques2021` in `02_limitationen.tex:3` als Rückverweis auf eine bereits mit `[S. 10]` belegte Aussage). Der dritte nicht: `01_ausgangslage_und_problem.tex:5` belegt eine sehr spezifische Aussage — Halbierung der Lebensmittelverschwendung bis 2030 — mit `\parencite{unTransformingOutWorld2030Agenda}`, also mit einer mehrere Dutzend Seiten umfassenden UN-Resolution ohne Seitenangabe.
+- **Warum**: Qualität (25 %) und Dokumentation (10 %). Es ist der einzige Zahlenbeleg der Einleitung und trägt die gesellschaftliche Relevanz des ganzen Berichts.
+- **Anweisung**: In `01_ausgangslage_und_problem.tex:5` die Seite ergänzen: `\parencite[S. 22]{unTransformingOutWorld2030Agenda}` (Ziel 12.3 steht im vorliegenden Snapshot auf S. 22 — vor Übernahme am PDF gegenprüfen). Die beiden anderen locatorfreien Zitationen unverändert lassen. **+2 Wörter.**
+
+#### 8.19 Gegenfinanzierungsreserve (kein Mangel, sondern Budget)
+
+Geprüfte Streichstellen für die additiven Punkte 8.1, 8.5, 8.7, 8.15 und 8.17. Alle sind Redundanz gegenüber anderen Textstellen, keine trägt ein eigenes Argument:
+
+| Stelle | Was | Ersparnis |
+|---|---|---|
+| `01_kernergebnisse_und_ausblick.tex:3`, Satz 2 | dritte Fassung der Lückenaussage (8.11) | −30 |
+| `06_evaluation_reflexion.tex:3` | Abhakliste der Teilaufgaben/Berichtsinhalte (8.14) — Querverweis retten | −40 |
+| `01_einleitung/03_vorgehen_und_aufbau.tex:5`, Satz 1 | „Kapitel 2 durchläuft dabei einen Trichter …" — die beiden Folgesätze sagen dasselbe ausführlicher | −25 |
+| `02_zielgruppe.tex:3` | wiederholt die Verengungsbegründung aus `02_zielsetzung_und_verengung.tex:5`; ein Rückverweis genügt | −30 |
+| `01_ausgangslage_und_problem.tex:3` | Pointen-Schlusssatz + Wachstumsclaim (8.13) | −12 |
+| `pages/appendix.tex:27`/`:34` | Wochenplan-Prompt-Passage bei Option B (8.10) | −22 |
+
+**Verfügbar: rund −159 Wörter.** Additive Empfehlungen bei den empfohlenen Optionen: rund +105 Wörter. **Netto etwa −55 Wörter.**
+
+#### Bewertungskriterien je Dimension (Schritt 5)
+
+| Kriterium | Dimension | Urteil | Begründung |
+|---|---|---|---|
+| **Qualität 25 %** | Teilaufgabe 1 ausgeführt | abgedeckt | eigener Abschnitt, Tabelle, Kriteriendefinition, Stichtag |
+| | Teilaufgabe 2 ausgeführt | abgedeckt | Konzept, Name, Funktionen, Mockups, Style Tile |
+| | Teilaufgabe 3 ausgeführt | schwach | inhaltlich vorhanden, aber der Abschnitt widerspricht sich (8.3, 8.4) |
+| | Berichtsinhalte vollständig | abgedeckt | alle vier vorhanden; UX nur als Struktur (8.15) |
+| | Behauptungen nachprüfbar | schwach | 8.1, 8.8, 8.9, 8.13 |
+| **Prozess 25 %** | Vorgehen dokumentieren | abgedeckt | `03_vorgehen_und_aufbau.tex:3`, `06_evaluation_reflexion.tex:9`, Phasenplanung |
+| | Reflektieren | schwach | eine generische Lehre, ein unerklärtes Ereignis (8.14) |
+| | Grenzen aufzeigen | abgedeckt | drei Limitationen, jede dreischichtig — die stärkste Passage der Arbeit |
+| **Transfer 15 %** | Technologie ↔ gesellschaftliche Bedeutung | abgedeckt | SDG 12.3, Haushaltsanteil, Spannungsauflösung in `06_evaluation_reflexion.tex:5` |
+| | Technologie ↔ wirtschaftliche Bedeutung | schwach | Freemium und Kooperationen sind das Einzige; keine Marktgröße, kein Kaltstart (8.7), Budget nur qualitativ |
+| | Ansätze/Modelle begründen | abgedeckt | Drivers/Levers-Rahmen, jede Gamification-Funktion an einen Hebel gebunden |
+| **Kreativität 15 %** | Vergleich zu bestehendem Produkt | abgedeckt | sechs Plattformen, fünf Kriterien, SWOT-Satz; Auswahl unbegründet (8.1) |
+| | Innovationskraft | schwach | genau ein Satz, der keinen der drei geforderten Zwecke trifft (8.5) |
+| **Dokumentation 10 %** | Entstehungsgeschichte lückenlos | schwach | Abfolge vorhanden, aber Zeitraum, Werkzeuge und Namenskollision fehlen; Phasenzuordnung unvollständig (8.4) |
+| | Artefakte korrekt ausgewiesen | schwach | vier Mockups sauber gekennzeichnet, aber eine Prompt-Angabe passt nicht zum Bild (8.10); ein Lieferobjekt ohne Textverweis (8.2) |
+| **Ressourcen 10 %** | Zeit effizient | schwach | Phasenplanung für das Produkt präzise; über den Zeiteinsatz für **diesen Bericht** steht nirgends etwas |
+| | Material effizient | abgedeckt | Ressourcenspalte je Phase, Budgethinweis, KI-Einsatz offengelegt |
+
+#### Was gut ist und beim Überarbeiten nicht angefasst werden darf
+
+1. **Die drei Limitationen** (`02_limitationen.tex`) — jeweils dreischichtig (Grund, Abmilderung, Folgeschritt). Sauberste Passage des Berichts, deckt „Grenzen aufzeigen" vollständig ab. Keine kürzen, keine Schicht opfern.
+2. **Die Claim-Abgrenzung in `03_konzept.tex:11`** („…belegt aber nicht die Wirkung der konkreten Punkte- und Level-Mechanik…, weil sie eine andere Intervention getestet hat"). Unverändert lassen.
+3. **Die parallele Trennung im Fazit** (`01_kernergebnisse_und_ausblick.tex:5`): Marktbeobachtung gegen literaturgestützte Hebel, mit ausdrücklichem Hinweis, dass Ersteres nicht als belegt gilt.
+4. **Der Satz „Die Wochenangaben zählen ab Projektstart"** (`05_phasenplanung.tex:3`). Er macht die gesamte Phasenplanung mit einer Abgabe in Woche 3 widerspruchsfrei. Ohne ihn zerfiele der Plan.
+5. **Die Auslassungsbegründungen** — Event-Kalender (`03_konzept.tex:36`) und Forum/Gruppen (`04_community_und_feedback.tex:7`, mit Studienbeleg).
+6. **Die Kriteriendefinition in `01_wettbewerbsanalyse.tex:13`**. Bewertungsmaßstäbe offenzulegen ist richtig — 8.9 verlangt nicht, sie zu streichen, sondern sie einzuhalten.
+7. **Die Spannungsauflösung in `06_evaluation_reflexion.tex:5`** (breites SDG-Ziel gegen enge Zielgruppe).
+8. **Die Mockups selbst.** Element für Element gegen den Fließtext geprüft — Drei-Bereiche-Navigation, Reste-Chips, Vorschlagskarten mit Zeit und fehlenden Zutaten, ausklappbare Lesezeichenliste, Rettungspunkte-Balken, Level-Titel, Einsparangabe „12,4 kg", Reste-Journal im Profil, Challenge-Banner mit Rangliste, Zutaten-Tag, Like- und Kommentar-Icon, freistehender Plus-Button: **jede im Text behauptete Oberflächen-Eigenschaft ist im Bild belegt.** Der einzige Befund betrifft die Prompt-Angabe, nicht das Bild (8.10).
+9. **Kein Stilbefund bei den Kontrastfiguren.** Rund 9–10 ausgeprägte „nicht X, sondern Y"-Konstruktionen auf geschätzt 10 Seiten — an der Grenze der Faustregel (max. 1 pro Seite), aber nicht darüber. Keine rhetorischen Fragen, kein Geviertstrich, keine Floskel-Öffner. Bitte auch nicht vorsorglich umschreiben.
+10. **Die gendersensible Schreibweise** ist kein Befund — die Aufgabenstellung verwendet diese Form selbst durchgehend.
+
+#### Umfangshinweis (Gesamtstand nach dieser Runde)
+
+`check_umfang.py`: **3.567 Wörter**, Anteile 14,8 / 73,5 / 11,6 % (alle drei im Soll). Der letzte gemessene Build (2026-07-29) stand bei **exakt 10 Seiten**, also auf der Obergrenze der Vorgabe 7–10 — es gibt keinen Spielraum nach oben. Bei den empfohlenen Optionen ist die Runde selbstfinanzierend (+105 gegen −159, netto rund **−55 Wörter**) und schafft zusätzlich Luft. Werden additive Punkte umgesetzt, ohne die Reserve aus 8.19 zu heben, kippt der Textteil auf 11 Seiten. **Nach der Umsetzung neu bauen und die gedruckte Seitenzahl prüfen** — die Heuristik von `check_umfang.py` liegt erfahrungsgemäß zu niedrig.
+
+Nebenbefund ohne Textbezug: `kapitelplan.md:7` trägt unter „Gesamtwortzahl (Richtwert)" eine **Seiten**angabe (7–10); `check_umfang.py` überspringt den Zielabgleich deshalb stillschweigend. Auf Wörter umstellen (Seiten × ~375).
+
+#### Gesamteinschätzung
+
+Der Bericht liefert vollständig ab: alle drei Teilaufgaben bearbeitet, alle vier geforderten Berichtsinhalte vorhanden, alle sechs Lieferobjekte existieren tatsächlich, alle Schlüsselbegriffe umgesetzt oder ausdrücklich begründet ausgelassen. Es fehlt kein Artefakt, keine Teilaufgabe ist durch einen Ersatz stillschweigend erledigt worden, und keine Textbehauptung über die Oberfläche steht ohne Deckung im Bild. Das ist die schwierigste Hürde, und sie ist genommen.
+
+Die Schwächen liegen eine Ebene darunter, bei der Nachvollziehbarkeit. Drei Punkte wiegen am schwersten: Die Auswahl der sechs verglichenen Plattformen — Beweisgrundlage der ganzen Konzeptbegründung — wird nirgends begründet (8.1). Der Abschnitt zu Teilaufgabe 3 widerspricht sich innerhalb von zwei Absätzen darüber, ob Feedback-Schleifen bereits gelaufen sind (8.3), und verortet die eigene Gegenwart in der Zukunft (8.4). Und die einzige Innovationsaussage trifft keinen der drei Zwecke, für die die Aufgabenstellung Innovation verlangt, obwohl das Konzept sie sachlich hergibt (8.5) — hier wird Bewertungssubstanz verschenkt, nicht Substanz vermisst.
+
+Gegen die Prämisse „Abgabe in Woche 3" ist die Phasenplanung bemerkenswert robust; sie hängt an einem einzigen Satz, der die Konstruktion trägt. Nur zwei Stellen stören, beide in `07_iteratives_design.tex:3`.
+
+Priorität, falls nur ein Teil umgesetzt wird: **8.3, 8.4 und 8.2 zuerst** (billig bis kostenlos, direkt auf Qualität und Prozess), dann **8.1 und 8.5** (die beiden größten Bewertungshebel, beide additiv — Reserve aus 8.19 mitheben), dann **8.11, 8.13, 8.14** (Kürzung plus Qualitätsgewinn), dann der Rest. **8.17** ist eine Grundsatzentscheidung, die einmal getroffen und dann nicht mehr aufgerufen werden sollte.
+
+#### Bitte manuell prüfen
+
+Vier Punkte konnte die Gegenlesung nicht selbst verifizieren. Sie sind **Voraussetzung** für die jeweils genannte Option — wird der Punkt nicht geprüft, gilt die Ausweichoption, nicht die stillschweigende Übernahme.
+
+1. **Der tatsächlich eingegebene Wochenplan-Folge-Prompt** (Voraussetzung für 8.10 Option A).
+   - *Wo*: `pages/appendix.tex:27` und `:34`, Quellenzeilen zu `fig:mockup_start` und `fig:mockup_start_bookmarks`; Gegenstück ist der Claude-Design-Chatverlauf.
+   - *Woran erkennbar, dass es stimmt*: Die zitierte Passage beschreibt das, was in `resteria_startseite.png` tatsächlich zu sehen ist — ein schmales Banner **ganz oben** mit „Wochenplan · Heute: Brokkoli-Suppe" und Pfeil. Die aktuelle Fassung zitiert eine „kompakte Karte **unterhalb der Rezeptvorschläge**" mit „nächsten Wochentagen" und einer „Zeile zu zuletzt verwerteten Zutaten" — davon ist im Bild nichts vorhanden.
+   - *Warum nicht selbst geprüft*: Der Chatverlauf des Bildwerkzeugs liegt nicht im Repository; nur die Autorenschaft weiß, was eingegeben wurde. **Ohne diese Angabe Option B wählen** (Passage streichen, −22 Wörter) — eine erfundene Prompt-Formulierung wäre ein Beleg-Fehler, kein Formfehler.
+
+2. **Ob Barker Feedback als wirksamen Nudge-Typ führt** (Voraussetzung für 8.8 Option A).
+   - *Wo*: `sources/literatur/barkerWhatNudgeTechniques2021.pdf`, Umfeld von S. 10 (dort steht bereits der belegte Reminders-Befund).
+   - *Woran erkennbar*: Feedback müsste dort neben „Reminders" als eigener, als reliabel eingestufter Nudge-Typ genannt sein — dann `\parencite[S. …]` an der ersten Satzhälfte in `03_konzept.tex:9` ergänzen.
+   - *Warum nicht selbst geprüft*: Der Auftrag der Gegenlesung war auf Aufgabenstellung und Text beschränkt, Volltexte gehören in Teil-Check G des Audits. **Trägt die Quelle den Befund nicht, gilt Option B** („zwei Befunde" → „einen Befund", Punktezähler als eigene Konzeptentscheidung kennzeichnen).
+
+3. **Die Seitenzahl von SDG 12.3** (Voraussetzung für 8.18).
+   - *Wo*: `sources/literatur/unTransformingOutWorld2030Agenda.pdf`; Zielort `01_ausgangslage_und_problem.tex:5`.
+   - *Woran erkennbar*: Ziel 12.3 („halve per capita global food waste at the retail and consumer levels") steht im Wortlaut auf der angegebenen Seite.
+   - *Warum nicht selbst geprüft*: Die Angabe **S. 22** stammt aus einer früheren Volltextprüfung dieses Projekts und wurde in der Gegenlesungs-Session nicht neu nachgeschlagen. Vor Übernahme einmal am PDF bestätigen.
+
+4. **Die gedruckte Seitenzahl nach Umsetzung der Runde** (gilt für die ganze Runde).
+   - *Wo*: `latexmk -lualatex main.tex`, danach Position von „1 Einleitung" und des Literaturverzeichnisses im gebauten PDF.
+   - *Woran erkennbar*: Textteil ≤ 10 gedruckte Seiten, Literaturverzeichnis beginnt spätestens auf gedruckter S. 11.
+   - *Warum nicht selbst geprüft*: In der Gegenlesungs-Session wurde bewusst nicht gebaut (Kompilieren ist Nutzer-Sache, und die Runde ändert den Text ohnehin erst danach). `check_umfang.py` liegt erfahrungsgemäß zu niedrig — die Heuristik kennt Abbildungen, Tabellen und Float-Umbrüche nicht.
+
+### Nächster Schritt
+
+Umsetzung in frischer Session: „Schreib-Modus: AENDERUNGEN.md abarbeiten". Die beiden `[FREIGABE]`-Punkte (8.1, 8.9) dort per `AskUserQuestion` klären, die vier Punkte aus „Bitte manuell prüfen" **vor** der jeweils abhängigen Option abarbeiten. Nach der Runde lokal bauen und die gedruckte Seitenzahl gegenprüfen, danach Abgabe-Audit.
