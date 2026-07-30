@@ -309,15 +309,152 @@
    "status": "OK",
    "notiz": "Rehash durch Aenderung von Zeile 15 (Zero-Waste-Woche-Formulierung) direkt vor der Tabelle, nicht durch Aenderung dieser Zelle (git diff bestaetigt Zeile 24 unveraendert). Bekannte Ursache P19. Urteil aus vorheriger Pruefung (Soma S. 9, Gamification-Effekt) bestaetigt weiter gueltig.",
    "datum": "2026-07-30"
+  },
+  "df1e0e2eee": {
+   "status": "OK",
+   "notiz": "Tabellenzelle tab:funktionsuebersicht, Migration des Traegersatz-Zuschnitts (Zeilenkopf+Zelle statt 1530 Zeichen Umfeld). Zellentext inhaltlich unveraendert. Barker S. 10 in diesem Lauf an zwei weiteren Stellen (0297f91de5, 5d1f67c4bf) am Volltext bestaetigt: vier als reliabel eingestufte Studien, darunter ein visueller Reminder mit signifikantem Effekt. SEITE VERDAECHTIG ist ein Heuristik-Fehlalarm - der Zellentext besteht aus deutschen Stichworten ohne Begriffsueberschneidung mit dem englischen Volltext.",
+   "datum": "2026-07-30"
+  },
+  "7f550ddd07": {
+   "status": "OK",
+   "notiz": "Tabellenzelle tab:funktionsuebersicht, dieselbe Migration. Seitenversatz fuer diesen Key in dieser Session von faelschlich +9 auf 0 korrigiert; gedruckte S. 14 = PDF-Seite 14 (Kopfzeile '14 of 29') maschinell verifiziert. Dort steht woertlich: 'the direct effect of green self-identification on PEB is insignificant, as the 95% CI includes 0, thus rejecting H1' sowie der signifikante Pfad ueber collective intention (0.246, p < .05). Die Zellenformulierung 'Selbstwahrnehmung ueber gemeinsame Absicht' bildet genau das ab.",
+   "datum": "2026-07-30"
+  },
+  "6db24dda46": {
+   "status": "OK",
+   "notiz": "Tabellenzelle tab:funktionsuebersicht, dieselbe Migration. Soma S. 9 in diesem Lauf an zwei weiteren Stellen (d9fb2c81b3, a0158014e2) am Volltext bestaetigt: Tabelle 3 mit den Abfallmengen vor/nach Kampagne und Mann-Whitney U (p = 0,030). Die Zelle nennt den Gamification-Effekt als Herleitung, keine Wirksamkeitsbehauptung. SEITE VERDAECHTIG ist ein Heuristik-Fehlalarm (deutsche Stichworte gegen englischen Volltext).",
+   "datum": "2026-07-30"
+  },
+  "856964c7c8": {
+   "status": "OK",
+   "notiz": "Soma S. 10-12 direkt am Volltext geprueft: S. 11 nennt 9 von 56 Befragten der Community-Gruppe mit Workshop-Teilnahme (16 %) und die Absagegruende (Terminkonflikt 47 %, Kinderbetreuung 21 %); S. 12 fasst zusammen: 'participation rates in the Information group were high, in the Community group they were very low, and they were relatively high in the Game group'. Der Traegersatz gibt das enger wieder als die Quelle. Rentabilitaet nach der Traegersatz-Aenderung der Cold-Read-Session geprueft: Die Rahmung 'Den Anstoss dazu gab' bleibt schwach genug fuer den zwei Saetze spaeter stehenden Uebertragungsvorbehalt.",
+   "datum": "2026-07-30"
+  },
+  "2f0873844c": {
+   "status": "OK",
+   "notiz": "Erlhofer Kap. 17.2.2 am EPUB-Volltext geprueft. Praxistipp 'Fuenf Test-User reichen meist': 'Schon bei fuenf Personen werden Sie feststellen, dass sich die meisten Usability-Probleme wiederholen und Sie damit die gravierenden Stolperstellen aufgedeckt haben.' Deckt 'schwerwiegende, mehrfach auftretende Bedienhuerden' exakt; narrative Zitierform korrekt, da die Autorenschaft im Satz Thema ist.",
+   "datum": "2026-07-30"
+  },
+  "08f5aae340": {
+   "status": "OK",
+   "notiz": "Nielsen Kap. 6.8 'Thinking Aloud' (gedruckte S. 195, PDF-Seite 207) am Volltext geprueft: 'By verbalizing their thoughts, the test users enable us to understand how they view the computer system, and this again makes it easy to identify the users major misconceptions'; dazu die ausdrueckliche Abgrenzung 'does not lend itself very well to most types of performance measurement. On the contrary, its strength is the wealth of qualitative data'. Deckt beide Haelften des Traegersatzes (Fehlannahmen sichtbar / reine Erfolgsmessung erfasst sie nicht).",
+   "datum": "2026-07-30"
+  },
+  "ed9971f3b6": {
+   "status": "OK",
+   "notiz": "Sauro & Lewis Kap. 8 'Standardized Usability Questionnaires', Abschnitt 'SEQ (Single Ease Question)' (gedruckte S. 218, PDF-Seite 224) am Volltext geprueft: 'the SEQ simply asks participants to assess the overall ease of completing a task ... we recommend using the 7-point version'. Deckt Einzelfrage, empfundene Aufgabenschwierigkeit und siebenstufige Skala. Die Erfolgsschwelle (Mittelwert >= 5) steht im Folgesatz ausdruecklich als eigene Festlegung dieser Arbeit, nicht als Sauro-Aussage - am Volltext gegengeprueft, dort existiert keine solche Regel.",
+   "datum": "2026-07-30"
   }
  },
  "versatz": {
   "vittuariHowReduceConsumer2023": -103,
   "barkerWhatNudgeTechniques2021": 0,
   "somaFoodWasteReduction2020": 0,
-  "nivedhithaHowGreenSocial2024": 9,
+  "nivedhithaHowGreenSocial2024": 0,
   "unTransformingOutWorld2030Agenda": 0,
   "shenInfluenceOsmosisSocial2023": 0
  },
- "ausnahmen": []
+ "ausnahmen": [],
+ "saetze": {
+  "a8b0d7574f": {
+   "key": "unTransformingOutWorld2030Agenda",
+   "ort": "22",
+   "satz": "Das Nachhaltigkeitsziel 12.3 der Vereinten Nationen fordert, die Lebensmittelverschwendung pro Kopf auf Handels- und Verbraucherebene bis 2030 zu halbieren \\parencite[S. 22]{unTransformingOutWorld2030Agenda}."
+  },
+  "acb47aface": {
+   "key": "vittuariHowReduceConsumer2023",
+   "ort": "105",
+   "satz": "Ein Großteil der Verschwendung wird dabei nicht dem Handel oder der Industrie zugerechnet, sondern der Verbraucherebene und dort vor allem den privaten Haushalten, wo Reste liegen bleiben und schließlich im Müll landen \\parencite[S. 105]{vittuariHowReduceConsumer2023}."
+  },
+  "86e0f4af84": {
+   "key": "vittuariHowReduceConsumer2023",
+   "ort": "105",
+   "satz": "\\textcite[S. 105]{vittuariHowReduceConsumer2023} trennen \\enquote{Drivers}, also psychologische und soziale Einflussfaktoren, die Verhalten erklären, von \\enquote{Levers}, den konkret nutzbaren Hebeln, mit denen sich Verhalten gezielt verändern lässt."
+  },
+  "ff6533b971": {
+   "key": "barkerWhatNudgeTechniques2021",
+   "ort": "2",
+   "satz": "Diese Mechanik ist eine Form von Gamification nach dem allgemeinen Nudge-Prinzip, also einem Gestaltungsimpuls, der Verhalten lenkt, ohne Wahlmöglichkeiten einzuschränken \\parencite[S. 2]{barkerWhatNudgeTechniques2021}, ergänzt um eigene Fortschrittsanzeigen."
+  },
+  "8fc31f38f4": {
+   "key": "barkerWhatNudgeTechniques2021",
+   "ort": "10",
+   "satz": "\\textcite[S. 10]{barkerWhatNudgeTechniques2021} identifizieren genau solche \\enquote{Reminders} als einen der wenigen Nudge-Typen, die sich in methodisch hochwertigen Studien als wirksam erwiesen haben."
+  },
+  "d7207b16a0": {
+   "key": "nivedhithaHowGreenSocial2024",
+   "ort": "14",
+   "satz": "\\textcite[S. 14]{nivedhithaHowGreenSocial2024} zeigen zudem, dass eine grüne Selbstwahrnehmung das Verhalten nicht unmittelbar verändert, sondern erst über die gemeinsame Handlungsabsicht in der Gruppe; der Titel wirkt deshalb vor allem über die Challenge-Rangliste aus~\\autoref{sec:community_und_feedback}, die Nutzer:innen sichtbar vergleicht."
+  },
+  "d9fb2c81b3": {
+   "key": "somaFoodWasteReduction2020",
+   "ort": "9",
+   "satz": "Dass Gamification als Hebel grundsätzlich wirkt, zeigt eine Feldstudie von \\textcite[S. 9]{somaFoodWasteReduction2020}: Vielspieler:innen einer zwölfwöchigen Intervention reduzierten ihren Lebensmittelabfall um 51 Prozent, Wenigspieler:innen nur um 39 Prozent; nach der Kampagne war der Abstand zwischen beiden Gruppen signifikant."
+  },
+  "df1e0e2eee": {
+   "key": "barkerWhatNudgeTechniques2021",
+   "ort": "10",
+   "satz": "Rettungspunkte \\& Reste-Level – geplante Erinnerungsbenachrichtigung \\parencite[S. 10]{barkerWhatNudgeTechniques2021}, Feedback/Fortschritt als eigene Gestaltung, Selbstwahrnehmung über gemeinsame Absicht \\parencite[S. 14]{nivedhithaHowGreenSocial2024}, Gamification-Effekt \\parencite[S. 9]{somaFoodWasteReduction2020}"
+  },
+  "7f550ddd07": {
+   "key": "nivedhithaHowGreenSocial2024",
+   "ort": "14",
+   "satz": "Rettungspunkte \\& Reste-Level – geplante Erinnerungsbenachrichtigung \\parencite[S. 10]{barkerWhatNudgeTechniques2021}, Feedback/Fortschritt als eigene Gestaltung, Selbstwahrnehmung über gemeinsame Absicht \\parencite[S. 14]{nivedhithaHowGreenSocial2024}, Gamification-Effekt \\parencite[S. 9]{somaFoodWasteReduction2020}"
+  },
+  "6db24dda46": {
+   "key": "somaFoodWasteReduction2020",
+   "ort": "9",
+   "satz": "Rettungspunkte \\& Reste-Level – geplante Erinnerungsbenachrichtigung \\parencite[S. 10]{barkerWhatNudgeTechniques2021}, Feedback/Fortschritt als eigene Gestaltung, Selbstwahrnehmung über gemeinsame Absicht \\parencite[S. 14]{nivedhithaHowGreenSocial2024}, Gamification-Effekt \\parencite[S. 9]{somaFoodWasteReduction2020}"
+  },
+  "c06e959e3b": {
+   "key": "shenInfluenceOsmosisSocial2023",
+   "ort": "4,6",
+   "satz": "Der Feed baut auf einem Mechanismus auf, den \\textcite[S. 4, 6]{shenInfluenceOsmosisSocial2023} als \\enquote{Influence by Osmosis} beschreiben, also Einfluss durch bloße Sichtbarkeit: Menschen übernehmen umweltfreundliches Verhalten häufig, weil sie es bei anderen sehen, nicht weil sie dazu aufgefordert werden."
+  },
+  "856964c7c8": {
+   "key": "somaFoodWasteReduction2020",
+   "ort": "10-12",
+   "satz": "Den Anstoß dazu gab ein Befund von \\textcite[S. 10--12]{somaFoodWasteReduction2020}."
+  },
+  "2f0873844c": {
+   "key": "erlhoferWebsiteKonzeptionUndRelaunch2017",
+   "ort": "Kap. 17.2.2",
+   "satz": "Schon fünf Testpersonen legen laut \\textcite[Kap.~17.2.2]{erlhoferWebsiteKonzeptionUndRelaunch2017} die schwerwiegenden, mehrfach auftretenden Bedienhürden einer Oberfläche offen; Auffälligkeiten lassen sich an dieser Stelle noch ohne Programmieraufwand korrigieren."
+  },
+  "08f5aae340": {
+   "key": "nielsenUsabilityEngineering1993",
+   "ort": "Kap. 6.8",
+   "satz": "So werden Fehlannahmen über die Bedienführung sichtbar, die eine reine Erfolgsmessung nicht erfasst~\\parencite[Kap.~6.8]{nielsenUsabilityEngineering1993}."
+  },
+  "ed9971f3b6": {
+   "key": "sauroLewisQuantifying2016",
+   "ort": "Kap. 8",
+   "satz": "Direkt danach erhebt ein kurzer Fragebogen je Kernaufgabe die \\ac{SEQ}, eine einzelne Frage zur empfundenen Aufgabenschwierigkeit auf einer siebenstufigen Skala~\\parencite[Kap.~8]{sauroLewisQuantifying2016}."
+  },
+  "aa5138cf7f": {
+   "key": "vittuariHowReduceConsumer2023",
+   "ort": "105",
+   "satz": "Die Gamification- und Community-Funktionen stützen sich dagegen auf literaturbasierte Verhaltenshebel: den Rahmen aus Drivers und Levers, der Hebel für konkrete Interventionen benennt \\parencite[S. 105]{vittuariHowReduceConsumer2023}, Reminders als wirksamen Nudge-Typ hinter der geplanten Erinnerungsbenachrichtigung \\parencite[S. 10]{barkerWhatNudgeTechniques2021}, erste Hinweise auf die Wirksamke"
+  },
+  "0297f91de5": {
+   "key": "barkerWhatNudgeTechniques2021",
+   "ort": "10",
+   "satz": "Die Gamification- und Community-Funktionen stützen sich dagegen auf literaturbasierte Verhaltenshebel: den Rahmen aus Drivers und Levers, der Hebel für konkrete Interventionen benennt \\parencite[S. 105]{vittuariHowReduceConsumer2023}, Reminders als wirksamen Nudge-Typ hinter der geplanten Erinnerungsbenachrichtigung \\parencite[S. 10]{barkerWhatNudgeTechniques2021}, erste Hinweise auf die Wirksamke"
+  },
+  "a0158014e2": {
+   "key": "somaFoodWasteReduction2020",
+   "ort": "9",
+   "satz": "Die Gamification- und Community-Funktionen stützen sich dagegen auf literaturbasierte Verhaltenshebel: den Rahmen aus Drivers und Levers, der Hebel für konkrete Interventionen benennt \\parencite[S. 105]{vittuariHowReduceConsumer2023}, Reminders als wirksamen Nudge-Typ hinter der geplanten Erinnerungsbenachrichtigung \\parencite[S. 10]{barkerWhatNudgeTechniques2021}, erste Hinweise auf die Wirksamke"
+  },
+  "7e89e1b140": {
+   "key": "nivedhithaHowGreenSocial2024",
+   "ort": "14",
+   "satz": "Die Gamification- und Community-Funktionen stützen sich dagegen auf literaturbasierte Verhaltenshebel: den Rahmen aus Drivers und Levers, der Hebel für konkrete Interventionen benennt \\parencite[S. 105]{vittuariHowReduceConsumer2023}, Reminders als wirksamen Nudge-Typ hinter der geplanten Erinnerungsbenachrichtigung \\parencite[S. 10]{barkerWhatNudgeTechniques2021}, erste Hinweise auf die Wirksamke"
+  },
+  "5d1f67c4bf": {
+   "key": "barkerWhatNudgeTechniques2021",
+   "ort": "10",
+   "satz": "Abgemildert wird die Grenze dadurch, dass zentrale Funktionen wie die Rettungspunkte aus überprüfter Verhaltensforschung stammen, etwa aus der Reminder-Wirkung, die \\textcite[S. 10]{barkerWhatNudgeTechniques2021} belegen."
+  }
+ }
 }
