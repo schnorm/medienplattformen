@@ -75,7 +75,9 @@ Eigene Abb./Tab.: „Quelle: Eigene Darstellung." in der Caption, kein `\cite{}`
 
 ## LaTeX
 
-lualatex, Arial 11, 1,5-zeilig, 2 cm Ränder, Blocksatz. Labels `sec:`/`fig:`/`tab:`/`eq:`. `\autoref{sec:label}` (mit `~` davor: `vgl.~\autoref{sec:label}`). `\enquote{}`. Float `[H]`, Caption vor `\label{}`. Tabellen `booktabs`, `\scriptsize` bei dichten Tabellen. **Kapitelstruktur (vollständiger Baum: `_shared/projektstruktur.md`):**
+lualatex, Arial 11, 1,5-zeilig, 2 cm Ränder, Blocksatz. Labels `sec:`/`fig:`/`tab:`/`eq:`. `\autoref{sec:label}` (mit `~` davor: `vgl.~\autoref{sec:label}`). `\enquote{}`. Caption vor `\label{}`. Tabellen `booktabs`, `\scriptsize` bei dichten Tabellen.
+
+**Float-Platzierung:** `[H]` nur für Floats, die **sicher auf eine halbe Seite passen** – bei größeren Tabellen `[htbp]`. Grund: `[H]` erzwingt die Position. Passt die Tabelle unten nicht mehr aufs Blatt, schiebt LaTeX sie komplett auf die nächste Seite und lässt die vorige halb leer. Gemessen an einem realen Projekt: 389 pt und 136 pt Weißraum auf zwei Seiten – zusammen mehr, als die dadurch entstandene Extraseite überhaupt an Text trug. Mit `[htbp]` darf die Tabelle an den Seitenanfang rutschen und steht weiterhin bei ihrem `\autoref`-Satz. **Vor jeder Kürzung deshalb erst den Weißraum prüfen** (`pruef-modus` → Teil-Check D): Eine Seite zu viel ist häufiger ein Layout- als ein Textmengenproblem. **Kapitelstruktur (vollständiger Baum: `_shared/projektstruktur.md`):**
 - Pro Hauptkapitel gibt es eine **Master-Datei** in `chapters/<kap>/<kap>.tex`, die mit `\section{...}\label{sec:<kap>}` (bzw. `\chapter{...}` je nach Dokumentklasse) beginnt und ihre Subsections per `\input{}` einbindet.
 - **Subsection-Dateien** in `chapters/<kap>/<nn>_<slug>.tex` beginnen mit `\subsection{...}\label{sec:<slug>}` (kein Chapter-Wrapper).
 - `pages/chapters.tex` bindet alle Hauptkapitel-Master per `\input{}` ein (nicht per `\include{}`).

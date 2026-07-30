@@ -1,4 +1,4 @@
-﻿# Brief-Vorlage: Gegenlesung per Subagent
+# Brief-Vorlage: Gegenlesung per Subagent
 
 Die Gegenlesung läuft standardmäßig über einen Subagenten (`gegenlesung/SKILL.md` → Ladevorschrift). Dieser Brief ist die Vorlage für den `Agent`-Auftrag.
 

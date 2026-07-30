@@ -146,7 +146,7 @@ STOPP = {
 }
 
 STATUS_BEFUND = {"WORTLAUT", "ZITAT WEICHT AB", "SEITE VERDÄCHTIG", "CLAIM SCHÄRFER",
-                 "NICHT GEFUNDEN", "SEITE AUSSERHALB"}
+                 "NICHT GEFUNDEN", "SEITE AUSSERHALB", "RENTIERT NICHT"}
 
 # „OK" heisst hier: Ein zur Textstelle passender Wortlaut wurde an der
 # angegebenen Stelle gefunden. Es heisst NICHT: Die Quelle traegt die Behauptung
@@ -222,6 +222,8 @@ def satz_um(text: str, pos: int) -> str:
     genau vor der Aussage ab, die belegt werden soll – der Vergleich mit der
     Quelle liefe dann gegen den falschen Text.
     """
+    if in_tabelle(text, pos):
+        return zellen_satz(text, pos)
     maske = list(text)
     for m in CITE_CMD_RE.finditer(text):
         for i in range(m.start(), m.end()):
@@ -232,7 +234,80 @@ def satz_um(text: str, pos: int) -> str:
         start = m.end()
     rest = SATZENDE_RE.search(maskiert[pos:])
     ende = pos + rest.end() if rest else len(text)
-    return text[start:ende].strip()
+    return ohne_struktur(text[start:ende]).strip()
+
+
+# LaTeX-Struktur ohne Aussagegehalt, die sonst im Trägersatz und damit im Hash
+# landet. Bewusst NICHT dabei: \caption{} und \quelle{} – dort steht Text, der
+# zitiert wird („Eigene Darstellung in Anlehnung an \cite{…}"), und wer sie
+# entfernt, lässt genau den Trägersatz verschwinden, den die Prüfung braucht.
+STRUKTUR_RE = re.compile(
+    r"\\(?:begin|end)\{[^}]*\}(?:\[[^\]]*\])?(?:\{[^}]*\})?"  # Umgebung, Option, Spaltenspec
+    r"|\\(?:top|mid|bottom)rule(?:\[[^\]]*\])?"                # booktabs-Linien
+    r"|\\label\{[^}]*\}"                                       # Anker
+    r"|\\(?:hline|centering|small|footnotesize|arraybackslash)\b")
+
+
+def ohne_struktur(satz: str) -> str:
+    """Strukturbefehle aus dem Trägersatz entfernen (siehe STRUKTUR_RE)."""
+    return re.sub(r"\s{2,}", " ", STRUKTUR_RE.sub(" ", satz))
+
+
+# Argumente mitschlucken: `\begin{tabular}{ll}`, bei tabularx zusätzlich die
+# Breite (`{\textwidth}{lX}`). Sonst bleibt die Spaltenspezifikation als „{ll}"
+# vor dem Zeilenkopf stehen.
+TABELLE_BEGIN_RE = re.compile(
+    r"\\begin\{(?:tabular|tabularx|longtable)\*?\}"
+    r"(?:\[[^\]]*\])?(?:\{[^{}]*\}){0,2}")
+TABELLE_END_RE = re.compile(r"\\end\{(?:tabular|tabularx|longtable)\*?\}")
+ZEILENENDE_RE = re.compile(r"\\\\")
+ZELLENTRENNER_RE = re.compile(r"(?<!\\)&")
+
+
+def in_tabelle(text: str, pos: int) -> bool:
+    """Liegt `pos` innerhalb einer tabular-Umgebung?"""
+    letztes_begin = max((m.start() for m in TABELLE_BEGIN_RE.finditer(text[:pos])),
+                        default=-1)
+    letztes_ende = max((m.start() for m in TABELLE_END_RE.finditer(text[:pos])),
+                       default=-1)
+    return letztes_begin > letztes_ende
+
+
+def zellen_satz(text: str, pos: int) -> str:
+    """Trägersatz einer Zitation in einer Tabellenzelle: die Zelle selbst.
+
+    Eine Zelle enthält keinen Satzschlusspunkt. Die Satzgrenzen-Logik spannte
+    deshalb vom letzten Punkt VOR der Tabelle bis zum ersten Punkt DANACH –
+    gemessen an einem realen Projekt 1530 Zeichen, beginnend bei
+    `\\begin{table}[H]` und endend mitten im Folgeabsatz. Folge: Jede Änderung
+    in der Nachbarschaft der Tabelle invalidierte alle Urteile ihrer Zellen,
+    obwohl kein Zeichen des zitierenden Textes berührt war – an einem Tag
+    dreimal, neun Neubuchungen.
+
+    Der Zeilenkopf (erste Zelle der Reihe) kommt als Kontext davor: Eine Zelle
+    wie „Feedback und Fortschritt" allein ist für den semantischen Abgleich zu
+    dünn, und der Kopf ändert sich nur, wenn die Reihe sich ändert.
+    """
+    # Zeilenanfang: das letzte `\\` – oder der Beginn der Tabelle, denn die
+    # erste Reihe hat kein `\\` davor. Ohne diese Grenze reichte der Zeilenkopf
+    # bis in den Absatz vor der Tabelle.
+    start = max([m.end() for m in ZEILENENDE_RE.finditer(text[:pos])]
+                + [m.end() for m in TABELLE_BEGIN_RE.finditer(text[:pos])]
+                + [0])
+    kandidaten = [m.start() for m in ZEILENENDE_RE.finditer(text[pos:])] \
+        + [m.start() for m in TABELLE_END_RE.finditer(text[pos:])]
+    ende = pos + min(kandidaten) if kandidaten else len(text)
+    zeile = text[start:ende]
+    rel = pos - start
+
+    grenzen = [0] + [m.end() for m in ZELLENTRENNER_RE.finditer(zeile)] + [len(zeile)]
+    zellen = [zeile[a:b].rstrip("&").strip() for a, b in zip(grenzen, grenzen[1:])]
+    idx = sum(1 for g in grenzen[1:-1] if g <= rel)
+    zelle = ohne_struktur(zellen[idx]).strip() if idx < len(zellen) else ""
+    kopf = ohne_struktur(zellen[0]).strip() if zellen else ""
+    if kopf and kopf != zelle:
+        return f"{kopf} – {zelle}"
+    return zelle
 
 
 def spanne(text: str, muster: re.Pattern, block: bool = False) -> list[tuple[int, int, str, bool]]:
@@ -878,6 +953,33 @@ HEDGE_WOERTER = re.compile(
     r"tendenziell|Hinweise darauf|nicht belegt|belegt aber nicht)(?![\wäöüß])", re.I)
 
 
+def vorfassung(z: Zitation, state: dict) -> str:
+    """Der Trägersatz derselben Fundstelle aus einem früheren Lauf, falls vorhanden.
+
+    Ändert sich ein Trägersatz, ändert sich sein Hash – das alte Urteil verfällt
+    und die Zitation kommt als PRÜFEN zurück. Der Bericht zeigt dann nur den
+    neuen Satz. Steht die Vorfassung daneben, ist die **Richtung** der Änderung
+    sichtbar (abgeschwächt oder verschärft), und genau die entscheidet, ob das
+    Zitat den Satz noch trägt: Wird ein Claim abgeschwächt, kann der Beleg zu
+    stark werden – die Rahmung („stützt sich auf") behauptet dann mehr als der
+    Satz selbst.
+    """
+    for h, e in state.get("saetze", {}).items():
+        if h == z.hash:
+            continue
+        if e.get("key") == z.key and e.get("ort") == ortsangabe(z):
+            return e.get("satz", "")
+    return ""
+
+
+def merke_saetze(zitate: list[Zitation], state: dict) -> None:
+    """Trägersätze je Hash festhalten – Grundlage für `vorfassung()`."""
+    state.setdefault("saetze", {})
+    for z in zitate:
+        state["saetze"][z.hash] = {"key": z.key, "ort": ortsangabe(z),
+                                   "satz": z.satz.strip()[:400]}
+
+
 def anspruchsverlauf(zitate: list[Zitation], nur_auffaellig: bool = True) -> list[str]:
     """Alle Trägersätze einer mehrfach zitierten Quelle nebeneinander.
 
@@ -917,6 +1019,37 @@ def anspruchsverlauf(zitate: list[Zitation], nur_auffaellig: bool = True) -> lis
                           f"[{ortsangabe(z)}] {z.satz.strip()[:220]}")
         ausgabe.append("\n".join(zeilen))
     return ausgabe
+
+
+MAX_DUBLETTE_ZEILEN = 12
+
+
+def zitat_dubletten(zitate: list[Zitation]) -> list[str]:
+    """Dieselbe Quelle mit derselben Stelle zweimal binnen weniger Zeilen.
+
+    Nicht falsch, aber inkonsistent – und teuer: Jede Änderung am Umfeld
+    invalidiert beide Urteile statt einem. Typischer Entstehungsort sind
+    Tabellenzellen, die einen Beleg wiederholen, der wenige Zeilen darüber im
+    Fließtext schon steht. Ein `\\autoref` auf den Abschnitt tut dasselbe.
+    """
+    findings: list[str] = []
+    nach_stelle: dict[tuple[str, str, str], list[Zitation]] = {}
+    for z in zitate:
+        nach_stelle.setdefault((z.datei, z.key, ortsangabe(z)), []).append(z)
+    for (datei, key, ort), gruppe in sorted(nach_stelle.items()):
+        if len(gruppe) < 2:
+            continue
+        gruppe.sort(key=lambda x: x.zeile)
+        for a, b in zip(gruppe, gruppe[1:]):
+            if b.zeile - a.zeile <= MAX_DUBLETTE_ZEILEN:
+                findings.append(
+                    f"[HINWEIS:ZITAT-DUBLETTE] `{key}` [{ort}] steht in "
+                    f"{Path(datei).name} zweimal binnen "
+                    f"{b.zeile - a.zeile} Zeilen (Z. {a.zeile} und {b.zeile}). "
+                    f"Nicht falsch, aber jede Änderung am Umfeld invalidiert "
+                    f"beide Urteile – die zweite Nennung durch einen "
+                    f"\\autoref auf den Abschnitt ersetzen.")
+    return findings
 
 
 def notiz_warnungen(zitate: list[Zitation], bib: dict) -> list[str]:
@@ -1045,6 +1178,12 @@ def pruefe(zitate: list[Zitation], bib: dict, state: dict, root: Path,
     ausnahmen = [normalisiere(a) for a in state.get("ausnahmen", [])]
     for z in zitate:
         alt = state["urteile"].get(z.hash)
+        if alt and alt.get("status") == "RENTIERT NICHT":
+            z.status = "RENTIERT NICHT"
+            z.befund = (alt.get("notiz") or
+                        "Fundstelle deckt, das Zitat trägt den Satz aber nicht mehr – "
+                        "Rahmung streichen oder Beleg ersetzen.")
+            continue
         if alt and not alle and alt.get("status") in ("OK", "AUSNAHME"):
             z.status, z.notiz = alt["status"], alt.get("notiz", "")
             continue
@@ -1479,7 +1618,10 @@ def main() -> int:
                     help="Prüfpaare mit vollem Seitentext statt Ausschnitt "
                          "(wenn der Ausschnitt für das Urteil nicht reicht)")
     ap.add_argument("--verdikt", action="append", default=[],
-                    metavar="HASH=STATUS", help="Urteil setzen: OK oder AUSNAHME")
+                    metavar="HASH=STATUS",
+                    help="Urteil setzen: OK · AUSNAHME · \"RENTIERT NICHT\" "
+                         "(Fundstelle deckt, das Zitat trägt den Satz aber nicht "
+                         "mehr – bleibt als Befund stehen)")
     ap.add_argument("--notiz", default="", help="Notiz zum Urteil")
     ap.add_argument("--offset", action="append", default=[], metavar="KEY=N",
                     help="Seitenversatz einer Quelle manuell setzen")
@@ -1509,9 +1651,14 @@ def main() -> int:
     for eintrag in a.verdikt:
         h, _, status = eintrag.partition("=")
         status = status.strip().upper() or "OK"
-        if status not in ("OK", "AUSNAHME"):
-            print(f"FEHLER: Status '{status}' unzulässig (OK oder AUSNAHME).",
-                  file=sys.stderr)
+        # „RENTIERT NICHT" schliesst eine Ausdruckslücke: Die Fundstelle deckt,
+        # aber das Zitat traegt den Satz nicht mehr – etwa weil der Claim
+        # abgeschwaecht wurde und die Rahmung („stuetzt sich auf") jetzt mehr
+        # behauptet als der Satz selbst. Ohne diesen Wert musste so ein Fall
+        # zwangslaeufig als OK gebucht werden und verschwand damit.
+        if status not in ("OK", "AUSNAHME", "RENTIERT NICHT"):
+            print(f"FEHLER: Status '{status}' unzulässig "
+                  f"(OK, AUSNAHME oder 'RENTIERT NICHT').", file=sys.stderr)
             return 2
         state["urteile"][h.strip()] = {"status": status, "notiz": a.notiz,
                                        "datum": f"{date.today():%Y-%m-%d}"}
@@ -1537,6 +1684,15 @@ def main() -> int:
         return 0
     bib = lies_bib(bib_pfad)
     pruefe(zitate, bib, state, root, a.min_words, a.alle)
+    for z in zitate:
+        if z.status == "PRÜFEN" and (alt := vorfassung(z, state)):
+            z.befund = ((z.befund + " · ") if z.befund else "") + (
+                f"**Trägersatz geändert.** Vorfassung: „{alt}“ – Richtung der "
+                f"Änderung prüfen: Deckt die Fundstelle noch, **und** trägt sie "
+                f"den Satz in seiner jetzigen Stärke, oder ist er inzwischen "
+                f"eigene Setzung? Falls Letzteres: "
+                f"--verdikt {z.hash}=\"RENTIERT NICHT\"")
+    merke_saetze(zitate, state)
     schreib_state(state_pfad, state)
     Path(a.bericht).write_text(bericht(zitate, root), encoding="utf-8")
 
@@ -1548,6 +1704,8 @@ def main() -> int:
         print(f"  {status:<20} {zaehler[status]}")
     for block in anspruchsverlauf(zitate, nur_auffaellig=not a.verlauf):
         print(f"\n{block}")
+    for w in zitat_dubletten(zitate):
+        print(f"\n{w}")
     for w in notiz_warnungen(zitate, bib):
         print(f"\n{w}")
     uebrig = unreferenzierte_volltexte(bib, root)

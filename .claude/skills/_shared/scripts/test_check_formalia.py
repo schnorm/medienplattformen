@@ -11,7 +11,8 @@ from check_formalia import (  # noqa: E402
     anhang_buchstaben, autorenschaft, caption_text, check_aktivierung,
     check_anhang_verweise, check_caption_doppelbelegung, check_file,
     check_gruppenbezug, check_meta_platzhalter, check_title_duplication,
-    check_unterpunkte, check_zahlwoerter, strip_comment)
+    check_ungenutzte_acronyms, check_unterpunkte, check_zahlwoerter,
+    find_acronyms, strip_comment)
 
 
 def run_on(content: str):
@@ -108,7 +109,7 @@ class TestChecks(unittest.TestCase):
         findings, _ = run_on("\\begin{figure}\n[H]\n\\centering\n\\end{figure}\n")
         self.assert_cat(findings, "FLOAT", expected=False)
 
-    def test_float_ohne_h_wird_weiter_gefunden(self):
+    def test_float_ohne_platzierung_wird_gefunden(self):
         findings, _ = run_on("\\begin{figure}\n\\centering\n\\end{figure}\n")
         self.assert_cat(findings, "FLOAT")
 
@@ -116,8 +117,18 @@ class TestChecks(unittest.TestCase):
         findings, _ = run_on("\\begin{figure}[H]\n\\centering\n\\end{figure}\n")
         self.assert_cat(findings, "FLOAT", expected=False)
 
-    def test_float_mit_anderer_platzierung(self):
-        findings, _ = run_on("\\begin{figure}[htbp]\n\\centering\n\\end{figure}\n")
+    def test_htbp_ist_zulaessig(self):
+        # Seit 2026-07-30: [H] erzwingt die Position und laesst bei grossen
+        # Tabellen eine halbe Seite leer – [htbp] ist dort die richtige Wahl
+        # und darf nicht als Formfehler gemeldet werden.
+        for opt in ("[htbp]", "[!ht]", "[tbp]"):
+            with self.subTest(opt=opt):
+                findings, _ = run_on(
+                    f"\\begin{{table}}{opt}\n\\centering\n\\end{{table}}\n")
+                self.assert_cat(findings, "FLOAT", expected=False)
+
+    def test_unsinnige_option_gilt_nicht_als_platzierung(self):
+        findings, _ = run_on("\\begin{figure}[xyz]\n\\centering\n\\end{figure}\n")
         self.assert_cat(findings, "FLOAT")
 
     def test_autoref_without_tilde(self):
@@ -636,6 +647,80 @@ class TestStrukturUndAktivierung(unittest.TestCase):
         finally:
             sys.argv = alt
         return puffer.getvalue()
+
+    # --- ABKUERZUNG-UNGENUTZT: Einträge, die im Text nicht vorkommen ---
+
+    def acro_projekt(self, root: Path, verzeichnis: str, text: str):
+        (root / "pages").mkdir(parents=True, exist_ok=True)
+        (root / "pages" / "acronyms.tex").write_text(verzeichnis, encoding="utf-8")
+        (root / "chapters" / "01_kap").mkdir(parents=True, exist_ok=True)
+        (root / "chapters" / "01_kap" / "a.tex").write_text(text, encoding="utf-8")
+        out = {}
+        for tex in sorted(root.rglob("*.tex")):
+            _f, _e, meta = check_file(tex)
+            out[tex] = meta
+        return out
+
+    def test_ungenutzter_eintrag_ist_fehler(self):
+        # Das acronym-Paket druckt jeden Eintrag – ein verwaister landet im
+        # abgegebenen Verzeichnis, ohne dass die Abkürzung im Text vorkommt.
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            metas = self.acro_projekt(
+                root,
+                "\\begin{acronym}[DSGVO]\n\\acro{KI}{Kuenstliche Intelligenz}\n"
+                "\\acro{DSGVO}{Datenschutz-Grundverordnung}\n\\end{acronym}\n",
+                "Die \\ac{KI} kommt vor, die andere nicht.\n")
+            funde = check_ungenutzte_acronyms(metas, {"KI", "DSGVO"})
+            self.assertEqual(len(funde), 1, funde)
+            self.assertIn("ABKUERZUNG-UNGENUTZT", funde[0])
+            self.assertIn("DSGVO", funde[0])
+            self.assertNotIn(" KI ", funde[0])
+
+    def test_alle_genutzt_bleibt_still(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            metas = self.acro_projekt(
+                root, "\\begin{acronym}[KI]\n\\acro{KI}{Kuenstliche Intelligenz}\n"
+                      "\\end{acronym}\n",
+                "Die \\ac{KI} kommt vor.\n")
+            self.assertEqual(check_ungenutzte_acronyms(metas, {"KI"}), [])
+
+    def test_verwendung_im_kommentar_zaehlt_nicht(self):
+        # acronyms.tex erklaert die Verwendung selbst im Kommentar.
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            metas = self.acro_projekt(
+                root, "% Verwendung: \\ac{KI}\n\\begin{acronym}[KI]\n"
+                      "\\acro{KI}{Kuenstliche Intelligenz}\n\\end{acronym}\n",
+                "Hier steht kein Akronym.\n")
+            funde = check_ungenutzte_acronyms(metas, {"KI"})
+            self.assertEqual(len(funde), 1, funde)
+
+    def test_varianten_von_ac_zaehlen(self):
+        # \acs, \acl, \acf, \acp sind ebenfalls Verwendungen.
+        for befehl in ("\\acs{KI}", "\\acl{KI}", "\\acf{KI}", "\\acp{KI}"):
+            with self.subTest(befehl=befehl):
+                with tempfile.TemporaryDirectory() as d:
+                    root = Path(d)
+                    metas = self.acro_projekt(
+                        root, "\\begin{acronym}[KI]\n\\acro{KI}{KI}\n\\end{acronym}\n",
+                        f"Hier: {befehl} im Satz.\n")
+                    self.assertEqual(check_ungenutzte_acronyms(metas, {"KI"}), [])
+
+    def test_todo_eintrag_gilt_nicht_als_verwaist(self):
+        # Der Platzhalter der Vorlage soll ersetzt werden – kein Verwaister.
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            (root / "pages").mkdir(parents=True)
+            (root / "pages" / "acronyms.tex").write_text(
+                "\\begin{acronym}[MUSTER]\n"
+                "    \\acro{MUSTER}{Platzhalter} % TODO\n"
+                "    \\acro{DSGVO}{Datenschutz-Grundverordnung}\n"
+                "\\end{acronym}\n", encoding="utf-8")
+            self.assertEqual(find_acronyms(root, ohne_todo=True), {"DSGVO"})
+            # Fuer die Gegenrichtung bleibt der Platzhalter bekannt.
+            self.assertEqual(find_acronyms(root), {"MUSTER", "DSGVO"})
 
     # --- Anhänge zählen: \newappendix{} plus handgeschriebene Altform ---
 

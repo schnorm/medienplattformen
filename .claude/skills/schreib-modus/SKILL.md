@@ -36,6 +36,19 @@ Pro Kapitel aus `kapitelplan.md` gibt es eine Subsection-Datei `chapters/<kap>/<
 
 **Sichtbarkeitspflicht**: Nach jeder gespeicherten `.tex`-Datei im Chat kurz quittieren, z. B. „✅ Gespeichert: chapters/theorie/konzept-a.tex" – nicht nur den Kapiteltext im Chat zeigen und stillschweigend annehmen, dass die Datei geschrieben wurde. **Zusätzlich** die entsprechende Zeile in `CLAUDE.md` → „Aktueller Projektstatus" auf FERTIG setzen (bestehende Zeile überschreiben, nicht anhängen) und kurz mitquittieren.
 
+## Kürzen ist ein Arbeitsschritt mit Verfahren, nicht freihändig
+
+Kürzungen entstehen aus einem Audit-Befund („Umfang überschritten") und wurden bisher freihändig ausgeführt – kein Verfahren, keine Abnahme, keine Prüfung danach. Belegt aus einem realen Projekt: Vier Runden entfernten über 1.000 Wörter, und der Nutzer meldete anschließend „liest sich zu gekürzt". Drei gebrochene Bezüge waren jeder einer Kürzungsrunde zuzuordnen und haben **Audits mit 100/100 überlebt** – weil geprüft wird, was der Diff zeigt, und der Schaden im Satz *davor* entsteht.
+
+**Verbindliche Reihenfolge:**
+
+1. **Erst Weißraum messen, dann kürzen.** Eine Seite zu viel ist häufiger ein Layout- als ein Textmengenproblem: `[H]` an einer großen Tabelle schiebt sie auf die nächste Seite und lässt die vorige halb leer. Gemessen wurden 389 pt und 136 pt auf zwei Seiten – zusammen mehr, als die Extraseite an Text trug. Der Prüfbericht nennt diese Reserve vor den Kürzungsstellen (`pruef-modus` → Teil-Check D).
+2. **Kandidaten nach Klasse ordnen, in dieser Reihenfolge abarbeiten:**
+   - **Klasse 1 – inhaltliche Dubletten:** dieselbe Aussage zum zweiten und dritten Mal, wiederholte Vorbehalte, Dubletten zwischen Reflexion und Fazit.
+   - **Klasse 2 – Bindungsmasse:** Übergangssätze, Absatzöffner, Ankündigungen, Rückverweise. **Zuletzt und nur, wenn Klasse 1 erschöpft ist.** Das Kriterium „sagt der Folgesatz auch" ist für Fakten richtig und für Text falsch: Anschlüsse sind *per Definition* redundant, und genau sie machen einen Absatz lesbar. Wer nach dem Kriterium allein vorgeht, entfernt bevorzugt die Bindungsmasse, weil sie es am saubersten erfüllt.
+3. **Nach jeder Streichung den ganzen Absatz plus den folgenden neu lesen** – nicht den Diff. Im Diff sieht jede einzelne Streichung sauber aus.
+4. **Je Streichung notieren, ob der gestrichene Satz ein Bezugswort geliefert hat** für einen späteren Anschluss mit „es", „beide", „daraus", „diese", „dort", „ebenso". `check_formalia.py` meldet absatzinitiale Anaphern als `ANAPHER` – das fängt den häufigsten Fall, ersetzt aber das Nachlesen nicht.
+
 ## Was beim Kürzen geschützt ist
 
 Das Audit schlägt Kürzungen vor, sobald `check_umfang.py` über der Zielgröße meldet. Diese Liste sagt, was dabei **nicht** angetastet wird – ohne sie greift Kürzen bevorzugt die dichtesten und damit tragenden Sätze an, weil die am meisten Wörter pro Aussage binden. Belegt: Eine Kürzungsrunde riss die Mitigationsschicht aus einer Limitation und kostete im folgenden Audit −15 Punkte.

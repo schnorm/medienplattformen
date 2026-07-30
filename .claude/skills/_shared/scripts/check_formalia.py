@@ -198,6 +198,8 @@ DOUBLE_WORD_RE = re.compile(r"(?<![\w-])(?<!, )([A-Za-zÄÖÜäöüß]{2,})\s+\1
 # Satz eine Klammer-Erklärung folgt.
 CAPS_TOKEN_RE = re.compile(r"(?<![\wÄÖÜäöüß-])([A-ZÄÖÜ]{2}[A-ZÄÖÜ0-9]*)(?![a-zäöüß])")
 ACRO_DEF_RE = re.compile(r"\\acro\{([^}]*)\}")
+# Verwendung im Text: \ac{KI}, \acs{KI}, \acl{KI}, \acf{KI}, \acp{KI} …
+ACRO_USE_RE = re.compile(r"\\ac[slfp]?\*?\{([^}]*)\}")
 ROMAN_RE = re.compile(r"^[IVXLCDM]+$")
 # Allgemein geläufige Abkürzungen und Organisations-/Technik-Eigennamen – laut
 # Akronym-Regel gehören sie gerade NICHT ins Verzeichnis und wären nur Rauschen.
@@ -326,15 +328,23 @@ def maskiere_zitate(line: str) -> str:
         lambda m: m.group(1) + " " * len(m.group(2)) + m.group(3), line)
 
 
+# Zulaessige Platzierungen. Bis 2026-07-30 war nur „[H]" erlaubt; das erzwang bei
+# grossen Tabellen einen Seitenumbruch mit halbleerer Vorseite. Gemessen an einem
+# realen Projekt: 389 pt und 136 pt Weissraum auf zwei Seiten - zusammen mehr,
+# als die dadurch entstandene Extraseite an Text trug. Vier Kuerzungsrunden mit
+# ueber 1.000 Woertern waren teils gar nicht noetig, die Ursache war Layout.
+FLOAT_OPT_RE = re.compile(r"^\[[Hhtbp!]+\]")
+
+
 def float_platzierung_ok(lines: list[str], idx: int, rest: str) -> bool:
-    """Steht „[H]“ hinter \\begin{figure} – oder in der nächsten Inhaltszeile?"""
+    """Steht eine Platzierungsoption hinter \\begin{figure} – oder in der Folgezeile?"""
     if rest.strip():
-        return rest.lstrip().startswith("[H]")
+        return bool(FLOAT_OPT_RE.match(rest.lstrip()))
     for weiter in lines[idx + 1:]:
         w = strip_comment(weiter).strip()
         if not w:
             continue
-        return w.startswith("[H]")
+        return bool(FLOAT_OPT_RE.match(w))
     return False
 
 
@@ -534,8 +544,10 @@ def check_file(path: Path) -> tuple[list[str], int, dict]:
         fb = FLOAT_BEGIN_RE.search(line)
         if fb and not float_platzierung_ok(lines, no - 1, fb.group(1)):
             findings.append(
-                f"{path}:{no}: [HINWEIS:FLOAT] Float ohne [H]-Platzierung – auch "
-                f"nicht in der Folgezeile.")
+                f"{path}:{no}: [HINWEIS:FLOAT] Float ohne Platzierungsoption – auch "
+                f"nicht in der Folgezeile. `[H]` für alles, was sicher auf eine "
+                f"halbe Seite passt, `[htbp]` für größere Tabellen: Sonst schiebt "
+                f"LaTeX sie auf die nächste Seite und lässt die vorige halb leer.")
 
         dw = DOUBLE_WORD_RE.search(line_eigen)
         if dw:
@@ -599,6 +611,12 @@ def check_file(path: Path) -> tuple[list[str], int, dict]:
             continue
         caps_tokens.setdefault(tok, None)
     meta["caps_tokens"] = list(caps_tokens)
+    # Über die rohen Zeilen, nicht über detexed_read: Dort ist der \ac-Befehl
+    # schon entfernt, und genau er ist hier das Suchmuster. Kommentare müssen
+    # aber raus – acronyms.tex erklärt die Verwendung im Kommentar („\ac{MUSTER}"),
+    # und das zählte sonst als Verwendung.
+    meta["ac_verwendet"] = set(ACRO_USE_RE.findall(
+        "\n".join(strip_comment(z) for z in lines)))
 
     # Dreier-Aufzählungs-Häufung („X, Y und Z" als Standardmuster)
     meta["zahlwoerter"] = ZAHLWORT_RE.findall(detexed_read)
@@ -610,6 +628,7 @@ def check_file(path: Path) -> tuple[list[str], int, dict]:
             f"{path}: [HINWEIS:TRIAS] {len(trias_matches)}× Dreier-Aufzählung (z. B. „{trias_matches[0]}“) – KI-Standardmuster; nur belassen, wo es sachlich genau drei Dinge sind (hard-rules-formal.md → Schreibstil).")
 
     findings.extend(check_readability(path, detexed_read))
+    findings.extend(check_anaphern(path, lines))
 
     return findings, errors, meta
 
@@ -671,15 +690,27 @@ def check_title_duplication(metas: dict[Path, dict], paper_title: str | None) ->
     return findings
 
 
-def find_acronyms(start: Path) -> set[str] | None:
-    """Sucht pages/acronyms.tex (analog find_paper_title) und liest die \\acro-Kürzel."""
+def find_acronyms(start: Path, ohne_todo: bool = False) -> set[str] | None:
+    """Sucht pages/acronyms.tex (analog find_paper_title) und liest die \\acro-Kürzel.
+
+    `ohne_todo=True` lässt als TODO markierte Zeilen weg. Die beiden Prüfungen
+    brauchen verschiedene Mengen: Für „unerklärte Abkürzung im Text" zählt der
+    Platzhalter der Vorlage als bekannt (sonst meldet ein frisches Projekt sein
+    eigenes „MUSTER"), für „ungenutzter Eintrag im Verzeichnis" nicht (er soll
+    ersetzt werden und ist kein verwaister Eintrag).
+    """
     candidates = [Path("pages/acronyms.tex")]
     base = start if start.is_dir() else start.parent
     for parent in [base, *base.parents]:
         candidates.append(parent / "pages" / "acronyms.tex")
     for c in candidates:
         if c.exists():
-            return set(ACRO_DEF_RE.findall(c.read_text(encoding="utf-8", errors="replace")))
+            gefunden: set[str] = set()
+            for zeile in c.read_text(encoding="utf-8", errors="replace").splitlines():
+                if ohne_todo and re.search(r"%.*\bTODO\b", zeile):
+                    continue
+                gefunden.update(ACRO_DEF_RE.findall(zeile))
+            return gefunden
     return None
 
 
@@ -697,6 +728,85 @@ def check_unexplained_acronyms(metas: dict[Path, dict], acros: set[str] | None) 
             findings.append(
                 f"{path}: [HINWEIS:ABKUERZUNG] … und {len(unknown) - MAX_ACRO_REPORTS} weitere unerklärte Abkürzungen.")
     return findings
+
+
+# Anaphern, die ein Bezugswort im vorangehenden Satz brauchen. Geprueft wird
+# bewusst nur die ABSATZINITIALE Stellung: Dort gibt es konstruktionsbedingt
+# keinen vorangehenden Satz, der das Bezugswort liefern koennte - der Befund ist
+# damit sicher, ohne Numerus- und Genusabgleich ueber Satzgrenzen, der im
+# Deutschen unweigerlich rauschen wuerde.
+#
+# Anlass: Drei gebrochene Bezuege in einer fremden Arbeit, jeder einer
+# Kuerzungsrunde zuzuordnen („Es beginnt mit der Wettbewerbsanalyse" - der Satz,
+# der „Kapitel 2" einfuehrte, war gestrichen). Alle drei haben Audits mit
+# 100/100 ueberlebt: Geprueft wird der Diff, und im Diff sieht jede einzelne
+# Streichung sauber aus. Der Schaden entsteht im Satz davor.
+ANAPHER_RE = re.compile(
+    r"^(Es|Beide|Daraus|Dabei|Dort|Damit|Letztere[rs]?|Diese[rs]?|Jene[rs]?|"
+    r"Ebenso|Dazu|Hierbei)\s+[a-zäöüß]")
+
+
+def check_anaphern(path: Path, lines: list[str]) -> list[str]:
+    """Absatzinitiale Anaphern ohne Bezugswort.
+
+    Ein Absatz, der mit „Es", „Beide" oder „Daraus" beginnt, verweist auf etwas,
+    das im Absatz davor stand – nach einer Kürzung womöglich auf nichts mehr.
+    HINWEIS, nicht FEHLER: Es gibt legitime Fälle („Es zeigt sich, dass …" als
+    unpersönliche Konstruktion), und das Urteil braucht den Kontext.
+    """
+    findings: list[str] = []
+    absatzanfang = True
+    for no, roh in enumerate(lines, 1):
+        z = strip_comment(roh).strip()
+        if not z:
+            absatzanfang = True
+            continue
+        if z.startswith("\\") or z.startswith("%"):
+            absatzanfang = True          # Struktur-/Befehlszeile trennt ebenfalls
+            continue
+        if absatzanfang:
+            m = ANAPHER_RE.match(z)
+            if m:
+                findings.append(
+                    f"{path}:{no}: [HINWEIS:ANAPHER] Absatz beginnt mit "
+                    f"„{m.group(1)}“ – das Bezugswort steht dann im Absatz davor "
+                    f"oder nirgends. Nach Kürzungen der häufigste stille Schaden: "
+                    f"Der gestrichene Satz war das Bezugswort. Absatz und "
+                    f"Vorgängerabsatz zusammen lesen, nicht den Diff.")
+        absatzanfang = False
+    return findings
+
+
+def check_ungenutzte_acronyms(metas: dict[Path, dict], acros: set[str] | None) -> list[str]:
+    """Die Gegenrichtung: Einträge im Verzeichnis, die im Text nicht vorkommen.
+
+    Das `acronym`-Paket druckt **jeden** deklarierten `\\acro`-Eintrag, ob
+    benutzt oder nicht. Ein Kürzel, das beim Kürzen aus dem Text verschwindet,
+    bleibt damit im abgegebenen Abkürzungsverzeichnis stehen – nachgewiesen an
+    der leeren Vorlage, deren Platzhalter „MUSTER" nirgends verwendet wird und
+    trotzdem im PDF erscheint. Die IU-Richtlinien verlangen ausdrücklich nur
+    tatsächlich verwendete Abkürzungen im Verzeichnis.
+
+    FEHLER, nicht Hinweis: Anders als eine unerklärte Abkürzung im Text ist das
+    kein Ermessensfall, sondern eine Zeile im PDF, die dort nicht hingehört.
+    """
+    if not acros:
+        return []
+    benutzt: set[str] = set()
+    for path, m in metas.items():
+        # Das Verzeichnis selbst zählt nicht als Verwendungsort.
+        if path.name == "acronyms.tex":
+            continue
+        benutzt |= set(m.get("ac_verwendet", set()))
+    ungenutzt = sorted(a for a in acros if a not in benutzt)
+    if not ungenutzt:
+        return []
+    return [f"pages/acronyms.tex: [FEHLER:ABKUERZUNG-UNGENUTZT] "
+            f"{', '.join(ungenutzt)} – im Verzeichnis deklariert, im Text nirgends "
+            f"per \\ac{{}} verwendet. Das acronym-Paket druckt jeden Eintrag; die "
+            f"Zeile steht also im abgegebenen Verzeichnis, ohne dass die Abkürzung "
+            f"vorkommt (IU-Richtlinien: nur tatsächlich verwendete aufnehmen). "
+            f"Entweder im Text verwenden oder den \\acro-Eintrag streichen."]
 
 
 def _projekt_root(start: Path) -> Path:
@@ -1035,7 +1145,18 @@ def main() -> int:
         metas[f] = meta
 
     total_findings.extend(check_title_duplication(metas, find_paper_title(args.targets[0])))
-    total_findings.extend(check_unexplained_acronyms(metas, find_acronyms(args.targets[0])))
+    acros = find_acronyms(args.targets[0])
+    total_findings.extend(check_unexplained_acronyms(metas, acros))
+    # Ungenutzte Einträge nur bewerten, wenn der ganze Textbestand im Lauf war –
+    # bei `check_formalia.py chapters/02_theorie/` gälte jede Abkürzung der
+    # übrigen Kapitel als ungenutzt.
+    if any(t.is_dir() and t.resolve() in (_projekt_root(args.targets[0]).resolve(),
+                                          (_projekt_root(args.targets[0]) / "chapters").resolve())
+           for t in args.targets if t.is_dir()):
+        ungenutzt = check_ungenutzte_acronyms(
+            metas, find_acronyms(args.targets[0], ohne_todo=True))
+        total_errors += sum(1 for f in ungenutzt if "[FEHLER:" in f)
+        total_findings.extend(ungenutzt)
 
     # Dateiübergreifende Struktur- und Aktivierungs-Checks. Sie ergeben nur über
     # den GESAMTEN Bestand Sinn (drei Abbildungen können auf drei Dateien liegen),

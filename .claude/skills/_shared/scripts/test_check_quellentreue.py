@@ -26,7 +26,8 @@ from check_quellentreue import (  # noqa: E402
     epub_kapitel, epub_pfad,
     gesetzte_dateipfade, kalibriere, kernbegriffe, laengste_gemeinsame_folge,
     lies_bib, lies_tex, naechstes_zitat, ohne_zitattext, ortsangabe, pdf_pfad,
-    notiz_warnungen, resolve_kapitel, seite_ausserhalb_pages, seiten_liste,
+    in_tabelle, merke_saetze, notiz_warnungen, ohne_struktur, resolve_kapitel, vorfassung,
+    zitat_dubletten, seite_ausserhalb_pages, seiten_liste,
     seitenbereich, spanne, sprache, sprachwechsel, unreferenzierte_volltexte,
     versatz_aus_pages, normalisiere, satz_um, treffer_auf_seite, woerter,
     zitat_segmente, zugangsklasse, CITE_CMD_RE, Zitation)
@@ -876,6 +877,136 @@ class TestZugangsklasse(unittest.TestCase):
             self.assertEqual(lies_bib(p)["mueller2020"]["_typ"], "book")
         finally:
             p.unlink()
+
+
+class TestStrukturImTraegersatz(unittest.TestCase):
+    """Die Float-Option darf das Urteil nicht invalidieren."""
+
+    def test_platzierungsoption_aendert_den_satz_nicht(self):
+        # Realfall: [H] -> [htbp] setzte drei Urteile von OK auf PRÜFEN zurück,
+        # ohne dass ein Zeichen des zitierenden Textes geändert wurde.
+        a = ("\\begin{table}[H]\n\\toprule\n"
+             "Feedback und Fortschritt \\parencite[S. 10]{barker2021} \\\\\n")
+        b = a.replace("[H]", "[htbp]")
+        pos_a = a.index("\\parencite")
+        pos_b = b.index("\\parencite")
+        self.assertEqual(satz_um(a, pos_a), satz_um(b, pos_b))
+
+    def test_hash_bleibt_gleich(self):
+        for opt in ("[H]", "[htbp]", "[!ht]"):
+            with self.subTest(opt=opt):
+                p = schreib(f"\\begin{{table}}{opt}\n\\toprule\n"
+                            f"Feedback und Fortschritt "
+                            f"\\parencite[S. 10]{{barker2021}} \\\\\n")
+                try:
+                    h = lies_tex([p])[0].hash
+                finally:
+                    p.unlink()
+                if opt == "[H]":
+                    referenz = h
+                self.assertEqual(h, referenz)
+
+    def test_struktur_wird_entfernt(self):
+        self.assertNotIn("toprule", ohne_struktur("\\toprule Text \\\\"))
+        self.assertNotIn("begin", ohne_struktur("\\begin{tabular}{ll} Text"))
+        self.assertNotIn("ll", ohne_struktur("\\begin{tabular}{ll} Text"))
+        self.assertNotIn("fig:x", ohne_struktur("\\label{fig:x} Text"))
+        self.assertIn("Text", ohne_struktur("\\begin{table}[htbp] Text"))
+
+    def test_caption_und_quelle_bleiben_stehen(self):
+        # Dort steht zitierter Text („Eigene Darstellung in Anlehnung an …").
+        # Sie zu entfernen liess genau den Traegersatz verschwinden, den die
+        # Pruefung braucht – eigener Rueckschritt, am Realfall aufgefallen.
+        self.assertIn("Modell", ohne_struktur("\\caption{Modell nach Mueller}"))
+        self.assertIn("Anlehnung",
+                      ohne_struktur("\\quelle{Eigene Darstellung in Anlehnung an X}"))
+
+    def test_inhalt_bleibt_erhalten(self):
+        satz = "Die Gruppengroesse liegt bei fuenf Personen."
+        self.assertEqual(ohne_struktur(satz), satz)
+
+    def test_zelle_reicht_nicht_in_die_nachbarabsaetze(self):
+        # Die eigentliche Ursache: Eine Zelle hat keinen Satzschlusspunkt, also
+        # spannte satz_um vom letzten Punkt VOR der Tabelle bis zum ersten
+        # DANACH. Jede Aenderung im Umfeld invalidierte alle Zellen-Urteile.
+        gerippe = ("Der Absatz vor der Tabelle endet hier.\n"
+                   "\\begin{table}[H]\n\\caption{Mechanik}\\label{tab:m}\n"
+                   "\\begin{tabular}{ll}\n\\toprule\n"
+                   "Rettungspunkte \\& Reste-Level & Feedback "
+                   "\\parencite[S. 10]{barker2021} \\\\\n"
+                   "\\bottomrule\n\\end{tabular}\n\\end{table}\n"
+                   "NACHSATZ\n")
+        a = gerippe.replace("NACHSATZ", "Das Interface folgt drei Bereichen.")
+        b = gerippe.replace("NACHSATZ", "Die Oberflaeche hat drei Bereiche.")
+        sa = satz_um(a, a.index("\\parencite"))
+        sb = satz_um(b, b.index("\\parencite"))
+        self.assertEqual(sa, sb)
+        self.assertNotIn("Absatz vor der Tabelle", sa)
+        self.assertNotIn("Interface", sa)
+        self.assertNotIn("caption", sa)
+        self.assertNotIn("{ll}", sa)
+        # Zeilenkopf als Kontext, Zelle als Inhalt.
+        self.assertIn("Rettungspunkte", sa)
+        self.assertIn("Feedback", sa)
+
+    def test_in_tabelle_erkennt_die_umgebung(self):
+        t = "Text \\begin{tabular}{ll}\nA & B \\\\\n\\end{tabular} Danach."
+        self.assertTrue(in_tabelle(t, t.index("A &")))
+        self.assertFalse(in_tabelle(t, t.index("Danach")))
+        self.assertFalse(in_tabelle(t, 2))
+
+
+class TestZitatDubletten(unittest.TestCase):
+    """Dieselbe Quelle mit derselben Stelle binnen weniger Zeilen."""
+
+    def z(self, zeile, ort="10"):
+        return Zitation(datei="k.tex", zeile=zeile, key="barker2021", seite=ort,
+                        satz="Ein Satz.", woertlich="")
+
+    def test_dublette_wird_gemeldet(self):
+        funde = zitat_dubletten([self.z(15), self.z(22)])
+        self.assertEqual(len(funde), 1, funde)
+        self.assertIn("ZITAT-DUBLETTE", funde[0])
+        self.assertIn("7 Zeilen", funde[0])
+
+    def test_weit_auseinander_bleibt_still(self):
+        self.assertEqual(zitat_dubletten([self.z(15), self.z(90)]), [])
+
+    def test_andere_stelle_bleibt_still(self):
+        self.assertEqual(
+            zitat_dubletten([self.z(15, "10"), self.z(18, "44")]), [])
+
+    def test_einzelne_zitation_bleibt_still(self):
+        self.assertEqual(zitat_dubletten([self.z(15)]), [])
+
+
+class TestVorfassung(unittest.TestCase):
+    """Bei geändertem Trägersatz die alte Formulierung zeigen."""
+
+    def zit(self, satz):
+        return Zitation(datei="k.tex", zeile=5, key="soma2020", seite="12",
+                        satz=satz, woertlich="")
+
+    def test_alte_fassung_wird_gefunden(self):
+        alt = self.zit("Die Studie stützt die Entscheidung.")
+        neu = self.zit("Die Entscheidung stützt sich auf die Studie.")
+        state = {}
+        merke_saetze([alt], state)
+        self.assertEqual(vorfassung(neu, state),
+                         "Die Studie stützt die Entscheidung.")
+
+    def test_unveraenderter_satz_liefert_nichts(self):
+        z = self.zit("Ein unveraenderter Satz.")
+        state = {}
+        merke_saetze([z], state)
+        self.assertEqual(vorfassung(z, state), "")
+
+    def test_andere_stelle_liefert_nichts(self):
+        alt = Zitation(datei="k.tex", zeile=5, key="soma2020", seite="99",
+                       satz="Anderer Ort.", woertlich="")
+        state = {}
+        merke_saetze([alt], state)
+        self.assertEqual(vorfassung(self.zit("Neuer Satz."), state), "")
 
 
 class TestAnspruchsverlauf(unittest.TestCase):
