@@ -4,7 +4,31 @@ Offene Änderungsvorschläge an Skills, Skripten und `CLAUDE.md`. **Kein Abgabeb
 
 Neu angelegt 2026-07-30, nachdem die vorherigen Punkte (P1–P18) übernommen und die Datei geleert wurde.
 
-**Status:** 4 Punkte OFFEN
+**Status:** 5 Punkte OFFEN
+
+---
+
+## P36 — Unzitierte Nebensatz-Behauptungen über die Außenwelt werden nur auf ausdrücklichen Nutzerwunsch geprüft, nie standardmäßig
+
+**Anlass (Nutzerfrage, 30.07.2026):** Beim alten Gruppen/Foren-Problem (Soma-Begründung auf einen unpassenden Vergleichsarm gestützt, siehe P35 und die Statuszeile `sec:durchfuehrung` → „Cold-Read auf Leser-Rückmeldung") lag der eigentliche Fehler in einem **Nebensatz**, nicht im Kernargument. Frage: Prüft irgendein Teil des Workflows Nebensätze systematisch auf faktuelle Richtigkeit — oder nur `stresstest`, der laut eigener Beschreibung ausdrücklich „pro Kernargument" arbeitet?
+
+**Antwort nach Durchsicht aller einschlägigen Skills: Nein, es existiert kein stehender Check dafür.** Vier Mechanismen kommen der Frage nahe, keiner deckt sie ab:
+
+1. **`stresstest`** (Einzel- und Gesamt-Modus) prüft ausdrücklich „pro Kernargument" bzw. „pro zentralem Argument" — das Verifikations-Gate für Außenwelt-Behauptungen greift nur, „sobald ein Argument … auf einer Behauptung über die Außenwelt ruht". Eine Detail-Behauptung, die kein Kernargument selbst ist, sondern es nur schmückt oder stützt, löst das Gate nicht aus.
+2. **Teil-Check G** (`check_quellentreue.py`) prüft nur Sätze mit `\cite`/`\parencite`/`\textcite` — nach Wortlaut *und inzwischen* Reichweite (P18, „RENTIERT NICHT"). Eine Behauptung ohne Zitation existiert für dieses Skript nicht.
+3. **P35** (offen, nicht umgesetzt) würde interne `\autoref`-Ziele auf Reichweite prüfen — nur Selbstverweise, keine Außenweltbehauptungen.
+4. **Teil-Check C** („Wirkungsaussagen gegen den beschriebenen Mechanismus prüfen") prüft Konsistenz **innerhalb** der Arbeit (behauptet X wirklich Y, wie der Text selbst Y beschreibt) — nie gegen die reale Außenwelt.
+
+**Die konkret betroffene Textklasse in diesem Projekt ist die Wettbewerbsanalyse.** Sie ist laut `sources/Anmerkungen vom Prüfer.md` ausdrücklich **eigene Sichtung, keine Primärquelle** — genau deshalb trägt sie fast keine Zitationen (ein Methodensatz reicht) und ist damit für Teil-Check G unsichtbar. Trotzdem stellt sie laufend überprüfbare Fakten über reale Produkte auf („Chefkoch.de hat einen gewachsenen Bestand an Beiträgen", Funktionsbehauptungen zu sechs Plattformen, Ministeriumsname BMEL). Alle bisherigen Korrekturen dieser Klasse — die BMEL→BMLEH-Umbenennung (Regierungswechsel 6. Mai 2025) und der Restegourmet-Fund beim Sechs-Plattformen-Check — kamen ausschließlich aus **einem vom Nutzer explizit angeforderten Web-Faktencheck**, nie aus einem Skill-Standardlauf. Ohne diese Nachfrage wären beide Fehler bis zur Abgabe im Text geblieben — kein PASS irgendeines Teil-Checks hätte sie verhindert.
+
+**Warum das kein Einzelfall, sondern strukturell ist:** Der Gesamt-Stresstest, der laut `SKILL.md` am ehesten zuständig wäre („Quellen-Overclaims: trägt der zitierte Befund die daran geknüpfte Behauptung"), ist bei Hausarbeit **und Projektbericht** die **optionale** Stufe der Kompakt-Prüfkette — in diesem Projekt wurde er bewusst übersprungen (Gegenlesung genügte laut Entscheidung). Der einzige Lauf, der die Soma-Reichweite je geprüft hat (Gegenlesung Runde 9, „Zitatkontext"), war eine eigens dafür angeforderte Sondersession mit eigenem Leseverbot-Setup, kein Bestandteil des Standard-Fahrplans.
+
+**Vorschlag, zwei Teile:**
+
+- **`pruef-modus` → neuer Prüfpunkt, am ehesten in Teil-Check B oder als eigener Teil-Check I „Externe Faktenbehauptungen":** Deterministisch vorfiltern statt jeden Satz lesen — ein Skript (Erweiterung von `check_formalia.py` oder neu) markiert Sätze mit Eigennamen/Institutionen/Produktnamen/Prozent- und Jahreszahlen **außerhalb** von `\enquote{}`, `\cite`/`\parencite`/`\textcite` und Blockzitat-Umgebungen als `[HINWEIS:UNBELEGTE-AUSSENWELT-BEHAUPTUNG]`. Besonders in Kapiteln, die laut `aufgabe.md` → Prüfer-Steuerungen als „eigene Sichtung, keine Zitationspflicht" markiert sind — denn genau diese Ausnahme von der Zitierpflicht ist es, die den Satz für Teil-Check G unsichtbar macht, ohne ihn von der Wahrheitspflicht zu befreien. Jeder Treffer wird im Voll-/Abgabe-Audit einmal per Web-Recherche verifiziert (wie im Verifikations-Gate des Stresstests), nicht aus dem Gedächtnis.
+- **Inkrementell wie Teil-Check G:** eigene State-Datei (`faktencheck-state.json`, analog `quellencheck-state.json`/dem für P35 vorgeschlagenen `autoref-state.json`) mit Satz-Hash je Fund, damit nicht bei jedem Audit erneut recherchiert werden muss — nur neue oder geänderte Sätze der markierten Klasse gehen auf `PRÜFEN`. Ohne diesen Mechanismus wäre der Vorschlag bei jedem Voll-Audit zu teuer und würde vermutlich bald übersprungen, wie es dem optionalen Gesamt-Stresstest in diesem Projekt bereits passiert ist.
+
+**Abgrenzung zu P35:** P35 schließt die Lücke bei **internen** Verweisen (Ziel bewegt sich, Referenz nicht). P36 schließt die Lücke bei **externen, unzitierten** Tatsachenbehauptungen (die Welt bewegt sich — Ministeriumsumbenennungen, Produktänderungen —, der Text nicht). Beide sind dieselbe Grundklasse „Behauptung ohne laufenden Wächter", nur mit unterschiedlicher Referenzrichtung.
 
 ---
 
