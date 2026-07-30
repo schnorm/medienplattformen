@@ -6,6 +6,21 @@
 
 **Methodik:** Ein isolierter Subagent hat den gesamten Text gelesen, **ohne** `CLAUDE.md` → Projektstatus, `pruefbericht.md`, `AENDERUNGEN.md`, `SKILL-ANPASSUNGEN.md`, `MEMORY.md`/`PERSISTENT.md` oder Git-Historie — um frühere „schon geprüft"-Urteile nicht ungeprüft zu übernehmen. Jede gefundene, überprüfbare Außenweltbehauptung wurde per gezielter Websuche einzeln verifiziert. 12 Kandidaten gefunden, 21 Websuchen, 7 zusätzliche (durchweg blockierte) Abrufversuche an Primärquellen.
 
+## Abarbeitungsvermerk (30.07.2026, `schreib-modus`-Sitzung)
+
+**Befund 2: umgesetzt** — aber **nicht** mit dem hier vorgeschlagenen Wortlaut. Der Vorschlag („offenbar kleineren, community-gespeisten Rezeptbestand als der redaktionell gepflegten Datenbank") hätte eine unbelegte Behauptung durch zwei neue ersetzt: Weder „community-gespeist" für leftovercooking noch „redaktionell gepflegt" für die \ac{BMLEH}-App ist in diesem Bericht verifiziert. Umgesetzt wurde stattdessen nur, was dieser Bericht selbst als Befund festhält (leftovercooking arbeitet KI-generiert statt mit fester Rezeptdatenbank) und was im Text bereits bestätigt steht (\ac{BMLEH}-App: umfangreiche Rezeptdatenbank, Zeile 7): der Größenvergleich ist durch einen **strukturellen** Unterschied ersetzt.
+`01_wettbewerbsanalyse.tex:9` — alt: „…KI-gestützte Rezeptvorschläge aus einem kleineren Rezeptbestand als dem der \ac{BMLEH}-App." · neu: „…KI-gestützte Rezeptvorschläge, statt wie die \ac{BMLEH}-App auf einen festen, durchsuchbaren Rezeptbestand zurückzugreifen."
+„durchsuchbar" ist dabei bewusst gesetzt: Der gestrichene Halbsatz war die einzige Deckung für die Tabellenwertung „Rezept-Entdeckung: mittel" bei leftovercooking; die Neufassung trägt sie weiter. Kontrolle: `check_all.py --kapitel chapters/02_durchfuehrung` 0 FEHLER · `check_quellentreue.py --datei chapters/` 19/19 FUNDSTELLE OK, keine Zitation invalidiert · Umfang 3.693 Wörter (+2).
+
+**Befund 1: bewusst nicht angefasst, bleibt offen.** Verifikation wurde in dieser Sitzung erneut versucht und kam weiter, ohne abzuschließen:
+- *Neu gefunden:* Ein unabhängiger NETZWELT-Vergleichstest speziell zu Rezept-Rückwärtssuchen führt Chefkoch.de mit einer „Reste-Suche" („Bei Chefkoch kannst du einzelne Zutaten eingeben, die du noch im Kühlschrank hast, und die Plattform schlägt dir mögliche Rezepte vor"). Zusätzlich nennen Chefkoch-**eigene** App-Store-Release-Notes die Funktion beim Namen („Performance in der Ergebnisliste der Zutatensuche verbessert") — das ist Herstellertext, kein Dritt-Snippet. Die Existenz *einer* Zutatensuche ist damit deutlich besser gestützt als im Erstlauf.
+- *Weiterhin ungeklärt, und daran hängt der Satz:* (a) ob **mehrere** Zutaten gleichzeitig eingegeben werden können — alle Snippets sagen „einzelne Zutaten eingeben", im Deutschen zweideutig; (b) kostenlos oder „Chefkoch Plus" — die Quellen widersprechen sich direkt.
+- *Warum kein Primärzugriff:* Nicht nur chefkoch.de blockt. Die Netzwerkrichtlinie dieser Umgebung lässt keine der Primär- und Testquellen durch — `apps.apple.com`, `play.google.com`, `netzwelt.de`, `t3n.de`, `deutsche-glasfaser.de` und `web.archive.org` antworten sämtlich mit 403 (per `curl` gegengeprüft: `CONNECT tunnel failed, response 403`; der Agent-Proxy selbst meldet `recentRelayFailures: []`, der Block ist also policy-, nicht fehlerbedingt).
+
+**Warum auch kein vorsorgliches Entschärfen des Fließtextsatzes:** Naheliegend wäre, die Absolutbehauptung („kein Werkzeug") ohne Verifikation abzuschwächen und die Tabelle zu lassen. Das ist hier **nicht** zulässig: Der Satz ist die einzige Deckung der Tabellenzelle „Reste-Matching-Werkzeug: schwach" für Chefkoch. Ein entschärfter Fließtext bei unveränderter Zelle erzeugt eine unbedeckte Wertung — einen eigenen Audit-Befund (`schreib-modus` → Self-Check, „deckt der Fließtext jede Wertung?"). Der Fehler wäre also nur ausgetauscht, nicht behoben.
+
+**Konsequenzkette, die dieser Bericht unterschätzt.** Er stuft die Korrektur als „reine Sachkorrektur ohne Bezug zu These/Kernargumenten" ein. Für den Fließtextsatz stimmt das; die Tabellenzelle zieht aber zwei weitere Stellen nach: `01_wettbewerbsanalyse.tex:36` („die Community-Plattformen den Austausch ohne Weg von übrigen Zutaten zum Rezept") und `:38` (Alleinstellungsmerkmal = Verbindung beider Elemente). Wandert Chefkoch von „schwach" auf „mittel", sind beide Sätze mitbetroffen. Wer Befund 1 umsetzt, plant diese drei Stellen als **einen** Arbeitsgang ein — und braucht dafür eine Freigabe, weil `:38` das Kernargument trägt.
+
 ## Ergebnis in einem Satz
 
 Der Text ist überwiegend sorgfältig recherchiert (10 von 12 Kandidaten vollständig bestätigt); **ein Fund ist potenziell ein echter Sachfehler an einer tragenden Stelle der Wettbewerbsanalyse** und braucht manuelle Nachprüfung, bevor er als Befund gilt oder verworfen wird.
@@ -61,12 +76,12 @@ Kein systematisches Alterungs- oder Rechercheproblem: 6 von 8 dort geprüften Ka
 ## Bitte manuell prüfen (kann ich nicht selbst verifizieren)
 
 1. **Existiert bei Chefkoch.de/in der App eine Zutatensuche/-verwertung, die aus mehreren eingegebenen Resten Rezeptvorschläge ableitet, und ist sie kostenlos oder Teil von „Chefkoch Plus"?** | `chapters/02_durchfuehrung/01_wettbewerbsanalyse.tex:3` und `tab:wettbewerbsvergleich`, Zeile Chefkoch.de, Spalte „Reste-Matching-Werkzeug" | Direkter Blick in die Chefkoch-App/-Website oder ein aktueller Chefkoch-Plus-Test mit Screenshot | WebFetch auf chefkoch.de und die App-Store-Seiten war durchgehend mit HTTP 403 blockiert; die fünf Suchergebnisse sind konvergent, aber sekundär.
-2. **Größenvergleich Rezeptbestand leftovercooking vs. BMLEH-App** | `chapters/02_durchfuehrung/01_wettbewerbsanalyse.tex:9` | Eine offizielle Zahlenangabe zu leftovercooking (Pressemitteilung, App-Store-Beschreibung) | Mehrere gezielte Suchanfragen lieferten keine Zahl; leftovercooking bewirbt sich nicht mit einer festen Rezeptanzahl.
+2. ~~**Größenvergleich Rezeptbestand leftovercooking vs. BMLEH-App**~~ — **entfällt seit 30.07.2026.** Der Größenvergleich steht nicht mehr im Text (siehe Abarbeitungsvermerk, Befund 2); es gibt damit nichts mehr nachzuschlagen.
 
 ## Handlungsempfehlungen (nach Priorität)
 
-1. **Befund 1 manuell an der echten Chefkoch-App/-Website verifizieren.** Danach: bei Bestätigung Fließtextsatz und Tabellenzelle wie oben vorgeschlagen anpassen (Freigabe nicht nötig, reine Sachkorrektur ohne Bezug zu These/Kernargumenten); bei Widerlegung keine Änderung, dieser Bericht kann als erledigt gelten.
-2. **Befund 2 optional hedgen** — keine Pflicht, geringes Risiko, da bereits als Vergleich formuliert und nicht als Absolutbehauptung.
+1. **Befund 1 manuell an der echten Chefkoch-App/-Website verifizieren** — einziger offener Punkt dieses Berichts. Zwei Teilfragen, beide nötig: Lassen sich **mehrere** Zutaten gleichzeitig eingeben? Kostenlos oder „Chefkoch Plus"? Danach: bei Bestätigung Fließtextsatz **und** Tabellenzelle **und** die beiden Folgestellen `:36`/`:38` in einem Arbeitsgang anpassen — **mit Freigabe**, weil `:38` das Kernargument trägt (Einstufung des Erstlaufs an dieser Stelle korrigiert, siehe Abarbeitungsvermerk). Bei Widerlegung keine Änderung, der Bericht ist damit vollständig erledigt.
+2. ~~**Befund 2 optional hedgen**~~ — **erledigt 30.07.2026**, mit abweichendem Wortlaut (siehe Abarbeitungsvermerk).
 3. Kein weiterer Handlungsbedarf aus diesem Bericht.
 
 ## Vor der nächsten Session
