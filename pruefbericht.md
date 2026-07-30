@@ -230,6 +230,17 @@ Nicht in dieser Session weiterarbeiten – neue Session, „Schreib-Modus: Über
 - [ ] Manueller Prüfpunkt 2: die vier zitierten Claude-Design-Folge-Prompts gegen den tatsächlichen Chatverlauf abgleichen.
 - [ ] Namensverfügbarkeit „Resteria" (DPMA, .de-Domain) – nicht abgabekritisch, aber vor einer realen Umsetzung relevant.
 
+## Nachtrag 3 — alle vier Befunde erledigt (30.07.2026, selbe Session)
+
+**Befund 3 und 4 sind über Zotero umgesetzt und am gebauten PDF verifiziert.**
+
+- **Befund 3**: `pages` bei Soma und Nivedhitha geleert, `eid` gesetzt. Verzeichnis: „Sustainability, 12(3), **Artikel 907**." und „48(2), **Artikel e13038**." — je einmal, identisch zum Muster von Barker und Shen. Zwischenstand mit beiden Feldern gleichzeitig belegt druckte die Nummer **doppelt** („Artikel 907, 907"); als Nachtrag zu **P32** in `SKILL-ANPASSUNGEN.md` festgehalten, samt der Lehre, dass eine Zotero-Anweisung mit zwei Teilschritten einzeln nummeriert gehört.
+- **Befund 4**: `title = {Website-Konzeption und Relaunch}` ohne Untertitel, `date = {2018}`. Verzeichnis: „Erlhofer, S. & Brenner, D. (2018). Website-Konzeption und Relaunch. Rheinwerk Computing." In-Text: „laut Erlhofer und Brenner (**2018**, Kap. 17.2.2)" — die Jahresänderung ist im Kurzbeleg angekommen. Der gepinnte Citekey trägt weiterhin `…2017`; kosmetisch und für die Ausgabe folgenlos, wie in Befund 4 vermerkt.
+- `check_bib_hygiene.py`: 10 Einträge, **0 Hinweise**. Build Exit 0, 0 Overfull, 0 Missing character, Textteil 10 Seiten.
+- Beobachtung ohne Handlungsbedarf: Das Erlhofer-Autorenfeld trägt jetzt Initialen (`{Erlhofer, S and Brenner, D}`) statt ausgeschriebener Vornamen wie alle übrigen Einträge. Die APA-Ausgabe ist identisch, weil der Stil ohnehin abkürzt; die Information fehlt nur für einen etwaigen Stilwechsel.
+
+**Damit ist die Arbeitsliste dieses Prüfberichts vollständig abgearbeitet.** Von den Nutzer-Checklistenpunkten „Vor der Einreichung" bleibt der manuelle Prüfpunkt 2 (Wortlaut der Claude-Design-Folge-Prompts) sowie Eidesstattliche Erklärung, LanguageTool-Durchgang und einmaliges Durchlesen am PDF. Nächster Schritt: **Delta-Re-Audit in frischer Session.**
+
 ## Nachtrag 2 — gezielter Konsistenz-Durchgang (30.07.2026, selbe Session)
 
 Auf Nutzerfrage, ob eine erneute Gegenlesung nötig sei. **Bewusst keine volle Gegenlesung** (ihr Zweck — Abwesenheiten gegen `aufgabe.md` — war durch Teil-Check B/H desselben Tages abgedeckt, und bei 10 von 10 Seiten mit ~2 Zeilen Reserve erzwingt jeder additive Befund eine weitere Kürzungsrunde, den Arbeitsschritt mit der höchsten dokumentierten Fehlerquote in diesem Projekt). Stattdessen ein Durchgang über alle 12 Subsections gegen **drei Fehlerklassen mit je einem belegten Vorfall**: Frequenz-/Zeitangaben gegen den beschriebenen Mechanismus · Absolutformulierungen und Reichweite · Modalität geplant vs. existierend. Kein kalter Blick nötig, weil Text gegen Text geprüft wird, nicht Text gegen Prüfererwartung.
