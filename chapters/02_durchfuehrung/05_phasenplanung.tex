@@ -2,13 +2,13 @@
 
 Diese Arbeit gliedert die Umsetzung von Resteria in fünf aufeinander aufbauende Phasen: Recherche und Konzeption, Design und Prototyp, \ac{MVP}-Entwicklung, Beta-Test und Feedback sowie Launch und Iteration. Das \ac{MVP} ist die erste funktionsfähige Version mit den wichtigsten Kernfunktionen.~\autoref{tab:phasenplanung} zeigt Zeitrahmen und benötigte Ressourcen je Phase. Die Wochenangaben zählen ab Projektstart: Phase~1 und die Mockups aus Phase~2 sind mit diesem Bericht bereits erbracht, offen bleibt dort der Klick-Prototyp.
 
-\begin{table}[H]
+\begin{table}[htbp]
 \caption{Phasenplanung für die Umsetzung von Resteria}\label{tab:phasenplanung}
 \begin{tabularx}{\textwidth}{@{}l X l X@{}}
 \toprule
 \textbf{Phase} & \textbf{Inhalt} & \textbf{Zeitrahmen} & \textbf{Ressourcen} \\
 \midrule
-Recherche \& Konzeption & Wettbewerbsanalyse, Zielgruppendefinition, Funktions- und Gamification-Konzept & Woche 1--2 & Eigenleistung; Fachliteratur, öffentlich zugängliche Plattform- und App-Angebote \\
+Recherche \& Konzeption & Wettbewerbsanalyse, Zielgruppendefinition, Funktions-, Community- und Gamification-Konzept, Umsetzungsplanung & Woche 1--2 & Eigenleistung; Fachliteratur, öffentlich zugängliche Plattform- und App-Angebote \\
 Design \& Prototyp & UI/UX-Struktur, Mockup, Klick-Prototyp & Woche 3--4 & Eigenleistung; Design-Tool, KI-gestützte Mockup-Erstellung \\
 \ac{MVP}-Entwicklung & Aufbau des Rezeptbestands, Umsetzung von Reste-Matching, Rettungspunkten und Rettungs-Feed, inklusive zweiwöchigem Zeitpuffer & Woche 5--14 & Eigenleistung, ergänzt um mögliche externe Entwicklungsunterstützung; Entwicklungsframework, Datenbank, Hosting, Rezeptdaten aus Kooperation oder Nutzerbeiträgen \\
 Beta-Test \& Feedback & Think-Aloud-Sitzungen, \ac{SEQ}-Fragebogen & Woche 15--17 & Eigenleistung, Beta-Gruppe (10--15 Personen); Fragebogen-Tool \\
@@ -18,6 +18,6 @@ Launch \& Iteration & Veröffentlichung, laufende Auswertung und Anpassung & ab 
 \quelle{Eigene Darstellung.}
 \end{table}
 
-Zwischen den Phasen bestehen klare Abhängigkeiten. Die \ac{MVP}-Entwicklung kann erst beginnen, wenn Design und Prototyp abgeschlossen sind; ebenso setzt der Beta-Test ein funktionsfähiges \ac{MVP} voraus. Nur die \ac{MVP}-Entwicklung benötigt ab einem bestimmten Umfang zusätzliches Budget für spezialisierte Backend-Arbeiten.
+Zwischen den Phasen bestehen klare Abhängigkeiten. Die \ac{MVP}-Entwicklung kann erst beginnen, wenn Design und Prototyp abgeschlossen sind; ebenso setzt der Beta-Test ein funktionsfähiges \ac{MVP} voraus. Ressourcenseitig fällt allein die \ac{MVP}-Entwicklung aus dem Rahmen: Sie benötigt ab einem bestimmten Umfang zusätzliches Budget für spezialisierte Backend-Arbeiten.
 
-Zwei Risiken begleiten den Fahrplan. Erstens könnte die Beta-Gruppe zu klein oder nicht repräsentativ für die Zielgruppe aus~\autoref{sec:zielgruppe} ausfallen; dem begegnet der Fahrplan, indem Teilnehmende gezielt über bestehende Nachhaltigkeits- und Kochcommunitys angesprochen werden. Zweitens kann sich die \ac{MVP}-Entwicklung verzögern, etwa durch technische Hürden bei der Rezeptvorschlags-Logik oder beim Aufbau des Rezeptbestands; dafür plant diese Arbeit innerhalb der \ac{MVP}-Phase einen Zeitpuffer von zwei Wochen ein.
+Drei Risiken begleiten den Fahrplan. Erstens könnte die Beta-Gruppe zu klein oder nicht repräsentativ für die Zielgruppe aus~\autoref{sec:zielgruppe} ausfallen; dem begegnet der Fahrplan, indem Teilnehmende gezielt über bestehende Nachhaltigkeits- und Kochcommunitys angesprochen werden. Zweitens kann sich die \ac{MVP}-Entwicklung verzögern, etwa durch technische Hürden bei der Rezeptvorschlags-Logik oder beim Aufbau des Rezeptbestands; dafür plant diese Arbeit innerhalb der \ac{MVP}-Phase einen Zeitpuffer von zwei Wochen ein. Drittens könnten nach dem Launch zu wenige Community-Beiträge zusammenkommen, um den Feed zu tragen; die Beta-Gruppe und die in~\autoref{sec:konzept} genannten Kooperationen liefern dafür einen ersten Bestand.

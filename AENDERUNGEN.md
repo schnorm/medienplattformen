@@ -1,6 +1,12 @@
 # AENDERUNGEN.md
 
-## Runde 1 — Gegenlesung (2026-07-21)
+## Offen
+
+_Leer — alle Runden abgearbeitet (Stand 2026-07-30). Die Voraussetzung für das Abgabe-Audit ist damit erfüllt._
+
+## Erledigt
+
+### Runde 1 — Gegenlesung (2026-07-21)
 
 Kalte Prüfer-Gegenlesung gegen `aufgabe.md`. Blickrichtung: Erfüllt die Arbeit die gestellte Aufgabe? Kapitelplan, Prüfbericht und Statusdateien wurden bewusst nicht herangezogen.
 
@@ -127,7 +133,7 @@ Umsetzung **nicht in dieser Sitzung** (Prüfer- und Autorrolle getrennt). In fri
 
 ---
 
-## Runde 2 — Gesamt-Stresstest (2026-07-21)
+### Runde 2 — Gesamt-Stresstest (2026-07-21)
 
 Inhaltliche Prüfung der ganzen Arbeit gegen ihre eigene Argumentation und gegen `aufgabe.md`. Alle Kapitel FERTIG. Mockup-Platzhalter (Runde-1-Befund 1) auf Nutzerwunsch ausgeklammert — bleibt separat offen. Doppelbefunde der Gegenlesung nicht erneut aufgeführt. Verifikations-Gate für die Markt-Nichtexistenzbehauptung ausgeführt (Websuche).
 
@@ -218,7 +224,7 @@ Nächster Schritt laut Fahrplan: **Voll-Audit** (`pruef-modus`) — kein Delta-R
 
 ---
 
-## Runde 3 — Gegenlesung (2026-07-23)
+### Runde 3 — Gegenlesung (2026-07-23)
 
 Zweite kalte Prüfer-Gegenlesung gegen `aufgabe.md`, unabhängig durchgeführt: Erwartung erst aus `aufgabe.md` gebildet, dann Text + Anhang + Einbindung gelesen, erst danach diese Datei geöffnet. Kapitelplan, Prüfbericht, Projektstatus und Änderungshistorie wurden nicht als Maßstab herangezogen. Befunde sind gegen den **aktuellen Text** geprüft; wo ein Punkt Bereiche berührt, die frühere Runden bereits ansahen, steht er nur, weil er im aktuellen Text noch **lebt**.
 
@@ -372,7 +378,7 @@ Nächster Schritt laut Fahrplan: **Voll-Audit** (`pruef-modus`) — prüft insbe
 
 ---
 
-## Runde 4 — Nutzer-Feedback / Umfangsanalyse (2026-07-24)
+### Runde 4 — Nutzer-Feedback / Umfangsanalyse (2026-07-24)
 
 Anlass: gezielte Suche nach Kürzungspotenzial im Fließtext, ohne Informationsverlust. Grundlage ist eine Wortzählung über alle 14 `chapters/**/*.tex` (Tabellen-/Abbildungsumgebungen und Zitationsbefehle herausgerechnet) plus das Layout aus `main.tex` (11pt, 2 cm Ränder, `\onehalfspacing`).
 
@@ -501,7 +507,7 @@ Nächster Schritt laut Fahrplan: **Delta-Re-Audit** (`pruef-modus`) — die Kür
 
 ---
 
-## Runde 5 — Gegenlesung (2026-07-24)
+### Runde 5 — Gegenlesung (2026-07-24)
 
 Kalte Prüfer-Gegenlesung gegen `aufgabe.md`. Gelesen wurden ausschließlich `aufgabe.md`, alle 14 `chapters/**/*.tex`, `pages/appendix.tex`, `pages/acronyms.tex`, `pages/chapters.tex`, die vier Mockup-Bilder in `images/durchfuehrung/` sowie `references.bib` zur reinen Eintragszählung. Kapitelplan, Prüfbericht, Statustabelle und die Runden 1–4 dieser Datei wurden nicht herangezogen. Alle Punkte sind **offen**.
 
@@ -686,9 +692,9 @@ Priorität, falls nur ein Teil umgesetzt wird: **5.4 und 5.2 zuerst** (billig, d
 
 „Offen" ist damit vollständig leer. Nächster Schritt laut Fahrplan: Gesamt-Stresstest (bei Papiertyp Projektbericht optional, siehe `CLAUDE.md` → Kompakt-Prüfkette) oder direkt Voll-Audit.
 
-## Offen
-
 ### Runde 6 — Gegenlesung (2026-07-24)
+
+**Abgearbeitet am 2026-07-24.** Zehn der elf Befunde umgesetzt; 6.8 (optionale Einstiegsliteratur) übersprungen, weil die Quellen in `references.bib` fehlen und `aufgabe.md` sie nicht verlangt; 6.11 nach Freigabe unverändert gelassen (Option B); 6.3 (Plus-Button-Überlapp im Rettungs-Feed-Mockup) vom Nutzer am 2026-07-28 behoben und per Bildsichtung verifiziert.
 
 Kalte Prüfer-Gegenlesung ausschließlich gegen `aufgabe.md` und `sources/Anmerkungen vom Prüfer.md`. Gelesen wurden nur die Aufgabenstellung, alle 15 `chapters/**/*.tex`, `pages/appendix.tex`, `pages/acronyms.tex`, `pages/chapters.tex`, `main.tex` (nur zur Prüfung, ob der Anhang tatsächlich kompiliert wird), die vier Mockup-Bilder und `references.bib` zur Zählung. Kapitelplan, Prüfbericht, Projektstatus und frühere Runden dieser Datei wurden bewusst nicht gelesen.
 
@@ -834,6 +840,8 @@ Die Arbeit erfüllt die gestellte Aufgabe. Alle drei Teilaufgaben sind bearbeite
 
 ### Runde 7 — Nutzer-Feedback / Methodenfundierung Beta-Test (2026-07-28)
 
+**Abgearbeitet am 2026-07-28.** 7.1–7.3 und 7.5 umgesetzt (SEQ, Think-Aloud, Gruppengröße, Gegenfinanzierung); 7.4 (ISO-9241-210-Prozessrahmen) auf ausdrückliche Nutzeranweisung übersprungen, `iso_9241_210` bleibt ungenutzt in `references.bib`. Die Prüfpunkte aus „Bitte manuell prüfen“ sind am Volltext geklärt.
+
 Anlass: Abgleich der eigenen Vorprojektarbeit (`sources/vorherige-projektarbeit/`, Volltext unter `/home/normi/Documents/projekt-ui-design/latex/`) gegen den Resteria-Textstand. Dort sind Usability-Tests real durchgeführt und methodisch belegt; hier ist der Beta-Test rein organisatorisch beschrieben. Die Runde überträgt **ausschließlich Konzepte und deren Primärquellen**, keine Formulierungen und keine Ergebnisse (siehe Abschnitt „Eigenplagiat-Grenze" am Ende).
 
 Betroffene Stelle: `chapters/02_durchfuehrung/07_iteratives_design.tex:5` nennt „zehn bis fünfzehn Personen", „kurze Fragebögen" und „ein moderiertes Feedback-Gespräch" — ohne benanntes Verfahren, ohne Erfolgskriterium, ohne Begründung der Gruppengröße. `05_phasenplanung.tex:14` wiederholt dieselbe Leerstelle in der Tabellenzelle.
@@ -930,6 +938,8 @@ Nächster Schritt laut Fahrplan: lokaler Build zur Seitenmessung (Nutzer-Schritt
 ---
 
 ### Runde 8 — Gegenlesung (2026-07-29)
+
+**Abgearbeitet am 2026-07-29** (gemeinsam mit Runde 9, da dieselben Dateien betroffen waren). Die drei `[FREIGABE]`-Punkte per `AskUserQuestion` geklärt; 8.17 (Kapoor et al. als Einstiegsliteratur) auf Nutzerwunsch endgültig als Verzicht entschieden und in künftigen Gegenlesungen nicht erneut aufzumachen.
 
 Kalte Prüfer-Gegenlesung, ausgeführt von einem Subagenten unter striktem Leseverbot, weil die Hauptsession über den auto-geladenen Projektstatus bereits die vollständige Historie aller bisherigen Prüfrunden trug. Gelesen wurden ausschließlich `aufgabe.md` (zuerst und allein, Erwartungsbildung vor Exposition), alle 15 `chapters/**/*.tex`, `pages/appendix.tex`, `pages/acronyms.tex`, `pages/chapters.tex`, die fünf Bilddateien unter `images/durchfuehrung/` und `references.bib` nur zur Zählung (9 Einträge, alle 9 zitiert). Nicht gelesen: Kapitelplan, Prüfbericht, frühere Runden dieser Datei, Memory-Dateien, Git-Historie, Projektstatus in `CLAUDE.md`. Kein Build.
 
@@ -1222,6 +1232,8 @@ Umsetzung in frischer Session: „Schreib-Modus: AENDERUNGEN.md abarbeiten". Die
 
 ### Runde 9 — Gegenlesung (Zitatkontext) (2026-07-29)
 
+**Abgearbeitet am 2026-07-29.** Alle zehn Reichweiten-Befunde umgesetzt; anschließend alle 19 Zitationen erneut gegen die geänderten Trägersätze geprüft (19/19 OK). Nachtrag 2026-07-30: Die Rahmung in `04_community_und_feedback.tex:7` („stützt sich auf“ → „Den Anstoß dazu gab“) nach Rückfrage nachgezogen, weil 9.2 den Übertragungsvorbehalt ergänzt, die Rahmung aber nicht mitgezogen hatte.
+
 **Umfang:** zugeschnitten auf eine Frage — **tragen die Quellen, was der Text ihnen zuschreibt, im Kontext des Satzes, in dem sie stehen?** Keine Vollgegenlesung; Struktur, Aufbau und Vollständigkeit deckt Runde 8 ab.
 
 Ausgeführt von einem Subagenten unter demselben Leseverbot wie Runde 8, **erweitert um eine Lesefreigabe**: `references.bib` vollständig und inhaltlich sowie die zehn Volltexte in `sources/literatur/`. Zusätzlich gesperrt waren `quellencheck.md` und `quellencheck-state.json` samt der Ausführung von `check_quellentreue.py` — sie enthalten die Urteile früherer Prüfläufe; wer sie liest, prüft nicht mehr, sondern bestätigt.
@@ -1363,3 +1375,11 @@ Runde 8 und Runde 9 zusammen liegen damit bei netto rund −55 Wörtern. Nach de
 ### Nächster Schritt
 
 Runde 8 und Runde 9 in **einer** Schreib-Session abarbeiten — sie berühren teils dieselben Dateien (`03_konzept.tex`, `01_kernergebnisse_und_ausblick.tex`, `07_iteratives_design.tex`), und getrennte Durchgänge würden dieselben Absätze zweimal umbauen. Reihenfolge: erst die Zitat-Befunde der Runde 9 (sie sind kleinteilig und ändern Formulierungen, nicht Struktur), dann Runde 8. Danach bauen, Seitenzahl prüfen, Abgabe-Audit.
+
+**Abgearbeitet (2026-07-29, diese Session).** Runde 9 vollständig (9.1–9.10, empfohlene bzw. präzisierte Varianten) und Runde 8 mit Ausnahme von 8.8 (durch 9.1 ersetzt, nicht doppelt bearbeitet) umgesetzt. Die drei `[FREIGABE]`-Punkte per `AskUserQuestion` geklärt: **8.1** wie vorgeschlagen (Auswahlsatz mit drei Kategorien in `01_wettbewerbsanalyse.tex:13`), **8.9** nach Nutzer-Delegation an die Empfehlung dieser Session mit **Option A** umgesetzt (Kriteriendefinition um „einseitiges Verfolgen von Creator-Inhalten zählt abgeschwächt" erweitert statt die leftovercooking-Zelle auf „schwach" zu korrigieren — günstiger, da ohne Folgeänderungen an `:34`/Limitationen), **8.17** auf Nutzerwunsch **endgültig als Verzicht entschieden**: Kapoor et al. (2018) wird nicht mehr aufgenommen, der Punkt soll in künftigen Gegenlesungen nicht erneut aufgemacht werden.
+
+Punkt 1 aus Runde 8 → „Bitte manuell prüfen" (tatsächlicher Wochenplan-Prompt) blieb unbeantwortet — wie in der Runde selbst als Fallback vorgesehen, daher **Option B** umgesetzt: Die Wochenplan-Karten-Passage ist aus beiden `\quelle{}`-Zeilen in `pages/appendix.tex` gestrichen, zitiert wird nur noch der Foto-Platzhalter-Folge-Prompt (deckt sich mit dem tatsächlich gezeigten Banner). 8.16(b) erledigte sich durch 8.1 automatisch (drei Kategorien jetzt explizit, „dritte Reste-Matching-App" bleibt konsistent).
+
+Alle inhaltlichen Änderungen berühren weder These noch Kernargumente noch die Leitfrage. `check_all.py --mit-quellen`: **0 FEHLER** in allen sechs Skripten. `check_quellentreue.py`: Alle 19 Zitationen erneut am Volltext gegen die geänderten Trägersätze geprüft und mit OK quittiert (Notizen in `quellencheck-state.json`) — keine Zitation offen. Umfang: **3.646 Wörter** (`check_umfang.py`, ≈ 9,7 S. geschätzt) gegenüber 3.567 Wörtern vor der Runde (zuletzt real gebaut: exakt 10 Seiten) — netto **+79 Wörter**, mehr als die in der Runde geplanten netto −55, weil mehrere additive Befunde (8.1, 8.5, 8.7, 8.15) inhaltlich wichtiger eingeschätzt wurden als ihre jeweilige Kürzungsreserve; zwei Ergänzungen (Auswahlsatz, neue Lehre in `06_evaluation_reflexion.tex`) wurden deshalb noch während der Umsetzung gestrafft, ein optionaler Zusatz (Entstehungszeitraum in `05_phasenplanung.tex`) ganz gestrichen. **Vor der Abgabe unbedingt neu bauen und die gedruckte Seitenzahl prüfen** — bei zuletzt exakt 10 Seiten bei 3.567 Wörtern ist bei 3.646 Wörtern ein Kippen auf 11 Seiten nicht auszuschließen; die Heuristik unterschätzt erfahrungsgemäß eher, als dass sie überschätzt. Bei Bedarf zuerst die Kontrastfigur-Kürzungen aus Runde 6/8 als Vorbild nehmen, nicht die neu gehärteten Zitat-Reichweiten aus dieser Runde (9.2, 9.3, 9.4, 9.5 – „Was sauber ist"-Listen beider Runden) antasten.
+
+Nächster Schritt: lokaler Build (`latexmk -g -lualatex main.tex`), Seitenzahl gegenprüfen, danach Abgabe-Audit (`pruef-modus`).

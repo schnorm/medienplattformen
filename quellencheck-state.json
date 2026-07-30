@@ -139,13 +139,145 @@
    "status": "OK",
    "notiz": "S. 105 (Verlagsfassung), Abs. 'Looking at the contributors of food waste': 'a large part of the literature highlights the prominent role of the responsibility to consumers, particularly at the household level'. Die neue Formulierung 'auf der Verbraucherebene und dort vor allem in privaten Haushalten' bildet Ebene und Schwerpunkt exakt ab; Eurostat-Zahl 65 % auf derselben Seite umfasst Haushalte und Food Service, was die Verbraucherebene korrekt mit abdeckt.",
    "datum": "2026-07-29"
+  },
+  "a8b0d7574f": {
+   "status": "OK",
+   "notiz": "SDG 12.3 steht wörtlich auf S. 22 der UN-Resolution ('halve per capita global food waste at the retail and consumer levels'); Text gibt nur die Halbierungs-Hälfte wieder, enger als Quelle. Verifiziert in Runde 9 (9.6).",
+   "datum": "2026-07-29"
+  },
+  "acb47aface": {
+   "status": "OK",
+   "notiz": "Vittuari S. 105 (Verlagsfassung): 'a large part of the literature highlights the prominent role of the responsibility to consumers, particularly at the household level' - neue Zuschreibungsform ('wird ... zugerechnet') bildet das exakt ab, ohne 'vermeidbar' zu behaupten. Verifiziert in Runde 9 (9.10).",
+   "datum": "2026-07-29"
+  },
+  "ab2eb82051": {
+   "status": "OK",
+   "notiz": "Nivedhitha S. 14 definiert 'collective intention' als geteilte Handlungsabsicht der Gruppe, nicht als Zugehörigkeitsgefühl; 'gemeinsame Handlungsabsicht in der Gruppe' bildet das korrekt ab (Korrektur der Begriffsverschiebung, Runde 9, 9.5).",
+   "datum": "2026-07-29"
+  },
+  "d9fb2c81b3": {
+   "status": "OK",
+   "notiz": "Soma S. 9: Mann-Whitney U (p=0,030) vergleicht die Abfallmengen NACH der Kampagne, nicht die Differenz der Reduktionsraten. Neue Formulierung bildet das korrekt ab (Runde 9, 9.4).",
+   "datum": "2026-07-29"
+  },
+  "e98c69bef5": {
+   "status": "OK",
+   "notiz": "Barker S. 10: Reminders als belegter Nudge-Typ; Tabellenzelle nennt jetzt nur noch die Erinnerungsbenachrichtigung unter diesem Beleg, Feedback/Fortschritt läuft separat als eigene Gestaltung (Runde 9, 9.1).",
+   "datum": "2026-07-29"
+  },
+  "113e62bac4": {
+   "status": "OK",
+   "notiz": "Nivedhitha S. 14: 'collective intention' korrekt als gemeinsame Absicht statt Gemeinschaftsgefühl wiedergegeben (Runde 9, 9.5).",
+   "datum": "2026-07-29"
+  },
+  "87628795fc": {
+   "status": "OK",
+   "notiz": "Soma S. 9, Gamification-Effekt in der Tabellenzelle unverändert, bereits zuvor gegen den Volltext verifiziert.",
+   "datum": "2026-07-29"
+  },
+  "c06e959e3b": {
+   "status": "OK",
+   "notiz": "Enquote-Phrase 'Influence by Osmosis' ist der wörtliche Titel der Quelle (PDF S. 1/Titelseite: 'Influence by osmosis: Social media green communities and pro-environmental behavior'), kein Zitat von S. 4/6 - Titelanführung, kein Kurzzitat. Locator S. 4 und 6 belegt korrekt den im Satz beschriebenen Mechanismus ('as if by osmosis' PDF S. 4/gedruckt) und den Pfad H3a (PDF S. 6).",
+   "datum": "2026-07-29"
+  },
+  "4c41eb78c3": {
+   "status": "OK",
+   "notiz": "Soma S. 10-12, Teilnahmequoten (84/16/53%) unverändert korrekt; Vergleichsgruppe jetzt korrekt als Präsenzveranstaltungen statt Online-Diskussion beschrieben, mit explizitem Übertragungsvorbehalt (Runde 9, 9.2).",
+   "datum": "2026-07-29"
+  },
+  "df78a0dd33": {
+   "status": "OK",
+   "notiz": "Erlhofer Kap. 17.2.2: 'Schon bei fünf Personen werden Sie feststellen, dass sich die meisten Usability-Probleme wiederholen' - neue Formulierung 'Schon fünf Testpersonen' deckungsgleich; die Zahl 10-15 ist jetzt korrekt als eigene Planungsgröße ausgewiesen, nicht als Quellenwert (Runde 9, 9.7).",
+   "datum": "2026-07-29"
+  },
+  "ed11ecda10": {
+   "status": "OK",
+   "notiz": "Sauro & Lewis Kap. 8, S. 218: SEQ-Beschreibung (siebenstufige Skala) korrekt; Erfolgsschwelle 'mindestens fünf' ist jetzt als 'hier festgelegte' eigene Setzung ausgewiesen, nicht als Quellenwert (Runde 9, 9.8).",
+   "datum": "2026-07-29"
+  },
+  "aa5138cf7f": {
+   "status": "OK",
+   "notiz": "Vittuari S. 105: 'those aspects of drivers that can be exploited' - 'Hebel für konkrete Interventionen benennt' bildet das korrekt ab, ohne dem Rahmen ein normatives 'Verlangen' zuzuschreiben (Runde 9, 9.9).",
+   "datum": "2026-07-29"
+  },
+  "0297f91de5": {
+   "status": "OK",
+   "notiz": "Barker S. 10, Reminders unverändert korrekt referenziert, bereits zuvor gegen Volltext verifiziert.",
+   "datum": "2026-07-29"
+  },
+  "a0158014e2": {
+   "status": "OK",
+   "notiz": "Soma S. 9: Kruskal-Wallis p=0,30, Spielgruppe nur marginal p=0,07, Fazit der Studie 'promising, we recommend further study' - 'erste Hinweise auf die Wirksamkeit' bildet das korrekt ab statt 'belegt' (Runde 9, 9.3).",
+   "datum": "2026-07-29"
+  },
+  "7e89e1b140": {
+   "status": "OK",
+   "notiz": "Nivedhitha S. 14: 'gemeinsame Handlungsabsicht' korrekt statt 'Gemeinschaftsgefühl' (Runde 9, 9.5).",
+   "datum": "2026-07-29"
+  },
+  "5d1f67c4bf": {
+   "status": "OK",
+   "notiz": "Barker S. 10, Reminder-Beleg jetzt mit Locator statt zuvor fehlender Stellenangabe (Runde 9, 9.6).",
+   "datum": "2026-07-29"
+  },
+  "f568306272": {
+   "status": "OK",
+   "notiz": "Barker S. 10, Zelle 'Rettungspunkte & Reste-Level' in tab:funktionsuebersicht: Zellentext wortgleich zum Urteil e98c69bef5 vom 29.07. (Reminders als belegter Nudge-Typ, Feedback/Fortschritt separat als eigene Gestaltung). Neuer Hash nur, weil die Float-Option der Tabelle von [H] auf [htbp] gewechselt ist - die \\begin{table}-Zeile geht in den Traegersatz-Hash ein. Kein inhaltlicher Unterschied.",
+   "datum": "2026-07-30"
+  },
+  "d3ebc091a2": {
+   "status": "OK",
+   "notiz": "Nivedhitha S. 14, dieselbe Tabellenzelle: 'Selbstwahrnehmung ueber gemeinsame Absicht' unveraendert gegenueber Urteil 113e62bac4 vom 29.07. (collective intention = geteilte Handlungsabsicht, nicht Zugehoerigkeitsgefuehl). Rehash allein durch den Wechsel der Float-Option [H] -> [htbp].",
+   "datum": "2026-07-30"
+  },
+  "e1fd65a089": {
+   "status": "OK",
+   "notiz": "Soma S. 9, dieselbe Tabellenzelle: Eintrag 'Gamification-Effekt' unveraendert gegenueber Urteil 87628795fc vom 29.07. Rehash allein durch den Wechsel der Float-Option [H] -> [htbp], kein geaenderter Text.",
+   "datum": "2026-07-30"
+  },
+  "b0f816e1af": {
+   "status": "OK",
+   "notiz": "Soma S. 10-12, Teilnahmequoten unveraendert korrekt wiedergegeben (Vorurteil 4c41eb78c3 vom 29.07.). Geaendert wurde nur die Rahmung: 'Die Entscheidung stuetzt sich auf einen Befund von' -> 'Den Anstoss dazu gab ein Befund von' (30.07.). Der Trittstein ist damit schwaecher als zuvor und damit schwaecher als die Quelle - zulaessige Richtung. Anlass: Der Absatz raeumt zwei Saetze spaeter selbst ein, dass die Uebertragung von Praesenz- auf Online-Formate eine Annahme dieser Arbeit ist; 'stuetzt sich auf' behauptete dagegen eine tragende Stuetze. Vergleichsarm (Praesenz-Workshops) und Uebertragungsvorbehalt aus Runde 9 unveraendert.",
+   "datum": "2026-07-30"
+  },
+  "1a83a596cb": {
+   "status": "OK",
+   "notiz": "Barker S. 10, Zelle 'Rettungspunkte & Reste-Level' in tab:funktionsuebersicht: Zellentext maschinell als identisch zur Vorfassung verifiziert (Urteil f568306272 bzw. e98c69bef5) - Reminders als belegter Nudge-Typ, Feedback/Fortschritt separat als eigene Gestaltung. Rehash allein, weil die Tabelle innerhalb des Abschnitts hinter den Innovationsabsatz verschoben und die Float-Option auf [H] zurueckgesetzt wurde (Layout, 30.07.); Zeilennummer 22 -> 24.",
+   "datum": "2026-07-30"
+  },
+  "e40f1a4822": {
+   "status": "OK",
+   "notiz": "Nivedhitha S. 14, dieselbe Tabellenzelle: 'Selbstwahrnehmung ueber gemeinsame Absicht' (collective intention = geteilte Handlungsabsicht) unveraendert gegenueber Urteil d3ebc091a2 bzw. 113e62bac4; Zellentext maschinell als identisch geprueft. Rehash nur durch die Verschiebung der Tabelle und [htbp] -> [H].",
+   "datum": "2026-07-30"
+  },
+  "1b24a2cd6e": {
+   "status": "OK",
+   "notiz": "Soma S. 9, dieselbe Tabellenzelle: Eintrag 'Gamification-Effekt' unveraendert gegenueber Urteil e1fd65a089 bzw. 87628795fc; Zellentext maschinell als identisch geprueft. Rehash nur durch die Verschiebung der Tabelle und [htbp] -> [H].",
+   "datum": "2026-07-30"
+  },
+  "a6c831935b": {
+   "status": "OK",
+   "notiz": "Barker S. 10, Zelle 'Rettungspunkte & Reste-Level': Urteil aus 1a83a596cb / f568306272 / e98c69bef5 gilt unveraendert weiter - Reminders als belegter Nudge-Typ, Feedback/Fortschritt separat als eigene Gestaltung. Ursache des Rehash mechanisch geklaert: satz_um() findet in einer Tabellenzelle kein Satzende und spannt den Traegersatz daher vom letzten Punkt VOR der Tabelle bis zum ersten Punkt DANACH - 1530 Zeichen, inklusive der Folgesatzes 'Das User Interface (UI) folgt drei Hauptbereichen ...', der in dieser Sitzung umgestellt wurde. Zellentext selbst maschinell als unveraendert verifiziert.",
+   "datum": "2026-07-30"
+  },
+  "26bc0b4512": {
+   "status": "OK",
+   "notiz": "Nivedhitha S. 14, dieselbe Zelle: 'Selbstwahrnehmung ueber gemeinsame Absicht' (collective intention = geteilte Handlungsabsicht, nicht Zugehoerigkeitsgefuehl) unveraendert gegenueber 26bc0b4512-Vorgaenger e40f1a4822 / d3ebc091a2 / 113e62bac4. Ursache des Rehash mechanisch geklaert: satz_um() findet in einer Tabellenzelle kein Satzende und spannt den Traegersatz daher vom letzten Punkt VOR der Tabelle bis zum ersten Punkt DANACH - 1530 Zeichen, inklusive der Folgesatzes 'Das User Interface (UI) folgt drei Hauptbereichen ...', der in dieser Sitzung umgestellt wurde. Zellentext selbst maschinell als unveraendert verifiziert.",
+   "datum": "2026-07-30"
+  },
+  "e4d9b4aad8": {
+   "status": "OK",
+   "notiz": "Soma S. 9, dieselbe Zelle: Eintrag 'Gamification-Effekt' unveraendert gegenueber 1b24a2cd6e / e1fd65a089 / 87628795fc. Ursache des Rehash mechanisch geklaert: satz_um() findet in einer Tabellenzelle kein Satzende und spannt den Traegersatz daher vom letzten Punkt VOR der Tabelle bis zum ersten Punkt DANACH - 1530 Zeichen, inklusive der Folgesatzes 'Das User Interface (UI) folgt drei Hauptbereichen ...', der in dieser Sitzung umgestellt wurde. Zellentext selbst maschinell als unveraendert verifiziert.",
+   "datum": "2026-07-30"
   }
  },
  "versatz": {
   "vittuariHowReduceConsumer2023": -103,
   "barkerWhatNudgeTechniques2021": -8,
   "somaFoodWasteReduction2020": 0,
-  "nivedhithaHowGreenSocial2024": 9
+  "nivedhithaHowGreenSocial2024": 9,
+  "unTransformingOutWorld2030Agenda": 0,
+  "shenInfluenceOsmosisSocial2023": 0
  },
  "ausnahmen": []
 }

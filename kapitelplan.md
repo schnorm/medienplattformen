@@ -4,7 +4,7 @@
 - **Titel**: Resteria — Konzeption einer Social-Media-Plattform für nachhaltigkeitsorientierte Hobbyköch:innen (Arbeitstitel)
 - **Papiertyp**: Projektbericht (B.Sc.) · **Forschungstyp**: entfällt
 - **Gewählte Aufgabenstellung**: Aufgabenstellung 2 (Social-Media-Plattform Hobbyköch:innen), Nische: Zero-Waste/Nachhaltigkeit
-- **Gesamtwortzahl (Richtwert)**: 7–10 Seiten (B.Sc.)
+- **Gesamtwortzahl (Richtwert)**: 2625–3750 Wörter · **Seitenvorgabe**: 7–10 Seiten (B.Sc.)
 - **Erstellt am**: 2026-07-21 · **Plan-Session-Checkpoints**: `kapitelplan.draft.md` (Archiv)
 - **Plattformname**: „Resteria" (Nutzer-Entscheidung 2026-07-21). Ersetzt den Arbeitstitel „Restlos", der mit „Restlos Glücklich" e.V. + App (Berlin, seit 2015, identisches Zero-Waste-Rezept-Feld) kollidierte. **Namensverfügbarkeit (DPMA / .de-Domain) prüft der Nutzer vor finaler Nutzung.**
 
