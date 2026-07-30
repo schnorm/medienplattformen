@@ -269,11 +269,51 @@
    "status": "OK",
    "notiz": "Soma S. 9, dieselbe Zelle: Eintrag 'Gamification-Effekt' unveraendert gegenueber 1b24a2cd6e / e1fd65a089 / 87628795fc. Ursache des Rehash mechanisch geklaert: satz_um() findet in einer Tabellenzelle kein Satzende und spannt den Traegersatz daher vom letzten Punkt VOR der Tabelle bis zum ersten Punkt DANACH - 1530 Zeichen, inklusive der Folgesatzes 'Das User Interface (UI) folgt drei Hauptbereichen ...', der in dieser Sitzung umgestellt wurde. Zellentext selbst maschinell als unveraendert verifiziert.",
    "datum": "2026-07-30"
+  },
+  "ff6533b971": {
+   "status": "OK",
+   "notiz": "Barker S. 2 (Offset korrigiert von -8 auf 0, danach Volltextfund exakt): 'Economist Thaler and legal scholar Sunstein convey the concept of nudging, defined as any aspect of the choice architecture that alters people's behaviour in a predictable way without forbidding any options or significantly changing their economic incentives.' Deckt die deutsche Paraphrase 'ein Gestaltungsimpuls, der Verhalten lenkt, ohne Wahlmoeglichkeiten einzuschraenken' praezise; Zurechnung an Barker (nicht Thaler/Sunstein direkt) korrekt, da Barker die gelesene Quelle ist.",
+   "datum": "2026-07-30"
+  },
+  "d7207b16a0": {
+   "status": "OK",
+   "notiz": "Nivedhitha S. 14: Rehash durch Aenderung des Nachbarsatzes nach dem Semikolon (Challenge-Rangliste statt Rettungs-Feed), nicht durch Aenderung der zitierten Aussage selbst. Der Nivedhitha zugerechnete Satzteil (Selbstwahrnehmung wirkt nicht direkt, sondern ueber gemeinsame Handlungsabsicht/collective intention) ist unveraendert; Urteil aus vorheriger Pruefung (Sitzung 2026-07-30) bestaetigt weiter gueltig.",
+   "datum": "2026-07-30"
+  },
+  "28f50f49aa": {
+   "status": "OK",
+   "notiz": "Rehash durch Aenderung der Nachbarzeile 'Rezept-Upload' (Text optional ergaenzt) und des Absatzes vor der Tabelle, nicht durch Aenderung dieser Zelle (git diff bestaetigt Zelle unveraendert). Bekannte Ursache P19: satz_um() spannt in Tabellen ueber Zeilen-/Nachbargrenzen hinweg. Urteil aus vorheriger Pruefung (Barker S. 10, Reminders) bestaetigt weiter gueltig.",
+   "datum": "2026-07-30"
+  },
+  "6be973af0e": {
+   "status": "OK",
+   "notiz": "Rehash durch Aenderung der Nachbarzeile 'Rezept-Upload' (Text optional ergaenzt) und des Absatzes vor der Tabelle, nicht durch Aenderung dieser Zelle (git diff bestaetigt Zelle unveraendert). Bekannte Ursache P19. Urteil aus vorheriger Pruefung (Nivedhitha S. 14, gemeinsame Absicht) bestaetigt weiter gueltig.",
+   "datum": "2026-07-30"
+  },
+  "51b7e1629e": {
+   "status": "OK",
+   "notiz": "Rehash durch Aenderung der Nachbarzeile 'Rezept-Upload' (Text optional ergaenzt) und des Absatzes vor der Tabelle, nicht durch Aenderung dieser Zelle (git diff bestaetigt Zelle unveraendert). Bekannte Ursache P19. Urteil aus vorheriger Pruefung (Soma S. 9, Gamification-Effekt) bestaetigt weiter gueltig.",
+   "datum": "2026-07-30"
+  },
+  "2be9aa2b20": {
+   "status": "OK",
+   "notiz": "Rehash durch Aenderung von Zeile 15 (Zero-Waste-Woche-Formulierung) direkt vor der Tabelle, nicht durch Aenderung dieser Zelle (git diff bestaetigt Zeile 24 unveraendert). Bekannte Ursache P19. Urteil aus vorheriger Pruefung (Barker S. 10, Reminders) bestaetigt weiter gueltig.",
+   "datum": "2026-07-30"
+  },
+  "2b5a9c9b01": {
+   "status": "OK",
+   "notiz": "Rehash durch Aenderung von Zeile 15 (Zero-Waste-Woche-Formulierung) direkt vor der Tabelle, nicht durch Aenderung dieser Zelle (git diff bestaetigt Zeile 24 unveraendert). Bekannte Ursache P19. Urteil aus vorheriger Pruefung (Nivedhitha S. 14, gemeinsame Absicht) bestaetigt weiter gueltig.",
+   "datum": "2026-07-30"
+  },
+  "347a702399": {
+   "status": "OK",
+   "notiz": "Rehash durch Aenderung von Zeile 15 (Zero-Waste-Woche-Formulierung) direkt vor der Tabelle, nicht durch Aenderung dieser Zelle (git diff bestaetigt Zeile 24 unveraendert). Bekannte Ursache P19. Urteil aus vorheriger Pruefung (Soma S. 9, Gamification-Effekt) bestaetigt weiter gueltig.",
+   "datum": "2026-07-30"
   }
  },
  "versatz": {
   "vittuariHowReduceConsumer2023": -103,
-  "barkerWhatNudgeTechniques2021": -8,
+  "barkerWhatNudgeTechniques2021": 0,
   "somaFoodWasteReduction2020": 0,
   "nivedhithaHowGreenSocial2024": 9,
   "unTransformingOutWorld2030Agenda": 0,
