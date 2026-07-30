@@ -4,7 +4,34 @@ Offene Änderungsvorschläge an Skills, Skripten und `CLAUDE.md`. **Kein Abgabeb
 
 Neu angelegt 2026-07-30, nachdem die vorherigen Punkte (P1–P18) übernommen und die Datei geleert wurde.
 
-**Status:** 3 Punkte OFFEN
+**Status:** 4 Punkte OFFEN
+
+---
+
+## P35 — Interne `\autoref`-Verweise werden nur auf Fundstelle geprüft, nie auf Reichweite — und niemand merkt, wenn sich das Ziel ändert
+
+**Konkrete Fälle (2026-07-30, Delta-Re-Audit und die Nutzer-Rückfrage danach).** Zwei Befunde in **einem** Absatz, `04_community_und_feedback.tex:9`, beide aus derselben Klasse:
+
+1. „Laut~`\autoref{sec:zielgruppe}` sucht die Zielgruppe **vor allem** einen Ort, an dem der eigene Erfolg von anderen gesehen wird." — `02_zielgruppe.tex:7` leitet **zwei gleichrangige** Anforderungen ab und nennt keine Rangfolge. Der Inhalt steht dort, die Gewichtung nicht.
+2. „…der Austausch über Rezepte ist **die Stärke** der etablierten Communitys: Chefkoch.de hat dafür einen **gewachsenen Bestand an Beiträgen** (siehe~`\autoref{sec:wettbewerbsanalyse}`)." — `01_wettbewerbsanalyse.tex:3` belegt Upload, Bewertung, Kommentar und die Einstufung „stark". „Gewachsener Bestand" ist eine Ableitung aus „etabliert", keine Aussage der Analyse.
+
+Beide Sätze sind **nicht falsch**. Beide haben ein Delta-Re-Audit mit ausdrücklich geprüften Querverweisen passiert — ich habe Fall 2 sogar angesehen und als „innerhalb der Toleranz" durchgewinkt. Gefunden hat ihn der Nutzer beim Lesen.
+
+**Warum das strukturell ist und nicht Sorgfalt.** Der Skill besitzt diese Unterscheidung bereits — aber nur für **externe** Quellen. Teil-Check G sagt in seinem eigenen Vorspann: „Er prüft **Fundstelle und Wortlaut** … Er prüft **nicht die Reichweite** — ob die Quelle die Behauptung in der *Stärke* trägt, in der der Satz sie aufstellt." Dafür gibt es das Verdikt `RENTIERT NICHT`, die Trägersatz-Hashes in `quellencheck-state.json`, P18 und die Prüferfrage 3 der `gegenlesung`.
+
+Für interne Verweise existiert nichts davon. Teil-Check C fragt wörtlich nur: „Steht an der Stelle, auf die ein `\autoref` zeigt, tatsächlich der behauptete Inhalt?" — **genau die Fundstellenfrage, die Teil-Check G selbst als unzureichend ausweist.** Die Reichweitenfrage wird für interne Verweise nie gestellt.
+
+**Der zweite, gefährlichere Teil: Ziele bewegen sich, Quellen nicht.** Ein zitiertes PDF ändert sich nie; `check_quellentreue.py` hasht den Trägersatz trotzdem und wirft die Zitation bei jeder Änderung auf `PRÜFEN` zurück (P16/P19 handeln von genau dieser Empfindlichkeit). Das Ziel eines `\autoref` ist dagegen ein **eigenes Kapitel, das laufend umgeschrieben wird** — dieses Projekt hat vier Kürzungsrunden mit über 1.000 gestrichenen Wörtern hinter sich. Würde `02_zielgruppe.tex:7` morgen gekürzt, bliebe der darauf gestützte Satz in `04` unbemerkt stehen. **Es gibt kein Skript, keinen Check und keinen Hash, der das meldet.** Betroffen sind hier **18** `\autoref{sec:…}`-Verweise über acht Dateien.
+
+Das ist dieselbe Klasse wie die drei gebrochenen Bezüge aus P17, nur eine Ebene höher: Dort verlor ein Pronomen sein Bezugswort, hier verliert eine Behauptung ihre Stütze. Beide entstehen im Satz *davor* und überleben Audits, die den Diff prüfen.
+
+**Vorschlag, drei Teile:**
+
+- **`pruef-modus` → Teil-Check C:** Den Prüfpunkt „Querverweise semantisch korrekt" um die Reichweitenfrage erweitern, wortgleich zu Teil-Check G: *Trägt die Zielstelle den Satz in seiner jetzigen Stärke — oder nur einen benachbarten, schwächeren Inhalt?* Besonders auf Gewichtungs- und Absolutheitsmarker im verweisenden Satz achten (`vor allem`, `in erster Linie`, `hauptsächlich`, `die Stärke`, `der wichtigste`, `ausschließlich`, `nur`), denn genau dort entsteht die Differenz. Fundstelle und Reichweite getrennt quittieren, nicht in einem PASS zusammenfassen.
+- **Neues Skript oder Erweiterung von `check_quellentreue.py` — der eigentliche Hebel.** Die bewährte Mechanik auf interne Verweise anwenden: je Paar (verweisender Satz, Ziel-Subsection) beide Seiten hashen und in einem `autoref-state.json` ablegen. Ändert sich **eine** von beiden, geht das Paar auf `PRÜFEN`. Das ist deterministisch, ohne Fehlalarmrisiko, wiederverwendet vorhandenen Code und schließt die Lücke, die kein Lesedurchgang zuverlässig schließt — denn niemand liest beim Kürzen von Kapitel 2.2 nach, wer aus Kapitel 2.4 darauf zeigt.
+- **`gegenlesung` / `stresstest`:** Prüferfrage 3 (Reichweite) gilt bislang implizit nur für Zitationen. Ausdrücklich auf interne Verweise und auf Rückgriffe auf die **eigene** Analyse ausdehnen („wie die Wettbewerbsanalyse gezeigt hat", „laut Kapitel X") — die Eigenanalyse ist im Projektbericht die Hauptbelegquelle und damit die Hauptquelle für Überdehnungen.
+
+**Zusatzbefund: Hedging-Historie ist ein Abriss-Signal, kein Politur-Signal.** PR #16 hat die alte Soma-Begründung ersetzt und das selbst so begründet: „Nach drei Hedging-Runden trug die Zitation das Argument ohnehin nicht mehr." Der **Ersatz**satz brauchte dann in derselben PR bereits eine Rücknahme („Foren sind die Stärke der etablierten Rezept-Communitys" → „der Austausch über Rezepte", weil die Analyse für Chefkoch kein Forum belegt) — und ist einen Tag später ganz entfallen. Das Muster ist damit zweimal am selben Absatz belegt. P18 kennt die Frage „rentiert sich das Zitat noch?" nur für Zitationen; sie gehört generalisiert: **Ein Satz, dessen Stütze in zwei oder mehr Runden abgeschwächt werden musste, ist ein Ersetzungs-, kein Umformulierungskandidat.** Wo die Reparaturhistorie sichtbar ist (`AENDERUNGEN.md`, Statuszeilen), gehört sie beim Befund mitzitiert, statt die nächste Abschwächung vorzuschlagen.
 
 ---
 
