@@ -3,6 +3,8 @@
 **Datum**: 30.07.2026 · **Geprüfter Stand**: Delta `85c0b53..d36412e` (3 Kapiteldateien, `pages/appendix.tex`) · **Audit-Typ**: Delta-Re-Audit
 **Score: 89/100 (vorläufig – Teil-Check D nicht lauffähig, Seitenumfang für den aktuellen Textstand ungeprüft)**
 
+> **Nachtrag 30.07.2026 (nach dem Audit, auf Nutzerentscheidung):** Befund 2 und 3 sind umgesetzt, dazu eine vom Nutzer angestoßene Streichung im selben Absatz. Details am Ende des Berichts unter „Nachtrag". Offen bleibt allein Handlungsempfehlung 1 (Build).
+
 > Einordnung vorab: Geprüft wurde der vollständige Textdiff seit dem letzten Delta-Re-Audit (100/100), alle sechs Skripte und das im Repository liegende PDF. **Inhaltlich ist der Delta ein Gewinn und trägt keinen score-relevanten Befund.** Der Punktabzug hat eine einzige Ursache: In dieser Session-Umgebung sind `lualatex`/`latexmk`/`biber` nicht installiert, und das eingecheckte `main.pdf` ist **veralteter Stand** — der Seitenumfang, ein Pflichtkriterium, ist damit für den aktuellen Text nicht gemessen. Das ist kein Textmangel, sondern ein ausstehender Build.
 
 ## Der Delta in einem Satz
@@ -165,3 +167,42 @@ Punkte 2–4 sind Ein-Wort-Änderungen ohne Bezug zu These, Kernargumenten oder 
 - [ ] **Keine externe Plagiatssoftware vorab** – ein Voraberprüfungs-Upload erzeugt einen Turnitin-Selbsttreffer.
 - [ ] Manueller Prüfpunkt 2 oben: die vier zitierten Prompts gegen den Chatverlauf abgleichen.
 - [ ] Namensverfügbarkeit „Resteria" (DPMA, .de-Domain) – nicht abgabekritisch.
+
+---
+
+## Nachtrag 30.07.2026 – Überarbeitung nach diesem Bericht
+
+Umgesetzt in derselben Session auf Nutzerentscheidung. Kein neues Audit; die Punkte sind mechanisch und berühren weder These noch Kernargumente noch Leitfrage.
+
+### Chefkoch-Vergleichssatz gestrichen (Nutzer-Anstoß, nicht aus diesem Bericht)
+
+Der Nutzer hat gefragt, ob der mit „Hinzu kommt," beginnende Satz in `04_community_und_feedback.tex:9` entfallen kann — der zweite der drei arbeitseigenen Gründe, die PR #16 dort aufgebaut hat („der Austausch über Rezepte ist die Stärke der etablierten Communitys: Chefkoch.de hat dafür einen gewachsenen Bestand an Beiträgen, Resteria würde bei null anfangen"). **Vorab auf Beschädigung geprüft, Ergebnis: unbedenklich.**
+
+| geprüft | Ergebnis |
+|---|---|
+| Verwaistes Label durch den entfallenden `\autoref{sec:wettbewerbsanalyse}`? | Nein – das Label wird an drei weiteren Stellen referenziert (`03_konzept.tex:7`, `:24`, `01_kernergebnisse_und_ausblick.tex:3`). |
+| Zitation betroffen? | Nein – der Satz und der ganze Absatz tragen keine. Teil-Check G nach der Änderung erneut gefahren: **19/19 FUNDSTELLE OK**, kein Trägersatz-Hash bewegt. |
+| Zählaussage im Text, die „drei Gründe" verspricht? | Nein – Grep über `chapters/` auf Grund/Gründe/erstens/zweitens/drittens: kein Treffer. Die Dreizahl steht nur in der PR-Beschreibung und in `CLAUDE.md`. |
+| Prüfer-Steuerung „Entscheidungen beruhen auf der Vergleichsanalyse"? | **Weiterhin erfüllt.** `04_community_und_feedback.tex:3` verankert das Kapitel bereits an der Analyse („wodurch der Feed genau den Austausch ermöglicht, den die Wettbewerbsanalyse bei den reinen Reste-Matching-Apps vermisst hat"). Die Anbindung läuft danach über eine positive Entscheidung statt über eine Auslassung. |
+| Bleibt die Austausch-Dimension gedeckt? | Ja, an zwei vorher gelesenen Stellen: `04:3` (Kommentieren und Bewerten) sowie `03_konzept.tex:13` und `tab:funktionsuebersicht` („Zubereitungstipps austauschen" → Aufgaben-Zweck Kochtipp-Austausch). Im Verzichts-Absatz selbst wird die Frage danach nur noch implizit beantwortet — das ist der einzige reale Verlust und war die bewusste Abwägung. |
+
+Zusätzlich beseitigt die Streichung eine Halb-Redundanz: Der entfallene Satz und der behaltene („Jeder weitere Bereich müsste zudem gefüllt werden …") begründeten beide fehlende Masse — einmal als Wettbewerbsnachteil, einmal als interne Verdünnung. Der behaltene ist der spezifischere, weil er an der eigenen schmalen Zielgruppe hängt. Das „zudem" bezieht sich danach auf einen Grund statt auf zwei und bleibt korrekt.
+
+### Befund 3 umgesetzt
+
+`04_community_und_feedback.tex:9`: „sucht die Zielgruppe **vor allem** einen Ort" → „sucht die Zielgruppe einen Ort". Der Satz schreibt `sec:zielgruppe` damit keine Rangfolge mehr zu, die dort nicht steht.
+
+### Befund 2 umgesetzt
+
+`pages/appendix.tex:53`: „}, **sowie** in weiteren Iterationsschritten verfeinert" → „}, in weiteren Iterationsschritten verfeinert". Alle vier `\quelle{}`-Zeilen tragen jetzt wieder dieselbe Anschlussformel (maschinell gegengeprüft, 4/4 identisch); das Komma vor „sowie" ist mit entfallen.
+
+### Nicht umgesetzt
+
+Befund 4 (`META-VERB` „bündeln") bewusst gelassen – Einzelvorkommen, kein Regelverstoß, und „bündeln" ist an der Stelle das genauere Verb.
+
+### Prüfstand nach der Überarbeitung
+
+- `check_all.py --mit-quellen`: **alle sechs Skripte ohne harte Funde**, `check_formalia.py` 0 FEHLER (47 Hinweise, unverändert – keine neue Klasse).
+- `check_quellentreue.py`: **19/19 FUNDSTELLE OK**, keine Invalidierung.
+- `check_umfang.py`: **3.691 Wörter** (vorher 3.721, −30), Korridor 2.625–3.750. Die Streichung entlastet die Seitenzahl zusätzlich.
+- **Weiterhin offen: der Build.** Handlungsempfehlung 1 ist unverändert der einzige score-relevante Schritt; die Session-Umgebung hat keine LaTeX-Toolchain, und `main.pdf` im Repository ist nach dieser Überarbeitung erst recht veraltet.
