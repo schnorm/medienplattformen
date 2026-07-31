@@ -6,6 +6,18 @@
 
 **Methodik:** Ein isolierter Subagent hat den gesamten Text gelesen, **ohne** `CLAUDE.md` → Projektstatus, `pruefbericht.md`, `AENDERUNGEN.md`, `SKILL-ANPASSUNGEN.md`, `MEMORY.md`/`PERSISTENT.md` oder Git-Historie — um frühere „schon geprüft"-Urteile nicht ungeprüft zu übernehmen. Jede gefundene, überprüfbare Außenweltbehauptung wurde per gezielter Websuche einzeln verifiziert. 12 Kandidaten gefunden, 21 Websuchen, 7 zusätzliche (durchweg blockierte) Abrufversuche an Primärquellen.
 
+## Abarbeitungsvermerk (31.07.2026, `schreib-modus`-Sitzung)
+
+**Befund 1: bestätigt und umgesetzt — Bericht damit vollständig abgearbeitet.** Der Nutzer hat den einzigen offenen Punkt selbst am Primärbeleg geprüft: chefkoch.de/wochenplaner/ listet unter Chefkoch Plus wörtlich „Lebensmittel aufbrauchen mit der Zutatensuche"; ein Screenshot der Zutaten-Auswahl zeigt ein Raster aus Zutatenkarten mit je eigenem „+"-Button — das übliche Multi-Select-Muster (wie bei Restegourmet/SuperCook), das eine Auswahl mehrerer Zutaten für eine gemeinsame Suche belegt. Beide zuvor offenen Teilfragen sind damit geklärt: mehrere Zutaten gleichzeitig → ja (Multi-Select), kostenlos oder Chefkoch Plus → Chefkoch Plus (kostenpflichtig).
+
+Umgesetzt wie unter „Handlungsempfehlungen" vorgesehen, alle vier Stellen in einem Arbeitsgang: Fließtextsatz `01_wettbewerbsanalyse.tex:3`, Tabellenzelle „Reste-Matching-Werkzeug" (schwach → mittel), `:36` und `:38`. **Bewusst enger gefasst als der Formulierungsvorschlag dieses Berichts:** Kein Zusatz zur Anbindung an Bewertungen/Kommentare/Punktesystem — dafür gibt es keinen Primärbeleg, und Chefkoch hat ohnehin kein Punktesystem, das auszuschließen wäre. Stattdessen nur die zwei verifizierten Fakten (Werkzeug existiert; kostenpflichtig) in den Text übernommen.
+
+**Zusätzlicher Fund beim Konsistenz-Check (vom Nutzer explizit angefordert):** Dieselbe Absolutbehauptung („kein Werkzeug" / „nicht vorgesehen") stand eine Ebene grundsätzlicher auch in der Einleitung (`chapters/01_einleitung/01_ausgangslage_und_problem.tex:7`) als Teil der zentralen Lücken-Begründung des ganzen Berichts — dort ebenfalls minimal korrigiert („kostenlose Resteverwertung"/„kostenlose Suche"), da sonst Kapitel 1 der präziseren Aussage in Kapitel 2 widersprochen hätte.
+
+Kontrolle: `check_all.py --kapitel chapters/02_durchfuehrung --mit-quellen` 0 FEHLER · `check_quellentreue.py --datei chapters/` 19/19 FUNDSTELLE OK, keine Zitation invalidiert (keiner der geänderten Sätze trägt eine Zitation) · Umfang 3.710 Wörter (weiterhin im Korridor 2.625–3.750). Details in `CLAUDE.md` → Statuszeilen `sec:einleitung`/`sec:durchfuehrung`.
+
+**Damit ist dieser Bericht vollständig erledigt — kein weiterer Handlungsbedarf.** Offen bleibt nur der davon unabhängige, bereits in `pruefbericht.md` dokumentierte Build-Schritt.
+
 ## Abarbeitungsvermerk (30.07.2026, `schreib-modus`-Sitzung)
 
 **Befund 2: umgesetzt** — aber **nicht** mit dem hier vorgeschlagenen Wortlaut. Der Vorschlag („offenbar kleineren, community-gespeisten Rezeptbestand als der redaktionell gepflegten Datenbank") hätte eine unbelegte Behauptung durch zwei neue ersetzt: Weder „community-gespeist" für leftovercooking noch „redaktionell gepflegt" für die \ac{BMLEH}-App ist in diesem Bericht verifiziert. Umgesetzt wurde stattdessen nur, was dieser Bericht selbst als Befund festhält (leftovercooking arbeitet KI-generiert statt mit fester Rezeptdatenbank) und was im Text bereits bestätigt steht (\ac{BMLEH}-App: umfangreiche Rezeptdatenbank, Zeile 7): der Größenvergleich ist durch einen **strukturellen** Unterschied ersetzt.

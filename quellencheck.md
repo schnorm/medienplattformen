@@ -1,6 +1,6 @@
 # Quellencheck – Volltextabgleich aller Zitationen
 
-Stand: 30.07.2026 · 19 Zitationen · OK 19 · offen 0
+Stand: 31.07.2026 · 19 Zitationen · OK 19 · offen 0
 
 > Erzeugt von `check_quellentreue.py`. Der Bericht wird pro Lauf überschrieben; die Urteile liegen in `quellencheck-state.json`. Statuswerte nie von Hand ändern – Urteil per `--verdikt <hash>=OK --notiz "…"` eintragen.
 
