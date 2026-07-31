@@ -2,7 +2,32 @@
 
 Offene Änderungsvorschläge an Skills, Skripten und `CLAUDE.md`. **Kein Abgabebestandteil.**
 
-**Status:** 2 Punkte OFFEN
+**Status:** 1 Punkt OFFEN (P37) · P35 und P36 sind erkennbar umgesetzt – `check_autoref.py` samt `autoref-state.json` und `check_aussenwelt.py` samt `faktencheck`-Skill und `faktencheck-state.json` existieren und laufen; ihre Abschnitte stehen nur noch als Herleitung.
+
+---
+
+## P37 — `check_autoref.py` löscht bei eingegrenztem Lauf die Urteile außerhalb der Eingrenzung
+
+**Anlass (Delta-Re-Audit, 31.07.2026).** Der Lauf meldete fünf Verweise als `[NEU]`, obwohl das Abgabe-Audit desselben Tages alle 29 geprüft und quittiert hatte und die betroffenen Dateien seither unverändert waren. Ursache ist `aufraeumen()`:
+
+```python
+def aufraeumen(state: dict, paare: list[dict]) -> int:
+    """Urteile zu Paaren entfernen, die es nicht mehr gibt."""
+    lebend = {p["hash"] for p in paare}
+    tot = [h for h in state if h not in lebend]
+```
+
+`paare` enthält bei `--datei`/`--kapitel` nur die Paare des eingegrenzten Bereichs. Alles andere gilt als „gibt es nicht mehr" und wird gelöscht. Die Überarbeitungssitzung fuhr `check_all.py --kapitel chapters/02_durchfuehrung --mit-quellen`; damit verschwanden die fünf Urteile der Fazit-Verweise. Nachweis: Die in Commit `1e4761d` eingecheckte `autoref-state.json` enthält 24 Einträge, sämtlich aus `chapters/02_durchfuehrung/`, keinen aus `chapters/03_fazit/`.
+
+**Warum das mehr ist als Buchführung.** Der Nutzen des Skripts liegt in genau zwei Zusagen: Ein quittiertes Paar muss nie wieder gelesen werden, und ein bewegtes Ziel fällt automatisch auf. Ein stiller Urteilsverlust kehrt beide um – die Prüfarbeit war getan, die Begründung ist weg, und beim nächsten Lauf sieht der Verweis wie ein neuer aus. Schlimmer als der doppelte Aufwand ist die falsche Sicherheit dazwischen: Zwischen dem eingegrenzten Lauf und dem nächsten vollen Lauf behauptet die Zustandsdatei, es gebe nur 24 Verweise. Hätte in dieser Zeit jemand eine Zielstelle im Fazit-Umfeld geändert, hätte kein Lauf es gemeldet.
+
+**Dieselbe Klasse betrifft potenziell `check_quellentreue.py`**, das mit `--datei` denselben Eingrenzungsschalter kennt – vor einer Korrektur prüfen, ob dort eine analoge Aufräumfunktion existiert.
+
+**Vorschlag:**
+
+- `aufraeumen()` **nur beim ungefilterten Lauf** ausführen. Ist `--datei`/`--kapitel` gesetzt, ist die Aussage „dieses Paar gibt es nicht mehr" schlicht nicht belegt – das Skript hat außerhalb seines Bereichs nichts gesehen.
+- Ersatzweise, falls das Aufräumen im Teillauf gewünscht bleibt: nur Urteile entfernen, deren `datei` im aktuellen Filterbereich liegt.
+- Beim Löschen **eine Zeile ausgeben** („N Urteile zu entfallenen Paaren entfernt"), statt still zu arbeiten. Der Verlust wäre dann sofort im Sitzungsprotokoll sichtbar gewesen.
 
 ---
 

@@ -53,12 +53,30 @@
     "verdikt": "OK",
     "ziel_hash": "a9e3c953f4"
   },
+  "2d34773fad": {
+    "datei": "chapters/03_fazit/02_limitationen.tex",
+    "datum": "2026-07-31",
+    "label": "sec:iteratives_design",
+    "notiz": "Delta-Re-Audit 31.07.: 07_iteratives_design.tex:3 beschreibt den Klick-Prototyp-Test woertlich als Pruefung von Bedienfuehrungs-Entscheidungen wie der Drei-Bereiche-Navigation, mit wenigen externen Testpersonen und ausdruecklich vor dem Uebergang in die MVP-Entwicklung. Deckt das in :5 benannte Defizit der Mockups (nur drei Navigationsbereiche statt vollstaendiger Bedienfuehrung).",
+    "quelle_hash": "baa9e6a023",
+    "verdikt": "OK",
+    "ziel_hash": "09fe0ef5f6"
+  },
   "39ac026c0f": {
     "datei": "chapters/02_durchfuehrung/03_konzept.tex",
     "datum": "2026-07-31",
     "label": "sec:wettbewerbsanalyse",
     "notiz": "Abgabe-Audit 31.07.: Marker 'allein' geprueft - Wettbewerbsanalyse:7 weist Restegourmet und BMLEH-App beide das Reste-Matching zu (Tabelle: je 'stark'), traegt den Satz also in voller Staerke.",
     "quelle_hash": "6aaa49e882",
+    "verdikt": "OK",
+    "ziel_hash": "582a4e62b1"
+  },
+  "3e41eb2959": {
+    "datei": "chapters/03_fazit/01_kernergebnisse_und_ausblick.tex",
+    "datum": "2026-07-31",
+    "label": "sec:wettbewerbsanalyse",
+    "notiz": "Delta-Re-Audit 31.07.: Zielstelle 01_wettbewerbsanalyse.tex:36 formuliert die Luecke woertlich ('Die Tabelle macht die Luecke sichtbar, die Resteria schliessen soll'); Fundstelle traegt. Reichweite geprueft: der verweisende Satz behauptet nur, dass die Analyse die Luecke gezeigt hat - der weitergehende Anspruch ('schliesst') wird im selben Abschnitt :5 selbst als 'unbelegte Marktbeobachtung' begrenzt.",
+    "quelle_hash": "3b73f73143",
     "verdikt": "OK",
     "ziel_hash": "582a4e62b1"
   },
@@ -86,6 +104,15 @@
     "label": "sec:konzept",
     "notiz": "Abgabe-Audit 31.07.: 03_konzept.tex:3 fuehrt die Kooperationen mit Food-Sharing-Initiativen und Lebensmittelhaendler:innen ein - Fundstelle korrekt.",
     "quelle_hash": "628b489275",
+    "verdikt": "OK",
+    "ziel_hash": "1ded4572a0"
+  },
+  "822512f663": {
+    "datei": "chapters/03_fazit/01_kernergebnisse_und_ausblick.tex",
+    "datum": "2026-07-31",
+    "label": "sec:konzept",
+    "notiz": "Delta-Re-Audit 31.07.: 03_konzept.tex:3 legt die Kooperationen mit regionalen Food-Sharing-Initiativen und Lebensmittelhaendler:innen als Teil des Erloesmodells an (gesponserte Challenges, Rabattaktionen) - der Rueckbezug 'ueber ihren Erloesbeitrag hinaus' trifft die Zielstelle genau. Die neue Wachstumsaussage steht im Konjunktiv ('koennten') und wird der Zielstelle nicht zugeschrieben.",
+    "quelle_hash": "12009b1b52",
     "verdikt": "OK",
     "ziel_hash": "1ded4572a0"
   },
@@ -124,6 +151,15 @@
     "quelle_hash": "b755485fdb",
     "verdikt": "OK",
     "ziel_hash": "d7e893a2fc"
+  },
+  "9c9f82cc30": {
+    "datei": "chapters/03_fazit/01_kernergebnisse_und_ausblick.tex",
+    "datum": "2026-07-31",
+    "label": "sec:phasenplanung",
+    "notiz": "Delta-Re-Audit 31.07.: tab:phasenplanung fuehrt Phase 2 'Design & Prototyp' (Woche 3-4) mit Klick-Prototyp und kurzem Nutzungstest sowie Phase 4 'Beta-Test & Feedback' (Woche 15-17); Phase 5 'Launch & Iteration' beginnt erst ab Woche 18, beide Tests liegen also vor dem Launch. Gewichtungsmarker 'vor allem' steht in der Eigenaussage ueber den Bedarf, nicht in der Zuschreibung an die Zielstelle - keine Reichweiten-Differenz.",
+    "quelle_hash": "3e1700bfe0",
+    "verdikt": "OK",
+    "ziel_hash": "a9e3c953f4"
   },
   "aa957663b9": {
     "datei": "chapters/02_durchfuehrung/03_konzept.tex",
@@ -187,6 +223,15 @@
     "quelle_hash": "067d49cfba",
     "verdikt": "OK",
     "ziel_hash": "5a22486690"
+  },
+  "ea2564de55": {
+    "datei": "chapters/03_fazit/02_limitationen.tex",
+    "datum": "2026-07-31",
+    "label": "sec:phasenplanung",
+    "notiz": "Delta-Re-Audit 31.07.: tab:phasenplanung weist Phase 4 'Beta-Test & Feedback' mit Zeitrahmen Woche 15-17 und Beta-Gruppe von 10-15 Personen aus; 05_phasenplanung.tex:23 nennt das MVP zusaetzlich ausdruecklich als Voraussetzung des Beta-Tests. Der Limitationssatz behauptet nur die Beruecksichtigung im Fahrplan und bleibt damit hinter der Zielstelle.",
+    "quelle_hash": "7daa81c0eb",
+    "verdikt": "OK",
+    "ziel_hash": "a9e3c953f4"
   },
   "eb1b08c81b": {
     "datei": "chapters/02_durchfuehrung/04_community_und_feedback.tex",

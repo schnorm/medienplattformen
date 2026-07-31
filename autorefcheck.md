@@ -1,6 +1,6 @@
 # Autoref-Check – tragen die Verweisziele ihre Sätze noch?
 
-Stand: 31.07.2026 · 24 Verweispaare · OK 24 · offen 0
+Stand: 31.07.2026 · 29 Verweispaare · OK 29 · offen 0
 
 > Erzeugt von `check_autoref.py`. Der Bericht wird pro Lauf überschrieben; die Urteile liegen in `autoref-state.json`. Statuswerte nie von Hand ändern – Urteil per `--verdikt <hash>=OK --notiz "…"` eintragen.
 
@@ -34,4 +34,9 @@ Stand: 31.07.2026 · 24 Verweispaare · OK 24 · offen 0
 | `d37c7c8131` | 06_evaluation_reflexion.tex:9 | `sec:iteratives_design` | Abgabe-Audit 31.07.: 07:3 beschreibt die frueh und ohne Programmieraufwand korrigierten Mockup-Runden; der Kostenvergleich des verweisenden Satzes ist damit gedeckt. |
 | `b720e9b018` | 07_iteratives_design.tex:3 | `tab:phasenplanung` | Abgabe-Audit 31.07.: tab:phasenplanung weist 'Design & Prototyp' mit Woche 3-4 aus - Wochenangabe im verweisenden Satz stimmt exakt. |
 | `20eca49ff0` | 07_iteratives_design.tex:3 | `sec:konzept` | Abgabe-Audit 31.07.: 03_konzept.tex:36 beschreibt die Drei-Bereiche-Navigation (Startseite, Rettungs-Feed, Profil) - Fundstelle korrekt. |
+| `3e41eb2959` | 01_kernergebnisse_und_ausblick.tex:3 | `sec:wettbewerbsanalyse` | Delta-Re-Audit 31.07.: Zielstelle 01_wettbewerbsanalyse.tex:36 formuliert die Luecke woertlich ('Die Tabelle macht die Luecke sichtbar, die Resteria schliessen soll'); Fundstelle traegt. Reichweite geprueft: der verweisende Satz behauptet nur, dass die Analyse die Luecke gezeigt hat - der weitergehende Anspruch ('schliesst') wird im selben Abschnitt :5 selbst als 'unbelegte Marktbeobachtung' begrenzt. |
+| `9c9f82cc30` | 01_kernergebnisse_und_ausblick.tex:7 | `sec:phasenplanung` | Delta-Re-Audit 31.07.: tab:phasenplanung fuehrt Phase 2 'Design & Prototyp' (Woche 3-4) mit Klick-Prototyp und kurzem Nutzungstest sowie Phase 4 'Beta-Test & Feedback' (Woche 15-17); Phase 5 'Launch & Iteration' beginnt erst ab Woche 18, beide Tests liegen also vor dem Launch. Gewichtungsmarker 'vor allem' steht in der Eigenaussage ueber den Bedarf, nicht in der Zuschreibung an die Zielstelle - keine Reichweiten-Differenz. |
+| `822512f663` | 01_kernergebnisse_und_ausblick.tex:7 | `sec:konzept` | Delta-Re-Audit 31.07.: 03_konzept.tex:3 legt die Kooperationen mit regionalen Food-Sharing-Initiativen und Lebensmittelhaendler:innen als Teil des Erloesmodells an (gesponserte Challenges, Rabattaktionen) - der Rueckbezug 'ueber ihren Erloesbeitrag hinaus' trifft die Zielstelle genau. Die neue Wachstumsaussage steht im Konjunktiv ('koennten') und wird der Zielstelle nicht zugeschrieben. |
+| `ea2564de55` | 02_limitationen.tex:3 | `sec:phasenplanung` | Delta-Re-Audit 31.07.: tab:phasenplanung weist Phase 4 'Beta-Test & Feedback' mit Zeitrahmen Woche 15-17 und Beta-Gruppe von 10-15 Personen aus; 05_phasenplanung.tex:23 nennt das MVP zusaetzlich ausdruecklich als Voraussetzung des Beta-Tests. Der Limitationssatz behauptet nur die Beruecksichtigung im Fahrplan und bleibt damit hinter der Zielstelle. |
+| `2d34773fad` | 02_limitationen.tex:5 | `sec:iteratives_design` | Delta-Re-Audit 31.07.: 07_iteratives_design.tex:3 beschreibt den Klick-Prototyp-Test woertlich als Pruefung von Bedienfuehrungs-Entscheidungen wie der Drei-Bereiche-Navigation, mit wenigen externen Testpersonen und ausdruecklich vor dem Uebergang in die MVP-Entwicklung. Deckt das in :5 benannte Defizit der Mockups (nur drei Navigationsbereiche statt vollstaendiger Bedienfuehrung). |
 

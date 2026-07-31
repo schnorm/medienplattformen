@@ -1,190 +1,157 @@
 # Prüfbericht – Projektbericht
 
-**Datum**: 31.07.2026 · **Geprüfter Stand**: alle 15 Kapiteldateien, `pages/appendix.tex`, `pages/acronyms.tex`, `pages/meta.tex`, `references.bib`, neu gebautes `main.pdf` (Arbeitsstand über Commit `7b597b4`) · **Audit-Typ**: **Abgabe-Audit** (Voll-Audit A–D, F, G, H + Teil-Check E als Hinweisliste + Sprachstichprobe)
+**Datum**: 31.07.2026 · **Geprüfter Stand**: Delta `7b597b4..1e4761d` (vier Kapiteldateien) plus Arbeitsverzeichnis, neu gebautes `main.pdf` · **Audit-Typ**: **Re-Audit (Delta)** – die beiden Befunde des Abgabe-Audits vom selben Tag, alle sieben Skripte, Teil-Check D (Neubau) und Teil-Check H über die geänderten Dateien am Stück
 
-**Score: 88/100 – abgabereif** (Schwelle ≥ 80; die verbleibenden Punkte sind optional nachbesserbar)
+**Score: 100/100 – abgabereif**
 
-> **Einordnung gegenüber dem Vorbericht (Delta-Re-Audit vom selben Tag, 100/100).** Der Vorbericht war ein Delta-Lauf über die Chefkoch-Korrekturen und hat den Text nicht als Ganzes gegen Teil-Check C gelesen. Dieser Lauf tut das – und findet dabei einen Befund in der Vergleichstabelle, den bisher kein Durchgang aufgegriffen hat. **Der Score ist nicht gefallen, weil der Text schlechter geworden wäre**, sondern weil erstmals die vollständige spaltenweise Tabellenprüfung und die Reichweitenprüfung über alle 29 internen Verweise (`check_autoref.py`) gelaufen sind. Beide Befunde sind mechanisch und berühren weder These noch Argumentation noch Aufbau.
+> **Einordnung.** Beide Befunde des Abgabe-Audits (88/100) sind umgesetzt und am Text wie am gebauten PDF verifiziert. Kein neuer Textbefund, keine Regression. Ein Fund betrifft nicht die Arbeit, sondern das Prüfwerkzeug: `check_autoref.py` hat beim Lauf der Überarbeitungssitzung fünf bereits vergebene Urteile stillschweigend gelöscht (siehe „Werkzeug-Fund"). Sie sind in diesem Lauf neu geprüft und eingetragen.
 
-**Vorbedingungen des Voll-Audits erfüllt:** Gegenlesungen (Runden 3, 5, 6, 8, 9) abgearbeitet, `AENDERUNGEN.md` → „Offen" ist leer, `faktencheck-bericht.md` vollständig erledigt. Der **Gesamt-Stresstest wurde bewusst übersprungen** – Default der Kompakt-Prüfkette beim Papiertyp Projektbericht (Gegenlesung → Abarbeiten → Voll-Audit). Der davon abgedeckte Prüfblock „Roter Faden" wurde deshalb in diesem Bericht vollständig selbst geprüft statt referenziert.
+---
+
+## Geprüfter Delta
+
+Vier Dateien, 8 Einfügungen, 6 Löschungen – vollständig deckungsgleich mit dem Nachtrag des Vorberichts:
+
+| Datei | Änderung | Herkunft |
+|---|---|---|
+| `01_wettbewerbsanalyse.tex:15` | Definition des Kriteriums „Rezept-Austausch" (+33 Wörter) | Befund 1, Variante (a) |
+| `01_wettbewerbsanalyse.tex:36` | „ein Risiko **ist** das dichte Umfeld" (+1 Wort) | Handlungsempfehlung 3 |
+| `06_evaluation_reflexion.tex` | Entstehungsgeschichte-Absatz vor den Kursänderungs-Absatz gezogen (±0) | Befund 2 |
+| `07_iteratives_design.tex:5` | „gilt auch hier **der** Maßstab" (−1 Wort) | Handlungsempfehlung 3 |
+| `03_konzept.tex:9` | Absatzteilung vor „Ergänzend plant Resteria …" (±0) | Handlungsempfehlung 3, optional |
+
+---
+
+## Befund 1 des Vorberichts (Struktur, −10) – **behoben, verifiziert**
+
+`01_wettbewerbsanalyse.tex:15` trägt jetzt zwischen der Kommunikations- und der Entdeckungs-Definition: „Rezept-Austausch bezieht sich dagegen allein auf die Rezepte selbst, also darauf, ob eine Plattform sie bereitstellt und weitergibt; die Spanne reicht von der reinen Rezeptdatenbank bis zum Einstellen eigener Beiträge durch Nutzer:innen."
+
+**Spalte „Rezept-Austausch" erneut spaltenweise gegen die neue Definition geprüft – alle sechs Wertungen liegen auf einer Achse und sind im Text gedeckt:**
+
+| Plattform | Wertung | Deckung im Text | Position auf der Spanne |
+|---|---|---|---|
+| Chefkoch.de | stark | `:3` Upload eigener Rezepte, Bewerten, Kommentieren | oberes Ende (Einstellen eigener Beiträge) |
+| TikTok (Food) | mittel | `:5` Rezeptvideos von Creator-Seite, keine strukturierte Rezeptablage | Mitte |
+| Restegourmet | mittel | `:7` schlägt Rezepte vor, Kochbuch/Wochenplan; kein Einstellen | bereitstellen ohne Weitergabe |
+| `\ac{BMLEH}`-App | mittel | `:7` umfangreiche Rezeptdatenbank | unteres Ende (reine Datenbank) |
+| leftovercooking | mittel | `:9` Food-Creator:innen teilen eigene Rezepte | Mitte |
+| Foodsharing.de | schwach | `:11` schlägt gar keine Rezepte vor | außerhalb der Spanne |
+
+**Der im Vorbericht benannte Widerspruch ist damit aufgelöst.** `:36` („ohne Austausch zwischen den Nutzer:innen") und `:7` („schafft keinen Ort für Austausch") beziehen sich nach der Definition eindeutig auf die Spalte „Kommunikation \& Community", in der beide Plattformen „schwach" tragen – sie verneinen nicht mehr dasselbe Merkmal, das die Nachbarspalte mit „mittel" bewertet. `:38` (Alleinstellungsmerkmal) und `02_limitationen:7` sind unberührt, wie im Vorbericht gegengeprüft.
+
+**Zusätzlich auf eine neue Kollision geprüft:** Die Definition macht „Rezept-Austausch" nicht deckungsgleich mit „Rezept-Entdeckung". Die beiden Spalten laufen bei drei von sechs Plattformen auseinander (Restegourmet mittel/schwach, `\ac{BMLEH}`-App mittel/stark, TikTok mittel/stark) – sie messen erkennbar Verschiedenes.
+
+## Befund 2 des Vorberichts (Lesefluss, −2) – **behoben, verifiziert**
+
+Neue Absatzfolge in `06_evaluation_reflexion.tex`: `:3` Spannung SDG ↔ Nische → `:5` Entstehungsgeschichte → `:7` Methodenbewertung und die zwei Kursänderungen → `:9` Lehre aus der zweiten. Am gebauten PDF gegengelesen; der Rückbezug „Aus der zweiten dieser Kursänderungen" schließt jetzt unmittelbar an ihre Nennung an.
+
+**Ein Nebeneffekt, den der Vorbericht nicht vorhergesagt hat, fällt zugunsten des Textes aus:** `:7` beginnt mit „Die Kombination aus Wettbewerbsanalyse und literaturbasierter Herleitung …" und folgt jetzt direkt auf `:5`, das genau diese beiden Arbeitsschritte gerade aufgezählt hat („die Sichtung der sechs Plattformen … und die Literaturrecherche zu Nudges und Gamification"). Der Absatzöffner hat damit ein unmittelbares Bezugswort, das er vorher nicht hatte.
 
 ---
 
 ## Teil-Check A – Formalia
 
-- [PASS] **Zitationen** – `check_bib_keys.py`: alle 9 im Text genutzten Keys existieren in `references.bib`. Alle stellenbezogenen Zitate tragen eine Stellenangabe (`[S. …]`, `[Kap. …]`); `check_formalia.py` meldet keinen SEITENANGABE-Fehler. Narrative (`\textcite`) und parenthetische (`\parencite`) Form sind sachgerecht gemischt.
-- [PASS] **Eigene Werke** – alle vier Tabellen und alle fünf Abbildungen tragen eine `\quelle{}`-Zeile, die Beschriftung steht jeweils über dem Objekt, Caption vor `\label{}`. Kein `\cite{}` auf ein eigenes Werk. Die vier KI-Mockups und der Style Tile sind nach Zitierleitfaden 2.2.5 gekennzeichnet („Erstellt mit dem Prompt … durch Anthropic, 2026"), das Persona-Foto mit Urheberin, Datenbank und Lizenz.
-- [PASS] **Pronomen** – kein „ich/wir/man", kein „Die Projektgruppe" (Einzelarbeit laut `aufgabe.md`); dritte Person durchgehend.
-- [PASS] **LaTeX-Format** – `check_formalia.py` über `chapters/` + `pages/`: **0 FEHLER**, 59 Hinweiszeilen (Aufschlüsselung unten). Kein Geviertstrich im gesetzten Text, kein `\underline`, kein `\include` in Kapiteln, `~\autoref` durchgehend, Tabellen in `booktabs` + `\footnotesize`.
-- [PASS] **Akronyme** – vier Einträge in `pages/acronyms.tex` (BMLEH, MVP, SDG, SEQ), alle im Text per `\ac{}` verwendet, kein ungenutzter Eintrag. „UI", „UX" und „KI" werden bei Erstnennung ausgeschrieben statt als Akronym geführt – zulässig, allgemein geläufige Abkürzungen gehören laut IU-Richtlinien nicht ins Verzeichnis.
-- [PASS] **Cross-References & Labels** – 29 interne Verweise, 27 Labels, alle Ziele existieren; der Build meldet keine undefinierte Referenz. Labels konsistent `sec:`/`fig:`/`tab:`. Semantische Prüfung siehe Teil-Check C.
-- [PASS] **Anti-KI-Stil** – keine Floskel-Öffner, keine gehäuften Klischee-Übergänge, keine rhetorischen Fragen, keine Pointen-Schlusssätze, keine Gedankenstrich-Häufung. Zwei TRIAS-Hinweise (`03_konzept.tex`, `05_phasenplanung.tex`, je 4×) betreffen sachliche Dreiergruppen (drei Hauptbereiche, drei Kategorien, drei Risiken) und fallen unter die ausdrückliche Ausnahme.
-- [PASS] **Verständlichkeit** – am **Fließtext ohne Tabellenmarkup** nachgemessen: durchschnittliche Satzlänge 16–25 Wörter je Subsection, nur `01_wettbewerbsanalyse.tex` (25,1) und `03_konzept.tex` (22,7) liegen über dem Richtwert 22. Die SATZSCHNITT-Hinweise des Skripts (~28/~30) sind dadurch verzerrt, dass es Tabellenumgebungen als „Sätze" mitzählt (119/126/135 Wörter). Die als überlang gemeldeten Sätze sind fast durchweg angekündigte Aufzählungen nach Doppelpunkt und beim ersten Lesen verständlich – **kein gehäufter Verständlichkeitsverstoß, daher kein Abzug**. Dichtester Absatz: `03_konzept.tex:9` (kosmetischer Hinweis unten).
+- [PASS] **`check_formalia.py` über `chapters/` + `pages/`: 0 FEHLER**, 49 Hinweise – ausschließlich bekannte Klassen (SATZLAENGE, SATZSCHNITT, TRIAS, ABKUERZUNG für UI/UX/KI, TITEL-DOPPLUNG), keine neue Klasse durch den Delta.
+- [PASS] **Zitationen** – `check_bib_keys.py`: alle 9 im Text genutzten Keys existieren in `references.bib`. Keine Zitation im Delta hinzugefügt, entfernt oder verschoben; die Absatzteilung in `03_konzept.tex` lässt beide Hälften mit je eigenen Belegen zurück (`:9` Barker S. 2; `:11` Barker S. 10 und Nivedhitha S. 14).
+- [PASS] **Verständlichkeit** – am Fließtext **ohne Tabellenmarkup** neu gemessen: `01_wettbewerbsanalyse.tex` 25,0 (vorher 25,1), `03_konzept.tex` 22,9 (vorher 22,7), alle übrigen 13 Dateien zwischen 10,5 und 21,9. Der neue Definitionssatz (32 Wörter) hat den Durchschnitt seiner Datei nicht erhöht, weil er zugleich die Satzzahl anhebt. Unveränderte Einordnung des Vorberichts: kein gehäufter Verständlichkeitsverstoß, kein Abzug.
 - [PASS] **Offene Arbeitsmarker** – kein `% TODO-QUELLE:`, kein `% UNVERIFIED:`.
-- [PASS] **`main.tex`/`cover.tex` unverändert**, Projektangaben ausschließlich in `pages/meta.tex`, dort alle Felder befüllt (`\SubmissionDate{\today}` ist bewusste Nutzer-Entscheidung laut `PERSISTENT.md`).
-- [PASS] **Quellen-Sperrliste** – keine Skripte, Vorlesungsfolien oder Webinare zitiert; kein Sekundärzitat.
+- [PASS] **`main.tex`/`cover.tex` unverändert**; der Delta berührt ausschließlich `chapters/`.
 
-**Sprachstichprobe (nur Abgabe-Audit, zwei Absätze je Hauptkapitel, ausschließlich auf Sprachfehler):** Keine Rechtschreib-, Grammatik- oder Kommafehler gefunden; `check_formalia.py` meldet keine Wortdopplung. Zwei Formulierungen mit Stolperpotenzial, beide ohne Score-Wirkung – siehe kosmetische Hinweise.
+## Teil-Check B – Argumentationsqualität
 
----
+Im Delta-Umfang geprüft, nicht neu erhoben. Keine der fünf Änderungen berührt These, Kernargumente, Leitfrage oder einen Pflicht-Punkt aus `typen/projektbericht.md`. Zwei Pflicht-Punkte lagen dennoch im Änderungsumfeld und wurden gegengelesen:
 
-## Teil-Check B – Argumentationsqualität (nur Pflicht-Punkte aus `typen/projektbericht.md`)
-
-- [PASS] **These erkennbar, Leitfrage ≠ These** – Ziel („Konzeption der Plattform Resteria", `02_zielsetzung_und_verengung.tex:3`) und These (die Kombination aus Reste-Matching und echter Zero-Waste-Community schließt eine Marktlücke) sind getrennt formuliert.
-- [PASS] **Normative Ebene der These** (Pflicht) – „Resteria soll Reste-Matching … mit einer echten Social-Community verbinden" (`02_zielsetzung:3`); Funktionsableitung aus den Levers (`03_konzept:5`).
-- [PASS] **Aktualität/Zeitbezug in der Einleitung** (Pflicht) – SDG 12.3 mit Zieljahr 2030 (`01_ausgangslage:5`), belegt.
-- [N.A.] **Forschungslücke in der Einleitung** – laut Typ-Datei „Optional"; faktisch als Marktlücke ausformuliert (`01_ausgangslage:7`).
-- [PASS] **Gegenargument reflektiert & entkräftet** (empfohlen) – `01_wettbewerbsanalyse:38` erhebt den stärksten Einwand („eine reine Community-Plattform mit Nachhaltigkeitsthema könnte bereits ausreichen") und entkräftet ihn.
-- [PASS] **Syntheseleistung pro Hauptkapitel** (Pflicht) – Einleitung schließt mit der Lücke, Durchführung mit `sec:evaluation_reflexion`, Fazit mit Kernergebnissen und Limitationen.
-- [PASS] **Limitationen dreischichtig** (Pflicht) – alle drei Grenzen nachgezählt vollständig: (1) kein Nutzertest · verhaltenswissenschaftliche Fundierung der Kernfunktionen · Beta-Test; (2) KI-Mockups ohne Nutzerrückmeldung · Anspruch auf die drei Navigationsbereiche begrenzt · Klick-Prototyp-Test; (3) nur sechs Vertreter · gezielte Auswahl mit ein bis drei je Kategorie · breitere Marktanalyse.
-- [PASS] **Phasenplanung als Tabelle** (Pflicht) – `tab:phasenplanung`, fünf Phasen mit Zeitrahmen und Ressourcen.
-- [PASS] **Dritte Person streng** (Pflicht) – siehe Teil-Check A.
-- [N.A.] **Ergebnisse ≠ Interpretation** – laut Typ-Datei „Entfällt" beim Projektbericht.
-- [PASS] **Typspezifische Audit-Checks** – Produkt sichtbar dokumentiert; Reflexion mit Theorie-Praxis-Bezug; 9 zitierte Quellen (Richtwert 5–10) plus eigene Artefakte.
-- [PASS] **Leitfragen aus `aufgabe.md` beantwortet** – (1) Analyse bestehender Plattformen → `sec:wettbewerbsanalyse` mit sechs Plattformen und Kriterienmatrix; (2) Konzeptentwicklung mit innovativen Funktionen → `sec:konzept`, Innovationsabsatz `:15`; (3) Iteratives Design und Feedback → `sec:iteratives_design`, ausdrücklich als geplantes Vorgehen.
-- [PASS] **Teilaufgaben-Abgleich** – alle drei Teilaufgaben real ausgeführt, keine durch eine Simulation ersetzt. Der hypothetische Charakter der Feedback-Schleifen ist in `07_iteratives_design.tex:5` benannt und laut `aufgabe.md` ausdrücklich zulässig („Beschreibung genügt – keine reale Durchführung verlangt").
-- [PASS] **Abhakliste** (per Grep über `chapters/`, nicht aus dem Leseeindruck) – Rezept-Uploads `03:13` · Kommentar-/Bewertungssystem `03:13` · Personalisierte Empfehlungen `03:13` · Gruppen und Foren `04:9` (erwogen, begründet verworfen) · Event-Kalender `03:38` (Auslassung begründet) · Lebensmittel-Journaling/Menüplanung `03:13` · Verengung der Zielgruppe `02_zielsetzung:5`. Die vier geforderten Berichtsinhalte (Zielgruppe, Funktionalitäten, UI und UX, Community-Building) haben je einen zusammenhängenden Ort.
-- [PASS] **Genannte Materialien** – Hansch & Rentschler (2012) und Kapoor et al. (2018) fehlen im Literaturverzeichnis. Laut `aufgabe.md` nicht verpflichtend; der Verzicht ist am 29.07.2026 als endgültige Nutzer-Entscheidung festgehalten. Kein FAIL.
-- [PASS] **Dimensionsabgleich** gegen die Abdeckungs-Tabelle in `kapitelplan.md` – keine Dimension ohne Ort im Text, Aufstellung unter „Bewertungsschwerpunkte".
-
----
+- [PASS] **Limitationen dreischichtig** – `02_limitationen.tex` unverändert, alle drei Grenzen nachgezählt weiterhin vollständig (warum · Mitigation · Folgeschritt).
+- [PASS] **Syntheseleistung Durchführung** – `sec:evaluation_reflexion` trägt nach der Umstellung dieselben vier Bausteine (Zielerreichung, Entstehungsgeschichte, Methodenbewertung, Lehre); keiner ist entfallen.
 
 ## Teil-Check C – Struktur
 
-- [PASS] **½-Seiten-Regel** – ein Hinweis: `03_vorgehen_und_aufbau.tex` mit ~136 Wörtern unter der 150-Wörter-Schwelle des Skripts. Im gesetzten PDF füllt der Abschnitt mit zwei Absätzen deutlich mehr als eine halbe Seite; Heuristik-Artefakt, kein Verstoß.
-- [PASS] **Max. 3 Kapitelstufen** – `\section` / `\subsection`, keine dritte Ebene.
-- [PASS] **Mindestens 2 Unterpunkte je Kapitel** – Einleitung 3, Durchführung 7, Fazit 2.
-- [PASS] **Front-/Backmatter** – Titelblatt, Inhalts-, Abbildungs- (5 Abb.), Tabellen- (4 Tab.) und Abkürzungsverzeichnis, Literaturverzeichnis, Anhangsverzeichnis, Anhänge A–C. Beide `\listof…`-Schalter sind aktiviert und liegen über der Pflichtschwelle von 3. Je Anhang mindestens ein Textverweis (A → `02_zielgruppe:9`; B → `03_konzept:36`; C → `03_konzept:36` und `02_limitationen:5`); das Anhangsverzeichnis A/B/C stimmt mit der Reihenfolge im Dokument überein.
-- [PASS] **Vorspann je Kapitel** – alle drei Master-Dateien mit einem bzw. zwei Sätzen, kein VORSPANN-Hinweis.
-- [PASS] **Outline-Check** – Einleitung (Umfeld, Problem, Ziel, Vorgehen) → Durchführung (Analyse, Zielgruppe, Konzept, Community, Iteration, Phasenplanung, Evaluation/Reflexion) → Fazit (Kernergebnisse, Ausblick, Limitationen). Identisch mit dem Gerüst in `typen/projektbericht.md` und mit dem in `kapitelplan.md` bestätigten Skelett.
+- [PASS] **Tabellenwertungen gegen die eigene Kriteriendefinition** – siehe Befund 1 oben. Der einzige FAIL des Vorberichts ist geschlossen.
+- [PASS] **Querverweise – Fundstelle *und* Reichweite.** `check_autoref.py`: **29 Verweise · 27 Labels · 29 quittiert, 0 offen.** Fünf Paare mussten in diesem Lauf neu beurteilt werden (siehe „Werkzeug-Fund"); alle fünf einzeln gegen ihre Zielstelle gelesen und mit Begründung in `autoref-state.json` eingetragen:
 
-### Roter Faden (kapitelübergreifend, vollständig selbst geprüft)
+  | Verweis | Ziel | Ergebnis |
+  |---|---|---|
+  | `01_kernergebnisse:3` | `sec:wettbewerbsanalyse` | OK – `:36` formuliert die Lücke wörtlich; der weitergehende Anspruch wird in `:5` selbst als „unbelegte Marktbeobachtung" begrenzt |
+  | `01_kernergebnisse:7` | `sec:phasenplanung` | OK – Phase 2 (Klick-Prototyp, Woche 3–4) und Phase 4 (Beta-Test, Woche 15–17) liegen beide vor Phase 5 (Launch, ab Woche 18). Marker „vor allem" steht in der Eigenaussage, nicht in der Zuschreibung – keine Reichweiten-Differenz |
+  | `01_kernergebnisse:7` | `sec:konzept` | OK – `03_konzept:3` legt die Kooperationen als Teil des Erlösmodells an; die Wachstumsaussage steht im Konjunktiv und wird der Zielstelle nicht zugeschrieben |
+  | `02_limitationen:3` | `sec:phasenplanung` | OK – Phase 4 mit Zeitrahmen und Beta-Gruppe; der Limitationssatz bleibt hinter der Zielstelle zurück |
+  | `02_limitationen:5` | `sec:iteratives_design` | OK – `07:3` beschreibt die Prüfung von Bedienführungs-Entscheidungen mit externen Testpersonen vor der `\ac{MVP}`-Entwicklung wörtlich |
 
-- [PASS] **Querverweise semantisch – Fundstelle *und* Reichweite.** Alle **29** internen Verweise einzeln gegen ihre Zielstelle gelesen und in `autorefcheck.md` mit Begründung quittiert. Besonders geprüft wurden die vier Verweise mit Gewichtungsmarker: `03_konzept:7` („allein"), `03_konzept:9` („vor allem"), `06_evaluation:9` („nur"), `01_kernergebnisse:7` („vor allem") – alle vier tragen. Der im Vorbericht behobene Reichweitenfehler in `04_community_und_feedback.tex:9` ist verifiziert weg: Der Satz schreibt `sec:zielgruppe` keine Rangfolge mehr zu, und die Zielstelle nennt weiterhin zwei gleichrangige Anforderungen.
-- [PASS] **Zeitlinien-Konsistenz Entwurf ↔ Iteration** – `07_iteratives_design.tex:3` beschreibt die Mockup-Runden ausdrücklich als „Abgleich gegen die Konzeptbeschreibung"; das Konzeptkapitel steht damit zu Recht vor der Iteration. Der Darstellungsstand ist durchgehend der finale, und die eine echte Konzeptänderung (Gruppen/Foren → Challenges) ist in `06:5` als Kursänderung ausgewiesen und in `04:9` begründet.
-- [PASS] **Rückgriffe auf die eigene Analyse** – `04:3`, `03_konzept:7` und `01_kernergebnisse:3` überdehnen die Wettbewerbsanalyse nicht; `01_kernergebnisse:5` weist die Differenzierung selbst ausdrücklich als „unbelegte Marktbeobachtung" aus.
-- [PASS] **Kernbegriffs-Konsistenz** – Reste-Matching, Rettungs-Feed, Rettungspunkte, Reste-Level, Challenges, Zero-Waste-Woche, Gruppen und Foren, nachhaltigkeitsorientierte Hobbyköch:innen: durchgehend identisch benannt, keine Synonym-Variation bei Kernbegriffen.
-- [PASS] **Zahlenangaben nachgezählt** – 24 Zählaussagen einzeln gegen Tabellen und Aufzählungen geprüft (drei Merkmale · zwei Anforderungen · sechs Plattformen · drei Kategorien · drei Vertreter · „die dritte Reste-Matching-App" · fünf Phasen · drei Risiken · drei Hauptbereiche · vier Mockups · sechs Funktionen · drei Limitationen · „ein bis drei Vertreter" · zwei Kursänderungen · „die zweite dieser Kursänderungen" · zwei bis drei Wochen ↔ Woche 15–17 · zehn bis fünfzehn Personen ↔ 10–15 · zwei Wochen Puffer · fünf Testpersonen · siebenstufige Skala · Mittelwert ≥ 5 · 51/39 Prozent · „eine vierte Funktion" · drei Plattform-Kategorien). **Alle stimmen.**
-- [PASS] **Kriterien derselben Art** – alle fünf Spalten sind Merkmale, kein zusammenfassendes Gesamturteil geht als gleichrangige Spalte ein.
-- [PASS] **Keine Matrix-Verzerrung** – das Objekt, gegen das sich die These richtet, erhält nicht durchgehend die schlechtesten Werte (Chefkoch 3× „stark", leftovercooking 2× „stark"); `02_limitationen:7` weist die Auswahlgrenze zusätzlich aus.
-- [PASS] **Akteurskonsistenz** – Nutzer:innen, Food-Creator:innen, Beta-Gruppe und externe Testpersonen bleiben widerspruchsfrei. Die Ausschließlichkeitsaussage des Freemium-Modells („Kostenpflichtig sind … **nur** Komfortfunktionen der individuellen Planung; Reste-Matching, Rettungs-Feed und Challenges bleiben kostenlos", `03:3`) wird an keiner späteren Stelle verletzt – die Menüplanung selbst ist kostenlos, nur die Vorratsübersicht gehört ins Bezahlpaket.
-- [PASS] **Offene Einwände** – Grep über „setzt voraus", „hängt davon ab", „bleibt angewiesen", „nur wenn": drei Treffer, alle beantwortet (Rezeptbestand → Phase 3 und Risiko 2; MVP vor Beta-Test → Abhängigkeitsabsatz; Prototyp-Voraussetzung im Ausblick → Phasenplanung und Limitation 1).
-- [PASS] **Redundanz über den ganzen Text** – der zentrale Befund (Marktlücke) steht auf Behauptungsebene in der Einleitung, belegt in der Wettbewerbsanalyse und einmal wiederaufgenommen im Fazit; das ist die zulässige Trichter-Struktur, keine Dublette. Der Vorbehalt „kein Nutzertest" erscheint viermal, davon dreimal als Halbsatz bzw. Ausblick und einmal ausführlich als Limitation 1. Der Umfang liegt im Soll, es besteht kein Kürzungsdruck.
-- [PASS] **Wirkungsaussagen gegen den beschriebenen Mechanismus** – Grep über „macht sichtbar", „bewirkt", „führt dazu", „sorgt dafür", „ermöglicht", „stellt sicher", „damit wird": jede Behauptung hat einen im Text beschriebenen Mechanismus. Insbesondere `02_zielgruppe:7` („sichtbar machen, wie viel eine Person tatsächlich einspart") wird durch `03:13` (Reste-Journal → Rettungspunkte **und** Einsparangabe) und durch das Profil-Mockup („12,4 kg Lebensmittel gerettet") eingelöst.
-- **[FAIL] Tabellenwertungen mit den eigenen Kriteriendefinitionen vereinbar – spaltenweise geprüft: ein Befund (siehe Befund 1).**
-
----
+- [PASS] **Zahlenangaben** – der Delta führt keine neue Zählaussage ein und verändert keine bestehende. Die im Änderungsumfeld liegenden zwei geprüft: „Zwei Stellen erzwangen eine Kursänderung" (`06:7`) steht weiterhin unmittelbar vor „Aus der zweiten dieser Kursänderungen" (`06:9`); „drei Bereiche vier Mockups" (`03:38`) unberührt.
+- [PASS] **Front-/Backmatter, Kapitelstufen, Outline** – vom Delta nicht berührt, im Build bestätigt.
 
 ## Teil-Check D – Build
 
-- [PASS] **Kompiliert fehlerfrei.** Vollständiger Neubau aus leerem Zustand (`build/` und `main.pdf` vorher gelöscht), `latexmk main.tex` über die projekteigene `.latexmkrc` (lualatex · biber · lualatex · lualatex), **Exit-Code 0**. `scripts/build.ps1` existiert in diesem Projekt nicht – die Umgebung ist Linux, `lualatex`, `biber`, `latexmk` und `pdflatex` liegen auf dem PATH, und die `.latexmkrc` ist passend eingestellt (`$pdf_mode = 4`, `$aux_dir = 'build'`).
-- [PASS] **Log sauber.** 0 Fehler (`^!`), 0 undefinierte Referenzen, 0 undefinierte Zitationen, 0 doppelte Labels, 0 fehlende Dateien, **0 Missing character**. Die vier „undefined"-Treffer im Log sind `Package acronym Info`-Meldungen der ersten Durchläufe, keine Warnungen.
-- [PASS] **Randüberstand** – **0 Overfull \hbox**. 11 Underfull \hbox, sämtlich in schmalen Tabellenspalten (zu locker gesetzte Zeilen, kein Überstand in den Rand) – kein Formfehler.
-- [PASS] **Projekt-Root sauber** – nach dem Lauf liegen dort weder `.aux`, `.bcf`, `.log`, `.out`, `.run.xml`, `.toc` noch `.bbl`/`.blg`; alle Hilfsdateien stehen in `build/`. Das PDF trägt also ein regulär über biber erzeugtes Literaturverzeichnis.
-- [PASS] **Seitenumfang Textteil: 10 Seiten von 7–10.** Am gebauten PDF gemessen: „1 Einleitung" auf PDF-Seite 6 (gedruckt 1), Literaturverzeichnis auf PDF-Seite 16 (gedruckt 11); 23 PDF-Seiten gesamt. Im Soll, exakt auf der Obergrenze. `check_umfang.py`: 3.710 Wörter gegen das Ziel 2.625–3.750 – ebenfalls im Korridor (Einleitung 496 / Durchführung 2.821 / Fazit 393 Wörter = 13,4 / 76,0 / 10,6 %, alle drei Anteile im Soll).
-- **Weißraum gemessen** (kein Kürzungsanlass, aber relevant für spätere Ergänzungen): Auf der letzten Textseite steht die unterste Fließtextzeile bei y ≈ 229,5 pt, die Satzspiegel-Unterkante bei y ≈ 56,7 pt, der Zeilenabstand beträgt 16,4 pt → **≈ 173 pt ≈ 10 freie Zeilen**. Kein Float erzeugt eine auffällige Weißraum-Reserve auf einer früheren Seite. Die im Projektstatus geführten Werte (37 pt bzw. 134 pt) stammen aus älteren Textständen und sind damit überholt.
-
----
+- [PASS] **Neubau aus leerem Zustand** (`build/` und `main.pdf` vorher gelöscht), `latexmk main.tex` über die projekteigene `.latexmkrc`, **Exit-Code 0**.
+- [PASS] **Log sauber:** 0 Fehler (`^!`), 0 undefinierte Referenzen, 0 undefinierte Zitationen, 0 doppelte Labels, 0 fehlende Dateien, **0 Overfull \hbox**, **0 Overfull \vbox**, **0 Missing character**. 11 Underfull \hbox, sämtlich in schmalen Tabellenspalten – kein Randüberstand, kein Formfehler.
+- [PASS] **Projekt-Root sauber** – nach dem Lauf keine `.aux`, `.bcf`, `.log`, `.out`, `.run.xml`, `.toc`, `.bbl`, `.blg` im Root; alle Hilfsdateien in `build/`.
+- [PASS] **Seitenumfang Textteil: 10 Seiten von 7–10.** „1 Einleitung" auf PDF-Seite 6 (gedruckt 1), Literaturverzeichnis auf PDF-Seite 16 (gedruckt 11); letzte Textseite ist PDF-Seite 15 = gedruckt 10. 23 PDF-Seiten gesamt. **Die +33 Wörter haben die Seite nicht gekippt.** `check_umfang.py`: 3.743 Wörter gegen das Ziel 2.625–3.750 (Einleitung 496 / Durchführung 2.854 / Fazit 393).
+- **Weißraum neu gemessen:** unterste Fließtextzeile der letzten Textseite bei y ≈ 188,4 pt, Satzspiegel-Unterkante bei y ≈ 56,7 pt, Zeilenabstand 16,4 pt → **≈ 132 pt ≈ 8 freie Zeilen**. Der Vorbericht maß ≈ 173 pt ≈ 10 Zeilen; die Überarbeitung hat rund zwei Zeilen gekostet, die Prognose des Vorberichts („netto rund eine Zeile") lag knapp zu niedrig.
+- [PASS] **PDF-Aktualität, dreifach abgeglichen.** Der Neubau ist über alle 23 Seiten **textidentisch** mit dem vorher im Arbeitsverzeichnis liegenden `main.pdf` **und** mit der abgabefertig benannten Kopie `20260731_Pelz_Sascha_3210267_DLBMIMPFS01-01.pdf`. Beide tragen die vier Textänderungen (per Phrasensuche im extrahierten Text belegt). Es besteht kein Aktualitätsproblem – nur der Versionierungsschritt steht aus.
 
 ## Teil-Check E – Abgabe (informativ, **kein** Score-Abzug – Festlegung `MEMORY.md` 19.07.2026)
 
-- [OFFEN] Eidesstattliche Erklärung elektronisch über myCampus abgegeben – ohne sie nimmt Turnitin die Einreichung nicht an.
+- [OFFEN] Eidesstattliche Erklärung elektronisch über myCampus abgegeben.
 - [OFFEN] Einreichungs-Anleitung im myCampus-Kurs gelesen.
 - [PASS] Umfang im Soll – Spiegel aus Teil-Check D (10 von 7–10 Seiten).
-- [ERINNERT] Keine externe Plagiatssoftware vorab nutzen (Turnitin-Selbsttreffer-Risiko).
-- [OFFEN] LanguageTool-Durchgang lokal über den Gesamttext – die Sprachstichprobe oben ersetzt keine Vollprüfung.
-
----
+- [ERINNERT] Keine externe Plagiatssoftware vorab (Turnitin-Selbsttreffer-Risiko).
+- [OFFEN] LanguageTool-Durchgang lokal über den Gesamttext.
 
 ## Teil-Check F – Literaturverzeichnis
 
-- [PASS] **Feld-Hygiene** – `check_bib_hygiene.py`: 10 Einträge, **0 Fehler, 0 Hinweise**.
-- [PASS] **Gerendertes Verzeichnis** (PDF-Seite 16) gegen `_shared/literaturverzeichnis.md` gelesen: Alphabetik korrekt (Barker · Erlhofer · Hasanbekava · Nielsen · Nivedhitha · Sauro · Shen · Soma · United Nations General Assembly · Vittuari), Sentence Case durchgehend, keine kaputten Sonderzeichen, Artikelnummern einheitlich als „Artikel N" (11099, e13038, 107706, 907), DOI ohne zusätzliche URL, kein `urldate`, keine APA-Disambiguierung nötig. Der Pexels-Eintrag folgt exakt dem Muster für Datenbank-Bilder (Urheberin · n. d. · Titel mit `[Foto]` · Datenbank · URL); die Lizenz steht regelkonform in der Quellenzeile der Abbildung, nicht im Verzeichnis.
-- [PASS] **Stichprobe Feld für Feld gegen die Titelei des Volltexts** (4 Einträge):
-  - **Nielsen 1993** – Titelblatt „Usability Engineering / Jakob Nielsen / Morgan Kaufmann", Copyright 1993. Verlag korrekt als Titelblatt-Imprint übernommen. Das Inhaltsverzeichnis bestätigt „6.8 Thinking Aloud, S. 195" und damit den Locator `[Kap.~6.8]` im Text.
-  - **Sauro & Lewis 2016** – Titelblatt „Quantifying the User Experience / Practical Statistics for User Research / 2nd Edition / Morgan Kaufmann", Copyright 2016. Auflage, Verlag und Jahr stimmen; rendert als „(2. Aufl.)".
-  - **Soma et al. 2020** – *Sustainability*, „Published: 26 January 2020", DOI 10.3390/su12030907, Artikelnummer 907.
-  - **Shen et al. 2023** – Kopfzeile „Computers in Human Behavior 143 (2023) 107706"; Band, Jahr und Artikelnummer stimmen.
+- [PASS] `check_bib_hygiene.py`: 10 Einträge, **0 Fehler, 0 Hinweise**. `references.bib` liegt außerhalb des Deltas – die Vollprüfung des Abgabe-Audits (gerendertes Verzeichnis, Stichprobe über vier Einträge gegen die Titelei) bleibt gültig und wurde nicht wiederholt.
 
-  Keine Abweichung – keine Zotero-Arbeitsliste nötig.
+## Teil-Check G – Quellentreue
 
----
+- [PASS] **19 Zitationen in 15 Dateien · 19× FUNDSTELLE OK · 0 offen** (`quellencheck.md`).
+- **Keine Invalidierung durch den Delta.** Weder die Absatzteilung in `03_konzept.tex` noch die Absatzverschiebung in `06_evaluation_reflexion.tex` hat einen Trägersatz verändert – Trägersätze sind Sätze, keine Absätze, und kein Satz mit Zitation wurde angefasst. Keine Befunde der Klassen WORTLAUT, ZITAT WEICHT AB, SEITE VERDÄCHTIG, SEITE AUSSERHALB, NICHT GEFUNDEN, CLAIM SCHÄRFER, RENTIERT NICHT; kein `[NOTIZ-DUBLETTE]`, kein `[NOTIZ-FREMDER-AUTOR]`.
 
-## Teil-Check G – Quellentreue (Volltextabgleich, im Abgabe-Audit blockierend)
+> **Grenze dieses Checks, unverändert:** Teil-Check G prüft Fundstelle und Wortlaut, **nicht die Reichweite**. Die Reichweitenprüfung über alle 19 Zitationen hat die Gegenlesung Runde 9 (29.07.) geleistet; ihre Befunde sind abgearbeitet. Der Delta hat keinen zitierenden Satz berührt.
 
-- [PASS] **19 Zitationen in 15 Dateien geprüft · 19× FUNDSTELLE OK · 0 offen** (Details: `quellencheck.md`).
-- Keine Befunde der Klassen WORTLAUT, ZITAT WEICHT AB, SEITE VERDÄCHTIG, SEITE AUSSERHALB, NICHT GEFUNDEN, CLAIM SCHÄRFER oder RENTIERT NICHT. Kein `NICHT PRÜFBAR`, kein `LIVE PRÜFEN`, kein `ZUGANG PRÜFEN`, kein `VOLLTEXT BESCHAFFBAR` – alle neun zitierten Werke liegen als Volltext unter `sources/literatur/<citekey>.<ext>` und lösen damit rechnerunabhängig auf.
-- Kein `[NOTIZ-DUBLETTE]`- und kein `[NOTIZ-FREMDER-AUTOR]`-Hinweis.
-- Kein Trägersatz hat sich seit dem letzten Urteil geändert; die einmalige Migration der Tabellen-Zitationen (Trägersatz auf Zeilenkopf + Zelle begrenzt) ist bereits vollzogen und erzeugt hier keine Neuprüfung.
+## Teil-Check H – Lesefluss (geänderte Dateien am Stück gelesen, nicht am Diff)
 
-> **Grenze dieses Checks, ausdrücklich vermerkt:** Teil-Check G prüft Fundstelle und Wortlaut, **nicht die Reichweite**. „19/19 FUNDSTELLE OK" belegt also nicht, dass jede Quelle ihre Aussage in der behaupteten Stärke trägt. Die Reichweitenprüfung hat die Gegenlesung Runde 9 (29.07.2026) über alle 19 Zitationen geleistet; ihre zehn Befunde sind abgearbeitet.
+Alle vier geänderten Subsections vollständig am Stück gelesen, wie es der Re-Audit-Umfang ausdrücklich verlangt.
+
+- [PASS] **Anschlüsse** – `06:9` „Aus der zweiten dieser Kursänderungen" zeigt nach der Verschiebung auf den unmittelbar vorangehenden Absatz. `06:5` „Der Weg zu diesem Konzept" hat sein Bezugswort im Kapitelkontext. `03:11` „Ergänzend" schließt an den Punktezähler-Satz an. `07:5` „gilt auch hier **der** Maßstab" ist selbsttragend, weil der Satz die Zahl („von fünf Testpersonen") selbst nennt – die vollständige Zitation steht im Vorabsatz. Kein ANAPHER-Hinweis des Skripts, keine satzinterne Ausnahme gefunden.
+- [PASS] **Absatzöffner** – alle fünf berührten Absätze beginnen mit einer Aussage.
+- [PASS] **Absatzlänge und Rhythmus** – die Teilung in `03_konzept.tex` entschärft den dichtesten Absatz der Arbeit (vorher sieben Sätze, vier Belege) auf zwei Hälften mit je eigenem Belegbestand.
 
 ---
 
-## Teil-Check H – Lesefluss (max. −5)
+## Werkzeug-Fund (kein Textbefund, kein Score-Abzug)
 
-- [PASS] **Anschlüsse** – jedes „es", „beide", „diese", „daraus", „letztere", „deren" hat ein Bezugswort und zeigt aufs Richtige; alle 12 Subsections einzeln am Stück gelesen. Kein ANAPHER-Hinweis des Skripts, keine satzinterne Ausnahme gefunden.
-- [PASS] **Absatzöffner** – jeder Absatz beginnt mit einer Aussage, kein abgeschnittener Rest.
-- **[FAIL] Absatzlänge und Rhythmus** – ein Befund in `06_evaluation_reflexion.tex` (siehe Befund 2).
+**`check_autoref.py` löscht bei einem eingegrenzten Lauf die Urteile außerhalb der Eingrenzung.** Die Funktion `aufraeumen()` entfernt jedes Urteil, dessen Paar im aktuellen Lauf nicht vorkommt – bei `--datei`/`--kapitel` sind das alle Paare der übrigen Kapitel. Die Überarbeitungssitzung hat `check_all.py --kapitel chapters/02_durchfuehrung --mit-quellen` gefahren; dabei sind die **fünf Urteile der Fazit-Verweise** aus `autoref-state.json` verschwunden. Nachweis: Die im Commit `1e4761d` eingecheckte Zustandsdatei enthält 24 Einträge, sämtlich aus `chapters/02_durchfuehrung/`, keinen einzigen aus `chapters/03_fazit/`.
 
----
+**Folge für den Vorbericht:** Dessen Aussage „Alle **29** internen Verweise einzeln gegen ihre Zielstelle gelesen und in `autorefcheck.md` mit Begründung quittiert" war zum Zeitpunkt des Schreibens zutreffend, ließ sich aber nicht mehr belegen – die fünf Fazit-Begründungen waren gelöscht. Sie sind in diesem Lauf **neu am Text geprüft** und mit eigener Begründung eingetragen (Tabelle in Teil-Check C). Der Prüfstand ist damit wiederhergestellt, nicht nur der Zähler.
 
-## Befunde
-
-### Befund 1 (Struktur, −10) – „Rezept-Austausch" ist das einzige undefinierte Kriterium, und zwei Wertungen sind im Text nicht gedeckt
-
-**Stelle:** `chapters/02_durchfuehrung/01_wettbewerbsanalyse.tex:15` (Kriteriendefinition) und `tab:wettbewerbsvergleich`, Spalte „Rezept-Austausch", Zeilen **Restegourmet** und **`\ac{BMLEH}`-App** (beide „mittel").
-
-**Was ist:** Der Definitionsabsatz erklärt die dreistufige Skala allgemein und präzisiert danach ausdrücklich **drei** der fünf Kriterien: „Bei Kommunikation \& Community zählt tatsächlicher Austausch zwischen Nutzer:innen …", „Rezept-Entdeckung erfasst, wie leicht sich überhaupt ein passendes Rezept finden lässt", „… während die reste-spezifische Suche das Kriterium Reste-Matching-Werkzeug abdeckt". **„Rezept-Austausch" wird nirgends erklärt** – das Wort kommt im gesamten Textteil nur zweimal vor: in der Herleitung der Achsen und in der Tabellenüberschrift.
-
-**Warum das ein Befund ist und nicht bloß eine Lücke:** Der Definitionsabsatz reserviert „Austausch zwischen Nutzer:innen" ausdrücklich für die Spalte „Kommunikation \& Community". Wer „Rezept-Austausch" trotzdem in seiner naheliegenden Bedeutung liest – Nutzer:innen tauschen Rezepte –, findet in jeder anderen Zelle dieser Spalte ein im Text beschriebenes Teilen-Merkmal: Chefkoch „stark" (Upload, Bewerten, Kommentieren, `:3`), leftovercooking „mittel" (Food-Creator:innen teilen eigene Rezepte, `:9`), TikTok „mittel" (Rezeptvideos, `:5`), Foodsharing „schwach" (keine Rezepte, `:11`). Für **Restegourmet und die `\ac{BMLEH}`-App** beschreibt der Text dagegen **kein** Teilen: `:7` nennt Zutaten-Eingabe, Portionenrechner und Rezeptdatenbank und hält ausdrücklich fest, dass Restegourmets „Fokus auf individuelle Rezeptverwaltung … keinen Ort für Austausch" schafft. `:36` verschärft das: „Die Matching-Apps lösen das Zutaten-Problem **ohne Austausch zwischen den Nutzer:innen**." Zwei „mittel"-Wertungen stehen damit ohne Deckung neben zwei Textstellen, die dasselbe Merkmal verneinen.
-
-**Einordnung:** Das beschädigt die Argumentation **nicht** – die Wertungen sind zugunsten der Konkurrenz zu hoch, eine Korrektur nach unten würde die Marktlücke sogar deutlicher machen. Der Befund ist ein Nachvollziehbarkeitsproblem an genau dem Lieferobjekt, das die gesamte Lückenbehauptung trägt, und die Art Stelle, an der eine Prüferin oder ein Prüfer eine Randnotiz setzt.
-
-**Zwei Wege, beide klein:**
-
-- **(a) Definieren, keine Zelle ändert sich** – in `:15` einen Halbsatz ergänzen, der klarstellt, dass „Rezept-Austausch" die Verfügbarkeit und Weitergabe von Rezepten auf der Plattform erfasst (einseitig wie beidseitig), während der Austausch *zwischen* Nutzer:innen in der Kommunikationsspalte steht. Rund 15 Wörter, keine Folgeaussage betroffen.
-- **(b) Wertungen angleichen** – Restegourmet und `\ac{BMLEH}`-App in dieser Spalte auf „schwach" setzen. Kostet kein Wort. Gegengeprüft: `:36` und `:38` bleiben unberührt (sie argumentieren über Reste-Matching und Community, nicht über Rezept-Austausch), `02_limitationen:7` ebenfalls.
-
-**Empfehlung: (a).** Die kleinere Änderung, macht die Spalte für jede Leseart eindeutig und folgt der bereits gewählten Systematik des Absatzes, der die kritischen Kriterien einzeln erläutert. Beide Varianten verlangen anschließend einen Neubau mit Seitenkontrolle; bei (a) reicht die gemessene Reserve von ~10 Zeilen dafür klar.
-
-### Befund 2 (Lesefluss, −2) – Absatzreihenfolge in der Projektreflexion
-
-**Stelle:** `chapters/02_durchfuehrung/06_evaluation_reflexion.tex`, Absätze `:5`, `:7`, `:9`.
-
-**Was ist:** `:5` benennt die beiden Kursänderungen (Community-Zuschnitt, Namenskollision). `:9` zieht daraus die Lehre und beginnt mit „Aus der **zweiten dieser Kursänderungen** …". Dazwischen steht `:7` mit einem thematisch anderen Gegenstand – der chronologischen Entstehungsgeschichte –, und zwar als **Ein-Satz-Absatz von 50 Wörtern**, dem längsten Satz des Kapitels. Der Rückbezug in `:9` springt damit über einen fremden Absatz hinweg, und `:7` steht rhythmisch allein zwischen zwei mehrsätzigen Absätzen.
-
-**Warum es zählt – und warum nur −2:** Der Bezug ist formal korrekt und löst sich nach dem Doppelpunkt sofort auf, ein Leser verliert also nichts. Der Absatz `:7` trägt aber ausgerechnet das Kriterium **Dokumentation** („Entstehungsgeschichte lückenlos", 10 %) und steht dort als isolierter Einschub, statt die Erzählung zu tragen.
-
-**Fix ohne ein einziges neues Wort:** `:7` vor `:5` ziehen. Die Reihenfolge lautet dann: Spannung SDG ↔ Nische (`:3`) → Entstehungsgeschichte (`:7`) → Methodenbewertung und die zwei Kursänderungen (`:5`) → Lehre aus der zweiten (`:9`). Nennung und Auswertung der Kursänderungen stehen damit nebeneinander, und die Chronologie eröffnet die Reflexion, statt sie zu unterbrechen. Reine Verschiebung, ±0 Wörter, keine Zitation und kein `\autoref` betroffen (`:7` enthält keinen).
+**Warum das mehr ist als Buchführung:** Der Nutzen des Skripts liegt darin, dass ein einmal quittiertes Paar nie wieder gelesen werden muss und ein bewegtes Ziel automatisch auffällt. Ein stiller Urteilsverlust kehrt beides um – die Arbeit war getan, die Spur weg, und beim nächsten Lauf sieht der Fund wie ein neuer Verweis aus. Als **P37** in `SKILL-ANPASSUNGEN.md` aufgenommen (Vorschlag: `aufraeumen()` nur beim ungefilterten Lauf ausführen).
 
 ---
 
 ## Kosmetische Hinweise (kein Score-Abzug, kein Handlungsdruck)
 
-- **`01_wettbewerbsanalyse.tex:36`, SWOT-Schlusssatz:** „… Chancen bieten die wachsende Relevanz … und Partnerschaften mit bestehenden Initiativen, ein Risiko das dichte Umfeld etablierter Reste-Apps." Die Ellipse ist grammatisch vertretbar, führt aber in einen Holzweg: „ein Risiko das …" liest sich zunächst als Relativsatz mit fehlendem Komma. Ein Wort behebt es: „…, ein Risiko **ist** das dichte Umfeld etablierter Reste-Apps."
-- **`07_iteratives_design.tex:5`:** „Wie beim Klick-Prototyp-Test gilt auch hier **Erlhofers** Maßstab von fünf Testpersonen" – der Genitiv Singular nennt nur den ersten von zwei Autoren; das Verzeichnis führt „Erlhofer, S. & Brenner, D.". Da die vollständige Zitation zwei Sätze davor steht, genügt „gilt auch hier **der** Maßstab von fünf Testpersonen" (−1 Wort). Verwandt mit Befund 9.7 der Gegenlesung, der an derselben Stelle den Numerus korrigiert hat.
-- **`03_konzept.tex:9`** ist mit sieben Sätzen und vier Belegen der dichteste Absatz der Arbeit (Rettungspunkte, Nudge-Definition, Reminders, Nivedhitha). Verständlich, aber der einzige Absatz, der beim ersten Lesen Tempo kostet. Eine Teilung vor „Ergänzend plant Resteria eine wiederkehrende Erinnerungsbenachrichtigung …" wäre kostenlos – lohnt aber nur, wenn ohnehin neu gebaut wird.
-- **Geviertstriche in den KI-Mockups** (Style Tile: „Salbeigrün — Primär"; Profil: „Level 4 — Resteheld:in"). Sie stehen im Bild, nicht im Text, und sind von der Geviertstrich-Regel nicht erfasst – erwähnt, weil sie im abgegebenen PDF sichtbar sind. Eine Korrektur hieße neue Mockup-Runde; das steht in keinem Verhältnis.
-- **`check_aussenwelt.py`-Zustandsdatei:** Die 14 Kandidaten stehen unquittiert auf „NEU", obwohl `faktencheck-bericht.md` sie inhaltlich abgearbeitet hat. Reine Buchführung, ohne Wirkung auf die Arbeit.
-- **`check_status.py`:** 0 Fehler, 15 `DATEI-OHNE-ZEILE`-Hinweise. Projektkonvention – die Statustabelle in `CLAUDE.md` führt Hauptkomponenten, nicht jede Subsection-Datei.
+- **`06_evaluation_reflexion.tex:5`** bleibt ein Ein-Satz-Absatz von 50 Wörtern zwischen zwei mehrsätzigen Absätzen. Der Vorbericht hatte das als zweite Hälfte von Befund 2 mitgenannt, seine eigene Fix-Empfehlung („`:7` vor `:5` ziehen, ±0 Wörter") aber bewusst darauf beschränkt, die Unterbrechung aufzulösen. Das ist eingetreten: Der Absatz trägt die Erzählung jetzt, statt sie zu unterbrechen – die inhaltliche Begründung des Abzugs entfällt damit. Der lange Satz ist eine geordnete „zuerst/dann/anschließend"-Kette und beim ersten Lesen verständlich. **Kein Abzug.**
+- **Geviertstriche in den KI-Mockups** (Style Tile „Salbeigrün — Primär", Profil „Level 4 — Resteheld:in") – im Bild, nicht im Text, von der Geviertstrich-Regel nicht erfasst. Eine Korrektur hieße neue Mockup-Runde.
+- **`check_aussenwelt.py`-Zustandsdatei** – 14 Kandidaten stehen unquittiert auf „NEU", obwohl `faktencheck-bericht.md` sie inhaltlich abgearbeitet hat. Reine Buchführung.
+- **`check_status.py`** – 0 Fehler, 15 `DATEI-OHNE-ZEILE`-Hinweise. Projektkonvention: Die Statustabelle führt Hauptkomponenten, nicht jede Subsection-Datei.
+- **`SKILL-ANPASSUNGEN.md` führt „2 Punkte OFFEN"** (P35, P36), obwohl beide erkennbar umgesetzt sind – `check_autoref.py` samt `autoref-state.json` (P35) und `check_aussenwelt.py` samt `faktencheck`-Skill und `faktencheck-state.json` (P36) existieren und laufen. Statuszeile veraltet.
 
 ---
 
 ## Bitte manuell prüfen (kann ich nicht selbst verifizieren)
 
-1. **Wortlaut der zitierten Claude-Design-Prompts** | `pages/appendix.tex`, Zeilen 30, 39, 46, 53, 60 (`\quelle{}`-Zeilen der fünf Abbildungen) | Stimmt der zitierte Prompt-Text wörtlich mit der Eingabe im Claude-Design-Chat überein, einschließlich der Folge-Prompts bei Rettungs-Feed und Profil? | Der Chatverlauf liegt außerhalb des Repositorys; ich kann nur prüfen, dass die Zitate formal korrekt gesetzt und in sich geschlossen sind. **Zur Entlastung:** Der Zitierleitfaden (Kap. 2.2.5) verlangt nur „den verwendeten Prompt" im Singular – ein fehlender Folge-Prompt wäre kein Regelverstoß, ein *falsch wiedergegebener* Prompt schon.
-2. **Aktualität der IU-Leitfäden zum Abgabezeitpunkt** | `sources/Zitierleitfaden.pdf` und `sources/Richtlinien für die Gestaltung wissenschaftlicher Arbeiten.pdf` (Datumszeile auf der Impressumsseite) gegen den Prüfungs-Guide auf myCampus; Register `_shared/quellen-versionen.md` | Tragen beide dort ebenfalls den Stand 01.10.2025? | Die Spalte „zuletzt vom Nutzer bestätigt" ist im Register für **alle** Zeilen leer. Die PDFs wurden am 25.07.2026 ausgetauscht und das Destillat am 28.07.2026 dagegen geprüft – die Regeln sind also mit hoher Wahrscheinlichkeit aktuell, formal bestätigt ist es nicht. Laut Richtlinien gilt die zum Abgabezeitpunkt gültige Fassung. myCampus kann ich nicht abrufen.
-3. **Namensverfügbarkeit „Resteria"** | DPMA-Markenregister und `.de`-Domain | keine eingetragene Marke und keine aktive Domain im selben Themenfeld | Steht seit Projektbeginn als Nutzer-Restpflicht in `kapitelplan.md`; nicht abgabekritisch, aber vor einer realen Nutzung des Namens relevant.
+1. **Wortlaut der zitierten Claude-Design-Prompts** | `pages/appendix.tex`, Zeilen 30, 39, 46, 53, 60 (`\quelle{}`-Zeilen der fünf Abbildungen) | Stimmt der zitierte Prompt-Text wörtlich mit der Eingabe im Claude-Design-Chat überein, einschließlich der Folge-Prompts bei Rettungs-Feed und Profil? | Der Chatverlauf liegt außerhalb des Repositorys; ich kann nur prüfen, dass die Zitate formal korrekt gesetzt und in sich geschlossen sind. **Zur Entlastung:** Der Zitierleitfaden (Kap. 2.2.5) verlangt nur „den verwendeten Prompt" im Singular – ein fehlender Folge-Prompt wäre kein Regelverstoß, ein falsch wiedergegebener schon.
+2. **Aktualität der IU-Leitfäden zum Abgabezeitpunkt** | `sources/Zitierleitfaden.pdf` und `sources/Richtlinien für die Gestaltung wissenschaftlicher Arbeiten.pdf` (Datumszeile auf der Impressumsseite) gegen den Prüfungs-Guide auf myCampus; Register `_shared/quellen-versionen.md` | Tragen beide dort ebenfalls den Stand 01.10.2025? | Die Spalte „zuletzt vom Nutzer bestätigt" ist im Register für alle Zeilen leer. Die PDFs wurden am 25.07.2026 ausgetauscht und das Destillat am 28.07.2026 dagegen geprüft – die Regeln sind mit hoher Wahrscheinlichkeit aktuell, formal bestätigt ist es nicht. Laut Richtlinien gilt die zum Abgabezeitpunkt gültige Fassung. myCampus kann ich nicht abrufen.
+3. **Namensverfügbarkeit „Resteria"** | DPMA-Markenregister und `.de`-Domain | keine eingetragene Marke und keine aktive Domain im selben Themenfeld | Nutzer-Restpflicht seit Projektbeginn; nicht abgabekritisch.
 
 ---
 
 ## Claims
 
-- **Ungesicherte FACTUAL CLAIMS**: keine. Die unzitierten Außenweltbehauptungen der Wettbewerbsanalyse sind Gegenstand des eigenständigen `faktencheck`-Laufs vom 30.07.2026 (`faktencheck-bericht.md`): 12 Kandidaten, 10 vollständig bestätigt, beide Befunde am 30. und 31.07. abgearbeitet – der Bericht ist vollständig erledigt.
+- **Ungesicherte FACTUAL CLAIMS**: keine. Der Delta führt keine neue Außenweltbehauptung ein – die Definition in `:15` ist eine methodische Setzung dieser Arbeit, keine Aussage über eine Plattform. `faktencheck-bericht.md` (30./31.07.) bleibt vollständig abgearbeitet.
 - **Fehlende OWN WORK-Markierungen**: keine.
-- **Ungenutzte Bib-Einträge (Aufräumhinweis)**: `check_bib_keys.py` meldet `pexelsHasanbekavaBasket` als ungenutzt. **Fehlalarm durch den Prüfumfang** – der Eintrag wird in `pages/appendix.tex:21` über `\citeauthor`/`\citeyear` verwendet, das Skript scannt nur `chapters/`. Am gerenderten Verzeichnis verifiziert: Der Eintrag steht dort korrekt. Kein Handlungsbedarf.
-- **Volltexte ohne Bib-Verweis (Aufräumhinweis)**: `sources/literatur/` enthält drei Dateien ohne zugehörigen Bib-Eintrag – Krug „Don't Make Me Think", Norman „The Design of Everyday Things" (beide bewusst nicht zitiert) und die Preprint-Fassung von Vittuari (durch die Verlagsfassung ersetzt).
+- **Ungenutzte Bib-Einträge (Aufräumhinweis)**: `pexelsHasanbekavaBasket` – Fehlalarm durch den Prüfumfang, der Eintrag wird in `pages/appendix.tex:21` über `\citeauthor`/`\citeyear` genutzt, das Skript scannt nur `chapters/`. Am gerenderten Verzeichnis verifiziert.
+- **Volltexte ohne Bib-Verweis (Aufräumhinweis)**: drei Dateien in `sources/literatur/` – Krug und Norman (bewusst nicht zitiert) sowie die Preprint-Fassung von Vittuari (durch die Verlagsfassung ersetzt).
 
 ---
 
@@ -192,50 +159,44 @@
 
 | Kategorie | Abzug | Begründung |
 |---|---|---|
-| Struktur-Verstoß (Teil-Check C) | **−10** | Befund 1 – Tabellenwertung nicht durch die eigene Kriteriendefinition gedeckt (1 Vorkommen, Deckel −30) |
-| Lesefluss-Befund (Teil-Check H) | **−2** | Befund 2 – Absatzreihenfolge und Ein-Satz-Absatz (1 Vorkommen, Deckel −5) |
-| **Summe** | **−12** | **Score 88/100 – abgabereif** |
+| Struktur-Verstoß (Teil-Check C) | **0** | Befund 1 des Vorberichts behoben und spaltenweise gegengeprüft |
+| Lesefluss-Befund (Teil-Check H) | **0** | Befund 2 des Vorberichts behoben, am PDF gegengelesen |
+| **Summe** | **0** | **Score 100/100 – abgabereif** |
 
 Keine Abzüge in den Kategorien BBT-Keys, Pflicht-Punkte der Typ-Datei, Formalia, Build, undefinierte Referenzen, Seitenumfang, Literaturverzeichnis, Anti-KI-Stil, Verständlichkeit, Quellentreue.
 
+**Zur Belastbarkeit dieses Scores:** Teil-Check D ist gelaufen und hat den Seitenumfang **gemessen** (nicht geschätzt); der Score-Deckel von 89 für einen übersprungenen Build greift nicht. Teil-Check F wurde im Delta-Umfang nur über das Skript geführt – die Vollprüfung des Abgabe-Audits vom selben Tag bleibt gültig, weil `references.bib` außerhalb des Deltas liegt.
+
 ---
 
-## Bewertungsschwerpunkte (Projektbericht) – je Dimension
+## Bewertungsschwerpunkte (Projektbericht) – Änderungen gegenüber dem Abgabe-Audit
 
-| Kriterium | Gewicht | Dimension | Status | Fundstelle |
-|---|---|---|---|---|
-| **Qualität** | 25 % | Erfüllt das Ergebnis die Aufgabenstellung | ABGEDECKT | alle drei Teilaufgaben ausgeführt, alle sechs Lieferobjekte vorhanden, Abhakliste vollständig |
-| **Prozess** | 25 % | Vorgehen dokumentiert, reflektiert, Grenzen aufgezeigt | ABGEDECKT | `sec:evaluation_reflexion`, `sec:iteratives_design`, Limitationen dreischichtig |
-| **Transfer** | 15 % | Technologie ↔ gesellschaftliche/wirtschaftliche Bedeutung, Ansätze begründet | ABGEDECKT | SDG 12.3 (`01_ausgangslage:5`), Freemium-Modell mit Begründung (`03_konzept:3`), Drivers/Levers, Nudge, Osmosis, Gamification je mit Beleg |
-| **Kreativität** | 15 % | Vergleich zu bestehendem Produkt + Innovationskraft | ABGEDECKT | `sec:wettbewerbsanalyse` mit sechs Plattformen; Innovationsabsatz `03_konzept:15` trennt Neues von bewusst Übernommenem. *Einschränkung:* Befund 1 sitzt im Vergleichsteil dieser Dimension |
-| **Dokumentation** | 10 % | Entstehungsgeschichte lückenlos | ABGEDECKT | `06:5`, `06:7`, `06:9` plus `tab:phasenplanung`. *Einschränkung:* Befund 2 betrifft genau diesen Absatz |
-| **Ressourcen** | 10 % | Zeit/Material/Tools effizient | ABGEDECKT | `tab:phasenplanung` (Ressourcenspalte je Phase), Budgethinweis `05:23`, drei Risiken mit Mitigation |
+| Kriterium | Gewicht | Status | Änderung durch die Überarbeitung |
+|---|---|---|---|
+| **Qualität** | 25 % | ABGEDECKT | unverändert |
+| **Prozess** | 25 % | ABGEDECKT | unverändert |
+| **Transfer** | 15 % | ABGEDECKT | unverändert |
+| **Kreativität** | 15 % | ABGEDECKT | **Einschränkung entfällt** – der Vergleichsteil trägt die Wertungen jetzt vollständig im Text |
+| **Dokumentation** | 10 % | ABGEDECKT | **Einschränkung entfällt** – die Entstehungsgeschichte eröffnet die Reflexion, statt sie zu unterbrechen |
+| **Ressourcen** | 10 % | ABGEDECKT | unverändert |
 
 ---
 
 ## Lieferobjekt-Abgleich
 
-- [PASS] **Wettbewerbsvergleich (Tabelle)** – `tab:wettbewerbsvergleich`, sechs Plattformen × fünf Kriterien.
-- [PASS] **Zielgruppen-/Persona-Beschreibung (Text/Abbildung)** – `sec:zielgruppe` plus `tab:persona` in Anhang A, mit Portraitfoto (Urheberin und Lizenz ausgewiesen).
-- [PASS] **UI/UX-Skizze/Mockup (Abbildung)** – vier Mockups in Anhang C plus Style Tile in Anhang B. **Alle fünf Bilddateien einzeln per `Read` gesichtet**, nicht nur auf Existenz geprüft: Die Startseite zeigt die Reste-Eingabe als Chip-Tags, Rezeptkarten mit Zubereitungszeit und „2 Zutaten fehlen", das Wochenplan-Banner und das Lesezeichen-Icon; die Bookmark-Variante zeigt den ausgeklappten Bereich „Gespeicherte Rezepte"; der Rettungs-Feed zeigt Challenge-Banner mit Rangliste („Platz 4"), einen Beitrag mit Foto, Nutzername, Zutaten-Tag sowie Like- und Kommentar-Icon und den frei stehenden Plus-Button; das Profil zeigt Level-Badge „Level 4 — Resteheld:in", 1.240 Rettungspunkte mit Fortschrittsbalken, „12,4 kg Lebensmittel gerettet", das Reste-Journal mit Punktevergabe und das Raster eigener Beiträge. **Jede im Text behauptete Oberflächen-Eigenschaft ist im Bild belegt.**
-- [PASS] **Plattformname** – „Resteria", hergeleitet in `03_konzept:3`, Namenskollision dokumentiert in `06:9`.
-- [PASS] **Funktionsübersicht** – `tab:funktionsuebersicht`, sechs Funktionen mit Kurzbeschreibung und Herleitung.
-- [PASS] **Phasenplanung (Tabelle)** – `tab:phasenplanung`, fünf Phasen mit Zeitrahmen und Ressourcen.
-- [PASS] **`pages/appendix.tex`** enthält echten Inhalt, nicht nur Kommentare; kein im Text behauptetes Artefakt fehlt (Grep über „Prototyp", „Formular", „Skizze", „Erhebung": alle Treffer verweisen auf Geplantes oder auf ein vorliegendes Objekt).
+Vom Delta nicht berührt; der Abgleich des Abgabe-Audits (alle sechs Lieferobjekte vorhanden, alle fünf Bilddateien einzeln per `Read` gesichtet, jede im Text behauptete Oberflächen-Eigenschaft am Bild belegt) bleibt gültig. Der einzige berührte Punkt ist `tab:wettbewerbsvergleich` – dort ist keine Zelle geändert, nur die zugehörige Kriteriendefinition ergänzt worden.
 
 ---
 
-## Handlungsempfehlungen (nach Priorität, größter Score-Hebel zuerst)
+## Handlungsempfehlungen
 
-1. **Befund 1 – Kriterium „Rezept-Austausch" definieren** (`01_wettbewerbsanalyse.tex:15`, Variante (a), ~15 Wörter). Größter Hebel: −10. Berührt weder These noch Kernargumente noch eine per Freigabe fixierte Formulierung.
-2. **Befund 2 – Absatz `:7` in `06_evaluation_reflexion.tex` vor `:5` ziehen.** −2, reine Verschiebung, ±0 Wörter.
-3. **Kosmetik in einem Aufwasch, falls ohnehin gebaut wird:** „ein Risiko **ist** das dichte Umfeld" (`01_wettbewerbsanalyse.tex:36`, +1 Wort) · „gilt auch hier **der** Maßstab" (`07_iteratives_design.tex:5`, −1 Wort) · optional die Absatzteilung in `03_konzept.tex:9`.
-4. **Danach neu bauen und die gedruckte Seitenzahl gegenprüfen.** Der Textteil steht exakt auf der Obergrenze 10; die gemessene Reserve auf der letzten Textseite beträgt ≈ 173 pt ≈ 10 Zeilen, die Änderungen aus 1–3 kosten netto rund eine Zeile. Ein Kippen auf 11 Seiten ist unwahrscheinlich – beweisen kann es nur der Build.
-5. **`main.pdf` einchecken.** `git status` meldet `M main.pdf`; zusätzlich liegt die abgabefertig benannte Kopie `20260731_Pelz_Sascha_3210267_DLBMIMPFS01-01.pdf` untracked im Root. **Beide sind inhaltlich identisch mit dem in diesem Audit gebauten PDF** (Textvergleich über alle 23 Seiten: deckungsgleich) – es besteht also kein Aktualitätsproblem, nur ein Versionierungsschritt. Werden 1–3 umgesetzt, muss die Abgabekopie danach neu erzeugt werden.
+**Am Text ist nichts mehr offen.** Es bleiben zwei Versionierungsschritte und die Nutzer-Checkliste.
 
-**Nicht in dieser Session weiterarbeiten.** Für die Überarbeitung eine frische Session öffnen: „Schreib-Modus: Überarbeitung nach Prüfbericht". Danach genügt ein Delta-Re-Audit; erwarteter Score nach vollständiger Umsetzung: **100/100**.
+1. **`main.pdf` einchecken.** `git status` meldet `M main.pdf` (der Neubau dieses Audits). Das eingecheckte PDF aus Commit `1e4761d` ist inhaltlich identisch – es geht um die Versionierung, nicht um Aktualität.
+2. **Abgabekopie prüfen, nicht neu erzeugen.** `20260731_Pelz_Sascha_3210267_DLBMIMPFS01-01.pdf` liegt untracked im Root und ist über alle 23 Seiten textidentisch mit dem Neubau. Sie trägt die vier Textänderungen bereits. Nur falls nach diesem Audit noch etwas geändert wird, muss sie ersetzt werden.
+3. **Optional, ohne Score-Wirkung:** die fünf kosmetischen Punkte oben – keiner davon berührt die Bewertung.
 
-**Werden 1–3 bewusst nicht umgesetzt, ist die Arbeit in diesem Stand einreichbar** – 88/100 liegt deutlich über der Abgabeschwelle, und beide Befunde sind Nachvollziehbarkeits- und Lesbarkeitspunkte ohne Wirkung auf Substanz, Belege oder Formalia.
+Ein weiteres Audit ist nicht nötig. Wird der Text nicht mehr angefasst, ist dieser Stand der Abgabestand.
 
 ---
 
@@ -243,22 +204,10 @@ Keine Abzüge in den Kategorien BBT-Keys, Pflicht-Punkte der Typ-Datei, Formalia
 
 1. **Eidesstattliche Erklärung elektronisch über myCampus abgeben** – ohne sie nimmt Turnitin die Einreichung nicht an. Das Fristfeld in `CLAUDE.md` steht auf `[offen]`.
 2. **Einreichungs-Anleitung im myCampus-Kurs lesen.**
-3. **LanguageTool-Durchgang lokal über den Gesamttext** (3.710 Wörter). Die Sprachstichprobe dieses Audits hat zwei Absätze je Hauptkapitel geprüft und ersetzt keine Vollprüfung.
+3. **LanguageTool-Durchgang lokal über den Gesamttext** (3.743 Wörter). Die Sprachstichprobe des Abgabe-Audits hat zwei Absätze je Hauptkapitel geprüft und ersetzt keine Vollprüfung.
 4. **Die Arbeit einmal am fertigen PDF am Stück durchlesen.**
 5. **Keine externe Plagiatssoftware vorab** – Selbsttreffer-Risiko bei Turnitin.
 6. **Prompt-Wortlaut der fünf Abbildungen gegen den Claude-Design-Chatverlauf abgleichen** (siehe „Bitte manuell prüfen", Punkt 1).
-7. **Auf myCampus prüfen, ob Zitierleitfaden und Gestaltungsrichtlinien noch den Stand 01.10.2025 tragen** (siehe „Bitte manuell prüfen", Punkt 2). Danach in `_shared/quellen-versionen.md` die Spalte „zuletzt vom Nutzer bestätigt" setzen.
+7. **Auf myCampus prüfen, ob Zitierleitfaden und Gestaltungsrichtlinien noch den Stand 01.10.2025 tragen** (Punkt 2). Danach in `_shared/quellen-versionen.md` die Spalte „zuletzt vom Nutzer bestätigt" setzen.
 8. **Namensverfügbarkeit „Resteria"** (DPMA, `.de`-Domain) – nicht abgabekritisch, aber offen.
-9. **Das eingereichte PDF muss aus dem letzten Build stammen.** Wird nach diesem Audit noch etwas geändert: neu bauen, Seitenzahl gegen 7–10 prüfen, Abgabekopie neu erzeugen.
-
----
-
-## Nachtrag – Abarbeitung (31.07.2026, `schreib-modus`-Sitzung)
-
-Handlungsempfehlungen 1–3 vollständig umgesetzt; der Bericht oben bleibt als Momentaufnahme des Audit-Stands unverändert stehen.
-
-- **Befund 1 – erledigt, Variante (a).** `01_wettbewerbsanalyse.tex:15` trägt jetzt zwischen der Kommunikations- und der Entdeckungs-Definition den Satz: „Rezept-Austausch bezieht sich dagegen allein auf die Rezepte selbst, also darauf, ob eine Plattform sie bereitstellt und weitergibt; die Spanne reicht von der reinen Rezeptdatenbank bis zum Einstellen eigener Beiträge durch Nutzer:innen." (+33 Wörter). **Alle sechs Wertungen der Spalte einzeln gegen die neue Definition geprüft, keine Zelle geändert:** Chefkoch „stark" (`:3`) · TikTok „mittel" (`:5`) · Restegourmet „mittel" (Rezeptvorschläge und Kochbuch bereitgestellt, kein Einstellen, `:7`) · `\ac{BMLEH}`-App „mittel" (umfangreiche Rezeptdatenbank, `:7`) · leftovercooking „mittel" (`:9`) · Foodsharing „schwach" (`:11`). `:36`, `:38` und `02_limitationen:7` bleiben unberührt, wie im Bericht gegengeprüft; ein Zwilling in der Einleitung existiert nicht (die Lücken-Begründung dort läuft über die kostenlose Resteverwertung, nicht über die Vergleichsachsen).
-- **Befund 2 – erledigt.** `06_evaluation_reflexion.tex`: Entstehungsgeschichte-Absatz vor den Methoden-/Kursänderungs-Absatz gezogen, ±0 Wörter, kein `\autoref` und keine Zitation betroffen. Neue Reihenfolge wie empfohlen.
-- **Handlungsempfehlung 3 – erledigt**, einschließlich des optionalen Punktes: „ein Risiko **ist** das dichte Umfeld" (`01_wettbewerbsanalyse.tex:36`, +1 Wort) · „gilt auch hier **der** Maßstab" (`07_iteratives_design.tex:5`, −1 Wort) · Absatzteilung in `03_konzept.tex:9` vor „Ergänzend plant Resteria …" (±0 Wörter, beide Hälften mit eigenen Belegen).
-- **Prüfungen:** `check_all.py --kapitel chapters/02_durchfuehrung --mit-quellen` — alle sieben Skripte ohne harte Funde, `check_formalia.py` 0 FEHLER, `check_bib_hygiene.py` 0 Hinweise, `check_autoref.py` 24 Verweise unverändert quittiert. `check_quellentreue.py --datei chapters/`: **19/19 FUNDSTELLE OK**. `check_umfang.py`: **3.743 Wörter** (Korridor 2.625–3.750), netto **+33 Wörter**.
-- **Offen (Nutzer-Schritte, Handlungsempfehlung 4 und 5):** Neubau mit Seitenkontrolle, `main.pdf` einchecken, Abgabekopie neu erzeugen. Danach Delta-Re-Audit, erwarteter Score 100/100.
+9. **Das eingereichte PDF muss aus dem letzten Build stammen.** Wird nach diesem Audit noch etwas geändert: neu bauen, Seitenzahl gegen 7–10 prüfen (Reserve auf der letzten Textseite ≈ 8 Zeilen), Abgabekopie neu erzeugen.
