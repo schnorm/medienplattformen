@@ -7,11 +7,11 @@ import unittest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from check_formalia import (  # noqa: E402
+from check_formalia import (check_sichtungskapitel,   # noqa: E402
     anhang_buchstaben, autorenschaft, caption_text, check_aktivierung,
     check_anhang_verweise, check_caption_doppelbelegung, check_file,
     check_gruppenbezug, check_meta_platzhalter, check_title_duplication,
-    check_ungenutzte_acronyms, check_unterpunkte, check_zahlwoerter,
+    check_ungenutzte_acronyms, check_unterpunkte, check_vorspann, check_zahlwoerter,
     find_acronyms, strip_comment)
 
 
@@ -829,6 +829,39 @@ class TestStrukturUndAktivierung(unittest.TestCase):
             "Die Übersicht fasst den Stand zusammen.\n")
         self.assertEqual(funde, [], funde)
 
+    # --- VORSPANN: Sätze zwischen Kapitelüberschrift und erstem Unterkapitel ---
+
+    def test_langer_vorspann_wird_gemeldet(self):
+        _f, _e, meta = run_full(
+            "\\section{Durchführung}\\label{sec:d}\n"
+            "Dieses Kapitel führt die Analyse durch. Es beginnt mit dem Wettbewerb. "
+            "Danach folgt die Zielgruppe. Anschließend das Konzept.\n\n"
+            "\\input{chapters/02/01_a}\n")
+        funde = check_vorspann({Path("d.tex"): meta})
+        self.assertEqual(len(funde), 1, funde)
+        self.assertIn("VORSPANN", funde[0])
+
+    def test_kurzer_vorspann_ist_still(self):
+        _f, _e, meta = run_full(
+            "\\section{Kurz}\\label{sec:k}\n"
+            "Dieses Kapitel ordnet ein. Mehr braucht es nicht.\n\n"
+            "\\input{chapters/02/01_a}\n")
+        self.assertEqual(check_vorspann({Path("k.tex"): meta}), [])
+
+    def test_text_nach_dem_ersten_input_zaehlt_nicht_mit(self):
+        _f, _e, meta = run_full(
+            "\\section{Kurz}\\label{sec:k}\n"
+            "Dieses Kapitel ordnet ein.\n\n"
+            "\\input{chapters/02/01_a}\n\n"
+            "Ein Satz. Noch einer. Und noch einer. Und ein vierter.\n")
+        self.assertEqual(check_vorspann({Path("k.tex"): meta}), [])
+
+    def test_subsection_datei_hat_keinen_vorspann(self):
+        _f, _e, meta = run_full(
+            "\\subsection{Wettbewerb}\\label{sec:w}\n"
+            "Ein Satz. Noch einer. Und noch einer. Und ein vierter. Und fünf.\n")
+        self.assertEqual(check_vorspann({Path("w.tex"): meta}), [])
+
     # --- ZAHLWORT: Zählaussagen als Erinnerungsliste ---
 
     def test_zahlwort_wird_gelistet(self):
@@ -837,6 +870,17 @@ class TestStrukturUndAktivierung(unittest.TestCase):
         self.assertEqual(len(funde), 1, funde)
         self.assertIn("ZAHLWORT", funde[0])
         self.assertIn("drei Konsequenzen", funde[0])
+
+    def test_zahlwort_mit_einschub_wird_gelistet(self):
+        # Auf das Zahlwort folgt kein Substantiv, sondern eine
+        # Praepositionalphrase. Ohne die Spanne zwischen Zahlwort und
+        # Bezugswort fiel genau diese Bauform aus der Liste - und zwar weder
+        # vor noch nach einem Fix, der die Zahl aenderte.
+        _f, _e, meta = run_full(
+            "Die drei von der Aufgabenstellung genannten Zwecke sind erfuellt.\n")
+        funde = check_zahlwoerter({Path("a.tex"): meta})
+        self.assertEqual(len(funde), 1, funde)
+        self.assertIn("ZAHLWORT", funde[0])
 
     def test_unbestimmter_artikel_loest_nicht_aus(self):
         # Bewusste Auslassung: „ein/eine" waere in jedem deutschen Satz Treffer.
@@ -957,6 +1001,53 @@ class TestStrukturUndAktivierung(unittest.TestCase):
             self.projekt(root, anhaenge=("A", "B"))
             self.assertEqual(anhang_buchstaben(root), {"A", "B"})
 
+
+
+class TestAussenwelt(unittest.TestCase):
+    """P36: Tatsachenbehauptungen in Sichtungskapiteln.
+
+    Der wichtigste Test ist der negative. Ein Muster, das auch ohne Deklaration
+    feuert, traefe halbe Kapitel und machte die Regel "Skript-Funde direkt
+    uebernehmen" wertlos - deshalb ist der Check opt-in.
+    """
+
+    SATZ = ("Die Plattform Chefkoch.de bietet eine Kommentarfunktion "
+            "fuer jedes eingestellte Rezept.\n")
+
+    def _meta(self, inhalt: str) -> dict:
+        return run_full(inhalt)[2]
+
+    def test_ohne_deklaration_schweigt_der_check(self):
+        meta = self._meta(self.SATZ)
+        self.assertFalse(meta["sichtung"])
+        self.assertEqual(meta["aussenwelt"], [])
+
+    def test_mit_deklaration_wird_der_satz_gelistet(self):
+        meta = self._meta("% SICHTUNG: eigene Plattformsichtung 07/2026\n" + self.SATZ)
+        self.assertTrue(meta["sichtung"])
+        self.assertEqual(len(meta["aussenwelt"]), 1)
+        self.assertIn("Chefkoch", meta["aussenwelt"][0])
+
+    def test_behoerdenname_wird_erkannt(self):
+        meta = self._meta("% SICHTUNG: Marktsichtung\n"
+                          "Zustaendig ist das Bundesministerium fuer Ernaehrung.\n")
+        self.assertEqual(len(meta["aussenwelt"]), 1)
+
+    def test_satz_ohne_aussenweltbezug_wird_nicht_gelistet(self):
+        meta = self._meta("% SICHTUNG: Marktsichtung\n"
+                          "Dieses Kapitel ordnet die Ergebnisse theoretisch ein.\n")
+        self.assertEqual(meta["aussenwelt"], [])
+
+    def test_block_nennt_datei_und_satz(self):
+        meta = self._meta("% SICHTUNG: Sichtung\n" + self.SATZ)
+        aus = check_sichtungskapitel({Path("chapters/01_markt/markt.tex"): meta})
+        self.assertEqual(len(aus), 1)
+        self.assertIn("[HINWEIS:AUSSENWELT]", aus[0])
+        self.assertIn("Chefkoch", aus[0])
+        self.assertIn("markt.tex", aus[0])
+
+    def test_kein_block_ohne_treffer(self):
+        self.assertEqual(check_sichtungskapitel({}), [])
 
 if __name__ == "__main__":
     unittest.main()

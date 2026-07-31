@@ -85,7 +85,15 @@ LANG_OK = ("de", "ger", "ngerman", "german", "en", "eng", "american", "british",
 # Großgeschriebenes Wort mit Kleinbuchstaben-Rest – Indiz für Title Case,
 # wenn es (nach dem ersten Wort) gehäuft auftritt.
 CAPWORD_RE = re.compile(r"(?<![\w{])[A-Z][a-zäöü]+")
-ARTNO_PAGES_RE = re.compile(r"^\d{5,}$")
+# Artikelnummer im `pages`-Feld. Das `e`-Praefix ist bei Wiley/Elsevier ueblich
+# („e13038") und fiel vorher durch, weil das Muster mit einer Ziffer beginnen
+# musste. Die Laengenschwelle bleibt bei vier: Dreistellige Werte sind der
+# Normalfall einer Startseite ohne Bereich - ein anderes Problem, das hier nur
+# Rauschen erzeugen wuerde. Kurze Artikelnummern faengt stattdessen die
+# DOI-Gegenprobe unten, und die ist ein starkes statt eines geratenen Signal.
+ARTNO_PAGES_RE = re.compile(r"^[eE]?\d{4,}$")
+# Bereichsangabe: alles mit Bindestrich/Gedankenstrich ist eine echte Seitenspanne.
+PAGES_BEREICH_RE = re.compile(r"\d\s*[-–—]{1,2}\s*\d")
 
 
 def parse_entries(text: str):
@@ -158,10 +166,33 @@ def hints_for(etype: str, key: str, fields: dict) -> list[str]:
             hints.append(
                 f"[HINWEIS] {key}: kein Sprachfeld – in Zotero `en` (bzw. `de`) setzen, sonst greifen "
                 f"Sentence-Case und Silbentrennung des Stils nicht.")
-    if etype == "article" and ARTNO_PAGES_RE.match(fields.get("pages", "")):
+    pages, eid = fields.get("pages", ""), fields.get("eid", "")
+    # Zuerst der harte Fall: beide Felder belegt. `style=apa` druckt dann beides
+    # („Sustainability, 12(3), Artikel 907, 907.") – im gedruckten Verzeichnis
+    # sichtbar schlechter als der Ausgangszustand, in dem die Nummer nur einmal
+    # an der falschen Stelle stand. Entsteht zuverlaessig aus einer Korrektur,
+    # die `eid` setzt und das Leeren von `pages` vergisst. Kein Ermessen, kein
+    # Fehlalarmrisiko – deshalb FEHLER und nicht HINWEIS.
+    if etype == "article" and pages and eid:
         hints.append(
-            f"[HINWEIS] {key}: `pages` = „{fields['pages']}“ sieht wie eine Artikelnummer aus – "
-            f"gehört als `eid` (Zotero: Extra-Feld `tex.eid: {fields['pages']}`), `pages` leeren.")
+            f"[FEHLER] {key}: `pages` = „{pages}“ UND `eid` = „{eid}“ gleichzeitig belegt – "
+            f"APA druckt beides („Artikel {eid}, {pages}“). In Zotero das Seitenfeld leeren; "
+            f"`eid` bleibt stehen.")
+    elif etype == "article" and ARTNO_PAGES_RE.match(pages):
+        hints.append(
+            f"[HINWEIS] {key}: `pages` = „{pages}“ sieht wie eine Artikelnummer aus – "
+            f"gehört als `eid` (Zotero: Extra-Feld `tex.eid: {pages}`). Zwei Schritte, "
+            f"beide nötig: (1) `tex.eid: {pages}` setzen, (2) das Seitenfeld leeren.")
+    elif (etype == "article" and pages and not eid
+          and not PAGES_BEREICH_RE.search(pages)
+          and pages.lstrip("eE") and pages.lstrip("eE") in fields.get("doi", "")):
+        # Zweites, unabhaengiges Signal statt geratener Ziffernlaenge: Steht die
+        # `pages`-Zahl im DOI-Suffix, ist sie die Artikelnummer der Zeitschrift.
+        # Belegt an 10.3390/su12030907 ↔ 907 und 10.1111/ijcs.13038 ↔ e13038.
+        hints.append(
+            f"[HINWEIS] {key}: `pages` = „{pages}“ ohne Seitenbereich, und der Wert steckt im "
+            f"DOI „{fields['doi']}“ – das ist die Artikelnummer, keine Seite. Zwei Schritte, "
+            f"beide nötig: (1) `tex.eid: {pages}` setzen, (2) das Seitenfeld leeren.")
     journal = fields.get("journaltitle") or fields.get("journal") or ""
     if len(JOURNAL_ABK_RE.findall(journal)) >= MIN_JOURNAL_ABK:
         hints.append(
@@ -188,16 +219,23 @@ def main() -> int:
         print(f"FEHLER: {path} nicht gefunden.")
         return 1
     text = path.read_text(encoding="utf-8", errors="replace")
-    n = hints = 0
+    n = hints = fehler = 0
     for etype, key, fields in parse_entries(text):
         if etype in ("comment", "preamble", "string"):
             continue
         n += 1
         for h in hints_for(etype, key, fields):
             print(h)
-            hints += 1
-    print(f"\n{n} Einträge geprüft, {hints} Hinweis(e). Korrekturen ausschließlich über Zotero + BBT-Export.")
-    return 0
+            if h.startswith("[FEHLER]"):
+                fehler += 1
+            else:
+                hints += 1
+    # Exit-Code 1 nur bei FEHLER: Die Hinweise sind eine Zotero-Arbeitsliste und
+    # duerfen einen Sammellauf nicht dauerhaft rot faerben. Ein FEHLER dagegen ist
+    # ein Zustand, den das gedruckte Verzeichnis sichtbar falsch wiedergibt.
+    print(f"\n{n} Einträge geprüft, {fehler} FEHLER, {hints} Hinweis(e). "
+          f"Korrekturen ausschließlich über Zotero + BBT-Export.")
+    return 1 if fehler else 0
 
 
 if __name__ == "__main__":

@@ -11,13 +11,17 @@ Führt nacheinander aus und fasst zusammen:
 
   1. check_bib_keys.py     – erfundene/fehlende BBT-Keys, ungenutzte Einträge
   2. check_formalia.py     – Formalia, Stil-, Struktur- und Aktivierungs-Checks
-  3. check_umfang.py       – Wörter je Kapitel gegen die Budgets aus kapitelplan.md
-  4. check_bib_hygiene.py  – Feld-Hygiene in references.bib (Zotero-Arbeitsliste)
-  5. check_status.py       – Statustabelle gegen das Dateisystem
-  6. check_quellentreue.py – Volltextabgleich (nur mit --mit-quellen; dauert,
+  3. check_umfang.py       – Umfang je Kapitel gegen die Budgets aus dem Kapitelplan
+  4. check_autoref.py      – interne Querverweise, deren Satz oder Ziel sich bewegt hat
+  5. check_bib_hygiene.py  – Feld-Hygiene in references.bib (Zotero-Arbeitsliste)
+  6. check_status.py       – Statustabelle gegen das Dateisystem
+  7. check_quellentreue.py – Volltextabgleich (nur mit --mit-quellen; dauert,
                              weil jedes Quell-PDF gelesen wird)
+  8. check_aussenwelt.py   – unzitierte Außenweltbehauptungen einsammeln (nur
+                             mit --mit-fakten; die Verifikation macht danach
+                             der `faktencheck`-Skill in kalter Sitzung)
 
-Warum ein Sammelaufruf: Diese vier bis fünf Läufe stehen in jedem Audit und in
+Warum ein Sammelaufruf: Diese sechs bis sieben Läufe stehen in jedem Audit und in
 jeder Schreib-Session ohnehin an. Einzeln aufgerufen kostet jeder einen eigenen
 Durchgang samt vollständiger Ausgabe; hier läuft alles einmal, und pro Skript
 erscheinen höchstens MAX_ZEILEN Zeilen. Fehlt ein Skript oder eine optionale
@@ -57,6 +61,7 @@ def lauf(name: str, argumente: list[str]) -> tuple[str, int, list[str]]:
 def main() -> int:
     args = sys.argv[1:]
     mit_quellen = "--mit-quellen" in args
+    mit_fakten = "--mit-fakten" in args
     kapitel = None
     if "--kapitel" in args:
         kapitel = args[args.index("--kapitel") + 1]
@@ -66,12 +71,19 @@ def main() -> int:
         ("check_bib_keys.py", ["references.bib", "--dir", ziel, "--report-unused"]),
         ("check_formalia.py", [ziel, "pages/"] if not kapitel else [ziel]),
         ("check_umfang.py", []),
+        ("check_autoref.py", ["--datei", kapitel] if kapitel else []),
         ("check_bib_hygiene.py", []),
         ("check_status.py", []),
     ]
     if mit_quellen:
         aufgaben.append(("check_quellentreue.py",
                          ["--datei", ziel] if kapitel else []))
+    # Bewusst nicht im Standardsatz: Der Vorfilter meldet beim ersten Lauf jeden
+    # noch nicht beurteilten Satz. Während des Schreibens wäre das Rauschen, das
+    # man wegzuklicken lernt – gebraucht wird er in der kalten Faktencheck-
+    # Sitzung und im Abgabe-Audit.
+    if mit_fakten:
+        aufgaben.append(("check_aussenwelt.py", ["--datei", ziel]))
 
     if not Path("references.bib").is_file():
         print("HINWEIS: references.bib fehlt – Key- und Hygiene-Prüfung entfallen.\n")
@@ -105,6 +117,10 @@ def main() -> int:
     if not mit_quellen:
         print("Der Volltextabgleich (check_quellentreue.py) lief nicht mit – "
               "in jedem Audit Pflicht: --mit-quellen.")
+    if not mit_fakten:
+        print("Der Vorfilter für unzitierte Außenweltbehauptungen "
+              "(check_aussenwelt.py) lief nicht mit – im Abgabe-Audit und im "
+              "`faktencheck`-Skill fällig: --mit-fakten.")
     return 1 if offen else 0
 
 

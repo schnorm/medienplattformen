@@ -85,6 +85,24 @@ class TestCheckStatus(unittest.TestCase):
         rows = parse_table(TABLE_HEAD + "| A | `b.md` | FERTIG | note |\n")
         self.assertEqual(rows, [{"komponente": "A", "pfad": "b.md", "status": "FERTIG"}])
 
+    def test_fehlende_claude_md_ist_fehler(self):
+        # Ohne CLAUDE.md gibt es keine Statustabelle – das muss ein FEHLER sein
+        # und nicht ein leeres „alles in Ordnung".
+        root = Path(tempfile.mkdtemp())
+        findings, errors = check(root)
+        self.assertEqual(errors, 1)
+        self.assertTrue(any("CLAUDE.md" in f for f in findings), findings)
+
+    def test_claude_md_ohne_tabelle_ist_hinweis(self):
+        # Frisch kopierte Vorlage vor dem ersten Setup: kein Fehler, aber
+        # sichtbar – sonst meldet check_status stumm Erfolg.
+        root = Path(tempfile.mkdtemp())
+        (root / "CLAUDE.md").write_text("# CLAUDE.md\n\nNoch keine Tabelle.\n",
+                                        encoding="utf-8")
+        findings, errors = check(root)
+        self.assertEqual(errors, 0)
+        self.assertEqual(len(findings), 1, findings)
+
 
 if __name__ == "__main__":
     unittest.main()

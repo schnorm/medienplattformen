@@ -74,6 +74,8 @@ LINE_CHECKS = [
      "Nominalstil-Marker – aktive Verb-Formulierung prüfen („Die Arbeit untersucht X“ statt „Die Untersuchung erfolgt“)."),
 ]
 
+MAX_VORSPANN_SAETZE = 3   # IU-Richtlinien: Vorspann ordnet ein, fasst nicht vorweg
+VORSPANN_ENDE_RE = re.compile(r"\\(?:input|subsection)\{")
 SKIP_ENVS = ("lstlisting", "verbatim", "tikzpicture")
 
 # `\cite{}` ist NICHT generell falsch: In der Quellenzeile einer Abbildung und im
@@ -398,7 +400,7 @@ def check_file(path: Path) -> tuple[list[str], int, dict]:
     meta = {"section_titles": [], "subsection_titles": [], "word_count": 0,
             "figures": 0, "tables": 0, "subsections_nummeriert": 0,
             "subsubsections": 0, "anhang_refs": set(), "zahlwoerter": [],
-            "captions": [], "bestimmte_nomen": set()}
+            "captions": [], "bestimmte_nomen": set(), "vorspann_saetze": 0}
     float_caption = ""
     float_label = ""
     float_typ = ""
@@ -619,7 +621,24 @@ def check_file(path: Path) -> tuple[list[str], int, dict]:
         "\n".join(strip_comment(z) for z in lines)))
 
     # Dreier-Aufzählungs-Häufung („X, Y und Z" als Standardmuster)
+    roh = "\n".join(strip_comment(z) for z in lines)
+    roh_section = SECTION_RE.search(roh)
+    if roh_section and roh_section.group(1) == "section":
+        rest = roh[roh_section.end():]
+        ende = VORSPANN_ENDE_RE.search(rest)
+        vorspann = rest[:ende.start()] if ende else rest
+        vorspann = re.sub(r"\\[a-zA-Z@]+\*?(?:\[[^\]]*\])?(?:{[^{}]*})?", " ", vorspann)
+        meta["vorspann_saetze"] = len([x for x in re.split(r"(?<=[.!?])\s+", vorspann) if len(x.split()) > 2])
     meta["zahlwoerter"] = ZAHLWORT_RE.findall(detexed_read)
+    # Nur in deklarierten Sichtungskapiteln. Saetze MIT Zitation sind Sache des
+    # Volltextabgleichs (Teil-Check G) und gehoeren nicht in diese Liste.
+    meta["sichtung"] = bool(SICHTUNG_RE.search("".join(z + chr(10) for z in lines)))
+    if meta["sichtung"]:
+        meta["aussenwelt"] = [s.strip() for s in _split_sentences(detexed_read)
+                              if AUSSENWELT_RE.search(s) and len(s.split()) > 4]
+    else:
+        meta["aussenwelt"] = []
+
     meta["bestimmte_nomen"] = {n.lower() for n in BESTIMMTES_NOMEN_RE.findall(detexed_read)}
 
     trias_matches = TRIAS_RE.findall(detexed_read)
@@ -818,6 +837,29 @@ def _projekt_root(start: Path) -> Path:
     return Path(".")
 
 
+def check_vorspann(metas: dict[Path, dict]) -> list[str]:
+    """Hoechstens 2-3 Saetze zwischen Kapitelueberschrift und erstem Unterkapitel.
+
+    Die IU-Richtlinien begrenzen den Vorspann eines Kapitels; bisher stand der
+    Punkt als Lesepruefung in Teil-Check C, obwohl er sich zaehlen laesst. Der
+    Vorspann steht in der Master-Datei zwischen `\\section{...}` und dem ersten
+    `\\input{}` beziehungsweise der ersten `\\subsection{}`.
+
+    Kein FEHLER, sondern ein HINWEIS: Ob ein vierter Satz stoert, haengt an
+    seiner Laenge, und die Grenze ist ein Richtwert - aber nachzaehlen muss das
+    niemand mehr.
+    """
+    findings: list[str] = []
+    for path, m in sorted(metas.items()):
+        n = m.get("vorspann_saetze", 0)
+        if n > MAX_VORSPANN_SAETZE:
+            findings.append(
+                f"{path}: [HINWEIS:VORSPANN] {n} Saetze zwischen Kapitelueberschrift und "
+                f"erstem Unterkapitel - Richtwert sind hoechstens {MAX_VORSPANN_SAETZE}. "
+                f"Der Vorspann ordnet ein, er fasst nicht vorweg.")
+    return findings
+
+
 def check_unterpunkte(metas: dict[Path, dict]) -> list[str]:
     """„Mindestens zwei Unterpunkte je Teilung" (IU-Richtlinien 3.2).
 
@@ -929,9 +971,21 @@ PLATZHALTER_RE = re.compile(r"\\newcommand\{\\(\w+)\}\{([^}]*)\}")
 # ueberblaettert. Zahlwoerter dagegen sind selten, und jedes einzelne ist eine
 # ueberpruefbare Behauptung ueber eine Anzahl - genau die Stellen, die beim
 # Umbauen veralten („zwei Einwaende", es sind vier).
+_ZAHLWORTE = (r"zwei|drei|vier|fünf|sechs|sieben|acht|neun|zehn|beide|mehrere|"
+              r"erste[nrs]?|zweite[nrs]?|dritte[nrs]?")
+# Zwischen Zahlwort und Bezugswort duerfen bis zu vier kleingeschriebene Woerter
+# stehen. Ohne diese Spanne faellt genau die gefaehrlichste Bauform aus der Liste:
+# „die drei von der Aufgabenstellung genannten Zwecke" wurde nie gemeldet, weil auf
+# „drei" kein Substantiv folgt, sondern eine Praepositionalphrase - und zwar weder
+# vor noch nach einem Fix, der die Zahl aenderte. Vier ist die Grenze, ab der
+# Zahlwort und Bezugswort erfahrungsgemaess nichts mehr miteinander zu tun haben.
+#
+# Im Einschub gesperrt sind „komma" und weitere Zahlwoerter: „drei komma fuenf im
+# Mittel" ist eine Dezimalzahl und keine Zaehlaussage.
 ZAHLWORT_RE = re.compile(
-    r"(?<![\wäöüß])(zwei|drei|vier|fünf|sechs|sieben|acht|neun|zehn|beide|mehrere|"
-    r"erste[nrs]?|zweite[nrs]?|dritte[nrs]?)\s+([A-ZÄÖÜ][\wäöüß-]{3,})")
+    r"(?<![\wäöüß])(" + _ZAHLWORTE + r")\s+"
+    r"((?:(?!(?:" + _ZAHLWORTE + r"|komma)\b)[a-zäöüß][\wäöüß-]*\s+){0,4}"
+    r"[A-ZÄÖÜ][\wäöüß-]{3,})")
 # Bruchteile, Zeitspannen und Maßangaben sind zwar Zahlen, aber keine Aussagen
 # ueber die eigene Gliederung: „zwei Drittel der Befragten" und „drei Jahre
 # Laufzeit" bleiben richtig, egal wie oft das Kapitel umgebaut wird. Aus dem
@@ -944,6 +998,33 @@ ZAHLWORT_STOPWORTE = {
     "sekunden", "mal", "male", "euro", "seiten",
 }
 MAX_ZAHLWORT_REPORTS = 12
+
+# --- Unzitierte Aussenweltbehauptungen in Sichtungskapiteln -------------------
+# Ein Kapitel, das laut Aufgabenstellung eigene Sichtung ist (Wettbewerbs-,
+# Markt-, Produktanalyse), traegt kaum Zitationen und ist damit fuer den
+# Volltextabgleich unsichtbar - von der Wahrheitspflicht befreit es das nicht.
+# Belegte Faelle: eine Ministeriumsumbenennung nach einem Regierungswechsel und
+# ein falsch beschriebenes Konkurrenzangebot; beide fielen nur auf, weil eigens
+# ein Faktencheck angefordert wurde, nicht durch einen Standardlauf.
+#
+# BEWUSST OPT-IN. Ein Muster ueber den ganzen Text traefe jede Jahreszahl und
+# jeden Werkzeugnamen und machte die Regel "Skript-Funde direkt uebernehmen"
+# wertlos. Der Check greift deshalb nur in Dateien, die sich selbst deklarieren:
+#
+#     % SICHTUNG: eigene Plattformsichtung 07/2026, keine Zitationspflicht
+#
+# Und er meldet keinen FEHLER, sondern eine Liste zum Nachrecherchieren - wie
+# der ZAHLWORT-Block, dessen Zahlen auch nur ein Mensch nachzaehlen kann.
+SICHTUNG_RE = re.compile(r"%[ \t]*SICHTUNG\b:?[ \t]*(.*)")   # kein \s: das fraesse den Zeilenumbruch
+AUSSENWELT_RE = re.compile(
+    r"\b(?:bietet|bieten|verfügt über|verfügen über|ermöglicht|ermöglichen|"
+    r"unterstützt|unterstützen|erlaubt|erlauben|enthält|enthalten|"
+    r"stellt bereit|stellen bereit|fehlt|fehlen)\b"
+    r"|\b(?:Bundes\w+|\w*[Mm]inisterium\w*|Bundesamt|Bundesanstalt|Behörde)\b"
+    r"|\b\w+\s(?:GmbH|AG|SE)\b"
+    r"|\b\w+\.(?:de|com|org|net|eu)\b")
+MAX_AUSSENWELT_REPORTS = 8
+
 
 # Verkuerzter Rueckverweis im Fliesstext: „die Skizze", „das Mockup". Genau
 # diese Form macht eine Doppelbelegung schaedlich - mit Beiwort („die
@@ -1014,7 +1095,7 @@ def check_zahlwoerter(metas: dict[Path, dict]) -> list[str]:
     zeilen = []
     for path in sorted(metas):
         treffer = [(a, b) for a, b in metas[path].get("zahlwoerter", [])
-                   if b.lower() not in ZAHLWORT_STOPWORTE]
+                   if b.split()[-1].lower() not in ZAHLWORT_STOPWORTE]
         if not treffer:
             continue
         gezeigt = ", ".join(f"„{a} {b}“" for a, b in treffer[:MAX_ZAHLWORT_REPORTS])
@@ -1026,6 +1107,34 @@ def check_zahlwoerter(metas: dict[Path, dict]) -> list[str]:
     return ["[HINWEIS:ZAHLWORT] Zählaussagen zum Gegenprüfen – nach jedem Umbau "
             "nachzählen, veraltete Anzahlen überleben Streichungen und Ergänzungen "
             "am häufigsten:\n" + "\n".join(zeilen)]
+
+
+def check_sichtungskapitel(metas: dict[Path, dict]) -> list[str]:
+    """Nachzurecherchierende Tatsachenbehauptungen in Sichtungskapiteln.
+
+    Kein FEHLER, sondern eine Liste - wie ZAHLWORT. Ob ein Ministerium noch so
+    heisst und ob ein Produkt eine Funktion wirklich hat, entscheidet keine
+    Regex, sondern eine Recherche. Der Check nimmt nur das Erinnern ab, welche
+    Saetze diese Recherche brauchen.
+    """
+    zeilen = []
+    for path in sorted(metas):
+        treffer = metas[path].get("aussenwelt") or []
+        if not treffer:
+            continue
+        gezeigt = [s if len(s) <= 120 else s[:117] + "..."
+                   for s in treffer[:MAX_AUSSENWELT_REPORTS]]
+        rest = (f" ... +{len(treffer) - MAX_AUSSENWELT_REPORTS} weitere"
+                if len(treffer) > MAX_AUSSENWELT_REPORTS else "")
+        block = "\n".join(f"      - {s}" for s in gezeigt)
+        zeilen.append(f"    {path}:\n{block}{rest}")
+    if not zeilen:
+        return []
+    return ["[HINWEIS:AUSSENWELT] Tatsachenbehauptungen in Sichtungskapiteln ohne "
+            "Zitation - von keinem Volltextabgleich erfasst, weil dort keine Quelle "
+            "steht. Im Voll-/Abgabe-Audit einmal per Recherche verifizieren, nicht "
+            "aus dem Gedaechtnis bestaetigen: Institutionsnamen aendern sich, "
+            "Produktfunktionen auch.\n" + "\n".join(zeilen)]
 
 
 # Selbstbezeichnung als Gruppe, obwohl die Arbeit allein geschrieben wurde.
@@ -1163,8 +1272,9 @@ def main() -> int:
     # deshalb nur bei einem Verzeichnis-Lauf und nicht bei einer Einzeldatei.
     if any(t.is_dir() for t in args.targets):
         root = _projekt_root(args.targets[0])
-        struktur = (check_unterpunkte(metas) + check_gruppenbezug(metas, root)
-                    + check_caption_doppelbelegung(metas) + check_zahlwoerter(metas))
+        struktur = (check_vorspann(metas) + check_unterpunkte(metas) + check_gruppenbezug(metas, root)
+                    + check_caption_doppelbelegung(metas) + check_zahlwoerter(metas)
+                    + check_sichtungskapitel(metas))
         # Abbildungs-/Tabellenzahl und Anhang-Verweise nur bewerten, wenn der
         # GESAMTE Kapitelbestand im Lauf war. Bei `check_formalia.py
         # chapters/02_theorie/` zählte man sonst die Abbildungen eines einzelnen

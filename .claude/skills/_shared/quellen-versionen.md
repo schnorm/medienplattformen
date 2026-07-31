@@ -9,7 +9,7 @@ Die `_shared`-Regeldateien sind **Destillate** aus den IU-PDFs in `sources/`. Di
 | IU-Quelle (in `sources/`) | Version im Template | destilliert in | zuletzt vom Nutzer bestätigt |
 |---|---|---|---|
 | Richtlinien Gestaltung wiss. Arbeiten | 01.10.2025 | `hard-rules-formal.md` (Formalia, Struktur, Umfang, Gendern, Transkriptionsregeln Anhang F) | – |
-| Zitierleitfaden | 01.10.2025 | `hard-rules-formal.md` (Zitationen), `literaturverzeichnis.md` | – |
+| Zitierleitfaden | 01.10.2025 | `hard-rules-formal.md` (Zitationen), `zitation-sonderfaelle.md`, `literaturverzeichnis.md` | – |
 | Prüfungsleitfaden Hausarbeit | ohne Datumsangabe | `typen/hausarbeit.md` | – |
 | Prüfungsleitfaden Fallstudie | ohne Datumsangabe | `typen/fallstudie.md` | – |
 | Prüfungsleitfaden Seminararbeit | ohne Datumsangabe | `typen/seminararbeit.md` | – |

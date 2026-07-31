@@ -6,7 +6,7 @@ Kommentierter Baum des Projektordners. Ausgelagert aus `CLAUDE.md`, weil er nur 
 
 ```
 <latex-projektordner>/
-├── CLAUDE.md                    # diese Datei, immer automatisch geladen
+├── CLAUDE.md                    # Regeln + Statustabelle, in jeder Session automatisch geladen
 ├── handbuch.md                  # Nutzer-Handbuch (einzige Quelle; handbuch.pdf ist daraus erzeugtes Derivat – generate_handbuch_pdf.py)
 ├── MEMORY.md                    # Korrekturen/Lernpunkte NUR für dieses Projekt
 ├── PERSISTENT.md                # projektübergreifende Dauer-Präferenzen – wandert per Kopie von Projekt zu Projekt
@@ -16,6 +16,10 @@ Kommentierter Baum des Projektordners. Ausgelagert aus `CLAUDE.md`, weil er nur 
 ├── AENDERUNGEN.md               # Änderungsaufträge in Runden (aus Gesamt-Stresstest/Review/Nutzer-Feedback): je Punkt eine konkrete Anweisung; [FREIGABE]-Punkte nur nach aktiver Rückfrage umsetzen; Abarbeitung im schreib-modus, danach leeren und Delta-Re-Audit
 ├── quellencheck.md              # Volltextabgleich aller Zitationen (check_quellentreue.py, pro Lauf neu)
 ├── quellencheck-state.json      # Urteile je Zitation – überdauert Läufe, nie von Hand editieren
+├── autorefcheck.md              # interne Verweise gegen Drift ihrer Ziele (check_autoref.py, pro Lauf neu)
+├── autoref-state.json           # Urteile je Verweispaar – überdauert Läufe, nie von Hand editieren
+├── faktencheck-bericht.md       # unzitierte Aussenweltbehauptungen, verifiziert (faktencheck-Skill)
+├── faktencheck-state.json       # Urteile je Satz – überdauert Läufe, nie von Hand editieren
 ├── pruefbericht.md              # letzter Audit-Bericht (Prüf-Modus überschreibt pro Lauf)
 ├── main.tex                     # Wurzeldokument – nicht umbauen; nur die markierten Aktivierungsblöcke schalten
 │                                #   (Gender-Disclaimer, Abbildungs-/Tabellenverzeichnis, Anhang)
@@ -37,12 +41,24 @@ Kommentierter Baum des Projektordners. Ausgelagert aus `CLAUDE.md`, weil er nur 
 ├── logos/ · tables/             # Logos bzw. Tabellen-Fragmente
 ├── sources/                     # IU-Leitfäden pro Papiertyp (Zweifelsfall) + optionales Anmerkungen vom Prüfer.md (Pflichtquelle, siehe plan-modus Schritt 0) Zweifelsfall lesen
 │   └── literature/              # EIGENE Quellen (Ebooks, Paper) – jederzeit befüllbar, auch vor dem Setup; Anleitung in literature/README.md. Wird in plan-modus Schritt 1 VOR der Consensus-Suche gesichtet. Nicht versioniert (.gitignore)
+├── scripts/                     # build.ps1 (vollständige LaTeX-Kette, Referenz für Teil-Check D)
+│                                #   und clean.ps1 (build/ + verstreute Hilfsdateien entfernen)
+│                                #   Editorunabhängig, aus jedem Terminal aufrufbar
+├── .zed/tasks.json              # OPTIONAL: dieselben Aufrufe als Zed-Tasks. Wer Zed nicht nutzt,
+│                                #   löscht den Ordner – der Workflow hängt nicht daran
+├── build/                       # alle LaTeX-Hilfsdateien (nicht versioniert); ins Root darf nur main.pdf
 └── .claude/skills/
-    ├── _shared/                 # hard-rules-formal.md, typen/<typ>.md, aenderungen-format.md, scripts/
+    ├── _shared/                 # Regeln: hard-rules-formal.md, zitation-sonderfaelle.md (nur bei Bedarf laden),
+    │                            #   literaturverzeichnis.md, stilprofil.md, typen/<typ>.md
+    │                            # Prozess: aenderungen-format.md, projektstruktur.md, modell-empfehlung.md,
+    │                            #   quellen-versionen.md
+    │                            # scripts/: check_all.py (Sammelaufruf) + check_bib_keys, check_formalia,
+    │                            #   check_umfang, check_bib_hygiene, check_status, check_quellentreue, export_pdf
     ├── setup-check/             # einmaliger Umgebungscheck
     ├── plan-modus/              # Betriebsarten kompakt/ausführlich, Schritt 0–4
     ├── schreib-modus/           # Kapitel schreiben
     ├── pruef-modus/             # Audit vor Abgabe (inkl. Build- und Abgabe-Check)
     ├── gegenlesung/             # kalte Prüfer-Gegenlesung gegen aufgabe.md (alle Kapitel FERTIG)
+    ├── faktencheck/             # kalter Faktencheck unzitierter Aussenweltbehauptungen (Websuche je Kandidat)
     └── stresstest/              # Gegenargumente prüfen, jederzeit einzeln aufrufbar
 ```

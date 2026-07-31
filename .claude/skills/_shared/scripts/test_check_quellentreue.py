@@ -13,6 +13,7 @@ die Zitation wirklich hängt – sonst wird der falsche Text mit der Quelle
 verglichen und jeder Folgebefund ist wertlos).
 """
 
+import json
 import subprocess
 import sys
 import tempfile
@@ -29,7 +30,7 @@ from check_quellentreue import (  # noqa: E402
     in_tabelle, merke_saetze, notiz_warnungen, ohne_struktur, resolve_kapitel, vorfassung,
     zitat_dubletten, seite_ausserhalb_pages, seiten_liste,
     seitenbereich, spanne, sprache, sprachwechsel, unreferenzierte_volltexte,
-    versatz_aus_pages, normalisiere, satz_um, treffer_auf_seite, woerter,
+    versatz_aus_pages, versatz_folgen, normalisiere, satz_um, treffer_auf_seite, woerter,
     zitat_segmente, zugangsklasse, CITE_CMD_RE, Zitation)
 
 
@@ -1083,6 +1084,110 @@ class TestSeiteAusserhalbPages(unittest.TestCase):
 
     def test_ohne_seitenangabe_kein_befund(self):
         self.assertIsNone(seite_ausserhalb_pages("", "104--114"))
+
+
+class TestNotizZuordnung(unittest.TestCase):
+    """Eine Begründung je Urteil – sie ist die einzige Spur, die ein OK hinterlässt.
+
+    Früher galt `--notiz` global für alle `--verdikt` desselben Aufrufs: Zwei
+    Urteile mit zwei Begründungen bekamen beide die zuletzt genannte. Das fällt
+    später nicht mehr auf, weil ein einmal vergebenes OK nie wieder angesehen
+    wird (nur `--alle` bricht das auf).
+    """
+
+    def projekt(self, ordner: Path) -> None:
+        (ordner / "chapters").mkdir()
+        (ordner / "chapters" / "a.tex").write_text(
+            "Ein Satz mit Beleg \\parencite[S. 3]{keyA}.\n", encoding="utf-8")
+        (ordner / "references.bib").write_text(
+            "@article{keyA,\n  title = {Ohne Volltext},\n  year = {2020},\n}\n",
+            encoding="utf-8")
+
+    def lauf(self, ordner: Path, *args: str):
+        skript = Path(__file__).parent / "check_quellentreue.py"
+        return subprocess.run([sys.executable, str(skript), *args],
+                              cwd=ordner, capture_output=True)
+
+    def urteile(self, ordner: Path) -> dict:
+        pfad = ordner / "quellencheck-state.json"
+        if not pfad.exists():
+            return {}
+        return json.loads(pfad.read_text(encoding="utf-8"))["urteile"]
+
+    def test_zwei_urteile_behalten_ihre_eigene_notiz(self):
+        with tempfile.TemporaryDirectory() as d:
+            self.projekt(Path(d))
+            self.lauf(Path(d),
+                      "--verdikt", "aaa111=OK", "--notiz", "S. 10 traegt die Aussage",
+                      "--verdikt", "bbb222=OK", "--notiz", "S. 2 nennt den Befund")
+            urteile = self.urteile(Path(d))
+            self.assertEqual(urteile["aaa111"]["notiz"], "S. 10 traegt die Aussage")
+            self.assertEqual(urteile["bbb222"]["notiz"], "S. 2 nennt den Befund")
+
+    def test_eine_notiz_fuer_zwei_urteile_bricht_ab(self):
+        with tempfile.TemporaryDirectory() as d:
+            self.projekt(Path(d))
+            e = self.lauf(Path(d), "--verdikt", "aaa111=OK",
+                          "--verdikt", "bbb222=OK", "--notiz", "gilt fuer beide")
+            self.assertEqual(e.returncode, 2)
+            self.assertEqual(self.urteile(Path(d)), {})
+
+    def test_urteile_ganz_ohne_notiz_bleiben_erlaubt(self):
+        with tempfile.TemporaryDirectory() as d:
+            self.projekt(Path(d))
+            e = self.lauf(Path(d), "--verdikt", "aaa111=OK", "--verdikt", "bbb222=OK")
+            self.assertEqual(e.returncode, 0)
+            self.assertEqual(self.urteile(Path(d))["bbb222"]["notiz"], "")
+
+    def test_notiz_ohne_verdikt_bricht_ab(self):
+        with tempfile.TemporaryDirectory() as d:
+            self.projekt(Path(d))
+            self.assertEqual(self.lauf(Path(d), "--notiz", "ohne Ziel").returncode, 2)
+
+
+class TestVersatzFolgen(unittest.TestCase):
+    """Ein geänderter Seitenversatz macht Urteile ungültig, die niemand wieder ansieht."""
+
+    def state(self) -> dict:
+        return {
+            "urteile": {"h1": {"status": "OK", "notiz": "S. 10 deckt die Aussage"},
+                        "h2": {"status": "OK", "notiz": "andere Quelle"}},
+            "versatz": {},
+            "saetze": {"h1": {"key": "barker2021", "ort": "10", "satz": "…"},
+                       "h2": {"key": "soma2020", "ort": "9", "satz": "…"}},
+        }
+
+    def test_erstsetzung_warnt_und_behaelt_das_urteil(self):
+        # Vorher lief die Pruefung gegen das ganze Dokument: gedeckt, nur die
+        # Stellenangabe war unbestaetigt. Das ist kein Grund, sie zu verwerfen.
+        s = self.state()
+        zeilen = versatz_folgen("barker2021", None, 0, s)
+        self.assertTrue(any("WARNUNG" in z for z in zeilen), zeilen)
+        self.assertIn("h1", s["urteile"])
+
+    def test_ueberschreiben_setzt_nur_den_eigenen_key_zurueck(self):
+        s = self.state()
+        zeilen = versatz_folgen("barker2021", -8, 0, s)
+        self.assertNotIn("h1", s["urteile"])
+        self.assertIn("h2", s["urteile"])
+        # Die alte Begruendung wird ausgegeben, damit sie nicht verloren geht.
+        self.assertTrue(any("S. 10 deckt die Aussage" in z for z in zeilen), zeilen)
+
+    def test_gleicher_wert_aendert_nichts(self):
+        s = self.state()
+        self.assertEqual(versatz_folgen("barker2021", 0, 0, s), [])
+        self.assertIn("h1", s["urteile"])
+
+    def test_ohne_gebuchtes_urteil_still(self):
+        s = self.state()
+        s["urteile"] = {}
+        self.assertEqual(versatz_folgen("barker2021", -8, 0, s), [])
+
+    def test_ohne_saetze_abschnitt_still(self):
+        # Stand aus einer aelteren Skriptfassung: kein Hash-zu-Key-Register.
+        s = self.state()
+        del s["saetze"]
+        self.assertEqual(versatz_folgen("barker2021", -8, 0, s), [])
 
 
 if __name__ == "__main__":

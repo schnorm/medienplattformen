@@ -44,6 +44,9 @@ Nutzung (vom Projekt-Root):
     python .claude/skills/_shared/scripts/check_quellentreue.py --alle
     python .claude/skills/_shared/scripts/check_quellentreue.py --paare 5
     python .claude/skills/_shared/scripts/check_quellentreue.py --verdikt <hash>=OK --notiz "S. 47 deckt die Aussage"
+        (mehrere Urteile in einem Aufruf: je `--verdikt` ein eigenes `--notiz`
+         in derselben Reihenfolge. Eine Notiz für mehrere Urteile ist ein
+         Fehler und kein Kürzel – sie würde stillschweigend falsch zugeordnet.)
     python .claude/skills/_shared/scripts/check_quellentreue.py --seite <bibkey> 453
         (nur den Text der zitierten Seite ausgeben – fuer den Schreibschritt,
          der den Satz aus der Quelle heraus formuliert; kein Prueflauf. Bei
@@ -980,6 +983,53 @@ def merke_saetze(zitate: list[Zitation], state: dict) -> None:
                                    "satz": z.satz.strip()[:400]}
 
 
+def versatz_folgen(key: str, alt: int | None, neu: int, state: dict) -> list[str]:
+    """Was ein neu gesetzter Seitenversatz mit bereits gebuchten Urteilen macht.
+
+    Ein Urteil wird gegen die Seite gefällt, die der damalige Versatz aufgelöst
+    hat – und danach nie wieder angesehen (`pruefe()` überspringt jedes OK, nur
+    `--alle` bricht das auf). Ändert sich der Versatz, beruht das Urteil auf
+    einer Seite, die das Skript heute anders auflöst. Es ist damit nicht
+    „möglicherweise veraltet", sondern ungültig. Deshalb zwei Fälle:
+
+    * **Erstsetzung** (vorher kein Versatz): nur warnen. Diese Urteile entstanden
+      gegen das ganze Dokument – Inhalt und Wortlaut sind gedeckt, allein die
+      Stellenangabe war nie bestätigt. Sie zurückzusetzen vernichtete geleistete
+      Prüfarbeit, ohne dass etwas daran falsch wäre.
+    * **Überschreiben mit einem anderen Wert**: Urteile löschen, sie kommen im
+      nächsten Lauf als PRÜFEN zurück. Die alte Begründung wird mit ausgegeben,
+      damit sie nach der Neuprüfung wiederverwendbar ist statt verloren zu sein.
+
+    Anlass: Ein gespeicherter Versatz stand auf -8 statt 0 und fiel erst auf, als
+    eine *neue* Zitation dadurch als „außerhalb des PDFs" gemeldet wurde. Er
+    hätte genauso gut die *alten* Urteile unbemerkt falsch validieren können.
+
+    Grundlage ist `state["saetze"]` (Hash → Key), das `merke_saetze()` bei jedem
+    Lauf fortschreibt. Fehlt der Abschnitt – Stand aus einer älteren
+    Skriptfassung –, bleibt die Meldung aus; der nächste reguläre Lauf legt ihn an.
+    """
+    if alt == neu:
+        return []
+    betroffen = [h for h, e in state.get("saetze", {}).items()
+                 if e.get("key") == key and h in state.get("urteile", {})]
+    if not betroffen:
+        return []
+    if alt is None:
+        return [f"  WARNUNG: {len(betroffen)} bereits gebuchte(s) Urteil(e) zu "
+                f"{key} entstanden ohne Versatz, also gegen das ganze Dokument. "
+                f"Inhalt und Wortlaut sind gedeckt, die Seitenangabe nicht – für "
+                f"die seitengenaue Nachprüfung: --alle",
+                f"  Betroffen: {', '.join(betroffen)}"]
+    zeilen = [f"  {len(betroffen)} Urteil(e) zu {key} zurückgesetzt "
+              f"(Versatz {alt} → {neu}): gefällt gegen eine anders aufgelöste "
+              f"Seite, kommen im nächsten Lauf als PRÜFEN zurück."]
+    for h in betroffen:
+        notiz = state["urteile"][h].get("notiz", "").strip()
+        zeilen.append(f"    {h}  {notiz or '(ohne Begründung)'}")
+        del state["urteile"][h]
+    return zeilen
+
+
 def anspruchsverlauf(zitate: list[Zitation], nur_auffaellig: bool = True) -> list[str]:
     """Alle Trägersätze einer mehrfach zitierten Quelle nebeneinander.
 
@@ -1622,7 +1672,9 @@ def main() -> int:
                     help="Urteil setzen: OK · AUSNAHME · \"RENTIERT NICHT\" "
                          "(Fundstelle deckt, das Zitat trägt den Satz aber nicht "
                          "mehr – bleibt als Befund stehen)")
-    ap.add_argument("--notiz", default="", help="Notiz zum Urteil")
+    ap.add_argument("--notiz", action="append", default=[],
+                    help="Begründung zum Urteil – positionsweise zu --verdikt; "
+                         "bei mehreren --verdikt genauso oft angeben")
     ap.add_argument("--offset", action="append", default=[], metavar="KEY=N",
                     help="Seitenversatz einer Quelle manuell setzen")
     ap.add_argument("--ausnahme", action="append", default=[],
@@ -1636,6 +1688,25 @@ def main() -> int:
                          "E-Books (epub) die Kapitelnummer angeben, z. B. 17.2.2")
     a = ap.parse_args()
 
+    # `--notiz` ist positionsgebunden: Notiz i begründet Urteil i. Früher war es
+    # ein Einzelwert, der für ALLE Urteile desselben Aufrufs galt – zwei
+    # `--verdikt` mit zwei `--notiz` bekamen beide die zuletzt genannte
+    # Begründung. Das bleibt unbemerkt, weil ein einmal vergebenes OK nie wieder
+    # angesehen wird (nur `--alle` bricht das auf) und die Notiz seine einzige
+    # überlebende Spur ist. Deshalb hier abbrechen statt raten: Eine gemeinsame
+    # Notiz für mehrere Urteile ist nicht als Kürzel zu retten – sie ist genau
+    # der Fall, der die Fehlzuordnung erzeugt hat.
+    if a.verdikt and len(a.notiz) not in (0, len(a.verdikt)):
+        print(f"FEHLER: {len(a.verdikt)}× --verdikt, aber {len(a.notiz)}× --notiz. "
+              f"Je Urteil eine eigene Begründung angeben (oder gar keine) – eine "
+              f"Notiz für mehrere Urteile würde stillschweigend falsch zugeordnet.",
+              file=sys.stderr)
+        return 2
+    if a.notiz and not a.verdikt:
+        print("FEHLER: --notiz ohne --verdikt – die Begründung hätte kein Ziel.",
+              file=sys.stderr)
+        return 2
+
     root = Path(".").resolve()
     buchung = bool(a.verdikt or a.offset or a.ausnahme)
     state_pfad = Path(a.state)
@@ -1643,12 +1714,16 @@ def main() -> int:
 
     for eintrag in a.offset:
         key, _, wert = eintrag.partition("=")
-        state["versatz"][key.strip()] = int(wert)
-        print(f"OK: Seitenversatz {key.strip()} = {int(wert)}")
+        key, neu = key.strip(), int(wert)
+        alt = state["versatz"].get(key)
+        state["versatz"][key] = neu
+        print(f"OK: Seitenversatz {key} = {neu}")
+        for zeile in versatz_folgen(key, alt, neu, state):
+            print(zeile)
     for wortfolge in a.ausnahme:
         state.setdefault("ausnahmen", []).append(wortfolge)
         print(f"OK: Ausnahme ergänzt – „{wortfolge}“")
-    for eintrag in a.verdikt:
+    for i, eintrag in enumerate(a.verdikt):
         h, _, status = eintrag.partition("=")
         status = status.strip().upper() or "OK"
         # „RENTIERT NICHT" schliesst eine Ausdruckslücke: Die Fundstelle deckt,
@@ -1660,7 +1735,8 @@ def main() -> int:
             print(f"FEHLER: Status '{status}' unzulässig "
                   f"(OK, AUSNAHME oder 'RENTIERT NICHT').", file=sys.stderr)
             return 2
-        state["urteile"][h.strip()] = {"status": status, "notiz": a.notiz,
+        state["urteile"][h.strip()] = {"status": status,
+                                       "notiz": a.notiz[i] if a.notiz else "",
                                        "datum": f"{date.today():%Y-%m-%d}"}
         print(f"OK: Urteil {h.strip()} = {status}")
 
