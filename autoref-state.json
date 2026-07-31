@@ -1,0 +1,218 @@
+{
+  "09cceb8af2": {
+    "datei": "chapters/02_durchfuehrung/03_konzept.tex",
+    "datum": "2026-07-31",
+    "label": "fig:mockup_feed",
+    "notiz": "Abgabe-Audit 31.07.: fig:mockup_feed am Bild geprueft - Beitraege mit Foto, Nutzername, Zutaten-Tag, Like/Kommentar sowie Challenge-Banner und Plus-Button vorhanden.",
+    "quelle_hash": "4a3c150b9c",
+    "verdikt": "OK",
+    "ziel_hash": "27e6f1c902"
+  },
+  "11744d4cbe": {
+    "datei": "chapters/02_durchfuehrung/06_evaluation_reflexion.tex",
+    "datum": "2026-07-31",
+    "label": "sec:community_und_feedback",
+    "notiz": "Abgabe-Audit 31.07.: 04:9 dokumentiert den Verzicht auf Gruppen und Foren zugunsten der Challenges - Kursaenderung dort belegt.",
+    "quelle_hash": "5b5a14eeba",
+    "verdikt": "OK",
+    "ziel_hash": "e47c4b03c9"
+  },
+  "1c30aefc2d": {
+    "datei": "chapters/02_durchfuehrung/01_wettbewerbsanalyse.tex",
+    "datum": "2026-07-31",
+    "label": "tab:wettbewerbsvergleich",
+    "notiz": "Abgabe-Audit 31.07.: Methodensatz zur eigenen Sichtung bezieht sich auf dieselbe Tabelle; Quellenzeile der Tabelle nennt dieselben sechs Plattformen und denselben Zeitraum Juli 2026.",
+    "quelle_hash": "b48ca4d7df",
+    "verdikt": "OK",
+    "ziel_hash": "06e79769c8"
+  },
+  "20d176f271": {
+    "datei": "chapters/02_durchfuehrung/03_konzept.tex",
+    "datum": "2026-07-31",
+    "label": "fig:styletile",
+    "notiz": "Abgabe-Audit 31.07.: fig:styletile liegt in Anhang B; Bild per Read geprueft - Farbwelt, Typografie (Lora/Work Sans) und wiederkehrende Bedienelemente sind darauf abgebildet.",
+    "quelle_hash": "3688a37793",
+    "verdikt": "OK",
+    "ziel_hash": "932acd6e0c"
+  },
+  "20eca49ff0": {
+    "datei": "chapters/02_durchfuehrung/07_iteratives_design.tex",
+    "datum": "2026-07-31",
+    "label": "sec:konzept",
+    "notiz": "Abgabe-Audit 31.07.: 03_konzept.tex:36 beschreibt die Drei-Bereiche-Navigation (Startseite, Rettungs-Feed, Profil) - Fundstelle korrekt.",
+    "quelle_hash": "bd88e4d7bc",
+    "verdikt": "OK",
+    "ziel_hash": "1ded4572a0"
+  },
+  "28ae7e8f30": {
+    "datei": "chapters/02_durchfuehrung/03_konzept.tex",
+    "datum": "2026-07-31",
+    "label": "sec:phasenplanung",
+    "notiz": "Abgabe-Audit 31.07.: tab:phasenplanung fuehrt Phase 4 'Beta-Test & Feedback' (Woche 15-17); Rezeptbestand steht als Inhalt der vorgelagerten MVP-Phase - Voraussetzungsverhaeltnis stimmt.",
+    "quelle_hash": "e011475805",
+    "verdikt": "OK",
+    "ziel_hash": "a9e3c953f4"
+  },
+  "39ac026c0f": {
+    "datei": "chapters/02_durchfuehrung/03_konzept.tex",
+    "datum": "2026-07-31",
+    "label": "sec:wettbewerbsanalyse",
+    "notiz": "Abgabe-Audit 31.07.: Marker 'allein' geprueft - Wettbewerbsanalyse:7 weist Restegourmet und BMLEH-App beide das Reste-Matching zu (Tabelle: je 'stark'), traegt den Satz also in voller Staerke.",
+    "quelle_hash": "6aaa49e882",
+    "verdikt": "OK",
+    "ziel_hash": "582a4e62b1"
+  },
+  "6e5445d6f4": {
+    "datei": "chapters/02_durchfuehrung/06_evaluation_reflexion.tex",
+    "datum": "2026-07-31",
+    "label": "sec:kernergebnisse_und_ausblick",
+    "notiz": "Abgabe-Audit 31.07.: 01_kernergebnisse_und_ausblick.tex:7 nennt die Kooperationen als Weg, neue Nutzer:innen zu erschliessen - genau die im verweisenden Satz gemeinte Skalierungsfunktion.",
+    "quelle_hash": "8c98ae5ee9",
+    "verdikt": "OK",
+    "ziel_hash": "ac76e0b972"
+  },
+  "74e4777ac0": {
+    "datei": "chapters/02_durchfuehrung/03_konzept.tex",
+    "datum": "2026-07-31",
+    "label": "fig:mockup_start",
+    "notiz": "Abgabe-Audit 31.07.: fig:mockup_start am Bild geprueft - Reste-Eingabefeld mit Chip-Tags und Rezeptvorschlaege mit Zubereitungszeit/fehlenden Zutaten vorhanden.",
+    "quelle_hash": "4a3c150b9c",
+    "verdikt": "OK",
+    "ziel_hash": "85a6ff1ee7"
+  },
+  "817d61716f": {
+    "datei": "chapters/02_durchfuehrung/05_phasenplanung.tex",
+    "datum": "2026-07-31",
+    "label": "sec:konzept",
+    "notiz": "Abgabe-Audit 31.07.: 03_konzept.tex:3 fuehrt die Kooperationen mit Food-Sharing-Initiativen und Lebensmittelhaendler:innen ein - Fundstelle korrekt.",
+    "quelle_hash": "628b489275",
+    "verdikt": "OK",
+    "ziel_hash": "1ded4572a0"
+  },
+  "8d46cfb075": {
+    "datei": "chapters/02_durchfuehrung/03_konzept.tex",
+    "datum": "2026-07-31",
+    "label": "tab:funktionsuebersicht",
+    "notiz": "Abgabe-Audit 31.07.: tab:funktionsuebersicht traegt die Spalte 'Herleitung/Bezug' fuer alle sechs Funktionen - Ankuendigung eingeloest.",
+    "quelle_hash": "83ea920266",
+    "verdikt": "OK",
+    "ziel_hash": "5a82e2b908"
+  },
+  "960f28779d": {
+    "datei": "chapters/02_durchfuehrung/03_konzept.tex",
+    "datum": "2026-07-31",
+    "label": "sec:community_und_feedback",
+    "notiz": "Abgabe-Audit 31.07.: Rettungs-Feed ist Gegenstand von 04_community_und_feedback.tex:3 - Fundstelle korrekt.",
+    "quelle_hash": "282695a78d",
+    "verdikt": "OK",
+    "ziel_hash": "e47c4b03c9"
+  },
+  "96221e15c3": {
+    "datei": "chapters/02_durchfuehrung/03_konzept.tex",
+    "datum": "2026-07-31",
+    "label": "sec:community_und_feedback",
+    "notiz": "Abgabe-Audit 31.07.: Marker 'vor allem' geprueft - 04:7 nennt die monatliche Zero-Waste-Woche mit Rangliste; der sichtbare Vergleich der Nutzer:innen steht dort. Die Gewichtung 'vor allem' ist eigene Designsetzung, keine Zuschreibung an die Zielstelle.",
+    "quelle_hash": "f2218ee4bc",
+    "verdikt": "OK",
+    "ziel_hash": "e47c4b03c9"
+  },
+  "9873b19735": {
+    "datei": "chapters/02_durchfuehrung/05_phasenplanung.tex",
+    "datum": "2026-07-31",
+    "label": "sec:zielgruppe",
+    "notiz": "Abgabe-Audit 31.07.: sec:zielgruppe definiert die Teilgruppe ueber drei Verhaltensmerkmale - Bezugspunkt fuer Repraesentativitaet korrekt.",
+    "quelle_hash": "b755485fdb",
+    "verdikt": "OK",
+    "ziel_hash": "d7e893a2fc"
+  },
+  "aa957663b9": {
+    "datei": "chapters/02_durchfuehrung/03_konzept.tex",
+    "datum": "2026-07-31",
+    "label": "fig:mockup_profil",
+    "notiz": "Abgabe-Audit 31.07.: fig:mockup_profil am Bild geprueft - Rettungspunkte, Reste-Level-Badge, Einsparangabe 12,4 kg und eigene Beitraege vorhanden.",
+    "quelle_hash": "4a3c150b9c",
+    "verdikt": "OK",
+    "ziel_hash": "a2754deb65"
+  },
+  "acc8ce8382": {
+    "datei": "chapters/02_durchfuehrung/05_phasenplanung.tex",
+    "datum": "2026-07-31",
+    "label": "tab:phasenplanung",
+    "notiz": "Abgabe-Audit 31.07.: tab:phasenplanung zeigt Zeitrahmen- und Ressourcenspalte je Phase - Ankuendigung eingeloest.",
+    "quelle_hash": "96278109a8",
+    "verdikt": "OK",
+    "ziel_hash": "1536619702"
+  },
+  "b720e9b018": {
+    "datei": "chapters/02_durchfuehrung/07_iteratives_design.tex",
+    "datum": "2026-07-31",
+    "label": "tab:phasenplanung",
+    "notiz": "Abgabe-Audit 31.07.: tab:phasenplanung weist 'Design & Prototyp' mit Woche 3-4 aus - Wochenangabe im verweisenden Satz stimmt exakt.",
+    "quelle_hash": "bd88e4d7bc",
+    "verdikt": "OK",
+    "ziel_hash": "1536619702"
+  },
+  "d2d0b27d74": {
+    "datei": "chapters/02_durchfuehrung/01_wettbewerbsanalyse.tex",
+    "datum": "2026-07-31",
+    "label": "tab:wettbewerbsvergleich",
+    "notiz": "Abgabe-Audit 31.07.: Zielstelle tab:wettbewerbsvergleich fuehrt Chefkoch.de bei Kommunikation & Community mit 'stark' - Wertung und verweisender Satz decken sich exakt.",
+    "quelle_hash": "5a503f634c",
+    "verdikt": "OK",
+    "ziel_hash": "06e79769c8"
+  },
+  "d37c7c8131": {
+    "datei": "chapters/02_durchfuehrung/06_evaluation_reflexion.tex",
+    "datum": "2026-07-31",
+    "label": "sec:iteratives_design",
+    "notiz": "Abgabe-Audit 31.07.: 07:3 beschreibt die frueh und ohne Programmieraufwand korrigierten Mockup-Runden; der Kostenvergleich des verweisenden Satzes ist damit gedeckt.",
+    "quelle_hash": "f0f2d3de9c",
+    "verdikt": "OK",
+    "ziel_hash": "09fe0ef5f6"
+  },
+  "e43e7ff891": {
+    "datei": "chapters/02_durchfuehrung/03_konzept.tex",
+    "datum": "2026-07-31",
+    "label": "fig:mockup_start_bookmarks",
+    "notiz": "Abgabe-Audit 31.07.: fig:mockup_start_bookmarks am Bild geprueft - Bereich 'Gespeicherte Rezepte' ist ausgeklappt dargestellt.",
+    "quelle_hash": "4a3c150b9c",
+    "verdikt": "OK",
+    "ziel_hash": "799aece89f"
+  },
+  "e90465b871": {
+    "datei": "chapters/02_durchfuehrung/02_zielgruppe.tex",
+    "datum": "2026-07-31",
+    "label": "sec:zielsetzung_und_verengung",
+    "notiz": "Abgabe-Audit 31.07.: 02_zielsetzung_und_verengung.tex:5 begruendet die Verengung auf die nachhaltigkeitsorientierte Teilgruppe ausdruecklich - Fundstelle und Reichweite gedeckt, keine Gewichtungszuschreibung.",
+    "quelle_hash": "067d49cfba",
+    "verdikt": "OK",
+    "ziel_hash": "5a22486690"
+  },
+  "eb1b08c81b": {
+    "datei": "chapters/02_durchfuehrung/04_community_und_feedback.tex",
+    "datum": "2026-07-31",
+    "label": "sec:zielgruppe",
+    "notiz": "Abgabe-Audit 31.07.: 02_zielgruppe.tex:7 nennt woertlich 'einen Ort bieten, an dem dieser Erfolg von anderen wahrgenommen wird'. Der verweisende Satz traegt seit Streichung von 'vor allem' keine Rangfolge mehr - Reichweite jetzt deckungsgleich.",
+    "quelle_hash": "8f94b23a3b",
+    "verdikt": "OK",
+    "ziel_hash": "d7e893a2fc"
+  },
+  "eee8b539f4": {
+    "datei": "chapters/02_durchfuehrung/02_zielgruppe.tex",
+    "datum": "2026-07-31",
+    "label": "tab:persona",
+    "notiz": "Abgabe-Audit 31.07.: tab:persona liegt in Anhang A und enthaelt die Persona-Skizze Mara K. samt Merkmalen; am gebauten PDF (S. 18) verifiziert.",
+    "quelle_hash": "9fb19eab42",
+    "verdikt": "OK",
+    "ziel_hash": "cafd38e9fa"
+  },
+  "fab60723ce": {
+    "datei": "chapters/02_durchfuehrung/03_konzept.tex",
+    "datum": "2026-07-31",
+    "label": "sec:wettbewerbsanalyse",
+    "notiz": "Abgabe-Audit 31.07.: Zellbezug 'schliesst die Marktluecke aus sec:wettbewerbsanalyse' - die Luecke ist dort in :36 ausformuliert.",
+    "quelle_hash": "38072d8cd2",
+    "verdikt": "OK",
+    "ziel_hash": "582a4e62b1"
+  }
+}
